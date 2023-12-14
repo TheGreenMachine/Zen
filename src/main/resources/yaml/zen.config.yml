@@ -1,0 +1,159 @@
+#TODO update when we get it
+subsystems:
+    drivetrain:
+        implemented: true
+        motors:
+            FLDr:
+                motorType: TalonFX
+                motorName: FLDr
+                id: 11
+                invertMotor: false
+            FRDr:
+                motorType: TalonFX
+                motorName: FLDr
+                id: 9
+                invertMotor: true
+            RLDr:
+                motorType: TalonFX
+                motorName: FLDr
+                id: 18
+                invertMotor: true
+            RRDr:
+                motorType: TalonFX
+                motorName: FLDr
+                id: 1
+                invertMotor: true
+            FLAz:
+                motorType: TalonFX
+                motorName: FLDr
+                id: 10
+                invertMotor: false
+            FRAz:
+                motorType: TalonFX
+                motorName: FLDr
+                id: 8
+                invertMotor: false
+            RLAz:
+                motorType: TalonFX
+                motorName: FLDr
+                id: 19
+                invertMotor: false
+            RRAz:
+                motorType: TalonFX
+                motorName: FLDr
+                id: 2
+                invertMotor: false
+        canCoders:
+            FLEnc: 25
+            FREnc: 27
+            RLEnc: 28
+            RREnc: 26
+        invertMotor:
+            - FRDr
+            - RRDr
+            - RLDr
+        invertCanCoder:
+            - FREnc
+            - BREnc
+        swerveModules:
+            modules:
+                frontLeft:
+                    drive: FLDr
+                    azimuth: FLAz
+                    canCoder: FLEnc
+                    constants:
+                        encoderOffset: 117 #was 99 #1442 remote, 110 pid0
+                        invertSensorPhase: 1
+                frontRight:
+                    drive: FRDr
+                    azimuth: FRAz
+                    canCoder: FREnc
+                    constants:
+                        encoderOffset: 1626 #was 1589 # 683 remote, 1589 pid0
+                        invertSensorPhase: 1
+                backLeft:
+                    drive: RLDr
+                    azimuth: RLAz
+                    canCoder: RLEnc
+                    constants:
+                        encoderOffset: 2592 #was 556 #1149 remote, 556 pid0
+                        invertSensorPhase: 1
+                backRight:
+                    drive: RRDr
+                    azimuth: RRAz
+                    canCoder: RREnc
+                    constants:
+                        encoderOffset: 2856 #was 2854,  #1150 remote, 2854 id0
+                        invertSensorPhase: 1
+            drivePID:
+                slot0:
+                    kP: .04
+                    kI: 0.00001
+                    kD: 2.0
+                    kF: 0.0499
+            azimuthPID:
+                slot0:
+                    kP: 3.8 # formerly 3.8
+                    kI: 0.00075
+                    kD: 77 # formerly 77
+                    kF: 0
+                    allowableError: 5
+        constants:
+            ## Positional Configurations ##
+            maxVelTicks100ms: 12275.7 # ticks per 100ms
+            openLoopRampRate: 0.1
+            isSwerve: 1
+            encPPR: 14641
+            azimuthEncPPR: 4096
+            wheelDiameter: 4
+            kTrackScrubFactor: 1.0
+            ## Velocity Constraints ##
+            maxRotVel: 18
+            trackWidth: 19.75 # inches
+            wheelbaseLength: 19.75 # inches
+            maxVelOpenLoop: 3.75 # meters/s (3.6)
+            maxVelPathFollowing: 3.1 # meters/s (3.6)
+            maxAccel: 1.5 # meters/s^2 (2.54)
+            isDemoMode: 0
+            ## Auto Balance ##
+            autoBalanceDivider: 50
+            autoBalanceThreshold: 2.5 # degrees
+    ledmanager:
+        implemented: true
+        candle: 23
+        constants:
+            raveEnabled: 0
+            raveSpeed: 0.05
+            cameraLed: 1
+            maxLevel: 200
+            ledStripCount: 35
+    camera:
+        implemented: false
+        constants:
+            useMultiTargetOdometry: 1
+infrastructure:
+    canBusName: highSpeed
+    ## Power Distribution ##
+    pdId: 1
+    pdIsRev: true
+    ## Pneumatics Control ##
+    compressorEnabled: true
+    pcmIsRev: false
+    pcmId: 4
+    ## Pigeon ##
+    pigeonId: 32
+    isPigeon2: true
+inputHandler: competition
+constants:
+    zeroingButton: 9 # channel of DIO port
+    ## Drivetrain ##
+    minAllowablePoseError: 0.1
+    maxAllowablePoseError: 5
+    ## Logging ##
+    logRobot: 1 # 0 or 1
+    logDrivetrain: 1 # 0 or 1
+    configStatusFrames: 0 # 0 or 1
+    ## General ##
+    teleopFieldCentric: 1 # 0 or 1
+    kLooperDt: .025 # seconds
+    resetFactoryDefaults: 1 # whether motors get reset to factory default
