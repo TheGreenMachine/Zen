@@ -85,7 +85,7 @@ public class GhostMotor implements IGreenMotor {
     }
 
     @Override
-    public double getOutputCurrent() {
+    public double getMotorOutputCurrent() {
         return 0;
     }
 

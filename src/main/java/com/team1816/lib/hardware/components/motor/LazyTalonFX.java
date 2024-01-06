@@ -87,7 +87,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     }
 
     @Override
-    public double getOutputCurrent() {
+    public double getMotorOutputCurrent() {
         return super.getStatorCurrent();
     }
 
