@@ -11,14 +11,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class LazyVictorSPX extends VictorSPX implements IGreenMotor {
     protected double lastSet = Double.NaN;
     protected String name = "";
+
     protected ControlMode lastControlMode = null;
 
-    protected Faults faults;
-    protected StickyFaults stickyFaults;
-
     protected boolean isFollower;
-
-    protected SoftLimitStatus softLimitStatus;
 
     protected double arbitraryFeedForward = 0;
 
