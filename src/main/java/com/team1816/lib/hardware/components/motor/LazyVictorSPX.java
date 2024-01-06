@@ -61,40 +61,13 @@ public class LazyVictorSPX extends VictorSPX implements IGreenMotor {
     }
 
     @Override
-    public void configCurrentLimit(SupplyCurrentLimitConfiguration configuration, int timeoutMs) {
-        GreenLogger.log("Current Limits nonexistent for VictorSPX!!!");
-    }
-
-    @Override
     public void configCurrentLimit(int current) {
         GreenLogger.log("Current Limits nonexistent for VictorSPX!!!");
     }
 
     @Override
-    public void setPeriodicStatusFramePeriod(PeriodicStatusFrame statusFrame, int periodms) {
-        super.setStatusFramePeriod(
-            ConfigurationTranslator.toStatusFrame(statusFrame),
-            periodms
-        );
-    }
-
-    @Override
-    public int getPeriodicStatusFramePeriod(PeriodicStatusFrame statusFrame) {
-        return super.getStatusFramePeriod(
-            ConfigurationTranslator.toStatusFrame(statusFrame)
-        );
-    }
-
-    @Override
     public double getMotorOutputCurrent() {
         return super.getOutputCurrent(); // Deprecated & victors are so old that they don't have getSupplyCurrent() or getStatorCurrent() smile
-    }
-
-    @Override
-    public void setVelocityMeasurementPeriod(int periodms) {
-        super.configVelocityMeasurementPeriod(
-            ConfigurationTranslator.toSensorVelocityMeasPeriod(periodms)
-        );
     }
 
     @Override
@@ -155,11 +128,6 @@ public class LazyVictorSPX extends VictorSPX implements IGreenMotor {
     }
 
     @Override
-    public void configClosedLoopRampRate(double secondsNeutralToFull, int timeoutMs) {
-        super.configClosedloopRamp(secondsNeutralToFull, timeoutMs);
-    }
-
-    @Override
     public void config_PeakOutputForward(double percentOut) {
         super.configPeakOutputForward(percentOut);
     }
@@ -183,11 +151,6 @@ public class LazyVictorSPX extends VictorSPX implements IGreenMotor {
     @Override
     public void config_NeutralDeadband(double deadbandPercent) {
         super.configNeutralDeadband(deadbandPercent);
-    }
-
-    @Override
-    public void configVoltageCompensation(double voltage) {
-        super.configVoltageCompSaturation(voltage);
     }
 
     @Override
@@ -226,63 +189,23 @@ public class LazyVictorSPX extends VictorSPX implements IGreenMotor {
     }
 
     @Override
-    public void configForwardSoftLimit(double forwardSoftLimit, int timeoutMs) {
-        super.configForwardSoftLimitThreshold(forwardSoftLimit, timeoutMs);
-    }
-
-    @Override
     public void configReverseSoftLimit(double reverseSoftLimit) {
         super.configReverseSoftLimitThreshold(reverseSoftLimit);
     }
 
     @Override
-    public void configReverseSoftLimit(double reverseSoftLimit, int timeoutMs) {
-        super.configReverseSoftLimitThreshold(reverseSoftLimit, timeoutMs);
-    }
-
-    @Override
     public void enableForwardSoftLimit(boolean isEnabled) {
         super.configForwardSoftLimitEnable(isEnabled);
-        softLimitStatus = updateSoftLimitStatus(
-            softLimitStatus,
-            isEnabled ? SoftLimitStatus.FORWARD : SoftLimitStatus.FORWARD_DISABLE
-        );
-    }
-
-    @Override
-    public void enableForwardSoftLimit(boolean isEnabled, int timeoutMs) {
-        super.configForwardSoftLimitEnable(isEnabled, timeoutMs);
-        softLimitStatus = updateSoftLimitStatus(
-            softLimitStatus,
-            isEnabled ? SoftLimitStatus.FORWARD : SoftLimitStatus.FORWARD_DISABLE
-        );
     }
 
     @Override
     public void enableReverseSoftLimit(boolean isEnabled) {
         super.configReverseSoftLimitEnable(isEnabled);
-        softLimitStatus = updateSoftLimitStatus(
-            softLimitStatus,
-            isEnabled ? SoftLimitStatus.REVERSE : SoftLimitStatus.REVERSE_DISABLE
-        );
-    }
-
-    @Override
-    public void enableReverseSoftLimit(boolean isEnabled, int timeoutMs) {
-        super.configReverseSoftLimitEnable(isEnabled, timeoutMs);
-        softLimitStatus = updateSoftLimitStatus(
-            softLimitStatus,
-            isEnabled ? SoftLimitStatus.REVERSE : SoftLimitStatus.REVERSE_DISABLE
-        );
     }
 
     @Override
     public void enableSoftLimits(boolean isEnabled) {
         super.overrideSoftLimitsEnable(isEnabled);
-        softLimitStatus = updateSoftLimitStatus(
-            softLimitStatus,
-            isEnabled ? SoftLimitStatus.BOTH : SoftLimitStatus.DISABLED
-        );
     }
 
     @Override
@@ -306,11 +229,6 @@ public class LazyVictorSPX extends VictorSPX implements IGreenMotor {
     }
 
     @Override
-    public void setArbitraryFeedForward(double feedForward) {
-        arbitraryFeedForward = feedForward;
-    }
-
-    @Override
     public void selectPIDSlot(int pidSlotID, int closedLoopSlotID) {
         super.selectProfileSlot(pidSlotID, closedLoopSlotID);
     }
@@ -326,33 +244,8 @@ public class LazyVictorSPX extends VictorSPX implements IGreenMotor {
     }
 
     @Override
-    public void configAllowableErrorClosedLoop(int pidSlotID, double allowableError, int timeoutMs) {
-        super.configAllowableClosedloopError(pidSlotID, allowableError, timeoutMs);
-    }
-
-    @Override
-    public void setMaxIAccumulation(int pidSlotID, double maxIAccum) {
-        super.configMaxIntegralAccumulator(pidSlotID, maxIAccum);
-    }
-
-    @Override
     public void setPeakOutputClosedLoop(int pidSlotID, double peakOutput) {
         super.configClosedLoopPeakOutput(pidSlotID, peakOutput);
-    }
-
-    @Override
-    public void setPeakOutputClosedLoop(int pidSlotID, double peakOutput, int timeoutMs) {
-        super.configClosedLoopPeakOutput(pidSlotID, peakOutput, timeoutMs);
-    }
-
-    @Override
-    public void setIAccumulation(int closedLoopSlotID, double IAccum) {
-        super.setIntegralAccumulator(IAccum, closedLoopSlotID, Constants.kCANTimeoutMs);
-    }
-
-    @Override
-    public double getIAccum(int closedLoopSlotID) {
-        return super.getIntegralAccumulator(closedLoopSlotID);
     }
 
     @Override
@@ -361,18 +254,8 @@ public class LazyVictorSPX extends VictorSPX implements IGreenMotor {
     }
 
     @Override
-    public void setMotionProfileMaxVelocity(double maxVelocity, int timeoutMs) {
-        super.configMotionCruiseVelocity(maxVelocity, timeoutMs);
-    }
-
-    @Override
     public void setMotionProfileMaxAcceleration(double maxAcceleration) {
         super.configMotionAcceleration(maxAcceleration);
-    }
-
-    @Override
-    public void setMotionProfileMaxAcceleration(double maxAcceleration, int timeoutMs) {
-        super.configMotionAcceleration(maxAcceleration, timeoutMs);
     }
 
     @Override
@@ -387,26 +270,6 @@ public class LazyVictorSPX extends VictorSPX implements IGreenMotor {
         super.configMotionSCurveStrength(
             ConfigurationTranslator.toMotionCurveInt(motionCurveType, curveStrength)
         );
-    }
-
-    @Override
-    public void clearMotionProfileTrajectoryBuffer() {
-        super.clearMotionProfileTrajectories();
-    }
-
-    @Override
-    public String get_LastError() {
-        return "CTRE ErrorCode " + super.getLastError().toString();
-    }
-
-    @Override
-    public String get_Faults() {
-        return "CTRE ErrorCode " + super.getFaults(faults).name();
-    }
-
-    @Override
-    public String get_StickyFaults() {
-        return "CTRE ErrorCode " + super.getStickyFaults(stickyFaults).toString();
     }
 
     @Override
@@ -425,11 +288,6 @@ public class LazyVictorSPX extends VictorSPX implements IGreenMotor {
         }
     }
 
-    @Override
-    public double getSupplyCurrent() {
-        GreenLogger.log("getSupplyCurrent() not present for VictorSPX, using getOutputCurrent() instead.");
-        return super.getOutputCurrent();
-    }
 
     @Override
     public void restore_FactoryDefaults(int timeoutMs) {
@@ -437,31 +295,8 @@ public class LazyVictorSPX extends VictorSPX implements IGreenMotor {
     }
 
     @Override
-    public int getQuadraturePosition() {
-        GreenLogger.log("Quadrature Position is nonexistent for VictorSPXs");
-        return -1;
-
-    }
-
-    @Override
-    public void setQuadraturePosition(int quadraturePosition) {
-        GreenLogger.log("Quadrature Position is nonexistent for VictorSPXs");
-    }
-
-    @Override
-    public int getPulseWidthPosition() {
-        GreenLogger.log("Pulse Width Position is nonexistent for VictorSPXs");
-        return -1;
-    }
-
-    @Override
     public boolean isFollower() {
         return isFollower;
-    }
-
-    @Override
-    public SoftLimitStatus getSoftLimitStatus() {
-        return softLimitStatus;
     }
 
     @Override
