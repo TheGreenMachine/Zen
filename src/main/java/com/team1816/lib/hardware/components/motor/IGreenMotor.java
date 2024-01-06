@@ -170,13 +170,6 @@ public interface IGreenMotor {
 
     /**
      * Configures a motor's current limits
-     * @param configuration The configurations to be applied
-     * @param timeoutMs The CAN timeout (in ms)
-     */
-    void configCurrentLimit(SupplyCurrentLimitConfiguration configuration, int timeoutMs);
-
-    /**
-     * Configures a motor's current limits
      * @param current The current limit
      */
     void configCurrentLimit(int current);
@@ -222,13 +215,6 @@ public interface IGreenMotor {
      */
     void configClosedLoopRampRate(double secondsNeutralToFull);
 
-    /**
-     * Configures the ramp rate of a motor in closed loop
-     * @param secondsNeutralToFull The time it takes to reach the full demand
-     * @param timeoutMs The CAN timeout (in ms)
-     */
-    void configClosedLoopRampRate(double secondsNeutralToFull, int timeoutMs);
-
     // Peak Outputs
 
     /**
@@ -266,24 +252,10 @@ public interface IGreenMotor {
     void configForwardSoftLimit(double forwardSoftLimit);
 
     /**
-     * Configures a motor's forwards soft limit
-     * @param forwardSoftLimit The soft limit
-     * @param timeoutMs The CAN timeout (in ms)
-     */
-    void configForwardSoftLimit(double forwardSoftLimit, int timeoutMs);
-
-    /**
      * Configures a motor's reverse soft limit
      * @param reverseSoftLimit The soft limit
      */
     void configReverseSoftLimit(double reverseSoftLimit);
-
-    /**
-     * Configures a motor's reverse soft limit
-     * @param reverseSoftLimit The soft limit
-     * @param timeoutMs The CAN timeout (in ms)
-     */
-    void configReverseSoftLimit(double reverseSoftLimit, int timeoutMs);
 
     /**
      * Sets if the forwards soft limit is enabled on a motor
@@ -292,24 +264,10 @@ public interface IGreenMotor {
     void enableForwardSoftLimit(boolean isEnabled);
 
     /**
-     * Sets if the forwards soft limit is enabled on a motor
-     * @param isEnabled If the forwards soft limit should be enabled
-     * @param timeoutMs The CAN timeout (in ms)
-     */
-    void enableForwardSoftLimit(boolean isEnabled, int timeoutMs);
-
-    /**
      * Sets if the reverse soft limit is enabled on a motor
      * @param isEnabled If the reverse soft limit should be enabled
      */
     void enableReverseSoftLimit(boolean isEnabled);
-
-    /**
-     * Sets if the reverse soft limit is enabled on a motor
-     * @param isEnabled If the reverse soft limit should be enabled
-     * @param timeoutMs The CAN timeout (in ms)
-     */
-    void enableReverseSoftLimit(boolean isEnabled, int timeoutMs);
 
     /**
      * Sets if the soft limits are enabled on a motor
@@ -415,27 +373,11 @@ public interface IGreenMotor {
     void configAllowableErrorClosedLoop(int pidSlotID, double allowableError);
 
     /**
-     * Configures the allowable error during closed-loop control for a PID slot
-     * @param pidSlotID The PID slot to configure
-     * @param allowableError The desired allowable error
-     * @param timeoutMs The CAN timeout (in ms)
-     */
-    void configAllowableErrorClosedLoop(int pidSlotID, double allowableError, int timeoutMs);
-
-    /**
      * Configures the peak output during closed-loop control for a PID slot
      * @param pidSlotID The PID slot to configure
      * @param peakOutput The desired peak output
      */
     void setPeakOutputClosedLoop(int pidSlotID, double peakOutput);
-
-    /**
-     * Configures the peak output during closed-loop control for a PID slot
-     * @param pidSlotID The PID slot to configure
-     * @param peakOutput The desired peak output
-     * @param timeoutMs The CAN timeout (in ms)
-     */
-    void setPeakOutputClosedLoop(int pidSlotID, double peakOutput, int timeoutMs);
 
     //Motion Profiling
 
@@ -446,24 +388,10 @@ public interface IGreenMotor {
     void setMotionProfileMaxVelocity(double maxVelocity);
 
     /**
-     * Configures the maximum velocity during motion-profiling
-     * @param maxVelocity The desired maximum velocity
-     * @param timeoutMs The CAN timeout (in ms)
-     */
-    void setMotionProfileMaxVelocity(double maxVelocity, int timeoutMs);
-
-    /**
      * Configures the maximum acceleration during motion-profiling
      * @param maxAcceleration The desired maximum acceleration
      */
     void setMotionProfileMaxAcceleration(double maxAcceleration);
-
-    /**
-     * Configures the maximum acceleration during motion-profiling
-     * @param maxAcceleration The desired maximum acceleration
-     * @param timeoutMs The CAN timeout (in ms)
-     */
-    void setMotionProfileMaxAcceleration(double maxAcceleration, int timeoutMs);
 
     /**
      * Configures the motion curve to use during motion profiling
