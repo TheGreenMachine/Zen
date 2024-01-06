@@ -91,28 +91,22 @@ public class TankDrive extends Drive implements DifferentialDrivetrain {
             0
         );
         leftMain.configCurrentLimit(
-            currentLimitConfig,
-            Constants.kLongCANTimeoutMs
+            currentLimitConfig
         );
         leftFollowerA.configCurrentLimit(
-            currentLimitConfig,
-            Constants.kLongCANTimeoutMs
+            currentLimitConfig
         );
         leftFollowerB.configCurrentLimit(
-            currentLimitConfig,
-            Constants.kLongCANTimeoutMs
+            currentLimitConfig
         );
         rightMain.configCurrentLimit(
-            currentLimitConfig,
-            Constants.kLongCANTimeoutMs
+            currentLimitConfig
         );
         rightFollowerA.configCurrentLimit(
-            currentLimitConfig,
-            Constants.kLongCANTimeoutMs
+            currentLimitConfig
         );
         rightFollowerB.configCurrentLimit(
-            currentLimitConfig,
-            Constants.kLongCANTimeoutMs
+            currentLimitConfig
         );
 
         setOpenLoop(DriveSignal.NEUTRAL);

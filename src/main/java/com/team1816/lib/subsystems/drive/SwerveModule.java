@@ -92,7 +92,7 @@ public class SwerveModule implements ISwerveModule {
 
         driveMotor.configOpenLoopRampRate(factory.getConstant("drivetrain", "openLoopRampRate", 0), Constants.kCANTimeoutMs);
         azimuthMotor.configCurrentLimit(
-            new SupplyCurrentLimitConfiguration(true, 18, 28, 1),
+            new SupplyCurrentLimitConfiguration(true, 18, 28, 1)
         );
 
         azimuthMotor.config_PeakOutputForward(.4, Constants.kLongCANTimeoutMs);
@@ -102,8 +102,7 @@ public class SwerveModule implements ISwerveModule {
 
         azimuthMotor.configAllowableErrorClosedLoop(
             0,
-            mModuleConfig.azimuthPid.allowableError,
-            Constants.kLongCANTimeoutMs
+            mModuleConfig.azimuthPid.allowableError
         );
 
         allowableError = 5; // TODO this is a dummy value for checkSystem

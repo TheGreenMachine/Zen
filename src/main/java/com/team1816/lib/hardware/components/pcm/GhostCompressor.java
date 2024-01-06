@@ -22,7 +22,7 @@ public class GhostCompressor implements ICompressor {
     }
 
     @Override
-    public boolean enabled() {
+    public boolean isEnabled() {
         return enabled;
     }
 
@@ -41,7 +41,7 @@ public class GhostCompressor implements ICompressor {
         builder.setSmartDashboardType("Compressor");
         builder.addBooleanProperty(
             "Enabled",
-            this::enabled,
+            this::isEnabled,
             value -> {
                 if (value) {
                     enableDigital();

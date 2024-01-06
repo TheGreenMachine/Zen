@@ -64,13 +64,14 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
 
     @Override
     public void configCurrentLimit(SupplyCurrentLimitConfiguration configuration) {
-        super.configSupplyCurrentLimit(configuration);
+        super.configSupplyCurrentLimit(configuration, Constants.kLongCANTimeoutMs);
     }
 
     @Override
     public void configCurrentLimit(int current) {
         super.configSupplyCurrentLimit(
-            new SupplyCurrentLimitConfiguration(true, current, 0, 0)
+            new SupplyCurrentLimitConfiguration(true, current, 0, 0),
+                Constants.kLongCANTimeoutMs
         );
     }
 
@@ -188,22 +189,22 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
 
     @Override
     public void configForwardSoftLimit(double forwardSoftLimit) {
-        super.configForwardSoftLimitThreshold(forwardSoftLimit);
+        super.configForwardSoftLimitThreshold(forwardSoftLimit, Constants.kCANTimeoutMs);
     }
 
     @Override
     public void configReverseSoftLimit(double reverseSoftLimit) {
-        super.configReverseSoftLimitThreshold(reverseSoftLimit);
+        super.configReverseSoftLimitThreshold(reverseSoftLimit, Constants.kCANTimeoutMs);
     }
 
     @Override
     public void enableForwardSoftLimit(boolean isEnabled) {
-        super.configForwardSoftLimitEnable(isEnabled);
+        super.configForwardSoftLimitEnable(isEnabled, Constants.kCANTimeoutMs);
     }
 
     @Override
     public void enableReverseSoftLimit(boolean isEnabled) {
-        super.configReverseSoftLimitEnable(isEnabled);
+        super.configReverseSoftLimitEnable(isEnabled, Constants.kCANTimeoutMs);
     }
 
     @Override
@@ -243,7 +244,7 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
 
     @Override
     public void configAllowableErrorClosedLoop(int pidSlotID, double allowableError) {
-        super.configAllowableClosedloopError(pidSlotID, allowableError);
+        super.configAllowableClosedloopError(pidSlotID, allowableError, Constants.kLongCANTimeoutMs);
     }
 
     @Override

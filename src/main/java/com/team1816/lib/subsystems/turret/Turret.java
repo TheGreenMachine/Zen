@@ -124,10 +124,10 @@ public class Turret extends Subsystem implements PidProvider {
 
         // Soft Limits
         turretMotor.setNeutralMode(NeutralMode.Brake);
-        turretMotor.enableForwardSoftLimit(true, Constants.kCANTimeoutMs);
-        turretMotor.enableReverseSoftLimit(true, Constants.kCANTimeoutMs);
-        turretMotor.configForwardSoftLimit(kFwdLimit, Constants.kCANTimeoutMs); // Forward = MAX
-        turretMotor.configReverseSoftLimit(kRevLimit, Constants.kCANTimeoutMs); // Reverse = MIN
+        turretMotor.enableForwardSoftLimit(true);
+        turretMotor.enableReverseSoftLimit(true);
+        turretMotor.configForwardSoftLimit(kFwdLimit); // Forward = MAX
+        turretMotor.configReverseSoftLimit(kRevLimit); // Reverse = MIN
         turretMotor.enableLimitSwitches(true);
         turretMotor.enableSoftLimits(true);
 
