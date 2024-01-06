@@ -14,8 +14,6 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
     protected GreenControlMode currentControlMode = GreenControlMode.PERCENT_OUTPUT;
     protected GreenControlMode lastControlMode = null;
     protected double lastSet = Double.NaN;
-    protected SoftLimitStatus softLimitStatus;
-    protected int currentPeriodicFrame = -1;
     protected int currentPIDSlot = 0;
 
     protected SparkMaxLimitSwitch forwardLimitSwitch, reverseLimitSwitch = null;
@@ -37,7 +35,6 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
         pidController = super.getPIDController();
         encoder = configureRelativeEncoder(FeedbackDeviceType.HALL_SENSOR);
         name = motorName;
-        softLimitStatus = SoftLimitStatus.DISABLED;
     }
 
     @Override
@@ -68,32 +65,8 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
     }
 
     @Override
-    public void configCurrentLimit(SupplyCurrentLimitConfiguration configuration, int timeoutMs) {
-        configCurrentLimit(configuration);
-    }
-
-    @Override
     public void configCurrentLimit(int current) {
         super.setSmartCurrentLimit(current);
-    }
-
-    @Override
-    public void setPeriodicStatusFramePeriod(PeriodicStatusFrame statusFrame, int periodms) {
-        currentPeriodicFrame = periodms;
-        super.setPeriodicFramePeriod(
-            ConfigurationTranslator.toPeriodicFrame(statusFrame),
-            periodms
-        );
-    }
-
-    @Override
-    public int getPeriodicStatusFramePeriod(PeriodicStatusFrame statusFrame) {
-        return currentPeriodicFrame;
-    }
-
-    @Override
-    public void setVelocityMeasurementPeriod(int periodms) {
-        encoder.setMeasurementPeriod(periodms);
     }
 
     @Override
@@ -161,11 +134,6 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
     }
 
     @Override
-    public void configClosedLoopRampRate(double secondsNeutralToFull, int timeoutMs) {
-        configClosedLoopRampRate(secondsNeutralToFull);
-    }
-
-    @Override
     public void config_PeakOutputForward(double percentOut) {
         peakOutputForward = percentOut;
         pidController.setOutputRange(peakOutputBackward, peakOutputForward, currentPIDSlot);
@@ -197,22 +165,6 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
     public void config_NeutralDeadband(double deadbandPercent) {
         GreenLogger.log("Neutral deadband is only configurable through USB for Spark Max. Factory default is ±5%");
 
-    }
-
-    @Override
-    public void configVoltageCompensation(double voltage) {
-        voltageForCompensation = voltage;
-    }
-
-    @Override
-    public void enableVoltageCompensation(boolean isEnabled) {
-        if (isEnabled) {
-            super.enableVoltageCompensation(voltageForCompensation);
-            voltageCompensationEnabled = true;
-        } else {
-            super.disableVoltageCompensation();
-            voltageCompensationEnabled = false;
-        }
     }
 
     @Override
@@ -264,60 +216,25 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
     }
 
     @Override
-    public void configForwardSoftLimit(double forwardSoftLimit, int timeoutMs) {
-        configForwardSoftLimit(forwardSoftLimit);
-    }
-
-
-    @Override
     public void configReverseSoftLimit(double reverseSoftLimit) {
         super.setSoftLimit(SoftLimitDirection.kReverse, (float) reverseSoftLimit);
     }
 
     @Override
-    public void configReverseSoftLimit(double reverseSoftLimit, int timeoutMs) {
-        configReverseSoftLimit(reverseSoftLimit);
-    }
-
-    @Override
     public void enableForwardSoftLimit(boolean isEnabled) {
         super.enableSoftLimit(SoftLimitDirection.kForward, isEnabled);
-        softLimitStatus = updateSoftLimitStatus(
-            softLimitStatus,
-            isEnabled ? SoftLimitStatus.FORWARD : SoftLimitStatus.FORWARD_DISABLE
-        );
     }
-
-    @Override
-    public void enableForwardSoftLimit(boolean isEnabled, int timeoutMs) {
-        enableForwardSoftLimit(isEnabled);
-    }
-
 
     @Override
     public void enableReverseSoftLimit(boolean isEnabled) {
         super.enableSoftLimit(SoftLimitDirection.kReverse, isEnabled);
-        softLimitStatus = updateSoftLimitStatus(
-            softLimitStatus,
-            isEnabled ? SoftLimitStatus.REVERSE : SoftLimitStatus.REVERSE_DISABLE
-        );
     }
 
     @Override
     public void enableSoftLimits(boolean isEnabled) {
         super.enableSoftLimit(SoftLimitDirection.kForward, isEnabled);
         super.enableSoftLimit(SoftLimitDirection.kReverse, isEnabled);
-        softLimitStatus = updateSoftLimitStatus(
-            softLimitStatus,
-            isEnabled ? SoftLimitStatus.BOTH : SoftLimitStatus.DISABLED
-        );
     }
-
-    @Override
-    public void enableReverseSoftLimit(boolean isEnabled, int timeoutMs) {
-        enableReverseSoftLimit(isEnabled);
-    }
-
 
     @Override
     public void set_kP(int pidSlotID, double kP) {
@@ -339,20 +256,6 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
         pidController.setFF(kF, pidSlotID);
     }
 
-    public String getPIDConfiguration(int pidSlotID) {
-        return "Motor " + name + ", slot " + pidSlotID +" pid configuration:" +
-            "\nkP: " + pidController.getP(pidSlotID) +
-            "\nkI: " + pidController.getI(pidSlotID) +
-            "\nkD: " + pidController.getD(pidSlotID) +
-            "\nkF: " + pidController.getFF(pidSlotID)
-        ;
-    }
-
-    @Override
-    public void setArbitraryFeedForward( double feedForward) {
-        arbitraryFeedForward = feedForward;
-    }
-
     @Override
     public void selectPIDSlot(int pidSlotID, int closedLoopSlotID) {
         currentPIDSlot = pidSlotID;
@@ -369,29 +272,8 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
     }
 
     @Override
-    public void configAllowableErrorClosedLoop(int pidSlotID, double allowableError, int timeoutMs) {
-        configAllowableErrorClosedLoop(pidSlotID, allowableError);
-    }
-
-
-    @Override
-    public void setMaxIAccumulation(int pidSlotID, double maxIAccum) {
-        pidController.setIMaxAccum(maxIAccum, pidSlotID);
-    }
-
-    @Override
     public void setPeakOutputClosedLoop(int pidSlotID, double peakOutput) {
         pidController.setOutputRange(-peakOutput, peakOutput, pidSlotID);
-    }
-
-    @Override
-    public void setPeakOutputClosedLoop(int pidSlotID, double peakOutput, int timeoutMs) {
-        setPeakOutputClosedLoop(pidSlotID, peakOutput);
-    }
-
-    @Override
-    public void setIAccumulation(int closedLoopSlotID, double IAccum) {
-        pidController.setIAccum(IAccum);
     }
 
     @Override
@@ -406,35 +288,13 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
     }
 
     @Override
-    public double getIAccum(int closedLoopSlotID) {
-        return pidController.getIAccum();
-    }
-
-    @Override
-    public double getErrorDerivative(int closedLoopSlotID) {
-        GreenLogger.log("Error Derivative unavailable for Spark Max Motors +C");
-        return Double.NaN;
-    }
-
-    @Override
     public void setMotionProfileMaxVelocity(double maxVelocity) {
         pidController.setSmartMotionMaxVelocity(maxVelocity, currentPIDSlot);
     }
 
     @Override
-    public void setMotionProfileMaxVelocity(double maxVelocity, int timeoutMs) {
-        setMotionProfileMaxVelocity(maxVelocity);
-    }
-
-
-    @Override
     public void setMotionProfileMaxAcceleration(double maxAcceleration) {
         pidController.setSmartMotionMaxAccel(maxAcceleration, currentPIDSlot);
-    }
-
-    @Override
-    public void setMotionProfileMaxAcceleration(double maxAcceleration, int timeoutMs) {
-        setMotionProfileMaxAcceleration(maxAcceleration);
     }
 
     @Override
@@ -446,28 +306,6 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
     }
 
     @Override
-    public void clearMotionProfileTrajectoryBuffer() {
-        GreenLogger.log("Cannot clear motion profile trajectories on SparkMax.");
-    }
-
-    @Override
-    public String get_LastError() {
-        return "REVLibErrorCode: " + super.getLastError().name();
-    }
-
-    @Override
-    //Would it even be useful to test this and see if it corresponds with FaultID.value()? is it even possible?
-    //I'm so sorry to anyone looking at this code if it ever causes problems.
-    public String get_Faults() {
-        return "All faults for " + getName() + " as a short: " + super.getFaults();
-    }
-
-    @Override
-    public String get_StickyFaults() {
-        return "All sticky faults for " + getName() + " as a short: " + super.getStickyFaults();
-    }
-
-    @Override
     public boolean hasResetOccurred() {
         GreenLogger.log("SparkMax does not track resets."); //Apparently tracks resets as a fault but I'm not implementing a method for that
         return false;
@@ -476,6 +314,11 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
     @Override
     public int getDeviceID() {
         return super.getDeviceId();
+    }
+
+    @Override
+    public double getMotorOutputCurrent() {
+        return super.getOutputCurrent();
     }
 
     @Override
@@ -493,36 +336,8 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
     }
 
     @Override
-    public double getSupplyCurrent() {
-        return getOutputCurrent();
-    }
-
-    @Override
     public void restore_FactoryDefaults(int timeoutMs) {
         //This method doesn't do anything because sparkmax restorefactorydefaults also resets USB-exclusive settings and that's annoying to deal with
-    }
-
-    @Override
-    public boolean isVoltageCompensationEnabled() {
-        return voltageCompensationEnabled;
-    }
-
-    //These 3 don't matter for sparks bcs we'll never use a non-brushless rev motor
-    @Override
-    public int getQuadraturePosition() {
-        return -1;
-    }
-    @Override
-    public void setQuadraturePosition(int quadraturePosition) {
-    }
-    @Override
-    public int getPulseWidthPosition() {
-        return -1;
-    }
-
-    @Override
-    public SoftLimitStatus getSoftLimitStatus() {
-        return softLimitStatus;
     }
 
     @Override
