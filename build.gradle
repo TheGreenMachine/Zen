@@ -2,12 +2,14 @@ import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2024.1.1-beta-2"
+    id "edu.wpi.first.GradleRIO" version "2024.1.1"
     id 'org.jsonschema2dataclass' version '4.0.1'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 def ROBOT_MAIN_CLASS = "com.team1816.season.Main"
 
