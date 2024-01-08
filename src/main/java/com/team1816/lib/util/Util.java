@@ -139,4 +139,9 @@ public class Util {
         }
         return numbers[idx];
     }
+
+    public static double msToHz(double ms) {
+        return 1/(1000 * ms);
+    }
+
 }
