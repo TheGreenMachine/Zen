@@ -1,8 +1,10 @@
 package com.team1816.lib.hardware.components.gyro;
 
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.team1816.lib.util.Util;
 
 /**
  * A class that interfaces with the Pigeon2
@@ -90,5 +92,16 @@ public class Pigeon2Impl extends Pigeon2 implements IPigeonIMU {
     }
 
     @Override
-    public void set_StatusFramePeriod(PigeonIMU_StatusFrame statusFrame, int periodMs) {}
+    public void set_StatusFramePeriod(PigeonIMU_StatusFrame statusFrame, int periodMs) {
+        BaseStatusSignal.setUpdateFrequencyForAll(
+                Util.msToHz(periodMs),
+                super.getAccelerationX(), //Don't you just love varargs? i don't
+                super.getAccelerationY(),
+                super.getAccelerationZ(),
+                super.getRoll(),
+                super.getPitch(),
+                super.getYaw(),
+                super.getAngularVelocityZWorld() //Used internally in Pigeon2
+        );
+    }
 }
