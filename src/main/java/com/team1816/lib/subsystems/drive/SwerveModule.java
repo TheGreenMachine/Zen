@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.team1816.lib.hardware.PIDSlotConfiguration;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
@@ -27,7 +28,7 @@ public class SwerveModule implements ISwerveModule {
      */
     private final IGreenMotor driveMotor;
     private final IGreenMotor azimuthMotor;
-    public final CANCoder canCoder;
+    public final CANcoder canCoder;
 
     /**
      * State
@@ -54,12 +55,12 @@ public class SwerveModule implements ISwerveModule {
      * @param subsystemName name of the subsystem for yaml purposes
      * @param moduleConfig  configuration of the module
      * @param canCoder      attached CANCoder of the module
-     * @see CANCoder
+     * @see CANcoder
      */
     public SwerveModule(
         String subsystemName,
         ModuleConfig moduleConfig,
-        CANCoder canCoder
+        CANcoder canCoder
     ) {
         mModuleConfig = moduleConfig;
 

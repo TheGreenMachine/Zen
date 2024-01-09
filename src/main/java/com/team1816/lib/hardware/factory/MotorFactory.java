@@ -3,6 +3,10 @@ package com.team1816.lib.hardware.factory;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix.sensors.*;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.team1816.lib.hardware.MotorConfiguration;
 import com.team1816.lib.hardware.PIDSlotConfiguration;
 import com.team1816.lib.hardware.SubsystemConfig;
@@ -184,12 +188,20 @@ public class MotorFactory {
         return followerSpark;
     }
 
-    public static CANCoder createCanCoder(int canCoderID, String canBus, boolean invertCanCoder) {
-        CANCoder canCoder = new CANCoder(canCoderID, canBus);
+    public static CANcoder createCanCoder(int canCoderID, String canBus, boolean invertCanCoder) {
+        CANcoder canCoder = new CANcoder(canCoderID, canBus) ;
         if (factory.getConstant("resetFactoryDefaults", 0) > 0) {
-            canCoder.configFactoryDefault(kTimeoutMs);
+            canCoder.getConfigurator().apply(new CANcoderConfiguration(), kTimeoutMs/1000.0);
         }
-        canCoder.configAllSettings(configureCanCoder(invertCanCoder), kTimeoutMsLONG);
+        CANcoderConfiguration config = new CANcoderConfiguration();
+        canCoder.getConfigurator().refresh(config);
+        canCoder.getConfigurator().apply(
+                config.MagnetSensor
+                        .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
+                        .withSensorDirection(invertCanCoder ? SensorDirectionValue.Clockwise_Positive : SensorDirectionValue.CounterClockwise_Positive),
+                kTimeoutMsLONG/1000.0
+        );
+
         return canCoder;
     }
 
@@ -311,16 +323,6 @@ public class MotorFactory {
             motor.selectFeedbackSensor(FeedbackDeviceType.HALL_SENSOR); // Only using hall sensors on sparks at the moment
         }
 
-    }
-
-    private static CANCoderConfiguration configureCanCoder ( boolean invertCanCoder){
-            CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
-            canCoderConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-            canCoderConfig.sensorDirection = invertCanCoder;
-            canCoderConfig.initializationStrategy =
-                    SensorInitializationStrategy.BootToAbsolutePosition;
-            canCoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
-            return canCoderConfig;
     }
 
     private static SlotConfiguration toSlotConfiguration (

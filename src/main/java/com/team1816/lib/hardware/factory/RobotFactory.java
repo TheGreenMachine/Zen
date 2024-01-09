@@ -1,8 +1,8 @@
 package com.team1816.lib.hardware.factory;
 
 import com.ctre.phoenix.led.CANdle;
-import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.google.common.io.Resources;
 import com.google.inject.Singleton;
 import com.team1816.lib.hardware.*;
@@ -272,15 +272,15 @@ public class RobotFactory {
         moduleConfig.drivePid = getPidSlotConfig(subsystemName, "slot0", PIDConfig.Drive);
         moduleConfig.azimuthEncoderHomeOffset = module.constants.get("encoderOffset");
 
-        var canCoder = getCanCoder(subsystemName, name);
+        CANcoder canCoder = getCanCoder(subsystemName, name);
 
         return new SwerveModule(subsystemName, moduleConfig, canCoder);
     }
 
-    public CANCoder getCanCoder(String subsystemName, String name) {
+    public CANcoder getCanCoder(String subsystemName, String name) {
         var subsystem = getSubsystem(subsystemName);
         var module = subsystem.swerveModules.modules.get(name);
-        CANCoder canCoder = null;
+        CANcoder canCoder = null;
         if (
             module != null &&
                 module.canCoder != null &&
