@@ -1,5 +1,6 @@
 package com.team1816.lib;
 
+import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.team1816.lib.hardware.components.gyro.IPigeonIMU;
@@ -93,7 +94,11 @@ public class Infrastructure {
     public void resetPigeon(Rotation2d angle) {
         GreenLogger.log("resetting Pigeon");
         if (pigeon instanceof Pigeon2Impl) {
-            ((Pigeon2Impl) pigeon).configMountPose(angle.getDegrees(), 0, 0);
+            Pigeon2Configuration config = new Pigeon2Configuration();
+            ((Pigeon2Impl) pigeon).getConfigurator().refresh(config);
+            ((Pigeon2Impl) pigeon).getConfigurator().apply(
+
+            )
         }
     }
 
@@ -111,30 +116,30 @@ public class Infrastructure {
      * Returns the gyroscopic yaw of the pigeon
      *
      * @return yaw
-     * @see IPigeonIMU#getYaw()
+     * @see IPigeonIMU#getYawValue()
      */
     public double getYaw() {
-        return pigeon.getYaw();
+        return pigeon.getYawValue();
     }
 
     /**
      * Returns the gyroscopic pitch of the pigeon
      *
      * @return pitch
-     * @see IPigeonIMU#getPitch()
+     * @see IPigeonIMU#getPitchValue()
      */
     public double getPitch() {
-        return pigeon.getPitch() + pitchOffset;
+        return pigeon.getPitchValue() + pitchOffset;
     }
 
     /**
      * Returns the gyroscopic roll of the pigeon
      *
      * @return roll
-     * @see IPigeonIMU#getRoll()
+     * @see IPigeonIMU#getRollValue()
      */
     public double getRoll() {
-        return pigeon.getRoll() + rollOffset;
+        return pigeon.getRollValue() + rollOffset;
     }
 
 
@@ -155,7 +160,7 @@ public class Infrastructure {
      * @param gyroDrift           drift
      */
     public void simulateGyro(double radianOffsetPerLoop, double gyroDrift) {
-        pigeon.setYaw(getYaw() + radianOffsetPerLoop + gyroDrift);
+        pigeon.set_Yaw(getYaw() + radianOffsetPerLoop + gyroDrift);
     }
 
     /**

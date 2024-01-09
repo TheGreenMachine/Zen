@@ -1,6 +1,5 @@
 package com.team1816.lib.hardware.components.gyro;
 
-import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 
 /**
@@ -12,21 +11,21 @@ public interface IPigeonIMU {
      *
      * @return yaw (degrees)
      */
-    double getYaw();
+    double getYawValue();
 
     /**
      * Returns gyroscopic pitch / transverse lateral angle
      *
      * @return pitch (degrees)
      */
-    double getPitch();
+    double getPitchValue();
 
     /**
      * Returns gyroscopic roll / transverse frontal angle
      *
      * @return roll (degrees)
      */
-    double getRoll();
+    double getRollValue();
 
     /**
      * Returns x, y, and z acceleration in a casted fixed point double array
@@ -39,26 +38,8 @@ public interface IPigeonIMU {
      * Sets the gyroscopic yaw to a specific angle
      *
      * @param angle (degrees)
-     * @return ErrorCode / void
      */
-    ErrorCode setYaw(double angle);
-
-    /**
-     * Same as setYaw();
-     *
-     * @param angle (degrees)
-     * @return ErrorCode / void
-     * @see IPigeonIMU#setYaw(double)
-     */
-    ErrorCode setFusedHeading(double angle);
-
-    /**
-     * Sets the accumulated z angle to angleDeg
-     *
-     * @param angle (degrees)
-     * @return ErrorCode / void
-     */
-    ErrorCode setAccumZAngle(double angle);
+    void set_Yaw(double angle);
 
     /**
      * Returns true if a pigeon reset has occurred
@@ -70,9 +51,8 @@ public interface IPigeonIMU {
     /**
      * Configures factory defaults
      *
-     * @return ErrorCode / void
      */
-    ErrorCode configFactoryDefault();
+    void configFactoryDefaults();
 
     /**
      * Sets the synchronized status frame period of the pigeon and is directly related to CAN-bus utilization
@@ -81,5 +61,5 @@ public interface IPigeonIMU {
      * @param periodMs
      * @return
      */
-    ErrorCode setStatusFramePeriod(PigeonIMU_StatusFrame statusFrame, int periodMs);
+    void set_StatusFramePeriod(PigeonIMU_StatusFrame statusFrame, int periodMs);
 }

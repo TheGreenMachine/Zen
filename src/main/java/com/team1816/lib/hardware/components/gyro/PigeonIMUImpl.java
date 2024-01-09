@@ -1,7 +1,7 @@
 package com.team1816.lib.hardware.components.gyro;
 
-import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 import com.team1816.lib.util.logUtil.GreenLogger;
 
 /**
@@ -29,10 +29,10 @@ public class PigeonIMUImpl extends PigeonIMU implements IPigeonIMU {
      * Returns gyroscopic yaw / transverse planar angle
      *
      * @return yaw (degrees)
-     * @see IPigeonIMU#getYaw()
+     * @see IPigeonIMU#getYawValue()
      */
     @Override
-    public double getYaw() {
+    public double getYawValue() {
         return super.getYaw();
     }
 
@@ -40,10 +40,10 @@ public class PigeonIMUImpl extends PigeonIMU implements IPigeonIMU {
      * Returns gyroscopic pitch / transverse lateral angle
      *
      * @return pitch (degrees)
-     * @see IPigeonIMU#getPitch()
+     * @see IPigeonIMU#getPitchValue()
      */
     @Override
-    public double getPitch() {
+    public double getPitchValue() {
         return super.getPitch();
     }
 
@@ -51,10 +51,10 @@ public class PigeonIMUImpl extends PigeonIMU implements IPigeonIMU {
      * Returns gyroscopic roll / transverse frontal angle
      *
      * @return roll (degrees)
-     * @see IPigeonIMU#getRoll()
+     * @see IPigeonIMU#getRollValue()
      */
     @Override
-    public double getRoll() {
+    public double getRollValue() {
         return super.getRoll();
     }
 
@@ -79,32 +79,8 @@ public class PigeonIMUImpl extends PigeonIMU implements IPigeonIMU {
      * @see IPigeonIMU#getAcceleration()
      */
     @Override
-    public ErrorCode setYaw(double angle) {
-        return super.setYaw(angle);
-    }
-
-    /**
-     * Sets the gyroscopic yaw to a specific angle
-     *
-     * @param angle (degrees)
-     * @return ErrorCode / void
-     * @see IPigeonIMU#setFusedHeading(double)
-     */
-    @Override
-    public ErrorCode setFusedHeading(double angle) {
-        return super.setYaw(angle);
-    }
-
-    /**
-     * Sets the accumulated z angle to angleDeg
-     *
-     * @param angle (degrees)
-     * @return ErrorCode / void
-     * @see IPigeonIMU#setAccumZAngle(double)
-     */
-    @Override
-    public ErrorCode setAccumZAngle(double angle) {
-        return super.setAccumZAngle(angle);
+    public void set_Yaw(double angle) {
+        super.setYaw(angle);
     }
 
     /**
@@ -122,10 +98,15 @@ public class PigeonIMUImpl extends PigeonIMU implements IPigeonIMU {
      * Configures factory defaults
      *
      * @return ErrorCode / void
-     * @see IPigeonIMU#configFactoryDefault()
+     * @see IPigeonIMU#configFactoryDefaults()
      */
     @Override
-    public ErrorCode configFactoryDefault() {
-        return super.configFactoryDefault();
+    public void configFactoryDefaults() {
+        super.configFactoryDefault();
+    }
+
+    @Override
+    public void set_StatusFramePeriod(PigeonIMU_StatusFrame statusFrame, int periodMs) {
+        super.setStatusFramePeriod(statusFrame, periodMs);
     }
 }
