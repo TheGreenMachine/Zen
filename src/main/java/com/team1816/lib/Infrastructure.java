@@ -94,11 +94,16 @@ public class Infrastructure {
     public void resetPigeon(Rotation2d angle) {
         GreenLogger.log("resetting Pigeon");
         if (pigeon instanceof Pigeon2Impl) {
-            Pigeon2Configuration config = new Pigeon2Configuration();
-            ((Pigeon2Impl) pigeon).getConfigurator().refresh(config);
-            ((Pigeon2Impl) pigeon).getConfigurator().apply(
 
-            )
+            Pigeon2Configuration configs = new Pigeon2Configuration();
+            ((Pigeon2Impl) pigeon).getConfigurator().refresh(configs);
+
+            ((Pigeon2Impl) pigeon).getConfigurator().apply(
+                    configs.MountPose
+                            .withMountPoseYaw(angle.getDegrees())
+                            .withMountPosePitch(0)
+                            .withMountPoseRoll(0)
+            );
         }
     }
 
