@@ -1,9 +1,15 @@
 package com.team1816.lib.hardware.components.motor;
 
 import com.ctre.phoenix.motorcontrol.*;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix6.configs.SlotConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.*;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.team1816.lib.hardware.components.motor.configurations.*;
 import com.team1816.lib.util.ConfigurationTranslator;
+import com.team1816.lib.util.Util;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.configuration.Constants;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -20,11 +26,21 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     protected double arbitraryFeedForward = 0;
 
+    protected TalonFXConfigurator configurator;
+    protected TalonFXConfiguration configs;
+
+    protected DutyCycleOut dutyCycle = new DutyCycleOut(0);
+    protected VelocityDutyCycle velocity = new VelocityDutyCycle(0);
+    protected PositionDutyCycle position = new PositionDutyCycle(0);
+    protected MotionMagicDutyCycle motionMagic = new MotionMagicDutyCycle(0);
+    protected Follower following = new Follower(0, false);
+    protected NeutralOut neutral = new NeutralOut();
+    protected StaticBrake brake = new StaticBrake();
     public LazyTalonFX(int deviceNumber, String motorName, String canBus) {
         super(deviceNumber, canBus);
         name = motorName;
-        faults = new Faults();
-        stickyFaults = new StickyFaults();
+        configurator = super.getConfigurator();
+        configurator.refresh(configs);
     }
 
     @Override
@@ -65,17 +81,30 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public double getMotorOutputCurrent() {
-        return super.getStatorCurrent();
+        return super.getStatorCurrent().getValueAsDouble();
     }
 
     @Override
     public void set(GreenControlMode controlMode, double demand) {
         ControlMode mode = ConfigurationTranslator.toCTREControlMode(controlMode);
         if (demand != lastSet || mode != lastControlMode) {
-            if (!super.hasResetOccurred()) {
+            if (isFollower) {
+                super.setControl(following);
+            } else if (!super.hasResetOccurred()) {
                 lastSet = demand;
                 lastControlMode = mode;
-                super.set(mode, demand, DemandType.ArbitraryFeedForward, arbitraryFeedForward); //Note that arbitraryFF is initialized at 0
+
+                ControlRequest controlRequest;
+                switch(controlMode){
+                    case PERCENT_OUTPUT -> controlRequest = dutyCycle.withOutput(demand);
+                    case VELOCITY_CONTROL -> controlRequest = velocity.withVelocity(demand);
+                    case POSITION_CONTROL -> controlRequest = position.withPosition(demand);
+                    case MOTION_MAGIC -> controlRequest = motionMagic.withPosition(demand);
+                    case BRAKE -> controlRequest = brake;
+                    default -> controlRequest = neutral;
+                }
+
+                super.setControl(controlRequest);
             } else {
                 DriverStation.reportError("MOTOR " + getDeviceID() + " HAS RESET", false);
             }
@@ -110,17 +139,16 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void neutralOutput() {
-        super.neutralOutput();
+        set(GreenControlMode.NEUTRAL, 0);
     }
 
     @Override
     public void setNeutralMode(NeutralMode neutralMode) {
-        super.setNeutralMode(neutralMode);
+        super.setNeutralMode(neutralMode == NeutralMode.Brake ? NeutralModeValue.Brake : NeutralModeValue.Coast);
     }
 
     @Override
     public void setSensorPhase(boolean isInverted) {
-        super.setSensorPhase(isInverted);
     }
 
     @Override
@@ -174,33 +202,28 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     }
 
     @Override
-    public void enableVoltageCompensation(boolean isEnabled) {
-        super.enableVoltageCompensation(isEnabled);
-    }
-
-    @Override
     public double getBusVoltage() {
-        return super.getBusVoltage();
+        return super.getSupplyVoltage().getValueAsDouble();
     }
 
     @Override
     public double getMotorOutputPercent() {
-        return super.getMotorOutputPercent();
+        return super.get();
     }
 
     @Override
     public double getMotorOutputVoltage() {
-        return super.getMotorOutputVoltage();
+        return super.getMotorVoltage().getValueAsDouble();
     }
 
     @Override
     public double getMotorTemperature() {
-        return super.getTemperature();
+        return Math.max(super.getProcessorTemp().getValueAsDouble(), super.getDeviceTemp().getValueAsDouble());
     }
 
     @Override
     public double getSensorPosition(int closedLoopSlotID) {
-        return super.getSelectedSensorPosition(closedLoopSlotID);
+        return super.getPosition().getValueAsDouble();
     }
 
     @Override
@@ -250,7 +273,11 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void set_kP(int pidSlotID, double kP) {
-        super.config_kP(pidSlotID, kP);
+        switch (pidSlotID) {
+            case 0 -> configs.Slot0.withKP(kP);
+            case 1 -> configs.Slot1.withKP(kP);
+            case 2 -> configs.Slot2.withKP(kP);
+        }
     }
 
     @Override
@@ -265,22 +292,23 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void set_kF(int pidSlotID, double kF) {
+        // KF renamed to kV in phoenix 6
         super.config_kF(pidSlotID, kF);
     }
 
     @Override
     public void selectPIDSlot(int pidSlotID, int closedLoopSlotID) {
-        super.selectProfileSlot(pidSlotID, closedLoopSlotID);
+        velocity.withSlot(pidSlotID);
+        position.withSlot(pidSlotID);
+        motionMagic.withSlot(pidSlotID);
     }
 
     @Override
     public void set_iZone(int pidSlotID, double iZone) {
-        super.config_IntegralZone(pidSlotID, iZone);
     }
 
     @Override
     public void configAllowableErrorClosedLoop(int pidSlotID, double allowableError) {
-        super.configAllowableClosedloopError(pidSlotID, allowableError, Constants.kLongCANTimeoutMs);
     }
 
     @Override
@@ -291,11 +319,6 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     @Override
     public double getClosedLoopError() {
         return super.getClosedLoopError();
-    }
-
-    @Override
-    public double getErrorDerivative(int closedLoopSlotID) {
-        return super.getErrorDerivative(closedLoopSlotID);
     }
 
     @Override
@@ -317,14 +340,9 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
             GreenLogger.log("Motion Curve Strength cannot be negative, adjusting to 0.");
             curveStrength = 0;
         }
-        super.configMotionSCurveStrength(
-            ConfigurationTranslator.toMotionCurveInt(motionCurveType, curveStrength)
+        configurator.apply(
+                configs.MotionMagic.withMotionMagicJerk(curveStrength)
         );
-    }
-
-    @Override
-    public int getFirmwareVersion() {
-        return super.getFirmwareVersion();
     }
 
     @Override
@@ -339,6 +357,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public GreenControlMode get_ControlMode() {
+        // Tag Will do this
         return ConfigurationTranslator.toGreenControlMode(super.getControlMode());
     }
 
@@ -349,7 +368,8 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
         if (leader.get_MotorType() == MotorType.SparkMax || leader.get_MotorType() == MotorType.GHOST) {
            GreenLogger.log("TalonFX cannot follow non-CTRE motor " + leader.getName() + " of type " + leader.get_MotorType());
         } else {
-            super.follow((IMotorController) leader);
+            following.withMasterID(leader.getDeviceID());
+            set(GreenControlMode.FOLLOWER, 0);
         }
     }
 
@@ -364,17 +384,13 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     }
 
     @Override
-    public boolean isVoltageCompensationEnabled() {
-        return super.isVoltageCompensationEnabled();
-    }
-
-    @Override
     public boolean isFollower() {
         return isFollower;
     }
 
     @Override
     public void configControlFramePeriod(ControlFrame controlFrame, int periodms) {
+        dutyCycle.withUpdateFreqHz(Util.msToHz(periodms));
         super.setControlFramePeriod(controlFrame, periodms);
     }
 }
