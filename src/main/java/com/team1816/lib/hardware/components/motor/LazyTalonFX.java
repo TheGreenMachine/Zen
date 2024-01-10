@@ -6,7 +6,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.*;
 import com.team1816.lib.hardware.components.motor.configurations.*;
 import com.team1816.lib.util.ConfigurationTranslator;
 import com.team1816.lib.util.Util;
@@ -59,24 +59,32 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     }
 
     public void selectFeedbackSensor(FeedbackDeviceType deviceType, int closedLoopSlotID) {
-        super.configSelectedFeedbackSensor(
-            ConfigurationTranslator.toTalonFXFeedbackDevice(deviceType),
-            closedLoopSlotID,
-            Constants.kCANTimeoutMs
-        );
+        if (deviceType == FeedbackDeviceType.INTEGRATED_SENSOR) {
+            configs.Feedback.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
+        } else {
+            configs.Feedback.withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder);
+        }
+        configurator.apply(configs);
     }
 
     @Override
     public void configCurrentLimit(SupplyCurrentLimitConfiguration configuration) {
-        super.configSupplyCurrentLimit(configuration, Constants.kLongCANTimeoutMs);
+        configs.CurrentLimits
+                .withSupplyCurrentLimit(configuration.currentLimit)
+                .withSupplyCurrentLimitEnable(configuration.enable)
+                .withSupplyCurrentThreshold(configuration.triggerThresholdCurrent)
+                .withSupplyTimeThreshold(configuration.triggerThresholdTime);
+        configurator.apply(configs);
     }
 
     @Override
     public void configCurrentLimit(int current) {
-        super.configSupplyCurrentLimit(
-            new SupplyCurrentLimitConfiguration(true, current, 0, 0),
-                Constants.kLongCANTimeoutMs
-        );
+        configs.CurrentLimits
+                .withSupplyCurrentLimit(current)
+                .withSupplyCurrentLimitEnable(true)
+                .withSupplyCurrentThreshold(0)
+                .withSupplyTimeThreshold(0);
+        configurator.apply(configs);
     }
 
     @Override
@@ -113,27 +121,25 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void configForwardLimitSwitch(boolean normallyOpen) {
-        LimitSwitchNormal openOrClosed = normallyOpen ? LimitSwitchNormal.NormallyOpen : LimitSwitchNormal.NormallyClosed;
-        super.configForwardLimitSwitchSource(
-            LimitSwitchSource.FeedbackConnector,
-            openOrClosed,
-            Constants.kCANTimeoutMs
-        );
+        configs.HardwareLimitSwitch
+                .withForwardLimitSource(ForwardLimitSourceValue.LimitSwitchPin)
+                .withForwardLimitType(normallyOpen ? ForwardLimitTypeValue.NormallyOpen : ForwardLimitTypeValue.NormallyClosed);
+        configurator.apply(configs);
     }
 
     @Override
     public void configReverseLimitSwitch(boolean normallyOpen) {
-        LimitSwitchNormal openOrClosed = normallyOpen ? LimitSwitchNormal.NormallyOpen : LimitSwitchNormal.NormallyClosed;
-        super.configReverseLimitSwitchSource(
-            LimitSwitchSource.FeedbackConnector,
-            openOrClosed,
-            Constants.kCANTimeoutMs
-        );
+        configs.HardwareLimitSwitch
+                .withReverseLimitSource(ReverseLimitSourceValue.LimitSwitchPin)
+                .withReverseLimitType(normallyOpen ? ReverseLimitTypeValue.NormallyOpen : ReverseLimitTypeValue.NormallyClosed);
+        configurator.apply(configs);
     }
 
     @Override
     public boolean isLimitSwitchClosed(LimitSwitchDirection direction) {
-        return direction == LimitSwitchDirection.FORWARD ? (super.isFwdLimitSwitchClosed() == 1) : (super.isRevLimitSwitchClosed() == 1);
+        return direction == LimitSwitchDirection.FORWARD ?
+                (super.getForwardLimit().getValue() == ForwardLimitValue.ClosedToGround) :
+                (super.getReverseLimit().getValue() == ReverseLimitValue.Open);
     }
 
 
@@ -163,37 +169,45 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void configOpenLoopRampRate(double secondsNeutralToFull) {
-        super.configOpenloopRamp(secondsNeutralToFull);
+        configs.OpenLoopRamps
+                .withDutyCycleOpenLoopRampPeriod(secondsNeutralToFull);
+        configurator.apply(configs);
     }
 
     @Override
     public void configOpenLoopRampRate(double secondsNeutralToFull, int timeoutMs) {
-        super.configOpenloopRamp(secondsNeutralToFull, timeoutMs);
+        configs.OpenLoopRamps
+                .withDutyCycleOpenLoopRampPeriod(secondsNeutralToFull);
+        configurator.apply(configs, timeoutMs/1000.0);
     }
 
     @Override
     public void configClosedLoopRampRate(double secondsNeutralToFull) {
-        super.configClosedloopRamp(secondsNeutralToFull);
+        configs.ClosedLoopRamps
+                .withDutyCycleClosedLoopRampPeriod(secondsNeutralToFull);
+        configurator.apply(configs);
     }
 
     @Override
     public void config_PeakOutputForward(double percentOut) {
-        super.configPeakOutputForward(percentOut);
+        config_PeakOutputForward(percentOut, 0);
     }
 
     @Override
     public void config_PeakOutputForward(double percentOut, int timeoutMs) {
-        super.configPeakOutputForward(percentOut, timeoutMs);
+        configs.MotorOutput.withPeakForwardDutyCycle(percentOut);
+        configurator.apply(configs, timeoutMs/1000.0);
     }
 
     @Override
     public void config_PeakOutputReverse(double percentOut) {
-        super.configPeakOutputReverse(percentOut);
+        config_PeakOutputReverse(percentOut, 0);
     }
 
     @Override
     public void config_PeakOutputReverse(double percentOut, int timeoutMs) {
-        super.configPeakOutputReverse(percentOut, timeoutMs);
+        configs.MotorOutput.withPeakReverseDutyCycle(percentOut);
+        configurator.apply(configs, timeoutMs/1000.0);
     }
 
     @Override
