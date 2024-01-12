@@ -2,9 +2,9 @@ package com.team1816.lib.util;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
+import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
-import com.revrobotics.SparkMaxRelativeEncoder;
+import com.revrobotics.SparkRelativeEncoder;
 import com.team1816.lib.hardware.components.motor.configurations.*;
 import com.team1816.lib.util.logUtil.GreenLogger;
 
@@ -19,31 +19,6 @@ import static com.team1816.lib.util.Util.closestTo;
 public class ConfigurationTranslator {
     //Also known as: Switch statements: the class!
     private ConfigurationTranslator() {}
-    /**
-     * Translates 1816 FeedbackDeviceType to TalonFXFeedbackDevice
-     *
-     * @see TalonFXFeedbackDevice
-     * @see FeedbackDeviceType
-     * @param deviceType The generalized device type
-     * @return The translated device type
-     */
-    public static TalonFXFeedbackDevice toTalonFXFeedbackDevice(FeedbackDeviceType deviceType) {
-        TalonFXFeedbackDevice talonFXFeedbackDevice;
-        switch (deviceType) {
-            case NO_SENSOR -> talonFXFeedbackDevice = TalonFXFeedbackDevice.None;
-            case INTEGRATED_SENSOR -> talonFXFeedbackDevice = TalonFXFeedbackDevice.IntegratedSensor;
-            case SENSOR_SUM -> talonFXFeedbackDevice = TalonFXFeedbackDevice.SensorSum;
-            case SENSOR_DIFFERENCE -> talonFXFeedbackDevice = TalonFXFeedbackDevice.SensorDifference;
-            case REMOTE_SENSOR_0 -> talonFXFeedbackDevice = TalonFXFeedbackDevice.RemoteSensor0;
-            case REMOTE_SENSOR_1 -> talonFXFeedbackDevice = TalonFXFeedbackDevice.RemoteSensor1;
-            case SOFTWARE_EMULATED_SENSOR -> talonFXFeedbackDevice = TalonFXFeedbackDevice.SoftwareEmulatedSensor;
-            default -> {
-                talonFXFeedbackDevice = TalonFXFeedbackDevice.None;
-                GreenLogger.log("Attempted application of non-applicable feedback device type " + deviceType + " to TalonFX, defaulting to No sensor");
-            }
-        }
-        return talonFXFeedbackDevice;
-    }
 
     /**
      * Translates 1816 FeedbackDeviceType to TalonSRXFeedbackDevice
@@ -104,20 +79,20 @@ public class ConfigurationTranslator {
     /**
      * Translates 1816 FeedbackDeviceType to REV SparkMaxRelativeEncoder.Type
      *
-     * @see SparkMaxRelativeEncoder.Type
+     * @see SparkRelativeEncoder.Type
      * @see FeedbackDeviceType
      * @param deviceType The generalized device type
      * @return The translated encoder type
      */
-    public static SparkMaxRelativeEncoder.Type toSparkMaxRelativeEncoderType(FeedbackDeviceType deviceType) {
-        SparkMaxRelativeEncoder.Type encoderType;
+    public static SparkRelativeEncoder.Type toSparkRelativeEncoderType(FeedbackDeviceType deviceType) {
+        SparkRelativeEncoder.Type encoderType;
         switch (deviceType) {
-            case QUADRATURE -> encoderType = SparkMaxRelativeEncoder.Type.kQuadrature;
-            case HALL_SENSOR -> encoderType = SparkMaxRelativeEncoder.Type.kHallSensor;
-            case NO_SENSOR -> encoderType = SparkMaxRelativeEncoder.Type.kNoSensor;
+            case QUADRATURE -> encoderType = SparkRelativeEncoder.Type.kQuadrature;
+            case HALL_SENSOR -> encoderType = SparkRelativeEncoder.Type.kHallSensor;
+            case NO_SENSOR -> encoderType = SparkRelativeEncoder.Type.kNoSensor;
             default -> {
                 GreenLogger.log("Non-SparkMax encoder type " + deviceType + " cannot be applied to SparkMaxRelativeEncoder, defaulting to No sensor.");
-                encoderType = SparkMaxRelativeEncoder.Type.kNoSensor;
+                encoderType = SparkRelativeEncoder.Type.kNoSensor;
             }
         }
         return encoderType;
@@ -191,19 +166,19 @@ public class ConfigurationTranslator {
         return statusFrame;
     }
 
-    public static CANSparkMaxLowLevel.PeriodicFrame toPeriodicFrame(PeriodicStatusFrame frame) {
-        CANSparkMaxLowLevel.PeriodicFrame periodicFrame;
+    public static CANSparkLowLevel.PeriodicFrame toPeriodicFrame(PeriodicStatusFrame frame) {
+        CANSparkLowLevel.PeriodicFrame periodicFrame;
         switch (frame) {
-            case STATUS_0 -> periodicFrame = CANSparkMaxLowLevel.PeriodicFrame.kStatus0;
-            case STATUS_1 -> periodicFrame = CANSparkMaxLowLevel.PeriodicFrame.kStatus1;
-            case STATUS_2 -> periodicFrame = CANSparkMaxLowLevel.PeriodicFrame.kStatus2;
-            case STATUS_3 -> periodicFrame = CANSparkMaxLowLevel.PeriodicFrame.kStatus3;
-            case STATUS_4 -> periodicFrame = CANSparkMaxLowLevel.PeriodicFrame.kStatus4;
-            case STATUS_5 -> periodicFrame = CANSparkMaxLowLevel.PeriodicFrame.kStatus5;
-            case STATUS_6 -> periodicFrame = CANSparkMaxLowLevel.PeriodicFrame.kStatus6;
+            case STATUS_0 -> periodicFrame = CANSparkLowLevel.PeriodicFrame.kStatus0;
+            case STATUS_1 -> periodicFrame = CANSparkLowLevel.PeriodicFrame.kStatus1;
+            case STATUS_2 -> periodicFrame = CANSparkLowLevel.PeriodicFrame.kStatus2;
+            case STATUS_3 -> periodicFrame = CANSparkLowLevel.PeriodicFrame.kStatus3;
+            case STATUS_4 -> periodicFrame = CANSparkLowLevel.PeriodicFrame.kStatus4;
+            case STATUS_5 -> periodicFrame = CANSparkLowLevel.PeriodicFrame.kStatus5;
+            case STATUS_6 -> periodicFrame = CANSparkLowLevel.PeriodicFrame.kStatus6;
             default -> {
                 GreenLogger.log("Cannot apply periodic frame status " + frame + " to SparkMax PeriodicFrame, defaulting to status 0");
-                periodicFrame = CANSparkMaxLowLevel.PeriodicFrame.kStatus0;
+                periodicFrame = CANSparkLowLevel.PeriodicFrame.kStatus0;
             }
         }
         return periodicFrame;

@@ -104,7 +104,7 @@ public class GreenPhotonCamera {
         // Populate packet and create result.
         packet.setData(rawBytesEntry.getRaw(new byte[]{}));
         if (packet.getSize() < 1) return ret;
-        ret.createFromPacket(packet);
+//        ret.createFromPacket(packet); FIXME during sim vision rework (this class is prob getting deleted anyways)
 
         // Return result.
         return ret;

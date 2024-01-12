@@ -7,7 +7,7 @@ import com.team1816.lib.util.ConfigurationTranslator;
 import com.team1816.lib.util.logUtil.GreenLogger;
 
 public class LazySparkMax extends CANSparkMax implements IGreenMotor {
-    private SparkMaxPIDController pidController;
+    private SparkPIDController pidController;
     private RelativeEncoder encoder;
 
     protected String name = "";
@@ -16,13 +16,12 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
     protected double lastSet = Double.NaN;
     protected int currentPIDSlot = 0;
 
-    protected SparkMaxLimitSwitch forwardLimitSwitch, reverseLimitSwitch = null;
+    protected SparkLimitSwitch forwardLimitSwitch, reverseLimitSwitch = null;
 
     protected double peakOutputForward, peakOutputBackward = -0;
 
     protected double voltageForCompensation = 0;
     protected boolean voltageCompensationEnabled = false;
-    protected double arbitraryFeedForward = 0;
 
     /**
      * Create a new object to control a SPARK MAX motor Controller
@@ -31,7 +30,7 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
      * @param motorName The name of the motor
      */
     public LazySparkMax(int deviceNumber, String motorName) {
-        super(deviceNumber, CANSparkMaxLowLevel.MotorType.kBrushless);
+        super(deviceNumber, CANSparkLowLevel.MotorType.kBrushless);
         pidController = super.getPIDController();
         encoder = configureRelativeEncoder(FeedbackDeviceType.HALL_SENSOR);
         name = motorName;
@@ -54,7 +53,7 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
 
     private RelativeEncoder configureRelativeEncoder(FeedbackDeviceType deviceType) {
         return super.getEncoder(
-            ConfigurationTranslator.toSparkMaxRelativeEncoderType(deviceType),
+            ConfigurationTranslator.toSparkRelativeEncoderType(deviceType),
             42
         );
     }
@@ -78,21 +77,19 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
             pidController.setReference(
                 demand,
                 ConfigurationTranslator.toSparkMaxControlType(controlMode),
-                currentPIDSlot,
-                arbitraryFeedForward, //Note that arbitraryFF is initialized to 0
-                SparkMaxPIDController.ArbFFUnits.kPercentOut
+                currentPIDSlot
             );
         }
     }
 
     @Override
     public void configForwardLimitSwitch(boolean normallyOpen) {
-        forwardLimitSwitch = super.getForwardLimitSwitch(normallyOpen ? SparkMaxLimitSwitch.Type.kNormallyOpen : SparkMaxLimitSwitch.Type.kNormallyClosed);
+        forwardLimitSwitch = super.getForwardLimitSwitch(normallyOpen ? SparkLimitSwitch.Type.kNormallyOpen : SparkLimitSwitch.Type.kNormallyClosed);
     }
 
     @Override
     public void configReverseLimitSwitch(boolean normallyOpen) {
-        reverseLimitSwitch = super.getReverseLimitSwitch(normallyOpen ? SparkMaxLimitSwitch.Type.kNormallyOpen : SparkMaxLimitSwitch.Type.kNormallyClosed);
+        forwardLimitSwitch = super.getReverseLimitSwitch(normallyOpen ? SparkLimitSwitch.Type.kNormallyOpen : SparkLimitSwitch.Type.kNormallyClosed);
     }
 
     @Override
@@ -300,7 +297,7 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
     @Override
     public void configMotionCurve(MotionCurveType motionCurveType, int curveStrength) {
         pidController.setSmartMotionAccelStrategy(
-            motionCurveType == MotionCurveType.S_CURVE ? SparkMaxPIDController.AccelStrategy.kSCurve : SparkMaxPIDController.AccelStrategy.kTrapezoidal,
+            motionCurveType == MotionCurveType.S_CURVE ? SparkPIDController.AccelStrategy.kSCurve : SparkPIDController.AccelStrategy.kTrapezoidal,
             currentPIDSlot
         );
     }

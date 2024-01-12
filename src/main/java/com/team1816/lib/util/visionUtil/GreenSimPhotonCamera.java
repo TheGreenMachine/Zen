@@ -166,7 +166,7 @@ public class GreenSimPhotonCamera extends GreenPhotonCamera {
             submittedTargetList
         );
         var newPacket = new Packet(newResult.getPacketSize());
-        newResult.populatePacket(newPacket);
+      //  newResult.populatePacket(newPacket); FIXME during sim vision rework
         rawBytesEntry.setRaw(newPacket.getData());
 
         boolean hasTargets = newResult.hasTargets();
