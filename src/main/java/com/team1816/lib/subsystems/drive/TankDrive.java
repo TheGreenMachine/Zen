@@ -1,6 +1,5 @@
 package com.team1816.lib.subsystems.drive;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -170,8 +169,8 @@ public class TankDrive extends Drive implements DifferentialDrivetrain {
 
         // update error (only if in closed loop where knowing it is useful)
         if (controlState == ControlState.TRAJECTORY_FOLLOWING) {
-            leftErrorClosedLoop = leftMain.getClosedLoopError();
-            rightErrorClosedLoop = rightMain.getClosedLoopError();
+            leftErrorClosedLoop = leftMain.get_ClosedLoopError();
+            rightErrorClosedLoop = rightMain.get_ClosedLoopError();
         }
 
         // update current movement of the whole drivetrain

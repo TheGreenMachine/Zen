@@ -3,7 +3,6 @@ package com.team1816.lib.subsystems.drive;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.team1816.lib.hardware.PIDSlotConfiguration;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
@@ -239,7 +238,7 @@ public class SwerveModule implements ISwerveModule {
      */
     @Override
     public double getAzimuthError() {
-        return azimuthMotor.getClosedLoopError();
+        return azimuthMotor.get_ClosedLoopError();
     }
 
     /**
@@ -279,7 +278,7 @@ public class SwerveModule implements ISwerveModule {
      */
     @Override
     public double getDriveError() {
-        return driveMotor.getClosedLoopError();
+        return driveMotor.get_ClosedLoopError();
     }
 
     /**

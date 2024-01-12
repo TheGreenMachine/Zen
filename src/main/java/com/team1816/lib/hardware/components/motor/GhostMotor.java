@@ -350,7 +350,7 @@ public class GhostMotor implements IGreenMotor {
     }
 
     @Override
-    public double getClosedLoopError() {
+    public double get_ClosedLoopError() {
         return 0;
     }
 

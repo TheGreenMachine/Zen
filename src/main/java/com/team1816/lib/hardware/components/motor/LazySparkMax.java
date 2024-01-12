@@ -274,7 +274,7 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
     }
 
     @Override
-    public double getClosedLoopError() {
+    public double get_ClosedLoopError() {
         // This isn't worth implementing as of 2023-24 because we aren't using rev motors for driving or anything that needs that much precision.
         // If anyone in the future wants to take a stab at it go ahead:
             //This is theoretically possible in a few ways

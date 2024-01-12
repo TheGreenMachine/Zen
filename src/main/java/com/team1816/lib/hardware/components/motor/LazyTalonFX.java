@@ -212,7 +212,8 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void config_NeutralDeadband(double deadbandPercent) {
-        super.configNeutralDeadband(deadbandPercent);
+        configs.MotorOutput.withDutyCycleNeutralDeadband(deadbandPercent);
+        configurator.apply(configs);
     }
 
     @Override
@@ -242,47 +243,57 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public double getSensorVelocity(int closedLoopSlotID) {
-        return super.getSelectedSensorVelocity(closedLoopSlotID);
+        return super.getVelocity().getValueAsDouble();
     }
 
     @Override
     public void setSensorPosition(double sensorPosition, int closedLoopSlotID) {
-        super.setSelectedSensorPosition(sensorPosition, closedLoopSlotID, Constants.kCANTimeoutMs);
+        setSensorPosition(sensorPosition, 0, 0);
     }
 
     @Override
     public void setSensorPosition(double sensorPosition, int closedLoopSlotID, int timeoutMs) {
-        super.setSelectedSensorPosition(sensorPosition, closedLoopSlotID, timeoutMs);
+        super.setPosition(sensorPosition, timeoutMs/1000.0);
     }
 
     @Override
     public void enableLimitSwitches(boolean isEnabled) {
-        super.overrideLimitSwitchesEnable(isEnabled);
+        configs.HardwareLimitSwitch
+                .withForwardLimitEnable(isEnabled)
+                .withReverseLimitEnable(isEnabled);
+        configurator.apply(configs);
     }
 
     @Override
     public void configForwardSoftLimit(double forwardSoftLimit) {
-        super.configForwardSoftLimitThreshold(forwardSoftLimit, Constants.kCANTimeoutMs);
+        configs.SoftwareLimitSwitch.withForwardSoftLimitThreshold(forwardSoftLimit);
+        configurator.apply(configs);
     }
 
     @Override
     public void configReverseSoftLimit(double reverseSoftLimit) {
-        super.configReverseSoftLimitThreshold(reverseSoftLimit, Constants.kCANTimeoutMs);
+        configs.SoftwareLimitSwitch.withReverseSoftLimitThreshold(reverseSoftLimit);
+        configurator.apply(configs);
     }
 
     @Override
     public void enableForwardSoftLimit(boolean isEnabled) {
-        super.configForwardSoftLimitEnable(isEnabled, Constants.kCANTimeoutMs);
+        configs.SoftwareLimitSwitch.withForwardSoftLimitEnable(isEnabled);
+        configurator.apply(configs);
     }
 
     @Override
     public void enableReverseSoftLimit(boolean isEnabled) {
-        super.configReverseSoftLimitEnable(isEnabled, Constants.kCANTimeoutMs);
+        configs.SoftwareLimitSwitch.withReverseSoftLimitEnable(isEnabled);
+        configurator.apply(configs);
     }
 
     @Override
     public void enableSoftLimits(boolean isEnabled) {
-        super.overrideSoftLimitsEnable(isEnabled);
+        configs.SoftwareLimitSwitch
+                .withForwardSoftLimitEnable(isEnabled)
+                .withReverseSoftLimitEnable(isEnabled);
+        configurator.apply(configs);
     }
 
     @Override
@@ -292,22 +303,38 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
             case 1 -> configs.Slot1.withKP(kP);
             case 2 -> configs.Slot2.withKP(kP);
         }
+        configurator.apply(configs);
     }
 
     @Override
     public void set_kI(int pidSlotID, double kI) {
-        super.config_kI(pidSlotID, kI);
+        switch (pidSlotID) {
+            case 0 -> configs.Slot0.withKI(kI);
+            case 1 -> configs.Slot1.withKI(kI);
+            case 2 -> configs.Slot2.withKI(kI);
+        }
+        configurator.apply(configs);
     }
 
     @Override
     public void set_kD(int pidSlotID, double kD) {
-        super.config_kD(pidSlotID, kD);
+        switch (pidSlotID) {
+            case 0 -> configs.Slot0.withKD(kD);
+            case 1 -> configs.Slot1.withKD(kD);
+            case 2 -> configs.Slot2.withKD(kD);
+        }
+        configurator.apply(configs);
     }
 
     @Override
     public void set_kF(int pidSlotID, double kF) {
         // KF renamed to kV in phoenix 6
-        super.config_kF(pidSlotID, kF);
+        switch (pidSlotID) {
+            case 0 -> configs.Slot0.withKV(kF);
+            case 1 -> configs.Slot1.withKV(kF);
+            case 2 -> configs.Slot2.withKV(kF);
+        }
+        configurator.apply(configs);
     }
 
     @Override
@@ -327,22 +354,25 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void setPeakOutputClosedLoop(int pidSlotID, double peakOutput) {
-        super.configClosedLoopPeakOutput(pidSlotID, peakOutput);
+        config_PeakOutputForward(peakOutput);
+        config_PeakOutputReverse(peakOutput);
     }
 
     @Override
-    public double getClosedLoopError() {
-        return super.getClosedLoopError();
+    public double get_ClosedLoopError() {
+        return super.getClosedLoopError().getValueAsDouble();
     }
 
     @Override
     public void setMotionProfileMaxVelocity(double maxVelocity) {
-        super.configMotionCruiseVelocity(maxVelocity);
+        configs.MotionMagic.withMotionMagicCruiseVelocity(maxVelocity);
+        configurator.apply(configs);
     }
 
     @Override
     public void setMotionProfileMaxAcceleration(double maxAcceleration) {
-        super.configMotionAcceleration(maxAcceleration);
+        configs.MotionMagic.withMotionMagicAcceleration(maxAcceleration);
+        configurator.apply(configs);
     }
 
     @Override
@@ -389,12 +419,13 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public double getSupplyCurrent() {
-        return super.getSupplyCurrent();
+        return super.getSupplyCurrent().getValueAsDouble();
     }
 
     @Override
     public void restore_FactoryDefaults(int timeoutMs) {
-        super.configFactoryDefault(timeoutMs);
+        configs = new TalonFXConfiguration();
+        configurator.apply(configs);
     }
 
     @Override
@@ -404,8 +435,14 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void configControlFramePeriod(ControlFrame controlFrame, int periodms) {
-        dutyCycle.withUpdateFreqHz(Util.msToHz(periodms));
-        super.setControlFramePeriod(controlFrame, periodms);
+        double periodHz = Util.msToHz(periodms);
+        dutyCycle.withUpdateFreqHz(periodHz);
+        velocity.withUpdateFreqHz(periodHz);
+        position.withUpdateFreqHz(periodHz);
+        motionMagic.withUpdateFreqHz(periodHz);
+        following.withUpdateFreqHz(periodHz);
+        neutral.withUpdateFreqHz(periodHz);
+        brake.withUpdateFreqHz(periodHz);
     }
 }
 

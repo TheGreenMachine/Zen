@@ -107,7 +107,7 @@ public interface IGreenMotor {
      * Gets the difference between the target and actual closed-loop sensor value
      * @return The error (in ticks for position, units/100ms for velocity)
      */
-    double getClosedLoopError();
+    double get_ClosedLoopError();
 
     //From us! Sometimes.
 

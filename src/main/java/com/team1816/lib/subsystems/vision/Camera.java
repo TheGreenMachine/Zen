@@ -222,7 +222,7 @@ public class Camera extends Subsystem {
         }
 
         double m = 0xFFFFFF; // big number
-        var principal_RANSAC = new PhotonTrackedTarget(); //TODO @Ethan make a placeholder constructor because they got rid of the empty one :)
+        PhotonTrackedTarget principal_RANSAC = null;
 
         for (PhotonTrackedTarget target : result.targets) {
             var p = new VisionPoint();
