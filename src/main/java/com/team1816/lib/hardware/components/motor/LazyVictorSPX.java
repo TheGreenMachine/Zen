@@ -8,6 +8,7 @@ import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.configuration.Constants;
 import edu.wpi.first.wpilibj.DriverStation;
 
+@SuppressWarnings("deprecation")
 public class LazyVictorSPX extends VictorSPX implements IGreenMotor {
     protected double lastSet = Double.NaN;
     protected String name = "";
