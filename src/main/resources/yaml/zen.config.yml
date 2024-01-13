@@ -6,42 +6,42 @@ subsystems:
             FLDr:
                 motorType: TalonFX
                 motorName: FLDr
-                id: -1
+                id: 1
                 invertMotor: false
             FRDr:
                 motorType: TalonFX
                 motorName: FRDr
-                id: -2
+                id: 2
                 invertMotor: true
             RLDr:
                 motorType: TalonFX
                 motorName: BLDr
-                id: -3
+                id: 3
                 invertMotor: true
             RRDr:
                 motorType: TalonFX
                 motorName: BRDr
-                id: -4
+                id: 4
                 invertMotor: true
             FLAz:
                 motorType: TalonFX
                 motorName: FLAz
-                id: -5
+                id: 5
                 invertMotor: false
             FRAz:
                 motorType: TalonFX
                 motorName: FRAz
-                id: -6
+                id: 6
                 invertMotor: false
             RLAz:
                 motorType: TalonFX
                 motorName: BLAz
-                id: -7
+                id: 7
                 invertMotor: false
             RRAz:
                 motorType: TalonFX
                 motorName: BRAz
-                id: -8
+                id: 8
                 invertMotor: false
         canCoders:
             FLEnc: 20
@@ -87,15 +87,15 @@ subsystems:
                         invertSensorPhase: 1
             drivePID:
                 slot0:
-                    kP: .04
-                    kI: 0.00001
-                    kD: 2.0
-                    kF: 0.0499
+                    kP: 0.008007
+                    kI: 0.002001
+                    kD: 0.000400
+                    kF: 0.009989
             azimuthPID:
                 slot0:
-                    kP: 3.8 # formerly 3.8
-                    kI: 0.00075
-                    kD: 77 # formerly 77
+                    kP: 7.6
+                    kI: 1.5
+                    kD: 0.15
                     kF: 0
                     allowableError: 5
         constants:
