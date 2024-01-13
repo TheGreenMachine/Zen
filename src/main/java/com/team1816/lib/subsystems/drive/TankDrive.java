@@ -161,6 +161,7 @@ public class TankDrive extends Drive implements DifferentialDrivetrain {
      */
     @Override
     public synchronized void readFromHardware() {
+        super.readFromHardware();
         // update current motor velocities and distance traveled
         leftActualVelocity = leftMain.getSensorVelocity(0);
         rightActualVelocity = rightMain.getSensorVelocity(0);
@@ -183,7 +184,7 @@ public class TankDrive extends Drive implements DifferentialDrivetrain {
         if (RobotBase.isSimulation()) {
             simulateGyroOffset();
         }
-        actualHeading = Rotation2d.fromDegrees(infrastructure.getYaw());
+        actualHeading = Rotation2d.fromDegrees(pigeon.getYawValue());
 
         tankOdometry.update(actualHeading, leftActualDistance, rightActualDistance);
 
@@ -207,7 +208,7 @@ public class TankDrive extends Drive implements DifferentialDrivetrain {
     public void zeroSensors(Pose2d pose) {
         GreenLogger.log("Zeroing drive sensors!");
 
-        actualHeading = Rotation2d.fromDegrees(infrastructure.getYaw());
+        actualHeading = Rotation2d.fromDegrees(pigeon.getYawValue());
         resetEncoders();
         resetOdometry(pose);
         startingPose = pose;
@@ -289,8 +290,8 @@ public class TankDrive extends Drive implements DifferentialDrivetrain {
         if (Constants.kLoggingDrivetrain) {
             drivetrainPoseLogger.append(new double[]{robotState.fieldToVehicle.getX(), robotState.fieldToVehicle.getY(), robotState.fieldToVehicle.getRotation().getRadians()});
             drivetrainChassisSpeedsLogger.append(new double[]{robotState.deltaVehicle.vxMetersPerSecond, robotState.deltaVehicle.vyMetersPerSecond, robotState.deltaVehicle.omegaRadiansPerSecond});
-            gyroPitchLogger.append(infrastructure.getPitch());
-            gyroRollLogger.append(infrastructure.getRoll());
+            gyroPitchLogger.append(pigeon.getPitchValue());
+            gyroRollLogger.append(pigeon.getRollValue());
         }
     }
 
@@ -367,14 +368,14 @@ public class TankDrive extends Drive implements DifferentialDrivetrain {
      */
     @Override
     public void autoBalance(ChassisSpeeds fieldRelativeChassisSpeeds) {
-        double pitch = infrastructure.getPitch();
-        double roll = infrastructure.getRoll();
+        double pitch = pigeon.getPitchValue();
+        double roll = pigeon.getRollValue();
         double throttle = 0;
         double strafe = 0;
         var heading = Constants.EmptyRotation2d;
 
         double maxFlatRange = Constants.autoBalanceThresholdDegrees;
-        double correction = (getInitialYaw() - infrastructure.getYaw()) / 1440;
+        double correction = (getInitialYaw() - pigeon.getYawValue()) / 1440;
 
         if (Math.abs(pitch) > maxFlatRange || Math.abs(roll) > maxFlatRange) {
             throttle = pitch / 4;
@@ -554,7 +555,7 @@ public class TankDrive extends Drive implements DifferentialDrivetrain {
         boolean leftSide = EnhancedMotorChecker.checkMotor(this, leftMain);
         boolean rightSide = EnhancedMotorChecker.checkMotor(this, rightMain);
 
-        boolean checkPigeon = infrastructure.getPigeon() == null;
+        boolean checkPigeon = pigeon == null;
 
         GreenLogger.log(leftSide && rightSide && checkPigeon);
         if (leftSide && rightSide && checkPigeon) {

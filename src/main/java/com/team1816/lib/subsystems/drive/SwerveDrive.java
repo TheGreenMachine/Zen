@@ -185,6 +185,7 @@ SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
      */
     @Override
     public synchronized void readFromHardware() {
+        super.readFromHardware();
         double[] actualStates = new double[8];
         double[] desiredStates = new double[8];
         for (int i = 0; i < 4; i++) {
@@ -210,7 +211,7 @@ SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
         if (RobotBase.isSimulation()) {
             simulateGyroOffset();
         }
-        actualHeading = Rotation2d.fromDegrees(infrastructure.getYaw());
+        actualHeading = Rotation2d.fromDegrees(pigeon.getYawValue());
 
         swerveOdometry.update(actualHeading, actualModulePositions);
 
@@ -301,8 +302,8 @@ SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
      */
     @Override
     public void autoBalance(ChassisSpeeds fieldRelativeChassisSpeeds) {
-        double pitch = -infrastructure.getPitch();
-        double roll = infrastructure.getRoll();
+        double pitch = -pigeon.getPitchValue();
+        double roll = pigeon.getRollValue();
         double throttle = 0;
         double strafe = 0;
         var heading = Constants.EmptyRotation2d;
@@ -368,8 +369,8 @@ SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
         if (Constants.kLoggingDrivetrain) {
             drivetrainPoseLogger.append(new double[]{robotState.fieldToVehicle.getX(), robotState.fieldToVehicle.getY(), robotState.fieldToVehicle.getRotation().getDegrees()});
             drivetrainChassisSpeedsLogger.append(new double[]{robotState.deltaVehicle.vxMetersPerSecond, robotState.deltaVehicle.vyMetersPerSecond, robotState.deltaVehicle.omegaRadiansPerSecond});
-            gyroPitchLogger.append(infrastructure.getPitch());
-            gyroRollLogger.append(infrastructure.getRoll());
+            gyroPitchLogger.append(pigeon.getPitchValue());
+            gyroRollLogger.append(pigeon.getRollValue());
         }
     }
 
@@ -487,7 +488,7 @@ SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
      */
     @Override
     public void resetOdometry(Pose2d pose) {
-        actualHeading = Rotation2d.fromDegrees(infrastructure.getYaw());
+        actualHeading = Rotation2d.fromDegrees(pigeon.getYawValue());
         swerveOdometry.resetPosition(actualHeading, actualModulePositions, pose);
         swerveOdometry.update(actualHeading, actualModulePositions);
         updateRobotState();

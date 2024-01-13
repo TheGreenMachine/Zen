@@ -37,7 +37,6 @@ public class SwerveDriveTest {
 
     public SwerveDriveTest() {
         mInfra = mock(Infrastructure.class);
-        when(mInfra.getPigeon()).thenReturn(mock(IPigeonIMU.class));
         Injector.register(mInfra);
         RobotFactory mockFactory = mock(RobotFactory.class);
         when(mockFactory.getConstant("maxVelOpenLoop")).thenReturn(maxVel);
@@ -48,6 +47,8 @@ public class SwerveDriveTest {
         var test = mDriveFactory.getClass();
         state = Injector.get(RobotState.class);
         mDrive = Injector.get(SwerveDrive.class);
+        when(mDrive.getPigeon()).thenReturn(mock(IPigeonIMU.class));
+
     }
 
     @BeforeEach

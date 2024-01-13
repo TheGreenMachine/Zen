@@ -45,22 +45,22 @@ public class Robot extends TimedRobot {
      */
     private InputHandler inputHandler;
 
-    private final Infrastructure infrastructure;
-    private final SubsystemLooper subsystemManager;
+    private Infrastructure infrastructure;
+    private SubsystemLooper subsystemManager;
 
     /**
      * State Managers
      */
-    private final Orchestrator orchestrator;
-    private final RobotState robotState;
+    private Orchestrator orchestrator;
+    private RobotState robotState;
 
     /**
      * Subsystems
      */
-    private final Drive drive;
+    private Drive drive;
 
-    private final LedManager ledManager;
-    private final Camera camera;
+    private LedManager ledManager;
+    private Camera camera;
 
 
     /**
@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
     /**
      * Autonomous
      */
-    private final AutoModeManager autoModeManager;
+    private AutoModeManager autoModeManager;
 
     private Thread autoTargetAlignThread;
 
@@ -102,17 +102,6 @@ public class Robot extends TimedRobot {
         Injector.registerModule(new SeasonModule());
         enabledLoop = new Looper(this);
         disabledLoop = new Looper(this);
-        drive = (Injector.get(Drive.Factory.class)).getInstance();
-
-        // TODO: Set up any other subsystems here.
-
-        ledManager = Injector.get(LedManager.class);
-        camera = Injector.get(Camera.class);
-        robotState = Injector.get(RobotState.class);
-        orchestrator = Injector.get(Orchestrator.class);
-        infrastructure = Injector.get(Infrastructure.class);
-        subsystemManager = Injector.get(SubsystemLooper.class);
-        autoModeManager = Injector.get(AutoModeManager.class);
 
         if (Constants.kLoggingRobot) {
             robotLoopLogger = new DoubleLogEntry(DataLogManager.getLog(), "Timings/Robot");
@@ -153,6 +142,19 @@ public class Robot extends TimedRobot {
             // readFromHardware and writeToHardware on a loop, but it can only call read/write it if it
             // can recognize the subsystem. To recognize your subsystem, just add it alongside the
             // drive, ledManager, and camera parameters.
+
+            drive = (Injector.get(Drive.Factory.class)).getInstance();
+
+            // TODO: Set up any other subsystems here.
+
+            ledManager = Injector.get(LedManager.class);
+            camera = Injector.get(Camera.class);
+            robotState = Injector.get(RobotState.class);
+            orchestrator = Injector.get(Orchestrator.class);
+            infrastructure = Injector.get(Infrastructure.class);
+            subsystemManager = Injector.get(SubsystemLooper.class);
+            autoModeManager = Injector.get(AutoModeManager.class);
+
             subsystemManager.setSubsystems(drive, ledManager, camera);
 
             /** Logging */
@@ -183,8 +185,6 @@ public class Robot extends TimedRobot {
             subsystemManager.registerEnabledLoops(enabledLoop);
             subsystemManager.registerDisabledLoops(disabledLoop);
 
-            // zeroing ypr - (-90) pigeon is mounted with the "y" axis facing forward
-            infrastructure.resetPigeon(Rotation2d.fromDegrees(-90));
             subsystemManager.zeroSensors();
 
             /** [Specific subsystem] not zeroed on boot up - letting ppl know */
