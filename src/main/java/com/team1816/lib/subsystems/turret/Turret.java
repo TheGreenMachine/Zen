@@ -7,6 +7,7 @@ import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.PIDSlotConfiguration;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
 import com.team1816.lib.hardware.components.motor.IMotorSensor;
+import com.team1816.lib.hardware.components.motor.LazyTalonSRX;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.subsystems.LedManager;
 import com.team1816.lib.subsystems.PidProvider;
@@ -170,9 +171,9 @@ public class Turret extends Subsystem implements PidProvider {
         lostEncPos = false;
 
         if ((int) kRatioTurretAbs == 1) {
-            var sensor = ((IMotorSensor) turretMotor);
-            var sensorVal = sensor.getPulseWidthPosition() % kAbsPPR;
-            sensor.setQuadraturePosition(sensorVal);
+            var sensor = ((LazyTalonSRX) turretMotor);
+            var sensorVal = sensor.getSensorCollection().getPulseWidthPosition() % kAbsPPR;
+            sensor.getSensorCollection().setQuadraturePosition(sensorVal, 0);
             GreenLogger.log("zeroing turret at " + sensorVal);
         } else {
             if (resetEncPos) {

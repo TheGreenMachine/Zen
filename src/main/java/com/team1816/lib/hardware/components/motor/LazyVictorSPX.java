@@ -8,7 +8,7 @@ import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.configuration.Constants;
 import edu.wpi.first.wpilibj.DriverStation;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings("deprecation") //IF I SEE ONE MORE WARNING AT COMPILE TIME I WILL LOSE IT
 public class LazyVictorSPX extends VictorSPX implements IGreenMotor {
     protected double lastSet = Double.NaN;
     protected String name = "";
@@ -65,6 +65,11 @@ public class LazyVictorSPX extends VictorSPX implements IGreenMotor {
     @Override
     public double getMotorOutputCurrent() {
         return super.getOutputCurrent(); // Deprecated & victors are so old that they don't have getSupplyCurrent() or getStatorCurrent() smile
+    }
+
+    @Override
+    public double get_SupplyCurrent() {
+        return 0; //No support on victors
     }
 
     @Override
@@ -151,6 +156,16 @@ public class LazyVictorSPX extends VictorSPX implements IGreenMotor {
     }
 
     @Override
+    public void enableClearPositionOnLimitF(boolean clearPosition, int timeoutMs) {
+        super.configClearPositionOnLimitF(clearPosition, timeoutMs);
+    }
+
+    @Override
+    public void enableClearPositionOnLimitR(boolean clearPosition, int timeoutMs) {
+        super.configClearPositionOnLimitR(clearPosition, timeoutMs);
+    }
+
+    @Override
     public double getMotorTemperature() {
         return super.getTemperature();
     }
@@ -163,6 +178,11 @@ public class LazyVictorSPX extends VictorSPX implements IGreenMotor {
     @Override
     public double getSensorVelocity(int closedLoopSlotID) {
         return super.getSelectedSensorVelocity(closedLoopSlotID);
+    }
+
+    @Override
+    public double get_ClosedLoopError() {
+        return super.getClosedLoopError();
     }
 
     @Override

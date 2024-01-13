@@ -269,7 +269,7 @@ public class RobotFactory {
         moduleConfig.drivePid = getPidSlotConfig(subsystemName, "slot0", PIDConfig.Drive);
         moduleConfig.azimuthEncoderHomeOffset = module.constants.get("encoderOffset");
 
-        CANcoder canCoder = getCanCoder(subsystemName, name);
+        var canCoder = getCanCoder(subsystemName, name);
 
         return new SwerveModule(subsystemName, moduleConfig, canCoder);
     }

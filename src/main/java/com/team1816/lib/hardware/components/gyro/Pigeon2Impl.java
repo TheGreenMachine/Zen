@@ -32,18 +32,29 @@ public class Pigeon2Impl extends Pigeon2 implements IPigeonIMU {
         return super.getYaw().getValueAsDouble();
     }
 
+    /**
+     * Returns gyroscopic pitch
+     *
+     * @return yaw (degrees)
+     */
     @Override
     public double getPitchValue() {
         return super.getPitch().getValueAsDouble();
     }
 
+    /**
+     * Returns gyroscopic pitch
+     *
+     * @return yaw (degrees)
+     */
     @Override
     public double getRollValue() {
         return super.getRoll().getValueAsDouble();
     }
 
+
     /**
-     * Returns x, y, and z acceleration in a casted fixed point double array
+     * Returns x, y, and z acceleration in a fixed point double array
      *
      * @return acceleration
      * @see IPigeonIMU#getAcceleration()

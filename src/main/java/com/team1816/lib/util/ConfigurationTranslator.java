@@ -2,6 +2,8 @@ package com.team1816.lib.util;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.signals.ControlModeValue;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkRelativeEncoder;
@@ -99,120 +101,6 @@ public class ConfigurationTranslator {
     }
 
     /**
-     * Translates 1816 PeriodicStatusFrame to CTRE StatusFrameEnhanced
-     *
-     * @see PeriodicStatusFrame
-     * @see StatusFrameEnhanced
-     * @param frame The generalized status frame
-     * @return The translated status frame
-     */
-    public static StatusFrameEnhanced toStatusFrameEnhanced(PeriodicStatusFrame frame) {
-        StatusFrameEnhanced statusFrameEnhanced;
-        switch (frame) {
-            //We love super long switch statements
-            case STATUS_1 -> statusFrameEnhanced = StatusFrameEnhanced.Status_1_General;
-            case STATUS_2 -> statusFrameEnhanced = StatusFrameEnhanced.Status_2_Feedback0;
-            case STATUS_3 -> statusFrameEnhanced = StatusFrameEnhanced.Status_3_Quadrature;
-            case STATUS_4 -> statusFrameEnhanced = StatusFrameEnhanced.Status_4_AinTempVbat;
-            case STATUS_6 -> statusFrameEnhanced = StatusFrameEnhanced.Status_6_Misc;
-            case STATUS_7_COMMSTATUS ->statusFrameEnhanced = StatusFrameEnhanced.Status_7_CommStatus;
-            case STATUS_8_PULSEWIDTH ->statusFrameEnhanced = StatusFrameEnhanced.Status_8_PulseWidth;
-            case STATUS_9_MOTPROFBUFFER ->statusFrameEnhanced = StatusFrameEnhanced.Status_9_MotProfBuffer;
-            case STATUS_10_TARGETS ->statusFrameEnhanced = StatusFrameEnhanced.Status_10_Targets;
-            case STATUS_11_UARTGADGETEER ->statusFrameEnhanced = StatusFrameEnhanced.Status_11_UartGadgeteer;
-            case STATUS_12_FEEDBACK1 ->statusFrameEnhanced = StatusFrameEnhanced.Status_12_Feedback1;
-            case STATUS_13_BASE_PIDF0 ->statusFrameEnhanced = StatusFrameEnhanced.Status_13_Base_PIDF0;
-            case STATUS_14_TURN_PIDF1 ->statusFrameEnhanced = StatusFrameEnhanced.Status_14_Turn_PIDF1;
-            case STATUS_15_FIRMWAREAPISTATUS ->statusFrameEnhanced = StatusFrameEnhanced.Status_15_FirmwareApiStatus;
-            case STATUS_21_FEEDBACKINTEGRATED->statusFrameEnhanced = StatusFrameEnhanced.Status_21_FeedbackIntegrated;
-            case STATUS_BRUSHLESS_CURRENT -> statusFrameEnhanced = StatusFrameEnhanced.Status_Brushless_Current;
-            default -> {
-                statusFrameEnhanced = StatusFrameEnhanced.Status_1_General;
-                GreenLogger.log("Attempted application of non-applicable status frame " + frame + " to a Talon motor, defaulting to Status 1 (General)");
-            }
-        }
-        return statusFrameEnhanced;
-    }
-
-    //I LOVE VICTORSPX NOT USING NEW CONFIGURATION ENUMS!!!!!!
-    /**
-     * Translates 1816 PeriodicStatusFrame to CTRE StatusFrame
-     *
-     * @see PeriodicStatusFrame
-     * @see StatusFrame
-     * @param frame The generalized status frame
-     * @return The translated status frame
-     */
-    public static StatusFrame toStatusFrame(PeriodicStatusFrame frame) {
-        StatusFrame statusFrame;
-        switch (frame) {
-            case STATUS_1 -> statusFrame = StatusFrame.Status_1_General;
-            case STATUS_2 -> statusFrame = StatusFrame.Status_2_Feedback0;
-            case STATUS_4 -> statusFrame = StatusFrame.Status_4_AinTempVbat;
-            case STATUS_6 -> statusFrame = StatusFrame.Status_6_Misc;
-            case STATUS_7_COMMSTATUS -> statusFrame = StatusFrame.Status_7_CommStatus;
-            case STATUS_9_MOTPROFBUFFER -> statusFrame = StatusFrame.Status_9_MotProfBuffer;
-            case STATUS_10_TARGETS -> statusFrame = StatusFrame.Status_10_Targets;
-            case STATUS_12_FEEDBACK1 -> statusFrame = StatusFrame.Status_12_Feedback1;
-            case STATUS_13_BASE_PIDF0 -> statusFrame = StatusFrame.Status_13_Base_PIDF0;
-            case STATUS_14_TURN_PIDF1 -> statusFrame = StatusFrame.Status_14_Turn_PIDF1;
-            case STATUS_15_FIRMWAREAPISTATUS -> statusFrame = StatusFrame.Status_15_FirmwareApiStatus;
-            case STATUS_17_TARGETS1 -> statusFrame = StatusFrame.Status_17_Targets1;
-            default -> {
-                statusFrame = StatusFrame.Status_1_General;
-                GreenLogger.log("Attempted application of non-applicable status frame " + frame + " to a VictorSPX, defaulting to Status 1 (General)");
-            }
-        }
-        return statusFrame;
-    }
-
-    public static CANSparkLowLevel.PeriodicFrame toPeriodicFrame(PeriodicStatusFrame frame) {
-        CANSparkLowLevel.PeriodicFrame periodicFrame;
-        switch (frame) {
-            case STATUS_0 -> periodicFrame = CANSparkLowLevel.PeriodicFrame.kStatus0;
-            case STATUS_1 -> periodicFrame = CANSparkLowLevel.PeriodicFrame.kStatus1;
-            case STATUS_2 -> periodicFrame = CANSparkLowLevel.PeriodicFrame.kStatus2;
-            case STATUS_3 -> periodicFrame = CANSparkLowLevel.PeriodicFrame.kStatus3;
-            case STATUS_4 -> periodicFrame = CANSparkLowLevel.PeriodicFrame.kStatus4;
-            case STATUS_5 -> periodicFrame = CANSparkLowLevel.PeriodicFrame.kStatus5;
-            case STATUS_6 -> periodicFrame = CANSparkLowLevel.PeriodicFrame.kStatus6;
-            default -> {
-                GreenLogger.log("Cannot apply periodic frame status " + frame + " to SparkMax PeriodicFrame, defaulting to status 0");
-                periodicFrame = CANSparkLowLevel.PeriodicFrame.kStatus0;
-            }
-        }
-        return periodicFrame;
-    }
-
-    /**
-     * Translates period milliseconds into a CTRE SensorVelocityMeasPeriod object
-     *
-     * @see SensorVelocityMeasPeriod
-     * @param periodms
-     * @return The translated object
-     */
-    public static SensorVelocityMeasPeriod toSensorVelocityMeasPeriod(int periodms) {
-        Integer[] possibilities = {1, 2, 5, 10, 20, 50, 100};
-        int closestPossible = closestTo(possibilities, periodms);
-
-        if (!Arrays.asList(possibilities).contains(periodms)) {
-            GreenLogger.log("Velocity measurement period converted from " + periodms + " ms to closest possible value, " + closestPossible + " ms");
-        }
-
-        SensorVelocityMeasPeriod sensorVelocityMeasPeriod;
-        switch (closestPossible){
-            case 1 -> sensorVelocityMeasPeriod = SensorVelocityMeasPeriod.Period_1Ms;
-            case 2 -> sensorVelocityMeasPeriod = SensorVelocityMeasPeriod.Period_2Ms;
-            case 5 -> sensorVelocityMeasPeriod = SensorVelocityMeasPeriod.Period_5Ms;
-            case 10 -> sensorVelocityMeasPeriod = SensorVelocityMeasPeriod.Period_10Ms;
-            case 50 -> sensorVelocityMeasPeriod = SensorVelocityMeasPeriod.Period_50Ms;
-            case 100 -> sensorVelocityMeasPeriod = SensorVelocityMeasPeriod.Period_100Ms;
-            default -> sensorVelocityMeasPeriod = SensorVelocityMeasPeriod.Period_20Ms; // 20 is our default
-        }
-        return sensorVelocityMeasPeriod;
-    }
-
-    /**
      * Translates 1816 GreenControlMode into CTRE ControlMode
      *
      * @see ControlMode
@@ -285,6 +173,28 @@ public class ConfigurationTranslator {
     }
 
     /**
+     * Translates CTRE ControlModeValue into 1816 GreenControlMode
+     * @see com.ctre.phoenix6.signals.ControlModeValue
+     * @see GreenControlMode
+     *
+     * @param controlMode The CTRE Control Mode Value
+     * @return The generalized translation
+     */
+    public static GreenControlMode toGreenControlMode(ControlModeValue controlMode) {
+        GreenControlMode greenControlMode;
+        switch (controlMode) {
+            case DutyCycleOut -> greenControlMode = GreenControlMode.PERCENT_OUTPUT;
+            case VelocityDutyCycle -> greenControlMode = GreenControlMode.VELOCITY_CONTROL;
+            case PositionDutyCycle -> greenControlMode = GreenControlMode.POSITION_CONTROL;
+            case MotionMagicDutyCycle -> greenControlMode = GreenControlMode.MOTION_PROFILE;
+            case Follower -> greenControlMode = GreenControlMode.FOLLOWER;
+            case MusicTone -> greenControlMode = GreenControlMode.MUSIC_TONE;
+            default -> greenControlMode = GreenControlMode.DISABLED;
+        }
+        return greenControlMode;
+    }
+
+    /**
      * Translates 1816 MotionCurveType into an int
      *
      * @param motionCurveType The Generalized motion curve type
@@ -297,6 +207,22 @@ public class ConfigurationTranslator {
             return motionCurveStrength;
         }
         return  0;
+    }
+
+    /**
+     * Translates Phoenix 6 CurrentLimitsConfig into Phoenix 5 SupplyCurrentLimitConfiguration
+     * @param currentLimitsConfigs The Phoenix 6 config
+     * @see CurrentLimitsConfigs
+     * @see SupplyCurrentLimitConfiguration
+     * @return The phoenix 5 config
+     */
+    public static SupplyCurrentLimitConfiguration toSupplyCurrentLimitConfiguration(CurrentLimitsConfigs currentLimitsConfigs) {
+        return new SupplyCurrentLimitConfiguration(
+                currentLimitsConfigs.SupplyCurrentLimitEnable,
+                currentLimitsConfigs.SupplyCurrentLimit,
+                currentLimitsConfigs.SupplyCurrentThreshold,
+                currentLimitsConfigs.SupplyTimeThreshold
+        );
     }
 
 }

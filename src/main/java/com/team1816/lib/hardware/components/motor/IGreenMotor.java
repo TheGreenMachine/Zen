@@ -55,6 +55,8 @@ public interface IGreenMotor {
      */
     double getMotorOutputVoltage();
 
+    double get_SupplyCurrent();
+
     /**
      * Gets if a motor controller is inverted
      * @return If the controller is inverted
@@ -285,6 +287,14 @@ public interface IGreenMotor {
     void selectFeedbackSensor(FeedbackDeviceType deviceType);
 
     /**
+     * Configures the feedback sensor connected to a motor controller
+     * @param deviceType The type of feedback sensor
+     * @param id The feedback sensor id
+     * @see FeedbackDeviceType
+     */
+    void selectFeedbackSensor(FeedbackDeviceType deviceType, int id);
+
+    /**
      * Configures the behavior of the motor while neutral
      * @param neutralMode The neutral mode type
      */
@@ -303,6 +313,10 @@ public interface IGreenMotor {
     void setInverted(boolean isInverted);
 
     void config_NeutralDeadband(double deadbandPercent);
+
+    void enableClearPositionOnLimitF(boolean clearPosition, int timeoutMs);
+
+    void enableClearPositionOnLimitR(boolean clearPosition, int timeoutMs);
 
     /**
      * Restores a motor's factory default settings

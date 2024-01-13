@@ -51,6 +51,11 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
         encoder = configureRelativeEncoder(deviceType);
     }
 
+    @Override
+    public void selectFeedbackSensor(FeedbackDeviceType deviceType, int id) {
+        selectFeedbackSensor(deviceType);
+    }
+
     private RelativeEncoder configureRelativeEncoder(FeedbackDeviceType deviceType) {
         return super.getEncoder(
             ConfigurationTranslator.toSparkRelativeEncoderType(deviceType),
@@ -89,7 +94,7 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
 
     @Override
     public void configReverseLimitSwitch(boolean normallyOpen) {
-        forwardLimitSwitch = super.getReverseLimitSwitch(normallyOpen ? SparkLimitSwitch.Type.kNormallyOpen : SparkLimitSwitch.Type.kNormallyClosed);
+        reverseLimitSwitch = super.getReverseLimitSwitch(normallyOpen ? SparkLimitSwitch.Type.kNormallyOpen : SparkLimitSwitch.Type.kNormallyClosed);
     }
 
     @Override
@@ -165,6 +170,16 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
     }
 
     @Override
+    public void enableClearPositionOnLimitF(boolean clearPosition, int timeoutMs) {
+        //No functionality
+    }
+
+    @Override
+    public void enableClearPositionOnLimitR(boolean clearPosition, int timeoutMs) {
+        //No functionality
+    }
+
+    @Override
     public double getMotorOutputPercent() {
         return super.getAppliedOutput(); // We don't use get() because that is only supplied with set() and we skip over that for setReference()
     }
@@ -172,6 +187,11 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
     @Override
     public double getMotorOutputVoltage() {
         return getMotorOutputPercent() * getBusVoltage(); //hate this but it's literally how BaseMotorController does it
+    }
+
+    @Override
+    public double get_SupplyCurrent() {
+        return super.getOutputCurrent();
     }
 
     @Override

@@ -12,6 +12,8 @@ public enum GreenControlMode {
     VELOCITY_CONTROL,
     POSITION_CONTROL,
     MOTION_PROFILE,
+
+    // All except TalonFX
     CURRENT,
 
     // TalonFX exclusive
@@ -25,8 +27,10 @@ public enum GreenControlMode {
     MUSIC_TONE,
     DISABLED,
 
-    // REV Exclusive
+    // TalonFX and REV
     VOLTAGE_CONTROL,
+
+    // REV Exclusive
     SMART_VELOCITY,
 
 }

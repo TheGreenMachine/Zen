@@ -50,6 +50,11 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
     }
 
     @Override
+    public double get_SupplyCurrent() {
+        return super.getSupplyCurrent();
+    }
+
+    @Override
     public void selectFeedbackSensor(FeedbackDeviceType deviceType) {
         selectFeedbackSensor(deviceType, 0);
     }
@@ -156,6 +161,15 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
         super.configNeutralDeadband(deadbandPercent);
     }
 
+    @Override
+    public void enableClearPositionOnLimitF(boolean clearPosition, int timeoutMs) {
+        super.configClearPositionOnLimitF(clearPosition, timeoutMs);
+    }
+
+    @Override
+    public void enableClearPositionOnLimitR(boolean clearPosition, int timeoutMs) {
+        super.configClearPositionOnLimitR(clearPosition, timeoutMs);
+    }
 
     @Override
     public double getMotorTemperature() {
@@ -170,6 +184,11 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
     @Override
     public double getSensorVelocity(int closedLoopSlotID) {
         return super.getSelectedSensorVelocity(closedLoopSlotID);
+    }
+
+    @Override
+    public double get_ClosedLoopError() {
+        return super.getClosedLoopError();
     }
 
     @Override

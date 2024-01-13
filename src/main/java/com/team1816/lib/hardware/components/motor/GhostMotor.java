@@ -57,6 +57,11 @@ public class GhostMotor implements IGreenMotor {
     }
 
     @Override
+    public void selectFeedbackSensor(FeedbackDeviceType deviceType, int id) {
+
+    }
+
+    @Override
     public void configCurrentLimit(SupplyCurrentLimitConfiguration configuration) {
 
     }
@@ -234,6 +239,16 @@ public class GhostMotor implements IGreenMotor {
     }
 
     @Override
+    public void enableClearPositionOnLimitF(boolean clearPosition, int timeoutMs) {
+
+    }
+
+    @Override
+    public void enableClearPositionOnLimitR(boolean clearPosition, int timeoutMs) {
+
+    }
+
+    @Override
     public double getBusVoltage() {
         return 12;
     }
@@ -247,6 +262,11 @@ public class GhostMotor implements IGreenMotor {
     @Override
     public double getMotorOutputVoltage() {
         return getMotorOutputPercent() * RobotController.getBatteryVoltage();
+    }
+
+    @Override
+    public double get_SupplyCurrent() {
+        return 0;
     }
 
     @Override

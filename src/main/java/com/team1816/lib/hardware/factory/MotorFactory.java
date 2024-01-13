@@ -235,7 +235,7 @@ public class MotorFactory {
             motor.configClosedLoopRampRate(CLOSED_LOOP_RAMP_RATE);
 
             // CTRE exclusive configs
-            if (isTalon) {
+            if (isTalon && motor.get_MotorType() != IGreenMotor.MotorType.TalonFX) {
                 ((BaseMotorController)motor).configVelocityMeasurementWindow(VELOCITY_MEASUREMENT_ROLLING_AVERAGE_WINDOW);
 
                 ((IMotorController)motor).configNominalOutputForward(0, kTimeoutMs); //TODO these should get removed when phoenix 6 rolls around

@@ -19,15 +19,13 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     protected String name = "";
     protected ControlMode lastControlMode = null;
 
-    protected Faults faults;
-    protected StickyFaults stickyFaults;
-
-    protected boolean isFollower;
-
-    protected double arbitraryFeedForward = 0;
+    protected boolean isFollower = false;
 
     protected TalonFXConfigurator configurator;
     protected TalonFXConfiguration configs;
+
+    protected final double kCANTimeoutSeconds = Constants.kCANTimeoutMs / 1000.0;
+    protected final double kLongCANTimeoutSeconds = Constants.kLongCANTimeoutMs / 1000.0;
 
     protected DutyCycleOut dutyCycle = new DutyCycleOut(0);
     protected VelocityDutyCycle velocity = new VelocityDutyCycle(0);
@@ -36,6 +34,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     protected Follower following = new Follower(0, false);
     protected NeutralOut neutral = new NeutralOut();
     protected StaticBrake brake = new StaticBrake();
+
     public LazyTalonFX(int deviceNumber, String motorName, String canBus) {
         super(deviceNumber, canBus);
         name = motorName;
@@ -55,16 +54,21 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void selectFeedbackSensor(FeedbackDeviceType deviceType) {
-        selectFeedbackSensor(deviceType, 0);
+        selectFeedbackSensor(deviceType, -1);
     }
 
-    public void selectFeedbackSensor(FeedbackDeviceType deviceType, int closedLoopSlotID) {
+    @Override
+    public void selectFeedbackSensor(FeedbackDeviceType deviceType, int id) {
+        // Only 2 needed possibilities
         if (deviceType == FeedbackDeviceType.INTEGRATED_SENSOR) {
             configs.Feedback.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
         } else {
-            configs.Feedback.withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder);
+            configs.Feedback
+                    .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
+                    .withFeedbackRemoteSensorID(id);
         }
-        configurator.apply(configs);
+
+        configurator.apply(configs, kLongCANTimeoutSeconds);
     }
 
     @Override
@@ -74,7 +78,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
                 .withSupplyCurrentLimitEnable(configuration.enable)
                 .withSupplyCurrentThreshold(configuration.triggerThresholdCurrent)
                 .withSupplyTimeThreshold(configuration.triggerThresholdTime);
-        configurator.apply(configs);
+        configurator.apply(configs, kLongCANTimeoutSeconds);
     }
 
     @Override
@@ -84,7 +88,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
                 .withSupplyCurrentLimitEnable(true)
                 .withSupplyCurrentThreshold(0)
                 .withSupplyTimeThreshold(0);
-        configurator.apply(configs);
+        configurator.apply(configs, kLongCANTimeoutSeconds);
     }
 
     @Override
@@ -124,7 +128,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
         configs.HardwareLimitSwitch
                 .withForwardLimitSource(ForwardLimitSourceValue.LimitSwitchPin)
                 .withForwardLimitType(normallyOpen ? ForwardLimitTypeValue.NormallyOpen : ForwardLimitTypeValue.NormallyClosed);
-        configurator.apply(configs);
+        configurator.apply(configs, kCANTimeoutSeconds);
     }
 
     @Override
@@ -132,7 +136,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
         configs.HardwareLimitSwitch
                 .withReverseLimitSource(ReverseLimitSourceValue.LimitSwitchPin)
                 .withReverseLimitType(normallyOpen ? ReverseLimitTypeValue.NormallyOpen : ReverseLimitTypeValue.NormallyClosed);
-        configurator.apply(configs);
+        configurator.apply(configs, kCANTimeoutSeconds);
     }
 
     @Override
@@ -145,6 +149,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void neutralOutput() {
+        //this is so stupid
         set(GreenControlMode.NEUTRAL, 0);
     }
 
@@ -155,6 +160,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void setSensorPhase(boolean isInverted) {
+        // TalonFX can't separate invert sensor phase
     }
 
     @Override
@@ -184,7 +190,9 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     @Override
     public void configClosedLoopRampRate(double secondsNeutralToFull) {
         configs.ClosedLoopRamps
-                .withDutyCycleClosedLoopRampPeriod(secondsNeutralToFull);
+                .withDutyCycleClosedLoopRampPeriod(secondsNeutralToFull)
+                .withVoltageClosedLoopRampPeriod(secondsNeutralToFull)
+                .withTorqueClosedLoopRampPeriod(secondsNeutralToFull);
         configurator.apply(configs);
     }
 
@@ -196,7 +204,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     @Override
     public void config_PeakOutputForward(double percentOut, int timeoutMs) {
         configs.MotorOutput.withPeakForwardDutyCycle(percentOut);
-        configurator.apply(configs, timeoutMs/1000.0);
+        configurator.apply(configs, timeoutMs / 1000.0);
     }
 
     @Override
@@ -207,7 +215,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     @Override
     public void config_PeakOutputReverse(double percentOut, int timeoutMs) {
         configs.MotorOutput.withPeakReverseDutyCycle(percentOut);
-        configurator.apply(configs, timeoutMs/1000.0);
+        configurator.apply(configs, timeoutMs / 1000.0);
     }
 
     @Override
@@ -217,18 +225,35 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     }
 
     @Override
+    public void enableClearPositionOnLimitF(boolean clearPosition, int timeoutMs) {
+        configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = clearPosition;
+        configurator.apply(configs, timeoutMs / 1000.0);
+    }
+
+    @Override
+    public void enableClearPositionOnLimitR(boolean clearPosition, int timeoutMs) {
+        configs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = clearPosition;
+        configurator.apply(configs, timeoutMs / 1000.0);
+    }
+
+    @Override
     public double getBusVoltage() {
         return super.getSupplyVoltage().getValueAsDouble();
     }
 
     @Override
     public double getMotorOutputPercent() {
-        return super.get();
+        return super.get(); //everything is verbose except for this. why
     }
 
     @Override
     public double getMotorOutputVoltage() {
         return super.getMotorVoltage().getValueAsDouble();
+    }
+
+    @Override
+    public double get_SupplyCurrent() {
+        return super.getSupplyCurrent().getValueAsDouble();
     }
 
     @Override
@@ -248,12 +273,12 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void setSensorPosition(double sensorPosition, int closedLoopSlotID) {
-        setSensorPosition(sensorPosition, 0, 0);
+        setSensorPosition(sensorPosition, 0, Constants.kLongCANTimeoutMs);
     }
 
     @Override
     public void setSensorPosition(double sensorPosition, int closedLoopSlotID, int timeoutMs) {
-        super.setPosition(sensorPosition, timeoutMs/1000.0);
+        super.setPosition(sensorPosition, timeoutMs / 1000.0);
     }
 
     @Override
@@ -267,25 +292,25 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     @Override
     public void configForwardSoftLimit(double forwardSoftLimit) {
         configs.SoftwareLimitSwitch.withForwardSoftLimitThreshold(forwardSoftLimit);
-        configurator.apply(configs);
+        configurator.apply(configs, kCANTimeoutSeconds);
     }
 
     @Override
     public void configReverseSoftLimit(double reverseSoftLimit) {
         configs.SoftwareLimitSwitch.withReverseSoftLimitThreshold(reverseSoftLimit);
-        configurator.apply(configs);
+        configurator.apply(configs, kCANTimeoutSeconds);
     }
 
     @Override
     public void enableForwardSoftLimit(boolean isEnabled) {
         configs.SoftwareLimitSwitch.withForwardSoftLimitEnable(isEnabled);
-        configurator.apply(configs);
+        configurator.apply(configs, kCANTimeoutSeconds);
     }
 
     @Override
     public void enableReverseSoftLimit(boolean isEnabled) {
         configs.SoftwareLimitSwitch.withReverseSoftLimitEnable(isEnabled);
-        configurator.apply(configs);
+        configurator.apply(configs, kCANTimeoutSeconds);
     }
 
     @Override
@@ -346,10 +371,12 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void set_iZone(int pidSlotID, double iZone) {
+        // Removed in phoenix 6
     }
 
     @Override
     public void configAllowableErrorClosedLoop(int pidSlotID, double allowableError) {
+        // Currently unavailable in phoenix 6
     }
 
     @Override
@@ -377,13 +404,6 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void configMotionCurve(MotionCurveType motionCurveType, int curveStrength) {
-        if (curveStrength > 8) {
-            GreenLogger.log("Motion Curve Strength cannot exceed 8, adjusting down.");
-            curveStrength = 8;
-        } else if (curveStrength < 0) {
-            GreenLogger.log("Motion Curve Strength cannot be negative, adjusting to 0.");
-            curveStrength = 0;
-        }
         configurator.apply(
                 configs.MotionMagic.withMotionMagicJerk(curveStrength)
         );
@@ -401,25 +421,19 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public GreenControlMode get_ControlMode() {
-        // Tag Will do this
-        return ConfigurationTranslator.toGreenControlMode(super.getControlMode());
+        return ConfigurationTranslator.toGreenControlMode(super.getControlMode().getValue());
     }
 
     @Override
     public void follow(IGreenMotor leader) {
         isFollower = true;
-        // ONLY works to follow CTRE Motor Controllers.
-        if (leader.get_MotorType() == MotorType.SparkMax || leader.get_MotorType() == MotorType.GHOST) {
-           GreenLogger.log("TalonFX cannot follow non-CTRE motor " + leader.getName() + " of type " + leader.get_MotorType());
+        // ONLY works to follow other Talons.
+        if (leader.get_MotorType() != MotorType.TalonFX) {
+           GreenLogger.log("TalonFX cannot follow non-Talon motor " + leader.getName() + " of type " + leader.get_MotorType());
         } else {
             following.withMasterID(leader.getDeviceID());
             set(GreenControlMode.FOLLOWER, 0);
         }
-    }
-
-    @Override
-    public double getSupplyCurrent() {
-        return super.getSupplyCurrent().getValueAsDouble();
     }
 
     @Override
