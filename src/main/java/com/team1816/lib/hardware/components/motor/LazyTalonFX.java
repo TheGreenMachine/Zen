@@ -109,9 +109,9 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
                 ControlRequest controlRequest;
                 switch(controlMode){
                     case PERCENT_OUTPUT -> controlRequest = dutyCycle.withOutput(demand);
-                    case VELOCITY_CONTROL -> controlRequest = velocity.withVelocity(demand);
-                    case POSITION_CONTROL -> controlRequest = position.withPosition(demand);
-                    case MOTION_MAGIC -> controlRequest = motionMagic.withPosition(demand);
+                    case VELOCITY_CONTROL -> controlRequest = velocity.withVelocity(demand / 204.8);
+                    case POSITION_CONTROL -> controlRequest = position.withPosition(demand / 2048.0);
+                    case MOTION_MAGIC -> controlRequest = motionMagic.withPosition(demand / 2048.0);
                     case BRAKE -> controlRequest = brake;
                     default -> controlRequest = neutral;
                 }
