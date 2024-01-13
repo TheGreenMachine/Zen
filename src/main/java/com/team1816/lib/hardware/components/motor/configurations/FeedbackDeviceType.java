@@ -19,6 +19,7 @@ public enum FeedbackDeviceType { // No enum inheritance :(
 
     // TalonFX
     INTEGRATED_SENSOR,
+    REMOTE_CANCODER,
 
     // TalonSRX
     ANALOG,

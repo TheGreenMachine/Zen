@@ -296,8 +296,11 @@ public class MotorFactory {
         // CTRE-Exclusive configurations
         if (isTalon) {
             if (remoteSensorId >= 0) {
-                motor.selectFeedbackSensor(FeedbackDeviceType.REMOTE_SENSOR_0);
-                ((BaseMotorController)motor).configRemoteFeedbackFilter(remoteSensorId, RemoteSensorSource.CANCoder, 0);
+                if (motor.get_MotorType() == IGreenMotor.MotorType.TalonFX) {
+                    motor.selectFeedbackSensor(FeedbackDeviceType.REMOTE_CANCODER, remoteSensorId);
+                } else {
+                    ((BaseMotorController) motor).configRemoteFeedbackFilter(remoteSensorId, RemoteSensorSource.CANCoder, 0);
+                }
             } else {
                 motor.selectFeedbackSensor(
                         motor.get_MotorType() == IGreenMotor.MotorType.TalonFX ?
@@ -306,8 +309,9 @@ public class MotorFactory {
                 );
             }
 
-            ((BaseMotorController)motor).configClearPositionOnLimitF(false, kTimeoutMs);
-            ((BaseMotorController)motor).configClearPositionOnLimitR(false, kTimeoutMs);
+
+            motor.enableClearPositionOnLimitF(false, kTimeoutMs);
+            motor.enableClearPositionOnLimitR(false, kTimeoutMs);
 
             // sensor phase inversion
             boolean invertSensorPhase = subsystem.invertSensorPhase.contains(name);
