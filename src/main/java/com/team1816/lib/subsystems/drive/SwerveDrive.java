@@ -32,7 +32,8 @@ import java.util.Objects;
  * A class that models a Swerve drivetrain
  */
 @Singleton
-public class SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
+public class
+SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
 
     /** Constants */
 

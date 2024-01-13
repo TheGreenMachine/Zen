@@ -198,7 +198,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void config_PeakOutputForward(double percentOut) {
-        config_PeakOutputForward(percentOut, 0);
+        config_PeakOutputForward(percentOut, 50);
     }
 
     @Override
@@ -209,7 +209,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void config_PeakOutputReverse(double percentOut) {
-        config_PeakOutputReverse(percentOut, 0);
+        config_PeakOutputReverse(percentOut, 50);
     }
 
     @Override
