@@ -7,12 +7,16 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
+import com.team1816.lib.Injector;
 import com.team1816.lib.hardware.components.motor.configurations.*;
+import com.team1816.lib.hardware.factory.RobotFactory;
 import com.team1816.lib.util.ConfigurationTranslator;
 import com.team1816.lib.util.Util;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.configuration.Constants;
 import edu.wpi.first.wpilibj.DriverStation;
+
+import java.awt.*;
 
 public class LazyTalonFX extends TalonFX implements IGreenMotor {
     protected double lastSet = Double.NaN;
@@ -35,9 +39,12 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     protected NeutralOut neutral = new NeutralOut();
     protected StaticBrake brake = new StaticBrake();
 
+    private RobotFactory factory;
+
     public LazyTalonFX(int deviceNumber, String motorName, String canBus) {
         super(deviceNumber, canBus);
         name = motorName;
+        factory = Injector.get(RobotFactory.class);
         configurator = super.getConfigurator();
         configurator.refresh(configs);
     }
@@ -439,6 +446,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     @Override
     public void restore_FactoryDefaults(int timeoutMs) {
         configs = new TalonFXConfiguration();
+        configs.Audio.withBeepOnConfig(factory.getConstant("soundOnBootup") > 0);
         configurator.apply(configs);
     }
 
