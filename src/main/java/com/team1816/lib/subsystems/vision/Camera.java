@@ -101,7 +101,7 @@ public class Camera extends Subsystem {
             simVisionSystem.addCamera(
                     simCam,
                     new Transform3d( //Untested based on https://github.com/PhotonVision/photonvision/blob/master/photonlib-java-examples/simaimandrange/src/main/java/frc/robot/sim/VisionSim.java
-                        new Translation3d(0,0,Constants.kCameraHeightMeters),
+                        Constants.kCameraMountingOffset3D,
                         new Rotation3d(0, -Constants.kCameraMountingOffset.getRotation().getRadians(), 0)
                     )
             );
@@ -137,26 +137,13 @@ public class Camera extends Subsystem {
      */
     public void readFromHardware() {
         if (RobotBase.isSimulation()) {
-            simVisionSystem.adjustCamera( //FIXME @Ethan (these are the params for GreenSimVisionSystem.moveCamera())
-                    simCam,
-                    new Transform2d(
-                    robotState.getFieldToTurretPos(),
-                    robotState.fieldToVehicle
-                ), // sim vision inverts this Transform when calculating robotPose
-                Constants.kCameraHeightMeters,
-                Constants.kCameraMountingAngleY
-            );
-            simVisionSystem.processFrame(robotState.fieldToVehicle);
-            robotState.field
-                .getObject("camera")
-                .setPose(
-                    robotState.fieldToVehicle.transformBy(
-                        new Transform2d(
-                            Constants.kCameraMountingOffset.getTranslation(),
-                            Constants.EmptyRotation2d
-                        )
-                    )
-                );
+            simVisionSystem.update(robotState.fieldToVehicle);
+            if(simVisionSystem.getCameraPose(simCam).isPresent())
+                robotState.field
+                    .getObject("camera")
+                    .setPose(
+                        simVisionSystem.getCameraPose(simCam).get().toPose2d()
+                    );
         }
         robotState.superlativeTarget = getPoint();
         robotState.visibleTargets = getPoints();
