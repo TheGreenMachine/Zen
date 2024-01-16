@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.team1816.lib.hardware.PIDSlotConfiguration;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
+import com.team1816.lib.hardware.components.motor.LazyTalonFX;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.util.driveUtil.DriveConversions;
 import com.team1816.lib.util.driveUtil.SwerveKinematics;
@@ -104,6 +105,10 @@ public class SwerveModule implements ISwerveModule {
             0,
             mModuleConfig.azimuthPid.allowableError
         );
+
+        if (azimuthMotor.get_MotorType() == IGreenMotor.MotorType.TalonFX) {
+            ((LazyTalonFX) azimuthMotor).configContinuousWrap(true);
+        }
 
         allowableError = 5; // TODO this is a dummy value for checkSystem
         drivePosition = 0;

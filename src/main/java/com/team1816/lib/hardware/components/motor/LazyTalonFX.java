@@ -411,6 +411,11 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
         );
     }
 
+    public void configContinuousWrap(boolean enable) {
+        configs.ClosedLoopGeneral.ContinuousWrap = enable;
+        configurator.apply(configs);
+    }
+
     @Override
     public boolean hasResetOccurred() {
         return super.hasResetOccurred();
