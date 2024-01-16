@@ -18,9 +18,11 @@ import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.RobotBase;
 import org.photonvision.PhotonCamera;
+import org.photonvision.estimation.TargetModel;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
+import org.photonvision.simulation.VisionTargetSim;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import java.util.ArrayList;
@@ -47,6 +49,7 @@ public class Camera extends Subsystem {
      */
     private static final String NAME = "camera";
     private boolean usingMultiTargetOdometry = true;
+    private final int numTargets = FieldConfig.fiducialTargets.size();
 
     /**
      * State
@@ -80,61 +83,38 @@ public class Camera extends Subsystem {
         if (RobotBase.isSimulation()) {
             simVisionSystem = new VisionSystemSim("photonvision");
             var simCamConfig = new SimCameraProperties();
+
             simCamConfig.setCalibration(
-                    960,
-                    720,
-                    new Rotation2d(90,60)
+                    3840,
+                    1080,
+                    new Rotation2d(90,60) // Diagonal FOV
             );
+            simCamConfig.setFPS(30);
+
             simCam = new PhotonCameraSim(
                     cameraEnabled ? cam : new PhotonCamera("ZED"),
-                    simCamConfig
+                    simCamConfig,
+                    0,
+                    25
             );
-
-            //TODO figure out how to do camera pitch degrees
 
             simVisionSystem.addCamera(
                     simCam,
-                    new Transform3d(
-                            Constants.kCameraMountingOffset3D,
-                            Constants.EmptyRotation3d
+                    new Transform3d( //Untested based on https://github.com/PhotonVision/photonvision/blob/master/photonlib-java-examples/simaimandrange/src/main/java/frc/robot/sim/VisionSim.java
+                        new Translation3d(0,0,Constants.kCameraHeightMeters),
+                        new Rotation3d(0, -Constants.kCameraMountingOffset.getRotation().getRadians(), 0)
                     )
             );
-//            simVisionSystem =
-//                new GreenSimVisionSystem(
-//                    "ZED",
-//                    90,
-//                    60,
-//                    Constants.kCameraMountingOffset.getRotation().getDegrees(),
-//                    new Transform2d(
-//                        Constants.kCameraMountingOffset.getTranslation(),
-//                        Constants.EmptyRotation2d
-//                    ),
-//                    CAMERA_HEIGHT_METERS,
-//                    25,
-//                    3840,
-//                    1080,
-//                    0
-//                );
-            //TODO this might not be accurate - check the next commented out block for how to add the ones from FieldConfig
-            simVisionSystem.addAprilTags(AprilTagFields.k2024Crescendo.loadAprilTagLayoutField());
-//            for (int i = 0; i <= 8; i++) {
-//                if (FieldConfig.fiducialTargets.get(i) == null) {
-//                    continue;
-//                }
-//                simVisionSystem.addSimVisionTarget(
-//                    new GreenSimVisionTarget(
-//                        new Pose2d(
-//                            FieldConfig.fiducialTargets.get(i).getX(),
-//                            FieldConfig.fiducialTargets.get(i).getY(),
-//                            FieldConfig.fiducialTargets.get(i).getRotation().toRotation2d()
-//                        ),
-//                        FieldConfig.fiducialTargets.get(i).getZ(),
-//                        .1651,
-//                        .1651,
-//                        i
-//                    )
-//                );
-//            }
+
+            VisionTargetSim[] targets = new VisionTargetSim[numTargets];
+
+            FieldConfig.fiducialTargets.forEach((index, target) -> {
+                        targets[index-1] = new VisionTargetSim(target, TargetModel.kAprilTag36h11);
+                    }
+            );
+
+            simVisionSystem.addVisionTargets(targets);
+            simCam.enableDrawWireframe(true);
         }
         PhotonCamera.setVersionCheckEnabled(false);
     }

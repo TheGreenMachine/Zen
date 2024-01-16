@@ -119,13 +119,13 @@ subsystems:
             autoBalanceDivider: 50
             autoBalanceThreshold: 2.5 # degrees
     camera:
-        implemented: false
+        implemented: true
         constants:
             useMultiTargetOdometry: 1
 infrastructure:
     canBusName: highSpeed
     ## Power Distribution ##
-    pdId: -1
+    pdId: 15
     pdIsRev: true
     ## Pneumatics Control ##
     compressorEnabled: false
@@ -140,7 +140,7 @@ constants:
     ## Drivetrain ##
     minAllowablePoseError: 0.1
     maxAllowablePoseError: 5
-    soundOnConfig: 0 #If this is false, It will still beep on robot bootup.
+    soundOnConfig: 1 #If this is false, It will still beep on robot bootup.
     ## Logging ##
     logRobot: 1 # 0 or 1
     logDrivetrain: 1 # 0 or 1
