@@ -25,6 +25,7 @@ public class FieldConfig {
 
             //I LOVE SIG FIGS!!!!!!!!!!
 
+            //TODO Sort these!
             put(1, new Pose3d(new Translation3d(15.5, 0.5,1.356), new Rotation3d(new Quaternion(0.5,0,0,0.866))));
             put(2, new Pose3d(new Translation3d(16.239, 0.9,1.356), new Rotation3d(new Quaternion(0.5,0,0,0.866))));
             put(3, new Pose3d(new Translation3d(16.579, 4.983,1.451), new Rotation3d(new Quaternion(0,0,0,1))));

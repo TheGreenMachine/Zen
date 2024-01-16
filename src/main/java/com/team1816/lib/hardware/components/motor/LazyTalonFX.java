@@ -7,7 +7,9 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
+import com.team1816.lib.Injector;
 import com.team1816.lib.hardware.components.motor.configurations.*;
+import com.team1816.lib.hardware.factory.RobotFactory;
 import com.team1816.lib.util.ConfigurationTranslator;
 import com.team1816.lib.util.Util;
 import com.team1816.lib.util.logUtil.GreenLogger;
@@ -439,6 +441,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     @Override
     public void restore_FactoryDefaults(int timeoutMs) {
         configs = new TalonFXConfiguration();
+        configs.Audio.withBeepOnConfig(Constants.kSoundOnConfig);
         configurator.apply(configs);
     }
 

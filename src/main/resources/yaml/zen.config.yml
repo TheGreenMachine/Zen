@@ -140,6 +140,7 @@ constants:
     ## Drivetrain ##
     minAllowablePoseError: 0.1
     maxAllowablePoseError: 5
+    soundOnConfig: 0 #If this is false, It will still beep on robot bootup.
     ## Logging ##
     logRobot: 1 # 0 or 1
     logDrivetrain: 1 # 0 or 1
