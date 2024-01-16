@@ -125,7 +125,7 @@ subsystems:
 infrastructure:
     canBusName: highSpeed
     ## Power Distribution ##
-    pdId: -1
+    pdId: 25
     pdIsRev: true
     ## Pneumatics Control ##
     compressorEnabled: false
