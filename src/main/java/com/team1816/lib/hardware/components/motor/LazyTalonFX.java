@@ -16,8 +16,6 @@ import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.configuration.Constants;
 import edu.wpi.first.wpilibj.DriverStation;
 
-import java.awt.*;
-
 public class LazyTalonFX extends TalonFX implements IGreenMotor {
     protected double lastSet = Double.NaN;
     protected String name = "";
@@ -39,12 +37,9 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     protected NeutralOut neutral = new NeutralOut();
     protected StaticBrake brake = new StaticBrake();
 
-    private RobotFactory factory;
-
     public LazyTalonFX(int deviceNumber, String motorName, String canBus) {
         super(deviceNumber, canBus);
         name = motorName;
-        factory = Injector.get(RobotFactory.class);
         configurator = super.getConfigurator();
         configurator.refresh(configs);
     }
@@ -446,7 +441,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     @Override
     public void restore_FactoryDefaults(int timeoutMs) {
         configs = new TalonFXConfiguration();
-        configs.Audio.withBeepOnConfig(factory.getConstant("soundOnBootup") > 0);
+        configs.Audio.withBeepOnConfig(Constants.kSoundOnConfig);
         configurator.apply(configs);
     }
 

@@ -107,6 +107,8 @@ public class Constants {
     public static double kMaxProximityThresholdCentimeters = 25; // cm
     public static double preTargetDistance = 0.4; // m
 
+    public static boolean kSoundOnConfig = factory.getConstant("soundOnBootup") > 0;
+
 
     /**
      * Camera characterization
