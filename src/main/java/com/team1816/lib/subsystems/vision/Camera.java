@@ -137,25 +137,16 @@ public class Camera extends Subsystem {
      */
     public void readFromHardware() {
         if (RobotBase.isSimulation()) {
-//            simVisionSystem.adjustCamera(
-//                    simCam,
-//                    new Transform3d(
-//                            robotState.getFieldToTurretPos(),
-//                            robotState.fieldToVehicle,
-//                            Constants.kCameraHeightMeters,
-//                            Rotation2d.fromDegrees(Constants.kCameraMountingAngleY)
-//                    )
-//            );
-//            simVisionSystem.adjustCamera(
-//                    simCam,
-//                    new Transform2d(
-//                    robotState.getFieldToTurretPos(),
-//                    robotState.fieldToVehicle
-//                ), // sim vision inverts this Transform when calculating robotPose
-//                Constants.kCameraHeightMeters,
-//                Constants.kCameraMountingAngleY
-//            );
-//            simVisionSystem.processFrame(robotState.fieldToVehicle);
+            simVisionSystem.adjustCamera( //FIXME @Ethan (these are the params for GreenSimVisionSystem.moveCamera())
+                    simCam,
+                    new Transform2d(
+                    robotState.getFieldToTurretPos(),
+                    robotState.fieldToVehicle
+                ), // sim vision inverts this Transform when calculating robotPose
+                Constants.kCameraHeightMeters,
+                Constants.kCameraMountingAngleY
+            );
+            simVisionSystem.processFrame(robotState.fieldToVehicle);
             robotState.field
                 .getObject("camera")
                 .setPose(
