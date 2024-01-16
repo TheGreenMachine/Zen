@@ -12,13 +12,15 @@ import com.team1816.lib.util.visionUtil.VisionPoint;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.configuration.FieldConfig;
 import com.team1816.season.states.RobotState;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.RobotBase;
 import org.photonvision.PhotonCamera;
+import org.photonvision.simulation.PhotonCameraSim;
+import org.photonvision.simulation.SimCameraProperties;
+import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import java.util.ArrayList;
@@ -33,13 +35,17 @@ public class Camera extends Subsystem {
      * Components
      */
     private PhotonCamera cam;
-    private GreenSimVisionSystem simVisionSystem;
+    private VisionSystemSim simVisionSystem;
+
+    /**
+     * Simulation
+     */
+    private PhotonCameraSim simCam;
 
     /**
      * Constants
      */
     private static final String NAME = "camera";
-    private final double CAMERA_HEIGHT_METERS = 0.15;
     private boolean usingMultiTargetOdometry = true;
 
     /**
@@ -64,49 +70,73 @@ public class Camera extends Subsystem {
 
         usingMultiTargetOdometry = factory.getConstant(NAME, "useMultiTargetOdometry") > 0;
 
-        if (RobotBase.isSimulation()) {
-            simVisionSystem =
-                new GreenSimVisionSystem(
-                    "ZED",
-                    90,
-                    60,
-                    Constants.kCameraMountingOffset.getRotation().getDegrees(),
-                    new Transform2d(
-                        Constants.kCameraMountingOffset.getTranslation(),
-                        Constants.EmptyRotation2d
-                    ),
-                    CAMERA_HEIGHT_METERS,
-                    25,
-                    3840,
-                    1080,
-                    0
-                );
-            for (int i = 0; i <= 8; i++) {
-                if (FieldConfig.fiducialTargets.get(i) == null) {
-                    continue;
-                }
-                simVisionSystem.addSimVisionTarget(
-                    new GreenSimVisionTarget(
-                        new Pose2d(
-                            FieldConfig.fiducialTargets.get(i).getX(),
-                            FieldConfig.fiducialTargets.get(i).getY(),
-                            FieldConfig.fiducialTargets.get(i).getRotation().toRotation2d()
-                        ),
-                        FieldConfig.fiducialTargets.get(i).getZ(),
-                        .1651,
-                        .1651,
-                        i
-                    )
-                );
-            }
-        }
-        PhotonCamera.setVersionCheckEnabled(false);
         if (cameraEnabled) {
             cam = new PhotonCamera("snakeyes");
             if (Constants.kLoggingRobot) {
                 visionTargetLogger = new DoubleArrayLogEntry(DataLogManager.getLog(), "Camera/SeenPoints");
             }
         }
+
+        if (RobotBase.isSimulation()) {
+            simVisionSystem = new VisionSystemSim("photonvision");
+            var simCamConfig = new SimCameraProperties();
+            simCamConfig.setCalibration(
+                    960,
+                    720,
+                    new Rotation2d(90,60)
+            );
+            simCam = new PhotonCameraSim(
+                    cameraEnabled ? cam : new PhotonCamera("ZED"),
+                    simCamConfig
+            );
+
+            //TODO figure out how to do camera pitch degrees
+
+            simVisionSystem.addCamera(
+                    simCam,
+                    new Transform3d(
+                            Constants.kCameraMountingOffset3D,
+                            Constants.EmptyRotation3d
+                    )
+            );
+//            simVisionSystem =
+//                new GreenSimVisionSystem(
+//                    "ZED",
+//                    90,
+//                    60,
+//                    Constants.kCameraMountingOffset.getRotation().getDegrees(),
+//                    new Transform2d(
+//                        Constants.kCameraMountingOffset.getTranslation(),
+//                        Constants.EmptyRotation2d
+//                    ),
+//                    CAMERA_HEIGHT_METERS,
+//                    25,
+//                    3840,
+//                    1080,
+//                    0
+//                );
+            //TODO this might not be accurate - check the next commented out block for how to add the ones from FieldConfig
+            simVisionSystem.addAprilTags(AprilTagFields.k2024Crescendo.loadAprilTagLayoutField());
+//            for (int i = 0; i <= 8; i++) {
+//                if (FieldConfig.fiducialTargets.get(i) == null) {
+//                    continue;
+//                }
+//                simVisionSystem.addSimVisionTarget(
+//                    new GreenSimVisionTarget(
+//                        new Pose2d(
+//                            FieldConfig.fiducialTargets.get(i).getX(),
+//                            FieldConfig.fiducialTargets.get(i).getY(),
+//                            FieldConfig.fiducialTargets.get(i).getRotation().toRotation2d()
+//                        ),
+//                        FieldConfig.fiducialTargets.get(i).getZ(),
+//                        .1651,
+//                        .1651,
+//                        i
+//                    )
+//                );
+//            }
+        }
+        PhotonCamera.setVersionCheckEnabled(false);
     }
 
     /**
@@ -127,15 +157,25 @@ public class Camera extends Subsystem {
      */
     public void readFromHardware() {
         if (RobotBase.isSimulation()) {
-            simVisionSystem.moveCamera(
-                new Transform2d(
-                    robotState.getFieldToTurretPos(),
-                    robotState.fieldToVehicle
-                ), // sim vision inverts this Transform when calculating robotPose
-                CAMERA_HEIGHT_METERS,
-                Constants.kCameraMountingAngleY
-            );
-            simVisionSystem.processFrame(robotState.fieldToVehicle);
+//            simVisionSystem.adjustCamera(
+//                    simCam,
+//                    new Transform3d(
+//                            robotState.getFieldToTurretPos(),
+//                            robotState.fieldToVehicle,
+//                            Constants.kCameraHeightMeters,
+//                            Rotation2d.fromDegrees(Constants.kCameraMountingAngleY)
+//                    )
+//            );
+//            simVisionSystem.adjustCamera(
+//                    simCam,
+//                    new Transform2d(
+//                    robotState.getFieldToTurretPos(),
+//                    robotState.fieldToVehicle
+//                ), // sim vision inverts this Transform when calculating robotPose
+//                Constants.kCameraHeightMeters,
+//                Constants.kCameraMountingAngleY
+//            );
+//            simVisionSystem.processFrame(robotState.fieldToVehicle);
             robotState.field
                 .getObject("camera")
                 .setPose(
