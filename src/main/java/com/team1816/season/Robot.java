@@ -18,6 +18,7 @@ import com.team1816.season.configuration.Constants;
 import com.team1816.season.configuration.DrivetrainTargets;
 import com.team1816.season.states.Orchestrator;
 import com.team1816.season.states.RobotState;
+import com.team1816.season.subsystems.Collector;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -61,6 +62,7 @@ public class Robot extends TimedRobot {
 
     private final LedManager ledManager;
     private final Camera camera;
+    private final Collector collector;
 
 
     /**
@@ -108,6 +110,7 @@ public class Robot extends TimedRobot {
 
         ledManager = Injector.get(LedManager.class);
         camera = Injector.get(Camera.class);
+        collector = Injector.get(Collector.class);
         robotState = Injector.get(RobotState.class);
         orchestrator = Injector.get(Orchestrator.class);
         infrastructure = Injector.get(Infrastructure.class);
@@ -200,6 +203,16 @@ public class Robot extends TimedRobot {
                     ActionState.PRESSED,
                     () -> {
 
+                    }
+            );
+            inputHandler.listenActionPressAndRelease(
+                    "collector",
+                    (pressed) -> {
+                        if(pressed){
+                            collector.setDesiredState(Collector.COLLECTOR_STATE.INTAKE);
+                        } else {
+                            collector.setDesiredState(Collector.COLLECTOR_STATE.STOP);
+                        }
                     }
             );
             /** Operator Commands */

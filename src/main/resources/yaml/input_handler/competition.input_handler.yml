@@ -12,6 +12,7 @@ driver:
         a: autoTargetAlign
     axes:
         rightTrigger: slowMode
+        leftTrigger: collector
     buttons:
         start: zeroPose
 operator:
