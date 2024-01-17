@@ -10,6 +10,7 @@ import com.team1816.lib.hardware.PIDSlotConfiguration;
 import com.team1816.lib.subsystems.LedManager;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.lib.util.team254.DriveSignal;
+import com.team1816.lib.util.team254.SwerveDriveSignal;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -88,6 +89,21 @@ public class CTRESwerveDrive extends Drive {
     @Inject
     public CTRESwerveDrive(LedManager lm, Infrastructure inf, RobotState rs) {
         super(lm, inf, rs);
+
+        swerveModules = new SwerveModule[4];
+
+        // enableDigital all Talons in open loop mode
+        swerveModules[kFrontLeft] = factory.getSwerveModule(NAME, "frontLeft");
+        swerveModules[kFrontRight] = factory.getSwerveModule(NAME, "frontRight");
+        swerveModules[kBackLeft] = factory.getSwerveModule(NAME, "backLeft");
+        swerveModules[kBackRight] = factory.getSwerveModule(NAME, "backRight");
+
+        setOpenLoop(SwerveDriveSignal.NEUTRAL);
+
+        actualModulePositions[kFrontLeft] = new SwerveModulePosition();
+        actualModulePositions[kFrontRight] = new SwerveModulePosition();
+        actualModulePositions[kBackLeft] = new SwerveModulePosition();
+        actualModulePositions[kBackRight] = new SwerveModulePosition();
 
         SwerveDrivetrainConstants constants = new SwerveDrivetrainConstants();
         constants.CANbusName = "highSpeed"; // TODO: Make more flexible.
@@ -171,6 +187,7 @@ public class CTRESwerveDrive extends Drive {
 
         speeds_request.Speeds = chassisSpeed;
 
+        request = speeds_request;
     }
 
     @Override
