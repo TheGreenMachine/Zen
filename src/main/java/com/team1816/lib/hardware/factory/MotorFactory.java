@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix.sensors.*;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.team1816.lib.hardware.MotorConfiguration;
@@ -280,16 +281,7 @@ public class MotorFactory {
 
         // inversion
         int id = motor.getDeviceID();
-        if (id != motorConfiguration.id && RobotBase.isReal()) {
-            GreenLogger.log(new DeviceIdMismatchException(name));
-        } else {
-            boolean invertMotor = motorConfiguration.invertMotor;
-            if (invertMotor) {
-                GreenLogger.log("        Inverting " + name + " with ID " + id);
-            }
-            motor.setInverted(invertMotor);
 
-        }
 
         motor.setNeutralMode(NEUTRAL_MODE);
 
@@ -326,6 +318,15 @@ public class MotorFactory {
         } else {
             motor.selectFeedbackSensor(FeedbackDeviceType.HALL_SENSOR); // Only using hall sensors on sparks at the moment
         }
+
+        //Inversion last because other things might override?
+        boolean invertMotor = motorConfiguration.invertMotor;
+        if (invertMotor) {
+            GreenLogger.log("        Inverting " + name + " with ID " + id);
+        }
+        motor.setInverted(invertMotor);
+        System.out.println("invert status? " + ((TalonFX) motor).getInverted());
+
 
     }
 

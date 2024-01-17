@@ -167,7 +167,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void setInverted(boolean isInverted) {
-        super.setInverted(isInverted);
+        configurator.apply(configs.MotorOutput.withInverted(isInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive));
     }
 
     @Override

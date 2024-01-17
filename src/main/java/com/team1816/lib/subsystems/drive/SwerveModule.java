@@ -16,6 +16,7 @@ import com.team1816.season.configuration.Constants;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 
 import static com.team1816.lib.subsystems.drive.Drive.NAME;
@@ -48,6 +49,8 @@ public class SwerveModule implements ISwerveModule {
     private final ModuleConfig mModuleConfig;
     private final int AZIMUTH_TICK_MASK;
     private final double allowableError;
+    public boolean cacheReal = RobotBase.isReal(); //don't want to do RobotBase.isReal() every update
+
 
     /**
      * Instantiates and configures a swerve module with a CANCoder
@@ -106,10 +109,6 @@ public class SwerveModule implements ISwerveModule {
                 mModuleConfig.azimuthPid.allowableError
         );
 
-        if (azimuthMotor.get_MotorType() == IGreenMotor.MotorType.TalonFX) {
-            ((LazyTalonFX) azimuthMotor).configContinuousWrap(true);
-        }
-
         allowableError = 5; // TODO this is a dummy value for checkSystem
         drivePosition = 0;
 
@@ -138,8 +137,10 @@ public class SwerveModule implements ISwerveModule {
                         desired_state.speedMetersPerSecond
                 );
         azimuthDemandDeg = desired_state.angle.getDegrees();
+
         double azimuthDemandPos =
-                desired_state.angle.getRotations() + mModuleConfig.azimuthEncoderHomeOffset;
+                DriveConversions.convertDegreesToRotations(desired_state.angle.getDegrees())
+                        + mModuleConfig.azimuthEncoderHomeOffset;
 
         if (!isOpenLoop) {
             driveMotor.set(GreenControlMode.VELOCITY_CONTROL, driveDemandTP100MS);
@@ -147,6 +148,7 @@ public class SwerveModule implements ISwerveModule {
             driveDemandMPS *= Drive.kMaxVelOpenLoopMeters;
             driveMotor.set(GreenControlMode.PERCENT_OUTPUT, desired_state.speedMetersPerSecond); // lying to it - speedMetersPerSecond passed in is actually percent output (1 to -1)
         }
+
         azimuthMotor.set(GreenControlMode.POSITION_CONTROL, azimuthDemandPos);
     }
 
@@ -158,7 +160,7 @@ public class SwerveModule implements ISwerveModule {
      */
     public void update() {
         driveActualMPS =
-                DriveConversions.ticksToMeters(driveMotor.getSensorVelocity(0)) * 10;
+                DriveConversions.convertToMPS(driveMotor.getSensorVelocity(0), cacheReal);
         azimuthActualDeg =
                 DriveConversions.convertRotationsToDegrees(
                         azimuthMotor.getSensorPosition(0) -

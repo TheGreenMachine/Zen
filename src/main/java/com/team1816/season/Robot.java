@@ -79,7 +79,7 @@ public class Robot extends TimedRobot {
      * Timing
      */
     private double loopStart;
-    public static double looperDt;
+    public static double looperDt; //looptime delta
     public static double robotDt;
     public static double autoStart;
     public static double teleopStart;
@@ -143,7 +143,6 @@ public class Robot extends TimedRobot {
             // can recognize the subsystem. To recognize your subsystem, just add it alongside the
             // drive, ledManager, and camera parameters.
 
-            drive = (Injector.get(Drive.Factory.class)).getInstance();
 
             // TODO: Set up any other subsystems here.
 
@@ -155,7 +154,7 @@ public class Robot extends TimedRobot {
             subsystemManager = Injector.get(SubsystemLooper.class);
             autoModeManager = Injector.get(AutoModeManager.class);
 
-            subsystemManager.setSubsystems(drive, ledManager, camera);
+
 
             /** Logging */
             if (Constants.kLoggingRobot) {
@@ -181,6 +180,10 @@ public class Robot extends TimedRobot {
                 }
                 DriverStation.startDataLog(DataLogManager.getLog(), false);
             }
+
+            drive = (Injector.get(Drive.Factory.class)).getInstance();
+
+            subsystemManager.setSubsystems(drive, ledManager, camera);
 
             subsystemManager.registerEnabledLoops(enabledLoop);
             subsystemManager.registerDisabledLoops(disabledLoop);

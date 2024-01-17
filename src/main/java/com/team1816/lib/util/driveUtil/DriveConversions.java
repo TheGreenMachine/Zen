@@ -41,7 +41,7 @@ public class DriveConversions {
     }
 
     public static double convertDegreesToRotations(double degrees) {
-        return degrees/360;
+        return degrees /360;
     }
 
 
@@ -53,6 +53,9 @@ public class DriveConversions {
         return rotations * (kWheelCircumferenceMeters);
     }
 
+    public static double convertToMPS(double input, boolean usingRotations) {
+        return usingRotations ? rotationsToMeters(input) : ticksToMeters(input) * 10;
+    }
     public static double metersPerSecondToTicksPer100ms(double meters_per_second) {
         return meters_per_second / (kWheelCircumferenceMeters) * drivePPR / 10.0;
     }
