@@ -111,9 +111,9 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
                 ControlRequest controlRequest;
                 switch(controlMode){
                     case PERCENT_OUTPUT -> controlRequest = dutyCycle.withOutput(demand);
-                    case VELOCITY_CONTROL -> controlRequest = velocity.withVelocity(demand / 204.8);
-                    case POSITION_CONTROL -> controlRequest = position.withPosition(demand / 2048.0);
-                    case MOTION_MAGIC -> controlRequest = motionMagic.withPosition(demand / 2048.0);
+                    case VELOCITY_CONTROL -> controlRequest = velocity.withVelocity(demand);
+                    case POSITION_CONTROL -> controlRequest = position.withPosition(demand);
+                    case MOTION_MAGIC -> controlRequest = motionMagic.withPosition(demand);
                     case BRAKE -> controlRequest = brake;
                     default -> controlRequest = neutral;
                 }
@@ -416,6 +416,12 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
         configurator.apply(configs);
     }
 
+    public void configRotorOffset(double offset) {
+        configurator.apply(
+          configs.Feedback.withFeedbackRotorOffset(offset)
+        );
+    }
+
     @Override
     public boolean hasResetOccurred() {
         return super.hasResetOccurred();
@@ -446,7 +452,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     @Override
     public void restore_FactoryDefaults(int timeoutMs) {
         configs = new TalonFXConfiguration();
-        configs.Audio.withBeepOnConfig(Constants.kSoundOnConfig);
+        configs.Audio.withBeepOnConfig(Constants.kSoundOnConfig).withBeepOnBoot(Constants.kSoundOnConfig);
         configurator.apply(configs);
     }
 

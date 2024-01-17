@@ -12,7 +12,7 @@ subsystems:
                 motorType: TalonFX
                 motorName: FRDr
                 id: 2
-                invertMotor: true
+                invertMotor: false
             RLDr:
                 motorType: TalonFX
                 motorName: BLDr
@@ -22,7 +22,7 @@ subsystems:
                 motorType: TalonFX
                 motorName: BRDr
                 id: 4
-                invertMotor: true
+                invertMotor: false
             FLAz:
                 motorType: TalonFX
                 motorName: FLAz
@@ -62,28 +62,28 @@ subsystems:
                     azimuth: FLAz
                     canCoder: FLEnc
                     constants:
-                        encoderOffset: 117 #was 99 #1442 remote, 110 pid0
+                        encoderOffset: 0.645508 #remote, -0.155273 rotor
                         invertSensorPhase: 1
                 frontRight:
                     drive: FRDr
                     azimuth: FRAz
                     canCoder: FREnc
                     constants:
-                        encoderOffset: 1626 #was 1589 # 683 remote, 1589 pid0
+                        encoderOffset: 0.775391 #remote, -0.091797 rotor
                         invertSensorPhase: 1
                 backLeft:
                     drive: RLDr
                     azimuth: RLAz
                     canCoder: RLEnc
                     constants:
-                        encoderOffset: 2592 #was 556 #1149 remote, 556 pid0
+                        encoderOffset: 0.444824 #remote, 0.049316 rotor
                         invertSensorPhase: 1
                 backRight:
                     drive: RRDr
                     azimuth: RRAz
                     canCoder: RREnc
                     constants:
-                        encoderOffset: 2856 #was 2854,  #1150 remote, 2854 id0
+                        encoderOffset: 0.511475  #remote, -0.309082 rotor
                         invertSensorPhase: 1
             drivePID:
                 slot0:
