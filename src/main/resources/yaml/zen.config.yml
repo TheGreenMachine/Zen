@@ -48,13 +48,9 @@ subsystems:
             FREnc: 21
             RLEnc: 22
             RREnc: 23
-        invertMotor:
-            - FRDr
-            - RRDr
-            - RLDr
-        invertCanCoder:
-            - FREnc
-            - BREnc
+#        invertCanCoder:
+#            - FREnc
+#            - BREnc
         swerveModules:
             modules:
                 frontLeft:
@@ -62,7 +58,7 @@ subsystems:
                     azimuth: FLAz
                     canCoder: FLEnc
                     constants:
-                        encoderOffset: 0.645508 #remote, -0.155273 rotor
+                        encoderOffset: 0.646240  #remote, -0.155273 rotor
                         invertSensorPhase: 1
                 frontRight:
                     drive: FRDr

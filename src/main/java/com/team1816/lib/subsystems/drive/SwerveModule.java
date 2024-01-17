@@ -132,21 +132,27 @@ public class SwerveModule implements ISwerveModule {
                 desiredState,
                 getActualState().angle
         );
+
+
         driveDemandMPS = desired_state.speedMetersPerSecond;
         double driveDemandTP100MS =
                 DriveConversions.metersPerSecondToTicksPer100ms(
                         desired_state.speedMetersPerSecond
                 );
         azimuthDemandDeg = desired_state.angle.getDegrees();
-        double azimuthDemandPos =
-                desired_state.angle.getRotations() + mModuleConfig.azimuthEncoderHomeOffset;
+//        System.out.println("Demanded degrees: " + desired_state.angle.getDegrees());
+//        System.out.println("Demanded rotations: " + DriveConversions.convertDegreesToRotations(desired_state.angle.getDegrees()) + " + " + mModuleConfig);
 
+        double azimuthDemandPos =
+                DriveConversions.convertDegreesToRotations(desired_state.angle.getDegrees())
+                        + mModuleConfig.azimuthEncoderHomeOffset;
         if (!isOpenLoop) {
             driveMotor.set(GreenControlMode.VELOCITY_CONTROL, driveDemandTP100MS);
         } else {
             driveDemandMPS *= Drive.kMaxVelOpenLoopMeters;
             driveMotor.set(GreenControlMode.PERCENT_OUTPUT, desired_state.speedMetersPerSecond); // lying to it - speedMetersPerSecond passed in is actually percent output (1 to -1)
         }
+
         azimuthMotor.set(GreenControlMode.POSITION_CONTROL, azimuthDemandPos);
     }
 
@@ -158,7 +164,7 @@ public class SwerveModule implements ISwerveModule {
      */
     public void update() {
         driveActualMPS =
-                DriveConversions.ticksToMeters(driveMotor.getSensorVelocity(0)) * 10;
+                DriveConversions.rotationsToMeters(driveMotor.getSensorVelocity(0)) * 10;
         azimuthActualDeg =
                 DriveConversions.convertRotationsToDegrees(
                         azimuthMotor.getSensorPosition(0) -
