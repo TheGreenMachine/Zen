@@ -131,6 +131,22 @@ subsystems:
         implemented: false
         constants:
             useMultiTargetOdometry: 1
+    collector:
+        implemented: true
+        motors:
+            intakeMotor:
+                motorType: SparkMax
+                motorName: intakeMotor
+                id: -1
+                invertMotor: false
+            bridgeMotor:
+                motorType: SparkMax
+                motorName: bridgeMotor
+                id: -1
+                invertMotor: false
+        constants:
+            intakeSpeed: 0.4
+            bridgeSpeed: 0.4
 infrastructure:
     canBusName: highSpeed
     ## Power Distribution ##
