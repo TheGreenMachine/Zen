@@ -22,66 +22,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 @Singleton
 public class CTRESwerveDrive extends Drive {
-    /** Constants */
-
-    /**
-     * Module Characterization
-     */
-    private static final double moduleDeltaX = kDriveWheelbaseLengthMeters / 2.0;
-    private static final double moduleDeltaY = kDriveWheelTrackWidthMeters / 2.0;
-
-    // module indices
-    public static final int kFrontLeft = 0;
-    public static final int kFrontRight = 1;
-    public static final int kBackLeft = 2;
-    public static final int kBackRight = 3;
-
-    // module positions
-    public static final Translation2d kFrontLeftModulePosition = new Translation2d(
-            moduleDeltaX,
-            moduleDeltaY
-    );
-    public static final Translation2d kFrontRightModulePosition = new Translation2d(
-            moduleDeltaX,
-            -moduleDeltaY
-    );
-    public static final Translation2d kBackLeftModulePosition = new Translation2d(
-            -moduleDeltaX,
-            moduleDeltaY
-    );
-    public static final Translation2d kBackRightModulePosition = new Translation2d(
-            -moduleDeltaX,
-            -moduleDeltaY
-    );
-
-    public static final Translation2d[] kModulePositions = {
-            kFrontLeftModulePosition,
-            kFrontRightModulePosition,
-            kBackRightModulePosition,
-            kBackLeftModulePosition,
-    };
-
-    // Kinematics (https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/swerve-drive-kinematics.html)
-    public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
-            kFrontLeftModulePosition,
-            kFrontRightModulePosition,
-            kBackLeftModulePosition,
-            kBackRightModulePosition
-    );
-
-    /**
-     * Components
-     */
-    public SwerveModule[] swerveModules;
-
-    /**
-     * States
-     */
-    public SwerveModuleState[] desiredModuleStates = new SwerveModuleState[4];
-    SwerveModuleState[] actualModuleStates = new SwerveModuleState[4];
-    SwerveModulePosition[] actualModulePositions = new SwerveModulePosition[4];
-    public double[] motorTemperatures = new double[4];
-
     private SwerveDrivetrain train;
 
     private SwerveRequest request;
@@ -89,21 +29,6 @@ public class CTRESwerveDrive extends Drive {
     @Inject
     public CTRESwerveDrive(LedManager lm, Infrastructure inf, RobotState rs) {
         super(lm, inf, rs);
-
-        swerveModules = new SwerveModule[4];
-
-        // enableDigital all Talons in open loop mode
-        swerveModules[kFrontLeft] = factory.getSwerveModule(NAME, "frontLeft");
-        swerveModules[kFrontRight] = factory.getSwerveModule(NAME, "frontRight");
-        swerveModules[kBackLeft] = factory.getSwerveModule(NAME, "backLeft");
-        swerveModules[kBackRight] = factory.getSwerveModule(NAME, "backRight");
-
-        setOpenLoop(SwerveDriveSignal.NEUTRAL);
-
-        actualModulePositions[kFrontLeft] = new SwerveModulePosition();
-        actualModulePositions[kFrontRight] = new SwerveModulePosition();
-        actualModulePositions[kBackLeft] = new SwerveModulePosition();
-        actualModulePositions[kBackRight] = new SwerveModulePosition();
 
         SwerveDrivetrainConstants constants = new SwerveDrivetrainConstants();
         constants.CANbusName = "highSpeed"; // TODO: Make more flexible.
@@ -123,27 +48,6 @@ public class CTRESwerveDrive extends Drive {
     @Override
     public synchronized void readFromHardware() {
         super.readFromHardware();
-        double[] actualStates = new double[8];
-        double[] desiredStates = new double[8];
-        for (int i = 0; i < 4; i++) {
-            // logging actual angle and velocity of swerve motors (azimuth & drive)
-            swerveModules[i].update();
-            actualModuleStates[i] = swerveModules[i].getActualState();
-            actualModulePositions[i] = swerveModules[i].getActualPosition();
-            // logging current temperatures of each module's drive motor
-            motorTemperatures[i] = swerveModules[i].getMotorTemp();
-
-            if (Constants.kLoggingDrivetrain) {
-                // populating double list with actState angles and speeds
-                actualStates[i * 2] = actualModuleStates[i].angle.getRadians();
-                actualStates[i * 2 + 1] = actualModuleStates[i].speedMetersPerSecond;
-
-                // populating double list with desState angles and speeds
-                desiredStates[i * 2] = desiredModuleStates[i].angle.getRadians();
-                desiredStates[i * 2 + 1] = desiredModuleStates[i].speedMetersPerSecond;
-            }
-        }
-        chassisSpeed = swerveKinematics.toChassisSpeeds(actualModuleStates);
 
         updateRobotState();
     }
