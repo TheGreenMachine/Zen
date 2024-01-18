@@ -185,7 +185,10 @@ public class CTRESwerveDrive extends Drive {
     public void setTeleopInputs(double forward, double strafe, double rotation) {
         SwerveRequest.ApplyChassisSpeeds speeds_request = new SwerveRequest.ApplyChassisSpeeds();
 
-        speeds_request.Speeds = chassisSpeed;
+//        speeds_request.Speeds = chassisSpeed;
+        // TODO: Elena suggested that this maybe would work.
+        // Explanation: Pythagorean theorem.
+        speeds_request.Speeds = new ChassisSpeeds(forward, strafe, rotation);
 
         request = speeds_request;
     }
