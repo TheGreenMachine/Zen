@@ -142,7 +142,7 @@ subsystems:
             bridgeMotor:
                 motorType: SparkMax
                 motorName: bridgeMotor
-                id: -1
+                id: 11
                 invertMotor: false
         constants:
             intakeSpeed: 0.4
