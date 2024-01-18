@@ -79,7 +79,7 @@ public class Robot extends TimedRobot {
      * Timing
      */
     private double loopStart;
-    public static double looperDt;
+    public static double looperDt; //looptime delta
     public static double robotDt;
     public static double autoStart;
     public static double teleopStart;

@@ -163,7 +163,7 @@ public class SwerveModule implements ISwerveModule {
      */
     public void update() {
         driveActualMPS =
-                DriveConversions.rotationsToMeters(driveMotor.getSensorVelocity(0)) * 10;
+                DriveConversions.rotationsToMeters(driveMotor.getSensorVelocity(0));
         azimuthActualDeg =
                 DriveConversions.convertRotationsToDegrees(
                         azimuthMotor.getSensorPosition(0) -
