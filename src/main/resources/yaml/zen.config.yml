@@ -137,7 +137,7 @@ subsystems:
             intakeMotor:
                 motorType: SparkMax
                 motorName: intakeMotor
-                id: -1
+                id: 10
                 invertMotor: false
             bridgeMotor:
                 motorType: SparkMax
@@ -147,6 +147,9 @@ subsystems:
         constants:
             intakeSpeed: 0.4
             bridgeSpeed: 0.4
+            currentLimit: 30
+            currentLimitThreshold: 0
+            currentLimitTriggerTime: 0
 infrastructure:
     canBusName: highSpeed
     ## Power Distribution ##
