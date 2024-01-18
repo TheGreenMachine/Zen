@@ -25,7 +25,6 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.RobotBase;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 

@@ -16,6 +16,7 @@ import com.team1816.season.configuration.Constants;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 
 import static com.team1816.lib.subsystems.drive.Drive.NAME;
@@ -48,6 +49,8 @@ public class SwerveModule implements ISwerveModule {
     private final ModuleConfig mModuleConfig;
     private final int AZIMUTH_TICK_MASK;
     private final double allowableError;
+    public boolean cacheReal = RobotBase.isReal(); //don't want to do RobotBase.isReal() every update
+
 
     /**
      * Instantiates and configures a swerve module with a CANCoder
@@ -132,8 +135,6 @@ public class SwerveModule implements ISwerveModule {
                 desiredState,
                 getActualState().angle
         );
-
-
         driveDemandMPS = desired_state.speedMetersPerSecond;
         double driveDemandTP100MS =
                 DriveConversions.metersPerSecondToTicksPer100ms(
@@ -163,7 +164,7 @@ public class SwerveModule implements ISwerveModule {
      */
     public void update() {
         driveActualMPS =
-                DriveConversions.rotationsToMeters(driveMotor.getSensorVelocity(0));
+                DriveConversions.convertToMPS(driveMotor.getSensorVelocity(0), cacheReal);
         azimuthActualDeg =
                 DriveConversions.convertRotationsToDegrees(
                         azimuthMotor.getSensorPosition(0) -
