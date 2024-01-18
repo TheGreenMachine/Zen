@@ -140,12 +140,11 @@ public class SwerveModule implements ISwerveModule {
                         desired_state.speedMetersPerSecond
                 );
         azimuthDemandDeg = desired_state.angle.getDegrees();
-//        System.out.println("Demanded degrees: " + desired_state.angle.getDegrees());
-//        System.out.println("Demanded rotations: " + DriveConversions.convertDegreesToRotations(desired_state.angle.getDegrees()) + " + " + mModuleConfig);
 
         double azimuthDemandPos =
                 DriveConversions.convertDegreesToRotations(desired_state.angle.getDegrees())
                         + mModuleConfig.azimuthEncoderHomeOffset;
+
         if (!isOpenLoop) {
             driveMotor.set(GreenControlMode.VELOCITY_CONTROL, driveDemandTP100MS);
         } else {

@@ -41,7 +41,7 @@ public class DriveConversions {
     }
 
     public static double convertDegreesToRotations(double degrees) {
-        return degrees/360;
+        return degrees /360;
     }
 
 
