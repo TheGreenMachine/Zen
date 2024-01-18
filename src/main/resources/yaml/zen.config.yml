@@ -48,9 +48,9 @@ subsystems:
             FREnc: 21
             RLEnc: 22
             RREnc: 23
-        invertCanCoder:
-            - FREnc
-            - RREnc
+#        invertCanCoder:
+#            - FREnc
+#            - RREnc
         swerveModules:
             modules:
                 frontLeft:
