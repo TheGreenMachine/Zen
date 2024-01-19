@@ -446,6 +446,9 @@ public class Robot extends TimedRobot {
         double strafe = inputHandler.getActionAsDouble("strafe");
         double throttle = inputHandler.getActionAsDouble("throttle");
 
+        // TODO NOTE: It's highly unlikely that autoaim will end up actually moving the chassis,
+        // TODO NOTE: so focus more on just moving the shooter based on where the robot pose is.
+        // TODO NOTE: If i had to guess, it'll go through the Orchestrator, not manualControl.
         if (robotState.isAutoAiming &&
                 AutoAimUtil.robotInRange(
                         robotState.fieldToVehicle.getTranslation().getDistance(new Translation2d(Constants.targetX, Constants.targetY)))
