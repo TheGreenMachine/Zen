@@ -75,6 +75,11 @@ public class Orchestrator {
     // Place any actions here.
 
 
+    public void setAutoAiming(boolean autoAiming) {
+        robotState.isAutoAiming = autoAiming;
+    }
+
+
     /**
      * Clears executable threads
      */

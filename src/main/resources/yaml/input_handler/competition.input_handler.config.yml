@@ -21,12 +21,4 @@ operator:
         leftBumper: updatePoseWithCamera
 buttonboard:
     upLeft: autoAim
-    up:
-    upRight:
-    left:
-    center:
-    right:
-    downLeft:
-    down:
-    downRight:
 demoMode: false

@@ -8,7 +8,7 @@ import java.util.Optional;
 /**
  * Organized from top down in the order that you should execute the methods(though they could technically be simultaneous)
  */
-public class UseableMethods {
+public class AutoAimUtil {
     private static double axleOffsetX = Constants.axlePositionOffsetX;
     private static double axleOffsetY = Constants.axlePositionOffsetY;
     private static double radiansDisplacement = Constants.axleRadiansDisplacement;
