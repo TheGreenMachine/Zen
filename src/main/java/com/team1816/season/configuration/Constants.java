@@ -72,11 +72,20 @@ public class Constants {
         Rotation2d.fromDegrees(180)
     );
 
+    public static final double kCameraHeightMeters = 0.15;
+
     public static final Pose2d kCameraMountingOffset = new Pose2d(
         0.20,
         0.19,
         Constants.EmptyRotation2d
     );
+
+    public static final Translation3d kCameraMountingOffset3D = new Translation3d(
+          0.20,
+          0.19,
+          Constants.kCameraHeightMeters
+    );
+
     public static final Translation2d kTurretMountingOffset = new Translation2d(
         -0.12065,
         0.13335
@@ -97,6 +106,8 @@ public class Constants {
     public static double kMinTrajectoryDistance = 0.064; // m
     public static double kMaxProximityThresholdCentimeters = 25; // cm
     public static double preTargetDistance = 0.4; // m
+
+    public static boolean kSoundOnConfig = factory.getConstant("soundOnConfig") > 0;
 
 
     /**

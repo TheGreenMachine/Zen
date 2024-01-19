@@ -70,6 +70,12 @@ public class RobotState {
 
 
     /**
+     * Pigeon state
+     */
+
+    public double[] gyroPos = new double[3];
+
+    /**
      * Initializes RobotState and field
      */
     public RobotState() {

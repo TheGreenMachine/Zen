@@ -1,4 +1,3 @@
-#TODO update when we get it
 subsystems:
     drivetrain:
         implemented: true
@@ -6,48 +5,48 @@ subsystems:
             FLDr:
                 motorType: TalonFX
                 motorName: FLDr
-                id: 11
+                id: 1
                 invertMotor: false
             FRDr:
                 motorType: TalonFX
-                motorName: FLDr
-                id: 9
-                invertMotor: true
+                motorName: FRDr
+                id: 2
+                invertMotor: false
             RLDr:
                 motorType: TalonFX
-                motorName: FLDr
-                id: 18
+                motorName: BLDr
+                id: 3
                 invertMotor: true
             RRDr:
                 motorType: TalonFX
-                motorName: FLDr
-                id: 1
-                invertMotor: true
+                motorName: BRDr
+                id: 4
+                invertMotor: false
             FLAz:
                 motorType: TalonFX
-                motorName: FLDr
-                id: 10
+                motorName: FLAz
+                id: 5
                 invertMotor: false
             FRAz:
                 motorType: TalonFX
-                motorName: FLDr
-                id: 8
+                motorName: FRAz
+                id: 6
                 invertMotor: false
             RLAz:
                 motorType: TalonFX
-                motorName: FLDr
-                id: 19
+                motorName: BLAz
+                id: 7
                 invertMotor: false
             RRAz:
                 motorType: TalonFX
-                motorName: FLDr
-                id: 2
+                motorName: BRAz
+                id: 8
                 invertMotor: false
         canCoders:
-            FLEnc: 25
-            FREnc: 27
-            RLEnc: 28
-            RREnc: 26
+            FLEnc: 20
+            FREnc: 21
+            RLEnc: 22
+            RREnc: 23
         invertMotor:
             - FRDr
             - RRDr
@@ -62,40 +61,40 @@ subsystems:
                     azimuth: FLAz
                     canCoder: FLEnc
                     constants:
-                        encoderOffset: 117 #was 99 #1442 remote, 110 pid0
+                        encoderOffset: 0.645508 #remote, -0.155273 rotor
                         invertSensorPhase: 1
                 frontRight:
                     drive: FRDr
                     azimuth: FRAz
                     canCoder: FREnc
                     constants:
-                        encoderOffset: 1626 #was 1589 # 683 remote, 1589 pid0
+                        encoderOffset: 0.775391 #remote, -0.091797 rotor
                         invertSensorPhase: 1
                 backLeft:
                     drive: RLDr
                     azimuth: RLAz
                     canCoder: RLEnc
                     constants:
-                        encoderOffset: 2592 #was 556 #1149 remote, 556 pid0
+                        encoderOffset: 0.444824 #remote, 0.049316 rotor
                         invertSensorPhase: 1
                 backRight:
                     drive: RRDr
                     azimuth: RRAz
                     canCoder: RREnc
                     constants:
-                        encoderOffset: 2856 #was 2854,  #1150 remote, 2854 id0
+                        encoderOffset: 0.511475  #remote, -0.309082 rotor
                         invertSensorPhase: 1
             drivePID:
                 slot0:
-                    kP: .04
-                    kI: 0.00001
-                    kD: 2.0
-                    kF: 0.0499
+                    kP: 0.008007
+                    kI: 0.002001
+                    kD: 0.000400
+                    kF: 0.009989
             azimuthPID:
                 slot0:
-                    kP: 3.8 # formerly 3.8
-                    kI: 0.00075
-                    kD: 77 # formerly 77
+                    kP: 7.6
+                    kI: 1.5
+                    kD: 0.15
                     kF: 0
                     allowableError: 5
         constants:
@@ -118,15 +117,6 @@ subsystems:
             ## Auto Balance ##
             autoBalanceDivider: 50
             autoBalanceThreshold: 2.5 # degrees
-    ledmanager:
-        implemented: true
-        candle: 23
-        constants:
-            raveEnabled: 0
-            raveSpeed: 0.05
-            cameraLed: 1
-            maxLevel: 200
-            ledStripCount: 35
     camera:
         implemented: false
         constants:
@@ -138,27 +128,27 @@ subsystems:
                 motorType: SparkMax
                 motorName: intakeMotor
                 id: 10
-                invertMotor: false
+                invertMotor: true
+                currentLimit: 30
+                currentLimitThreshold: 0
+                currentLimitTriggerTime: 0
             bridgeMotor:
-                motorType: SparkMax
+                motorType: TalonFX
                 motorName: bridgeMotor
                 id: 11
-                invertMotor: true
+                invertMotor: false
         constants:
             intakeSpeed: 0.4
             bridgeSpeed: 0.4
-            currentLimit: 30
-            currentLimitThreshold: 0
-            currentLimitTriggerTime: 0
 infrastructure:
     canBusName: highSpeed
     ## Power Distribution ##
-    pdId: 1
+    pdId: 25
     pdIsRev: true
     ## Pneumatics Control ##
-    compressorEnabled: true
+    compressorEnabled: false
     pcmIsRev: false
-    pcmId: 4
+    pcmId: -1
     ## Pigeon ##
     pigeonId: 32
     isPigeon2: true
@@ -168,6 +158,7 @@ constants:
     ## Drivetrain ##
     minAllowablePoseError: 0.1
     maxAllowablePoseError: 5
+    soundOnConfig: 0 #If this is false, It will still beep on robot bootup.
     ## Logging ##
     logRobot: 1 # 0 or 1
     logDrivetrain: 1 # 0 or 1
