@@ -16,7 +16,8 @@ import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.configuration.Constants;
 import edu.wpi.first.wpilibj.DriverStation;
 
-public class LazyTalonFX extends TalonFX implements IGreenMotor {
+public class
+LazyTalonFX extends TalonFX implements IGreenMotor {
     protected double lastSet = Double.NaN;
     protected String name = "";
     protected ControlMode lastControlMode = null;
@@ -158,6 +159,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     @Override
     public void setNeutralMode(NeutralMode neutralMode) {
         super.setNeutralMode(neutralMode == NeutralMode.Brake ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+        configurator.refresh(configs);
     }
 
     @Override
@@ -167,7 +169,8 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void setInverted(boolean isInverted) {
-        configurator.apply(configs.MotorOutput.withInverted(isInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive));
+        super.setInverted(isInverted);
+        configurator.refresh(configs);
     }
 
     @Override
@@ -411,17 +414,6 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
         );
     }
 
-    public void configContinuousWrap(boolean enable) {
-        configs.ClosedLoopGeneral.ContinuousWrap = enable;
-        configurator.apply(configs);
-    }
-
-    public void configRotorOffset(double offset) {
-        configurator.apply(
-          configs.Feedback.withFeedbackRotorOffset(offset)
-        );
-    }
-
     @Override
     public boolean hasResetOccurred() {
         return super.hasResetOccurred();
@@ -442,7 +434,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
         isFollower = true;
         // ONLY works to follow other Talons.
         if (leader.get_MotorType() != MotorType.TalonFX) {
-           GreenLogger.log("TalonFX cannot follow non-Talon motor " + leader.getName() + " of type " + leader.get_MotorType());
+            GreenLogger.log("TalonFX cannot follow non-Talon motor " + leader.getName() + " of type " + leader.get_MotorType());
         } else {
             following.withMasterID(leader.getDeviceID());
             set(GreenControlMode.FOLLOWER, 0);
