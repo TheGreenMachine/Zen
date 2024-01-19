@@ -103,7 +103,7 @@ public class EnhancedMotorChecker {
             Timer.delay(checkerConfig.mRunTimeSec);
 
             // Now poll the interesting information.
-            double current = MotorUtil.getSupplyCurrent(motor);
+            double current = motor.get_SupplyCurrent();
             currents.add(current);
             System.out.print("Current: " + current);
 

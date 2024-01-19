@@ -29,12 +29,6 @@ public interface IGreenMotor {
     MotorType get_MotorType();
 
     /**
-     * Gets a motor controller's firmware version
-     * @return The firmware version
-     */
-    int getFirmwareVersion();
-
-    /**
      * Gets a motor controller's CAN id
      * @return The CAN id
      */
@@ -47,7 +41,7 @@ public interface IGreenMotor {
      * Gets the current outputted by a motor controller
      * @return The output current (in amps)
      */
-    double getOutputCurrent();
+    double getMotorOutputCurrent();
 
     /**
      * Gets the percent of motor power outputted by a motor controller
@@ -60,6 +54,8 @@ public interface IGreenMotor {
      * @return The output voltage
      */
     double getMotorOutputVoltage();
+
+    double get_SupplyCurrent();
 
     /**
      * Gets if a motor controller is inverted
@@ -84,12 +80,6 @@ public interface IGreenMotor {
      * @return If a reset has occurred
      */
     boolean hasResetOccurred();
-
-    /**
-     * Gets the current supplied to the controlled motor
-     * @return The current supplied (in amps)
-     */
-    double getSupplyCurrent();
 
     /**
      * Gets if the selected limit switch is currently closed
@@ -119,33 +109,7 @@ public interface IGreenMotor {
      * Gets the difference between the target and actual closed-loop sensor value
      * @return The error (in ticks for position, units/100ms for velocity)
      */
-    double getClosedLoopError();
-
-    /**
-     * Gets the Integral Accumulator value
-     * @param closedLoopSlotID Primary or Auxiliary PID
-     * @return The iAccum value
-     */
-    double getIAccum(int closedLoopSlotID);
-
-    /**
-     * Gets the derivative of the closed-loop error
-     * @param closedLoopSlotID Primary or Auxiliary PID
-     * @return The derivative of the closed-loop error
-     */
-    double getErrorDerivative(int closedLoopSlotID);
-
-    /**
-     * Gets the position recorded by a quadrature encoder
-     * @return The quadrature position
-     */
-    int getQuadraturePosition();
-
-    /**
-     * Gets the position recorded by a pulse width encoder
-     * @return The pulse width position
-     */
-    int getPulseWidthPosition();
+    double get_ClosedLoopError();
 
     //From us! Sometimes.
 
@@ -157,46 +121,10 @@ public interface IGreenMotor {
     GreenControlMode get_ControlMode();
 
     /**
-     * Gets if voltage compensation has been enabled on a motor
-     * @return If voltage compensation is enabled
-     */
-    boolean isVoltageCompensationEnabled();
-
-    /**
      * Gets if a motor is a follower of another motor
      * @return If the motor is a follower
      */
     boolean isFollower();
-
-    /**
-     * Gets a motor's soft limit status
-     * @see SoftLimitStatus
-     * @return The soft limit status
-     */
-    SoftLimitStatus getSoftLimitStatus();
-
-
-    //Faults
-        //Why are these Strings? Because I refuse to write a translator method with 50ish cases. Just no.
-
-    /**
-     * Gets the most recent fault recorded by a motor controller
-     * @return The most recent fault
-     */
-    String get_LastError();
-
-    /**
-     * Gets the collection of faults recorded by a motor controller
-     * @return The recorded faults
-     */
-    String get_Faults();
-
-    /**
-     * Gets the collection of sticky faults recorded by a motor controller
-     * @return The sticky faults
-     */
-    String get_StickyFaults();
-
 
     /** Control */
     /**
@@ -233,12 +161,6 @@ public interface IGreenMotor {
      */
     void follow(IGreenMotor leader);
 
-    /**
-     * Sets the quadrature position currently read by the encoder as the value passed in
-     * @param quadraturePosition The quadrature position to be passed in
-     */
-    void setQuadraturePosition(int quadraturePosition);
-
     /** Configurations */
     // Current limits
 
@@ -250,32 +172,9 @@ public interface IGreenMotor {
 
     /**
      * Configures a motor's current limits
-     * @param configuration The configurations to be applied
-     * @param timeoutMs The CAN timeout (in ms)
-     */
-    void configCurrentLimit(SupplyCurrentLimitConfiguration configuration, int timeoutMs);
-
-    /**
-     * Configures a motor's current limits
      * @param current The current limit
      */
     void configCurrentLimit(int current);
-
-    // Status frames
-
-    /**
-     * Configures a motor's status frame period
-     * @param statusFrame The type of status frame
-     * @param periodms The period for the frame (in ms)
-     */
-    void setPeriodicStatusFramePeriod(PeriodicStatusFrame statusFrame, int periodms);
-
-    /**
-     * Gets the periodic status frame of a motor
-     * @param statusFrame The status frame type
-     * @return The period of the frame (in ms)
-     */
-    int getPeriodicStatusFramePeriod(PeriodicStatusFrame statusFrame);
 
     // Limit Switches
 
@@ -297,8 +196,6 @@ public interface IGreenMotor {
      */
     void enableLimitSwitches(boolean isEnabled);
 
-
-
     // Ramp rates
 
     /**
@@ -319,13 +216,6 @@ public interface IGreenMotor {
      * @param secondsNeutralToFull The time it takes to reach the full demand
      */
     void configClosedLoopRampRate(double secondsNeutralToFull);
-
-    /**
-     * Configures the ramp rate of a motor in closed loop
-     * @param secondsNeutralToFull The time it takes to reach the full demand
-     * @param timeoutMs The CAN timeout (in ms)
-     */
-    void configClosedLoopRampRate(double secondsNeutralToFull, int timeoutMs);
 
     // Peak Outputs
 
@@ -355,20 +245,6 @@ public interface IGreenMotor {
      */
     void config_PeakOutputReverse(double percentOut, int timeoutMs);
 
-    // Voltage compensation
-
-    /**
-     * Configures a motor's voltage compensation settings
-     * @param voltage The maximum voltage to apply when compensation is enabled
-     */
-    void configVoltageCompensation(double voltage);
-
-    /**
-     * Sets if voltage compensation is enabled for a motor
-     * @param isEnabled If voltage compensation should be enabled
-     */
-    void enableVoltageCompensation(boolean isEnabled);
-
     // Soft limits
 
     /**
@@ -378,24 +254,10 @@ public interface IGreenMotor {
     void configForwardSoftLimit(double forwardSoftLimit);
 
     /**
-     * Configures a motor's forwards soft limit
-     * @param forwardSoftLimit The soft limit
-     * @param timeoutMs The CAN timeout (in ms)
-     */
-    void configForwardSoftLimit(double forwardSoftLimit, int timeoutMs);
-
-    /**
      * Configures a motor's reverse soft limit
      * @param reverseSoftLimit The soft limit
      */
     void configReverseSoftLimit(double reverseSoftLimit);
-
-    /**
-     * Configures a motor's reverse soft limit
-     * @param reverseSoftLimit The soft limit
-     * @param timeoutMs The CAN timeout (in ms)
-     */
-    void configReverseSoftLimit(double reverseSoftLimit, int timeoutMs);
 
     /**
      * Sets if the forwards soft limit is enabled on a motor
@@ -404,24 +266,10 @@ public interface IGreenMotor {
     void enableForwardSoftLimit(boolean isEnabled);
 
     /**
-     * Sets if the forwards soft limit is enabled on a motor
-     * @param isEnabled If the forwards soft limit should be enabled
-     * @param timeoutMs The CAN timeout (in ms)
-     */
-    void enableForwardSoftLimit(boolean isEnabled, int timeoutMs);
-
-    /**
      * Sets if the reverse soft limit is enabled on a motor
      * @param isEnabled If the reverse soft limit should be enabled
      */
     void enableReverseSoftLimit(boolean isEnabled);
-
-    /**
-     * Sets if the reverse soft limit is enabled on a motor
-     * @param isEnabled If the reverse soft limit should be enabled
-     * @param timeoutMs The CAN timeout (in ms)
-     */
-    void enableReverseSoftLimit(boolean isEnabled, int timeoutMs);
 
     /**
      * Sets if the soft limits are enabled on a motor
@@ -439,10 +287,12 @@ public interface IGreenMotor {
     void selectFeedbackSensor(FeedbackDeviceType deviceType);
 
     /**
-     * Configures the velocity measurement period of a motor's encoder
-     * @param periodms The time of the period (in ms)
+     * Configures the feedback sensor connected to a motor controller
+     * @param deviceType The type of feedback sensor
+     * @param id The feedback sensor id
+     * @see FeedbackDeviceType
      */
-    void setVelocityMeasurementPeriod(int periodms);
+    void selectFeedbackSensor(FeedbackDeviceType deviceType, int id);
 
     /**
      * Configures the behavior of the motor while neutral
@@ -462,8 +312,11 @@ public interface IGreenMotor {
      */
     void setInverted(boolean isInverted);
 
-    //TODO will be deleted with phoenix six
     void config_NeutralDeadband(double deadbandPercent);
+
+    void enableClearPositionOnLimitF(boolean clearPosition, int timeoutMs);
+
+    void enableClearPositionOnLimitR(boolean clearPosition, int timeoutMs);
 
     /**
      * Restores a motor's factory default settings
@@ -511,12 +364,6 @@ public interface IGreenMotor {
     void set_kF(int pidSlotID, double kF);
 
     /**
-     * Configures the arbitrary feed-forward value of a motor
-     * @param feedForward The feed-forward value
-     */
-    void setArbitraryFeedForward(double feedForward);
-
-    /**
      * Selects which PID slot a motor is using
      * @param pidSlotID The slot id
      * @param closedLoopSlotID Primary or auxiliary PID
@@ -530,20 +377,6 @@ public interface IGreenMotor {
      */
     void set_iZone(int pidSlotID, double iZone);
 
-    /**
-     * Configures the maximum integral accumulation for a PID slot
-     * @param pidSlotID The PID slot to configure
-     * @param maxIAccum The desired max iAccum
-     */
-    void setMaxIAccumulation(int pidSlotID, double maxIAccum);
-
-    /**
-     * Sets the integral accumulation of a motor controller
-     * @param closedLoopSlotID Primary or Auxiliary PID
-     * @param IAccum The desired integral accumulation
-     */
-    void setIAccumulation(int closedLoopSlotID, double IAccum);
-
     //Motion Miscellaneous
 
     /**
@@ -554,27 +387,11 @@ public interface IGreenMotor {
     void configAllowableErrorClosedLoop(int pidSlotID, double allowableError);
 
     /**
-     * Configures the allowable error during closed-loop control for a PID slot
-     * @param pidSlotID The PID slot to configure
-     * @param allowableError The desired allowable error
-     * @param timeoutMs The CAN timeout (in ms)
-     */
-    void configAllowableErrorClosedLoop(int pidSlotID, double allowableError, int timeoutMs);
-
-    /**
      * Configures the peak output during closed-loop control for a PID slot
      * @param pidSlotID The PID slot to configure
      * @param peakOutput The desired peak output
      */
     void setPeakOutputClosedLoop(int pidSlotID, double peakOutput);
-
-    /**
-     * Configures the peak output during closed-loop control for a PID slot
-     * @param pidSlotID The PID slot to configure
-     * @param peakOutput The desired peak output
-     * @param timeoutMs The CAN timeout (in ms)
-     */
-    void setPeakOutputClosedLoop(int pidSlotID, double peakOutput, int timeoutMs);
 
     //Motion Profiling
 
@@ -585,24 +402,10 @@ public interface IGreenMotor {
     void setMotionProfileMaxVelocity(double maxVelocity);
 
     /**
-     * Configures the maximum velocity during motion-profiling
-     * @param maxVelocity The desired maximum velocity
-     * @param timeoutMs The CAN timeout (in ms)
-     */
-    void setMotionProfileMaxVelocity(double maxVelocity, int timeoutMs);
-
-    /**
      * Configures the maximum acceleration during motion-profiling
      * @param maxAcceleration The desired maximum acceleration
      */
     void setMotionProfileMaxAcceleration(double maxAcceleration);
-
-    /**
-     * Configures the maximum acceleration during motion-profiling
-     * @param maxAcceleration The desired maximum acceleration
-     * @param timeoutMs The CAN timeout (in ms)
-     */
-    void setMotionProfileMaxAcceleration(double maxAcceleration, int timeoutMs);
 
     /**
      * Configures the motion curve to use during motion profiling
@@ -610,53 +413,6 @@ public interface IGreenMotor {
      * @param curveStrength The strength of the curve
      */
     void configMotionCurve(MotionCurveType motionCurveType, int curveStrength);
-
-    /**
-     * Clears the trajectory buffer of a motion profile
-     */
-    void clearMotionProfileTrajectoryBuffer();
-
-    /**
-     * Updates the tracked status of a motor's soft limits
-     *
-     * @see SoftLimitStatus
-     * @param softLimitStatus The current soft limit status of the motor
-     * @param statusDemand The status demand applied
-     */
-    default SoftLimitStatus updateSoftLimitStatus(SoftLimitStatus softLimitStatus, SoftLimitStatus statusDemand) {
-        switch(statusDemand){
-            case FORWARD_DISABLE -> {
-                if (softLimitStatus == SoftLimitStatus.FORWARD) {
-                    softLimitStatus = SoftLimitStatus.DISABLED;
-                } else if (softLimitStatus == SoftLimitStatus.BOTH) {
-                    softLimitStatus = SoftLimitStatus.REVERSE;
-                }
-            }
-            case REVERSE_DISABLE -> {
-                if (softLimitStatus == SoftLimitStatus.REVERSE) {
-                    softLimitStatus = SoftLimitStatus.DISABLED;
-                } else if (softLimitStatus == SoftLimitStatus.BOTH) {
-                    softLimitStatus = SoftLimitStatus.FORWARD;
-                }
-            }
-            case FORWARD -> {
-                if (softLimitStatus == SoftLimitStatus.REVERSE || softLimitStatus == SoftLimitStatus.BOTH) {
-                    softLimitStatus = SoftLimitStatus.BOTH;
-                } else {
-                    softLimitStatus = SoftLimitStatus.FORWARD;
-                }
-            }
-            case REVERSE -> {
-                if (softLimitStatus == SoftLimitStatus.FORWARD || softLimitStatus == SoftLimitStatus.BOTH) {
-                    softLimitStatus = SoftLimitStatus.BOTH;
-                } else {
-                    softLimitStatus = SoftLimitStatus.REVERSE;
-                }
-            }
-            case DISABLED -> softLimitStatus = SoftLimitStatus.DISABLED;
-        }
-        return softLimitStatus;
-    }
 
     enum MotorType {
         TalonFX, //Falcons and Krakens

@@ -28,7 +28,7 @@ public interface ICompressor extends Sendable, AutoCloseable {
      *
      * @return boolean enabled
      */
-    boolean enabled();
+    boolean isEnabled();
 
     /**
      * Returns the compressor current

@@ -37,10 +37,10 @@ public class GhostPigeonIMU implements IPigeonIMU {
      * Returns the simulatedYaw
      *
      * @return simulatedYaw
-     * @see IPigeonIMU#getYaw()
+     * @see IPigeonIMU#getYawValue()
      */
     @Override
-    public double getYaw() {
+    public double getYawValue() {
         return simulatedYaw;
     }
 
@@ -48,10 +48,10 @@ public class GhostPigeonIMU implements IPigeonIMU {
      * Returns the simulatedPitch
      *
      * @return simulatedPitch
-     * @see IPigeonIMU#getPitch()
+     * @see IPigeonIMU#getPitchValue()
      */
     @Override
-    public double getPitch() {
+    public double getPitchValue() {
         return simulatedPitch;
     }
 
@@ -59,10 +59,10 @@ public class GhostPigeonIMU implements IPigeonIMU {
      * Returns the simulatedRoll
      *
      * @return simulatedRoll
-     * @see IPigeonIMU#getRoll()
+     * @see IPigeonIMU#getRollValue()
      */
     @Override
-    public double getRoll() {
+    public double getRollValue() {
         return simulatedRoll;
     }
 
@@ -83,36 +83,11 @@ public class GhostPigeonIMU implements IPigeonIMU {
      *
      * @param angle (degrees)
      * @return ErrorCode / void
-     * @see IPigeonIMU#setYaw(double)
+     * @see IPigeonIMU#set_Yaw(double)
      */
     @Override
-    public ErrorCode setYaw(double angle) {
+    public void set_Yaw(double angle) {
         simulatedYaw = angle;
-        return ErrorCode.OK;
-    }
-
-    /**
-     * Functionality: non-existent
-     *
-     * @param angle (degrees)
-     * @return ErrorCode / void
-     * @see IPigeonIMU#setFusedHeading(double)
-     */
-    @Override
-    public ErrorCode setFusedHeading(double angle) {
-        return ErrorCode.OK;
-    }
-
-    /**
-     * Functionality: non-existent
-     *
-     * @param angle (degrees)
-     * @return ErrorCode / void
-     * @see IPigeonIMU#setAccumZAngle(double)
-     */
-    @Override
-    public ErrorCode setAccumZAngle(double angle) {
-        return ErrorCode.OK;
     }
 
     /**
@@ -130,24 +105,20 @@ public class GhostPigeonIMU implements IPigeonIMU {
      * Functionality: non-existent
      *
      * @return ErrorCode / void
-     * @see IPigeonIMU#configFactoryDefault()
+     * @see IPigeonIMU#configFactoryDefaults()
      */
     @Override
-    public ErrorCode configFactoryDefault() {
-        return ErrorCode.OK;
-    }
+    public void configFactoryDefaults() {}
 
     /**
      * Functionality: non-existent
      *
      * @return ErrorCode / void
-     * @see IPigeonIMU#setStatusFramePeriod(PigeonIMU_StatusFrame, int)
+     * @see IPigeonIMU#set_StatusFramePeriod(PigeonIMU_StatusFrame, int)
      */
     @Override
-    public ErrorCode setStatusFramePeriod(
+    public void set_StatusFramePeriod(
         PigeonIMU_StatusFrame statusFrame,
         int periodMs
-    ) {
-        return ErrorCode.OK;
-    }
+    ) {}
 }

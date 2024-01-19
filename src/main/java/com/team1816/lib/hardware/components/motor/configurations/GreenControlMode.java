@@ -8,11 +8,17 @@ package com.team1816.lib.hardware.components.motor.configurations;
  */
 public enum GreenControlMode {
     // Universal
-    PERCENT_OUTPUT, //TODO when phoenix 6 is brought in, change to DUTY_CYCLE
+    PERCENT_OUTPUT,
     VELOCITY_CONTROL,
     POSITION_CONTROL,
     MOTION_PROFILE,
+
+    // All except TalonFX
     CURRENT,
+
+    // TalonFX exclusive
+    BRAKE,
+    NEUTRAL,
 
     // CTRE Exclusive
     FOLLOWER,
@@ -21,8 +27,10 @@ public enum GreenControlMode {
     MUSIC_TONE,
     DISABLED,
 
-    // REV Exclusive
+    // TalonFX and REV
     VOLTAGE_CONTROL,
+
+    // REV Exclusive
     SMART_VELOCITY,
 
 }

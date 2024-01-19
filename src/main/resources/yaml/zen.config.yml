@@ -1,3 +1,4 @@
+#TODO update when we get it
 subsystems:
     drivetrain:
         implemented: true
@@ -6,7 +7,7 @@ subsystems:
                 motorType: TalonFX
                 motorName: FLDr
                 id: 1
-                invertMotor: false
+                invertMotor: true
             FRDr:
                 motorType: TalonFX
                 motorName: FRDr
@@ -47,13 +48,8 @@ subsystems:
             FREnc: 21
             RLEnc: 22
             RREnc: 23
-        invertMotor:
-            - FRDr
-            - RRDr
-            - RLDr
         invertCanCoder:
-            - FREnc
-            - BREnc
+            - FLEnc
         swerveModules:
             modules:
                 frontLeft:
@@ -61,7 +57,7 @@ subsystems:
                     azimuth: FLAz
                     canCoder: FLEnc
                     constants:
-                        encoderOffset: 0.645508 #remote, -0.155273 rotor
+                        encoderOffset: 0.646240  #remote, -0.155273 rotor
                         invertSensorPhase: 1
                 frontRight:
                     drive: FRDr

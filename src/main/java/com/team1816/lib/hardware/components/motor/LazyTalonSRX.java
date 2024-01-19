@@ -19,8 +19,6 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
 
     protected boolean isFollower;
 
-    protected SoftLimitStatus softLimitStatus;
-
     protected double arbitraryFeedForward = 0;
 
     /**
@@ -34,7 +32,6 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
         name = motorName;
         faults = new Faults();
         stickyFaults = new StickyFaults();
-        softLimitStatus = SoftLimitStatus.DISABLED;
     }
 
     @Override
@@ -45,6 +42,16 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
     @Override
     public MotorType get_MotorType() {
         return MotorType.TalonSRX;
+    }
+
+    @Override
+    public double getMotorOutputCurrent() {
+        return super.getStatorCurrent();
+    }
+
+    @Override
+    public double get_SupplyCurrent() {
+        return super.getSupplyCurrent();
     }
 
     @Override
@@ -62,40 +69,14 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
 
     @Override
     public void configCurrentLimit(SupplyCurrentLimitConfiguration configuration) {
-        super.configSupplyCurrentLimit(configuration);
-    }
-
-    @Override
-    public void configCurrentLimit(SupplyCurrentLimitConfiguration configuration, int timeoutMs) {
-        super.configSupplyCurrentLimit(configuration, timeoutMs);
+        super.configSupplyCurrentLimit(configuration, Constants.kLongCANTimeoutMs);
     }
 
     @Override
     public void configCurrentLimit(int current) {
         super.configSupplyCurrentLimit(
-            new SupplyCurrentLimitConfiguration(true, current, 0, 0)
-        );
-    }
-
-    @Override
-    public void setPeriodicStatusFramePeriod(PeriodicStatusFrame statusFrame, int periodms) {
-        super.setStatusFramePeriod(
-            ConfigurationTranslator.toStatusFrameEnhanced(statusFrame),
-            periodms
-        );
-    }
-
-    @Override
-    public int getPeriodicStatusFramePeriod(PeriodicStatusFrame statusFrame) {
-        return super.getStatusFramePeriod(
-            ConfigurationTranslator.toStatusFrameEnhanced(statusFrame)
-        );
-    }
-
-    @Override
-    public void setVelocityMeasurementPeriod(int periodms) {
-        super.configVelocityMeasurementPeriod(
-            ConfigurationTranslator.toSensorVelocityMeasPeriod(periodms)
+            new SupplyCurrentLimitConfiguration(true, current, 0, 0),
+                Constants.kLongCANTimeoutMs
         );
     }
 
@@ -155,11 +136,6 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
     }
 
     @Override
-    public void configClosedLoopRampRate(double secondsNeutralToFull, int timeoutMs) {
-        super.configClosedloopRamp(secondsNeutralToFull, timeoutMs);
-    }
-
-    @Override
     public void config_PeakOutputForward(double percentOut) {
         super.configPeakOutputForward(percentOut);
     }
@@ -186,8 +162,13 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
     }
 
     @Override
-    public void configVoltageCompensation(double voltage) {
-        super.configVoltageCompSaturation(voltage);
+    public void enableClearPositionOnLimitF(boolean clearPosition, int timeoutMs) {
+        super.configClearPositionOnLimitF(clearPosition, timeoutMs);
+    }
+
+    @Override
+    public void enableClearPositionOnLimitR(boolean clearPosition, int timeoutMs) {
+        super.configClearPositionOnLimitR(clearPosition, timeoutMs);
     }
 
     @Override
@@ -203,6 +184,11 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
     @Override
     public double getSensorVelocity(int closedLoopSlotID) {
         return super.getSelectedSensorVelocity(closedLoopSlotID);
+    }
+
+    @Override
+    public double get_ClosedLoopError() {
+        return super.getClosedLoopError();
     }
 
     @Override
@@ -222,67 +208,27 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
 
     @Override
     public void configForwardSoftLimit(double forwardSoftLimit) {
-        super.configForwardSoftLimitThreshold(forwardSoftLimit);
-    }
-
-    @Override
-    public void configForwardSoftLimit(double forwardSoftLimit, int timeoutMs) {
-        super.configForwardSoftLimitThreshold(forwardSoftLimit, timeoutMs);
+        super.configForwardSoftLimitThreshold(forwardSoftLimit, Constants.kCANTimeoutMs);
     }
 
     @Override
     public void configReverseSoftLimit(double reverseSoftLimit) {
-        super.configReverseSoftLimitThreshold(reverseSoftLimit);
-    }
-
-    @Override
-    public void configReverseSoftLimit(double reverseSoftLimit, int timeoutMs) {
-        super.configReverseSoftLimitThreshold(reverseSoftLimit, timeoutMs);
+        super.configReverseSoftLimitThreshold(reverseSoftLimit, Constants.kCANTimeoutMs);
     }
 
     @Override
     public void enableForwardSoftLimit(boolean isEnabled) {
-        super.configForwardSoftLimitEnable(isEnabled);
-        softLimitStatus = updateSoftLimitStatus(
-            softLimitStatus,
-            isEnabled ? SoftLimitStatus.FORWARD : SoftLimitStatus.FORWARD_DISABLE
-        );
-    }
-
-    @Override
-    public void enableForwardSoftLimit(boolean isEnabled, int timeoutMs) {
-        super.configForwardSoftLimitEnable(isEnabled, timeoutMs);
-        softLimitStatus = updateSoftLimitStatus(
-            softLimitStatus,
-            isEnabled ? SoftLimitStatus.FORWARD : SoftLimitStatus.FORWARD_DISABLE
-        );
+        super.configForwardSoftLimitEnable(isEnabled, Constants.kCANTimeoutMs);
     }
 
     @Override
     public void enableReverseSoftLimit(boolean isEnabled) {
-        super.configReverseSoftLimitEnable(isEnabled);
-        softLimitStatus = updateSoftLimitStatus(
-            softLimitStatus,
-            isEnabled ? SoftLimitStatus.REVERSE : SoftLimitStatus.REVERSE_DISABLE
-        );
-    }
-
-    @Override
-    public void enableReverseSoftLimit(boolean isEnabled, int timeoutMs) {
-        super.configReverseSoftLimitEnable(isEnabled, timeoutMs);
-        softLimitStatus = updateSoftLimitStatus(
-            softLimitStatus,
-            isEnabled ? SoftLimitStatus.REVERSE : SoftLimitStatus.REVERSE_DISABLE
-        );
+        super.configReverseSoftLimitEnable(isEnabled, Constants.kCANTimeoutMs);
     }
 
     @Override
     public void enableSoftLimits(boolean isEnabled) {
         super.overrideSoftLimitsEnable(isEnabled);
-        softLimitStatus = updateSoftLimitStatus(
-            softLimitStatus,
-            isEnabled ? SoftLimitStatus.BOTH : SoftLimitStatus.DISABLED
-        );
     }
 
     @Override
@@ -306,11 +252,6 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
     }
 
     @Override
-    public void setArbitraryFeedForward(double feedForward) {
-        arbitraryFeedForward = feedForward;
-    }
-
-    @Override
     public void selectPIDSlot(int pidSlotID, int closedLoopSlotID) {
         super.selectProfileSlot(pidSlotID, closedLoopSlotID);
     }
@@ -322,17 +263,7 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
 
     @Override
     public void configAllowableErrorClosedLoop(int pidSlotID, double allowableError) {
-        super.configAllowableClosedloopError(pidSlotID, allowableError);
-    }
-
-    @Override
-    public void configAllowableErrorClosedLoop(int pidSlotID, double allowableError, int timeoutMs) {
-        super.configAllowableClosedloopError(pidSlotID, allowableError, timeoutMs);
-    }
-
-    @Override
-    public void setMaxIAccumulation(int pidSlotID, double maxIAccum) {
-        super.configMaxIntegralAccumulator(pidSlotID, maxIAccum);
+        super.configAllowableClosedloopError(pidSlotID, allowableError, Constants.kLongCANTimeoutMs);
     }
 
     @Override
@@ -341,40 +272,14 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
     }
 
     @Override
-    public void setPeakOutputClosedLoop(int pidSlotID, double peakOutput, int timeoutMs) {
-        super.configClosedLoopPeakOutput(pidSlotID, peakOutput, timeoutMs);
-    }
-
-    @Override
-    public void setIAccumulation(int closedLoopSlotID, double IAccum) {
-        super.setIntegralAccumulator(IAccum, closedLoopSlotID, Constants.kCANTimeoutMs);
-    }
-
-    @Override
-    public double getIAccum(int closedLoopSlotID) {
-        return super.getIntegralAccumulator(closedLoopSlotID);
-    }
-
-    @Override
     public void setMotionProfileMaxVelocity(double maxVelocity) {
         super.configMotionCruiseVelocity(maxVelocity);
-    }
-
-    @Override
-    public void setMotionProfileMaxVelocity(double maxVelocity, int timeoutMs) {
-        super.configMotionCruiseVelocity(maxVelocity, timeoutMs);
     }
 
     @Override
     public void setMotionProfileMaxAcceleration(double maxAcceleration) {
         super.configMotionAcceleration(maxAcceleration);
     }
-
-    @Override
-    public void setMotionProfileMaxAcceleration(double maxAcceleration, int timeoutMs) {
-        super.configMotionAcceleration(maxAcceleration, timeoutMs);
-    }
-
     @Override
     public void configMotionCurve(MotionCurveType motionCurveType, int curveStrength) {
         if (curveStrength > 8) {
@@ -387,26 +292,6 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
         super.configMotionSCurveStrength(
             ConfigurationTranslator.toMotionCurveInt(motionCurveType, curveStrength)
         );
-    }
-
-    @Override
-    public void clearMotionProfileTrajectoryBuffer() {
-        super.clearMotionProfileTrajectories();
-    }
-
-    @Override
-    public String get_LastError() {
-        return "CTRE ErrorCode " + super.getLastError().toString();
-    }
-
-    @Override
-    public String get_Faults() {
-        return "CTRE ErrorCode " + super.getFaults(faults).name();
-    }
-
-    @Override
-    public String get_StickyFaults() {
-        return "CTRE ErrorCode " + super.getStickyFaults(stickyFaults).toString();
     }
 
     @Override
@@ -431,28 +316,8 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
     }
 
     @Override
-    public int getQuadraturePosition() {
-        return sensors.getQuadraturePosition();
-    }
-
-    @Override
-    public void setQuadraturePosition(int quadraturePosition) {
-        sensors.setQuadraturePosition(quadraturePosition, Constants.kCANTimeoutMs);
-    }
-
-    @Override
-    public int getPulseWidthPosition() {
-        return sensors.getPulseWidthPosition();
-    }
-
-    @Override
     public boolean isFollower() {
         return isFollower;
-    }
-
-    @Override
-    public SoftLimitStatus getSoftLimitStatus() {
-        return softLimitStatus;
     }
 
     @Override

@@ -1,7 +1,9 @@
 package com.team1816.season.states;
 
+import com.ctre.phoenix6.StatusCode;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.team1816.lib.PlaylistManager;
 import com.team1816.lib.subsystems.LedManager;
 import com.team1816.lib.subsystems.drive.Drive;
 import com.team1816.lib.subsystems.vision.Camera;
@@ -74,6 +76,54 @@ public class Orchestrator {
 
     // Place any actions here.
 
+    /**
+     * Music Control
+     */
+
+    //TODO Move orchestra object out of drive and add wrapper - LOW LOW PRIORITY
+
+    /**
+     * Plays/Pauses the selected song for the Orchestra
+     * @see com.ctre.phoenix6.Orchestra
+     * @param playing If the song should play or pause
+     */
+    public void playSong(boolean playing) {
+        if (playing) {
+            if (!drive.orchestra.isPlaying()) {
+                drive.orchestra.play();
+            }
+        } else {
+            drive.orchestra.pause();
+        }
+    }
+
+    /**
+     * Stops the Orchestra from playing a song
+     * @see com.ctre.phoenix6.Orchestra
+     */
+    public void stopSong() {
+        drive.orchestra.stop();
+    }
+
+    /**
+     * Loads the entered song's filepath into the Orchestra
+     *
+     * @param song The selected song
+     * @see com.ctre.phoenix6.Orchestra
+     */
+    public StatusCode loadSong(PlaylistManager.Playlist song) {
+        return loadSong(song.getFilePath());
+    }
+
+    /**
+     * Loads the entered filepath into the Orchestra
+     *
+     * @param filepath
+     * @see com.ctre.phoenix6.Orchestra
+     */
+    private StatusCode loadSong(String filepath) {
+        return drive.orchestra.loadMusic(filepath);
+    }
 
     /**
      * Clears executable threads

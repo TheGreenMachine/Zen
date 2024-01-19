@@ -89,7 +89,7 @@ public class AutoModeManager {
         if (RobotBase.isSimulation()) {
             selectedColor = sideChooser.getSelected();
         } else if (RobotBase.isReal()) {
-            var dsAlliance = DriverStation.getAlliance();
+            var dsAlliance = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : sideChooser.getSelected(); //ternary hell
             selectedColor = (dsAlliance == DriverStation.Alliance.Red) ? Color.RED : Color.BLUE;
         }
         boolean autoChanged = desiredAuto != selectedAuto;

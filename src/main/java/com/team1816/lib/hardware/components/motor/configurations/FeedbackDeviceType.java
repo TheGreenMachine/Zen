@@ -3,15 +3,14 @@ package com.team1816.lib.hardware.components.motor.configurations;
 /**
  * Enum containing all motor feedback device types
  *
- * @see com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice
  * @see com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice
- * @see com.revrobotics.SparkMaxRelativeEncoder.Type
+ * @see com.revrobotics.SparkRelativeEncoder.Type
  */
 public enum FeedbackDeviceType { // No enum inheritance :(
-    // Universal
+    // Near Universal
     NO_SENSOR,
 
-    // CTRE Universal
+    // Phoenix 5 Universal
     SENSOR_SUM,
     SENSOR_DIFFERENCE,
     REMOTE_SENSOR_0,
@@ -20,6 +19,7 @@ public enum FeedbackDeviceType { // No enum inheritance :(
 
     // TalonFX
     INTEGRATED_SENSOR,
+    REMOTE_CANCODER,
 
     // TalonSRX
     ANALOG,

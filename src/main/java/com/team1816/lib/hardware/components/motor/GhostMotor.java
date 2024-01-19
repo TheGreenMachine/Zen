@@ -35,8 +35,6 @@ public class GhostMotor implements IGreenMotor {
 
     protected double lastUpdate = 0;
 
-    protected SoftLimitStatus softLimitStatus = SoftLimitStatus.DISABLED;
-
     public GhostMotor(int maxTickVel, int absInitOffset, String motorName) {
         this.absInitOffset = absInitOffset;
         maxVelTicks100ms = maxTickVel;
@@ -59,15 +57,14 @@ public class GhostMotor implements IGreenMotor {
     }
 
     @Override
-    public void configCurrentLimit(SupplyCurrentLimitConfiguration configuration) {
+    public void selectFeedbackSensor(FeedbackDeviceType deviceType, int id) {
 
     }
 
     @Override
-    public void configCurrentLimit(SupplyCurrentLimitConfiguration configuration, int timeoutMs) {
+    public void configCurrentLimit(SupplyCurrentLimitConfiguration configuration) {
 
     }
-
 
     @Override
     public void configCurrentLimit(int current) {
@@ -75,23 +72,8 @@ public class GhostMotor implements IGreenMotor {
     }
 
     @Override
-    public void setPeriodicStatusFramePeriod(PeriodicStatusFrame statusFrame, int periodms) {
-
-    }
-
-    @Override
-    public int getPeriodicStatusFramePeriod(PeriodicStatusFrame statusFrame) {
+    public double getMotorOutputCurrent() {
         return 0;
-    }
-
-    @Override
-    public double getOutputCurrent() {
-        return 0;
-    }
-
-    @Override
-    public void setVelocityMeasurementPeriod(int periodms) {
-
     }
 
     @Override
@@ -231,11 +213,6 @@ public class GhostMotor implements IGreenMotor {
     }
 
     @Override
-    public void configClosedLoopRampRate(double secondsNeutralToFull, int timeoutMs) {
-
-    }
-
-    @Override
     public void config_PeakOutputForward(double percentOut) {
 
     }
@@ -262,12 +239,12 @@ public class GhostMotor implements IGreenMotor {
     }
 
     @Override
-    public void configVoltageCompensation(double voltage) {
+    public void enableClearPositionOnLimitF(boolean clearPosition, int timeoutMs) {
 
     }
 
     @Override
-    public void enableVoltageCompensation(boolean isEnabled) {
+    public void enableClearPositionOnLimitR(boolean clearPosition, int timeoutMs) {
 
     }
 
@@ -285,6 +262,11 @@ public class GhostMotor implements IGreenMotor {
     @Override
     public double getMotorOutputVoltage() {
         return getMotorOutputPercent() * RobotController.getBatteryVoltage();
+    }
+
+    @Override
+    public double get_SupplyCurrent() {
+        return 0;
     }
 
     @Override
@@ -327,59 +309,24 @@ public class GhostMotor implements IGreenMotor {
     }
 
     @Override
-    public void configForwardSoftLimit(double forwardSoftLimit, int timeoutMs) {
-        configForwardSoftLimit(forwardSoftLimit);
-    }
-
-
-    @Override
     public void configReverseSoftLimit(double reverseSoftLimit) {
         usingLimit = true;
         revLimit = (int) reverseSoftLimit;
     }
 
     @Override
-    public void configReverseSoftLimit(double reverseSoftLimit, int timeoutMs) {
-        configReverseSoftLimit(reverseSoftLimit);
-    }
-
-
-    @Override
     public void enableForwardSoftLimit(boolean isEnabled) {
         usingLimit = isEnabled;
-        softLimitStatus = updateSoftLimitStatus(
-            softLimitStatus,
-            isEnabled ? SoftLimitStatus.FORWARD : SoftLimitStatus.FORWARD_DISABLE
-        );
     }
-
-    @Override
-    public void enableForwardSoftLimit(boolean isEnabled, int timeoutMs) {
-        enableForwardSoftLimit(isEnabled);
-    }
-
 
     @Override
     public void enableReverseSoftLimit(boolean isEnabled) {
         usingLimit = isEnabled;
-        softLimitStatus = updateSoftLimitStatus(
-            softLimitStatus,
-            isEnabled ? SoftLimitStatus.REVERSE : SoftLimitStatus.REVERSE_DISABLE
-        );
-    }
-
-    @Override
-    public void enableReverseSoftLimit(boolean isEnabled, int timeoutMs) {
-        enableReverseSoftLimit(isEnabled);
     }
 
     @Override
     public void enableSoftLimits(boolean isEnabled) {
         usingLimit = isEnabled;
-        softLimitStatus = updateSoftLimitStatus(
-            softLimitStatus,
-            isEnabled ? SoftLimitStatus.BOTH : SoftLimitStatus.DISABLED
-        );
     }
 
     @Override
@@ -403,11 +350,6 @@ public class GhostMotor implements IGreenMotor {
     }
 
     @Override
-    public void setArbitraryFeedForward(double feedForward) {
-
-    }
-
-    @Override
     public void selectPIDSlot(int pidSlotID, int closedLoopSlotID) {
 
     }
@@ -423,44 +365,12 @@ public class GhostMotor implements IGreenMotor {
     }
 
     @Override
-    public void configAllowableErrorClosedLoop(int pidSlotID, double allowableError, int timeoutMs) {
-
-    }
-
-
-    @Override
-    public void setMaxIAccumulation(int pidSlotID, double maxIAccum) {
-
-    }
-
-    @Override
     public void setPeakOutputClosedLoop(int pidSlotID, double peakOutput) {
 
     }
 
     @Override
-    public void setPeakOutputClosedLoop(int pidSlotID, double peakOutput, int timeoutMs) {
-
-    }
-
-
-    @Override
-    public void setIAccumulation(int closedLoopSlotID, double IAccum) {
-
-    }
-
-    @Override
-    public double getClosedLoopError() {
-        return 0;
-    }
-
-    @Override
-    public double getIAccum(int closedLoopSlotID) {
-        return 0;
-    }
-
-    @Override
-    public double getErrorDerivative(int closedLoopSlotID) {
+    public double get_ClosedLoopError() {
         return 0;
     }
 
@@ -470,49 +380,13 @@ public class GhostMotor implements IGreenMotor {
     }
 
     @Override
-    public void setMotionProfileMaxVelocity(double maxVelocity, int timeoutMs) {
-        setMotionProfileMaxVelocity(maxVelocity);
-    }
-
-
-    @Override
     public void setMotionProfileMaxAcceleration(double maxAcceleration) {
         motionMagicAccel = maxAcceleration;
     }
 
     @Override
-    public void setMotionProfileMaxAcceleration(double maxAcceleration, int timeoutMs) {
-        setMotionProfileMaxAcceleration(maxAcceleration);
-    }
-
-    @Override
     public void configMotionCurve(MotionCurveType motionCurveType, int curveStrength) {
 
-    }
-
-    @Override
-    public void clearMotionProfileTrajectoryBuffer() {
-
-    }
-
-    @Override
-    public String get_LastError() {
-        return "Ghost motor, no errors!";
-    }
-
-    @Override
-    public String get_Faults() {
-        return "Ghost motor, no faults!";
-    }
-
-    @Override
-    public String get_StickyFaults() {
-        return "Ghost motor, no sticky faults!";
-    }
-
-    @Override
-    public int getFirmwareVersion() {
-        return 0;
     }
 
     @Override
@@ -536,33 +410,8 @@ public class GhostMotor implements IGreenMotor {
     }
 
     @Override
-    public double getSupplyCurrent() {
-        return 0;
-    }
-
-    @Override
     public void restore_FactoryDefaults(int timeoutMs) {
 
-    }
-
-    @Override
-    public boolean isVoltageCompensationEnabled() {
-        return false;
-    }
-
-    @Override
-    public int getQuadraturePosition() {
-        return (int) desiredDemand[0];
-    }
-
-    @Override
-    public void setQuadraturePosition(int quadraturePosition) {
-        desiredDemand[2] = quadraturePosition;
-    }
-
-    @Override
-    public int getPulseWidthPosition() {
-        return (int) (absInitOffset + actualOutput[2]) % absMotorPPR;
     }
 
     @Override
@@ -570,10 +419,6 @@ public class GhostMotor implements IGreenMotor {
         return false;
     }
 
-    @Override
-    public SoftLimitStatus getSoftLimitStatus() {
-        return softLimitStatus;
-    }
 
     @Override
     public void configControlFramePeriod(ControlFrame controlFrame, int periodms) {

@@ -2,12 +2,14 @@ import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2023.4.3" //TODO update to 2024 when out
+    id "edu.wpi.first.GradleRIO" version "2024.1.1"
     id 'org.jsonschema2dataclass' version '4.0.1'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 def ROBOT_MAIN_CLASS = "com.team1816.season.Main"
 
@@ -31,12 +33,16 @@ def writeGitHashToFile() {
 
     def gitHashStrLines = gitHashStr.split(",\\[]");
 
-    delete "$directory/$fileName"
+    def gitHashFolder = file("$directory")
 
-    file("$directory/$fileName") << getGitBranchName() << "    \n"
+    if (gitHashFolder.exists()) {
+        delete "$directory/$fileName"
 
-    for (String line : gitHashStrLines) {
-        file("$directory/$fileName") << line.trim() << "    \n"
+        file("$directory/$fileName") << getGitBranchName() << "    \n"
+
+        for (String line : gitHashStrLines) {
+            file("$directory/$fileName") << line.trim() << "    \n"
+        }
     }
 }
 
@@ -120,11 +126,14 @@ dependencies {
 wpi.sim.addGui().defaultEnabled.set(true)
 wpi.sim.addDriverstation()
 
+//TODO add test function definition
+
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
 // in order to make them all available at runtime. Also adding the manifest so WPILib
 // knows where to look for our Robot Class.
 jar {
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    from sourceSets.main.allSource
     manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 

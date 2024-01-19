@@ -86,7 +86,8 @@
       "/SmartDashboard/SendableChooser[0]": "String Chooser",
       "/SmartDashboard/SendableChooser[2]": "String Chooser",
       "/SmartDashboard/Starting Position": "String Chooser",
-      "/SmartDashboard/Turret Sim": "Mechanism2d"
+      "/SmartDashboard/Turret Sim": "Mechanism2d",
+      "/SmartDashboard/VisionSystemSim-photonvision/Sim Field": "Field2d"
     },
     "windows": {
       "/SmartDashboard/Auto mode": {
@@ -134,6 +135,8 @@
           "style": "Line",
           "weight": 1.0
         },
+        "bottom": 544,
+        "builtin": "2024 Crescendo",
         "camera": {
           "arrowSize": 0,
           "arrows": false,
@@ -146,13 +149,15 @@
           "length": 0.010000001639127731,
           "width": 0.010000001639127731
         },
-        "height": 8.229599952697754,
-        "image": "season.png",
+        "height": 8.013679504394531,
+        "left": 46,
+        "right": 1088,
+        "top": 36,
         "turret": {
           "arrowWeight": 3.0,
           "style": "Line"
         },
-        "width": 16.459199905395508,
+        "width": 16.541748046875,
         "window": {
           "visible": true
         }
@@ -208,6 +213,9 @@
       }
     },
     "special": true
+  },
+  "NetworkTables Info": {
+    "visible": true
   },
   "NetworkTables View": {
     "visible": false

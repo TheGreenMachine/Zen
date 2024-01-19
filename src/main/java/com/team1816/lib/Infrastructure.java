@@ -1,5 +1,6 @@
 package com.team1816.lib;
 
+import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.team1816.lib.hardware.components.gyro.IPigeonIMU;
@@ -24,7 +25,6 @@ public class Infrastructure {
      * Components
      */
     private static ICompressor compressor;
-    private static IPigeonIMU pigeon;
     private static PowerDistribution pd;
     public static List<IProximitySensor> proximitySensors;
 
@@ -43,7 +43,6 @@ public class Infrastructure {
     @Inject
     public Infrastructure(RobotFactory factory) {
         compressor = factory.getCompressor();
-        pigeon = factory.getPigeon();
         pd = factory.getPd();
         compressorEnabled = factory.isCompressorEnabled();
 
@@ -90,52 +89,7 @@ public class Infrastructure {
      *
      * @param angle Rotation2d
      */
-    public void resetPigeon(Rotation2d angle) {
-        GreenLogger.log("resetting Pigeon");
-        if (pigeon instanceof Pigeon2Impl) {
-            ((Pigeon2Impl) pigeon).configMountPose(angle.getDegrees(), 0, 0);
-        }
-    }
 
-    /**
-     * Returns the pigeon associated with the infrastructure
-     *
-     * @return IPigeonIMU
-     * @see IPigeonIMU
-     */
-    public IPigeonIMU getPigeon() {
-        return pigeon;
-    }
-
-    /**
-     * Returns the gyroscopic yaw of the pigeon
-     *
-     * @return yaw
-     * @see IPigeonIMU#getYaw()
-     */
-    public double getYaw() {
-        return pigeon.getYaw();
-    }
-
-    /**
-     * Returns the gyroscopic pitch of the pigeon
-     *
-     * @return pitch
-     * @see IPigeonIMU#getPitch()
-     */
-    public double getPitch() {
-        return pigeon.getPitch() + pitchOffset;
-    }
-
-    /**
-     * Returns the gyroscopic roll of the pigeon
-     *
-     * @return roll
-     * @see IPigeonIMU#getRoll()
-     */
-    public double getRoll() {
-        return pigeon.getRoll() + rollOffset;
-    }
 
 
     /**
@@ -148,15 +102,6 @@ public class Infrastructure {
         return pd;
     }
 
-    /**
-     * Emulates gyroscope behaviour of the pigeon in simulation environments
-     *
-     * @param radianOffsetPerLoop loop ratio
-     * @param gyroDrift           drift
-     */
-    public void simulateGyro(double radianOffsetPerLoop, double gyroDrift) {
-        pigeon.setYaw(getYaw() + radianOffsetPerLoop + gyroDrift);
-    }
 
     /**
      * Returns the maximal locus proximity of the drivetrain in relation to the floor

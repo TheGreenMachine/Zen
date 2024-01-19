@@ -1,8 +1,15 @@
 package com.team1816.lib.subsystems.drive;
 
+import com.ctre.phoenix6.Orchestra;
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.Pigeon2Configuration;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.google.inject.Inject;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.PIDSlotConfiguration;
+import com.team1816.lib.hardware.components.gyro.IPigeonIMU;
+import com.team1816.lib.hardware.components.gyro.Pigeon2Impl;
+import com.team1816.lib.hardware.factory.RobotFactory;
 import com.team1816.lib.loops.ILooper;
 import com.team1816.lib.loops.Loop;
 import com.team1816.lib.subsystems.LedManager;
@@ -22,6 +29,7 @@ import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -66,6 +74,9 @@ public abstract class Drive
      * Components
      */
     protected static LedManager ledManager;
+    protected IPigeonIMU pigeon;
+    public Orchestra orchestra;
+    public boolean orchestraInit = false;
 
     /**
      * Localized state
@@ -189,6 +200,7 @@ public abstract class Drive
     public Drive(LedManager lm, Infrastructure inf, RobotState rs) {
         super(NAME, inf, rs);
         ledManager = lm;
+        orchestra = new Orchestra();
 
         if (isDemoMode) {
             demoModeChooser = new SendableChooser<>();
@@ -211,6 +223,8 @@ public abstract class Drive
             drivetrainPoseLogger = new DoubleArrayLogEntry(DataLogManager.getLog(), "Drivetrain/Pose");
             drivetrainChassisSpeedsLogger = new DoubleArrayLogEntry(DataLogManager.getLog(), "Drivetrain/ChassisSpeeds");
         }
+
+
     }
 
     /**
@@ -349,7 +363,6 @@ public abstract class Drive
     public double getInitialYaw() {
         return initialYaw;
     }
-
 
     /**
      * Sets the drivetrain to be in slow mode which will modify the drive signals and the motor demands
@@ -519,6 +532,20 @@ public abstract class Drive
      */
     @Override
     public void zeroSensors() {
+        if (pigeon == null) {
+            createPigeon();
+        }
+
+        if (!orchestraInit) {
+            if (RobotBase.isReal()) {
+                configureOrchestra();
+
+            }
+            orchestraInit = true;
+        }
+        // zeroing ypr - (-90) pigeon is mounted with the "y" axis facing forward
+        this.resetPigeon(Rotation2d.fromDegrees(-90));
+
         zeroSensors(getPose());
     }
 
@@ -584,8 +611,55 @@ public abstract class Drive
     public void simulateGyroOffset() {
         double simGyroOffset = chassisSpeed.omegaRadiansPerSecond * tickRatioPerLoop;
         gyroDrift -= 0;
-        infrastructure.simulateGyro(simGyroOffset, gyroDrift);
+        this.simulateGyro(simGyroOffset, gyroDrift);
     }
+
+    /**
+     * Emulates gyroscope behaviour of the pigeon in simulation environments
+     *
+     * @param radianOffsetPerLoop loop ratio
+     * @param gyroDrift           drift
+     */
+    public void simulateGyro(double radianOffsetPerLoop, double gyroDrift) {
+        pigeon.set_Yaw(pigeon.getYawValue() + radianOffsetPerLoop + gyroDrift);
+    }
+
+    /**
+     * Instantiates the pigeon
+     */
+    public void createPigeon() {
+        pigeon = factory.getPigeon();
+    }
+
+    public IPigeonIMU getPigeon() {
+        return pigeon;
+    }
+
+
+    public void resetPigeon(Rotation2d angle) {
+        GreenLogger.log("resetting Pigeon");
+        if (pigeon instanceof Pigeon2Impl) {
+
+            Pigeon2Configuration configs = new Pigeon2Configuration();
+            ((Pigeon2Impl) pigeon).getConfigurator().refresh(configs);
+
+            ((Pigeon2Impl) pigeon).getConfigurator().apply(
+                    configs.MountPose
+                            .withMountPoseYaw(angle.getDegrees())
+                            .withMountPosePitch(0)
+                            .withMountPoseRoll(0)
+            );
+        }
+    }
+
+    public synchronized void readFromHardware() {
+        robotState.gyroPos = new double[] {pigeon.getYawValue(), pigeon.getPitchValue(), pigeon.getRollValue()};
+    }
+
+    /**
+     * Adds each motor to the orchestra object
+     */
+    public abstract void configureOrchestra();
 
     /**
      * Enum for the ControlState

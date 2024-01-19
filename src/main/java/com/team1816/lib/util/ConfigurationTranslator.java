@@ -2,9 +2,11 @@ package com.team1816.lib.util;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.signals.ControlModeValue;
+import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
-import com.revrobotics.SparkMaxRelativeEncoder;
+import com.revrobotics.SparkRelativeEncoder;
 import com.team1816.lib.hardware.components.motor.configurations.*;
 import com.team1816.lib.util.logUtil.GreenLogger;
 
@@ -19,31 +21,6 @@ import static com.team1816.lib.util.Util.closestTo;
 public class ConfigurationTranslator {
     //Also known as: Switch statements: the class!
     private ConfigurationTranslator() {}
-    /**
-     * Translates 1816 FeedbackDeviceType to TalonFXFeedbackDevice
-     *
-     * @see TalonFXFeedbackDevice
-     * @see FeedbackDeviceType
-     * @param deviceType The generalized device type
-     * @return The translated device type
-     */
-    public static TalonFXFeedbackDevice toTalonFXFeedbackDevice(FeedbackDeviceType deviceType) {
-        TalonFXFeedbackDevice talonFXFeedbackDevice;
-        switch (deviceType) {
-            case NO_SENSOR -> talonFXFeedbackDevice = TalonFXFeedbackDevice.None;
-            case INTEGRATED_SENSOR -> talonFXFeedbackDevice = TalonFXFeedbackDevice.IntegratedSensor;
-            case SENSOR_SUM -> talonFXFeedbackDevice = TalonFXFeedbackDevice.SensorSum;
-            case SENSOR_DIFFERENCE -> talonFXFeedbackDevice = TalonFXFeedbackDevice.SensorDifference;
-            case REMOTE_SENSOR_0 -> talonFXFeedbackDevice = TalonFXFeedbackDevice.RemoteSensor0;
-            case REMOTE_SENSOR_1 -> talonFXFeedbackDevice = TalonFXFeedbackDevice.RemoteSensor1;
-            case SOFTWARE_EMULATED_SENSOR -> talonFXFeedbackDevice = TalonFXFeedbackDevice.SoftwareEmulatedSensor;
-            default -> {
-                talonFXFeedbackDevice = TalonFXFeedbackDevice.None;
-                GreenLogger.log("Attempted application of non-applicable feedback device type " + deviceType + " to TalonFX, defaulting to No sensor");
-            }
-        }
-        return talonFXFeedbackDevice;
-    }
 
     /**
      * Translates 1816 FeedbackDeviceType to TalonSRXFeedbackDevice
@@ -104,137 +81,23 @@ public class ConfigurationTranslator {
     /**
      * Translates 1816 FeedbackDeviceType to REV SparkMaxRelativeEncoder.Type
      *
-     * @see SparkMaxRelativeEncoder.Type
+     * @see SparkRelativeEncoder.Type
      * @see FeedbackDeviceType
      * @param deviceType The generalized device type
      * @return The translated encoder type
      */
-    public static SparkMaxRelativeEncoder.Type toSparkMaxRelativeEncoderType(FeedbackDeviceType deviceType) {
-        SparkMaxRelativeEncoder.Type encoderType;
+    public static SparkRelativeEncoder.Type toSparkRelativeEncoderType(FeedbackDeviceType deviceType) {
+        SparkRelativeEncoder.Type encoderType;
         switch (deviceType) {
-            case QUADRATURE -> encoderType = SparkMaxRelativeEncoder.Type.kQuadrature;
-            case HALL_SENSOR -> encoderType = SparkMaxRelativeEncoder.Type.kHallSensor;
-            case NO_SENSOR -> encoderType = SparkMaxRelativeEncoder.Type.kNoSensor;
+            case QUADRATURE -> encoderType = SparkRelativeEncoder.Type.kQuadrature;
+            case HALL_SENSOR -> encoderType = SparkRelativeEncoder.Type.kHallSensor;
+            case NO_SENSOR -> encoderType = SparkRelativeEncoder.Type.kNoSensor;
             default -> {
                 GreenLogger.log("Non-SparkMax encoder type " + deviceType + " cannot be applied to SparkMaxRelativeEncoder, defaulting to No sensor.");
-                encoderType = SparkMaxRelativeEncoder.Type.kNoSensor;
+                encoderType = SparkRelativeEncoder.Type.kNoSensor;
             }
         }
         return encoderType;
-    }
-
-    /**
-     * Translates 1816 PeriodicStatusFrame to CTRE StatusFrameEnhanced
-     *
-     * @see PeriodicStatusFrame
-     * @see StatusFrameEnhanced
-     * @param frame The generalized status frame
-     * @return The translated status frame
-     */
-    public static StatusFrameEnhanced toStatusFrameEnhanced(PeriodicStatusFrame frame) {
-        StatusFrameEnhanced statusFrameEnhanced;
-        switch (frame) {
-            //We love super long switch statements
-            case STATUS_1 -> statusFrameEnhanced = StatusFrameEnhanced.Status_1_General;
-            case STATUS_2 -> statusFrameEnhanced = StatusFrameEnhanced.Status_2_Feedback0;
-            case STATUS_3 -> statusFrameEnhanced = StatusFrameEnhanced.Status_3_Quadrature;
-            case STATUS_4 -> statusFrameEnhanced = StatusFrameEnhanced.Status_4_AinTempVbat;
-            case STATUS_6 -> statusFrameEnhanced = StatusFrameEnhanced.Status_6_Misc;
-            case STATUS_7_COMMSTATUS ->statusFrameEnhanced = StatusFrameEnhanced.Status_7_CommStatus;
-            case STATUS_8_PULSEWIDTH ->statusFrameEnhanced = StatusFrameEnhanced.Status_8_PulseWidth;
-            case STATUS_9_MOTPROFBUFFER ->statusFrameEnhanced = StatusFrameEnhanced.Status_9_MotProfBuffer;
-            case STATUS_10_TARGETS ->statusFrameEnhanced = StatusFrameEnhanced.Status_10_Targets;
-            case STATUS_11_UARTGADGETEER ->statusFrameEnhanced = StatusFrameEnhanced.Status_11_UartGadgeteer;
-            case STATUS_12_FEEDBACK1 ->statusFrameEnhanced = StatusFrameEnhanced.Status_12_Feedback1;
-            case STATUS_13_BASE_PIDF0 ->statusFrameEnhanced = StatusFrameEnhanced.Status_13_Base_PIDF0;
-            case STATUS_14_TURN_PIDF1 ->statusFrameEnhanced = StatusFrameEnhanced.Status_14_Turn_PIDF1;
-            case STATUS_15_FIRMWAREAPISTATUS ->statusFrameEnhanced = StatusFrameEnhanced.Status_15_FirmwareApiStatus;
-            case STATUS_21_FEEDBACKINTEGRATED->statusFrameEnhanced = StatusFrameEnhanced.Status_21_FeedbackIntegrated;
-            case STATUS_BRUSHLESS_CURRENT -> statusFrameEnhanced = StatusFrameEnhanced.Status_Brushless_Current;
-            default -> {
-                statusFrameEnhanced = StatusFrameEnhanced.Status_1_General;
-                GreenLogger.log("Attempted application of non-applicable status frame " + frame + " to a Talon motor, defaulting to Status 1 (General)");
-            }
-        }
-        return statusFrameEnhanced;
-    }
-
-    //I LOVE VICTORSPX NOT USING NEW CONFIGURATION ENUMS!!!!!!
-    /**
-     * Translates 1816 PeriodicStatusFrame to CTRE StatusFrame
-     *
-     * @see PeriodicStatusFrame
-     * @see StatusFrame
-     * @param frame The generalized status frame
-     * @return The translated status frame
-     */
-    public static StatusFrame toStatusFrame(PeriodicStatusFrame frame) {
-        StatusFrame statusFrame;
-        switch (frame) {
-            case STATUS_1 -> statusFrame = StatusFrame.Status_1_General;
-            case STATUS_2 -> statusFrame = StatusFrame.Status_2_Feedback0;
-            case STATUS_4 -> statusFrame = StatusFrame.Status_4_AinTempVbat;
-            case STATUS_6 -> statusFrame = StatusFrame.Status_6_Misc;
-            case STATUS_7_COMMSTATUS -> statusFrame = StatusFrame.Status_7_CommStatus;
-            case STATUS_9_MOTPROFBUFFER -> statusFrame = StatusFrame.Status_9_MotProfBuffer;
-            case STATUS_10_TARGETS -> statusFrame = StatusFrame.Status_10_Targets;
-            case STATUS_12_FEEDBACK1 -> statusFrame = StatusFrame.Status_12_Feedback1;
-            case STATUS_13_BASE_PIDF0 -> statusFrame = StatusFrame.Status_13_Base_PIDF0;
-            case STATUS_14_TURN_PIDF1 -> statusFrame = StatusFrame.Status_14_Turn_PIDF1;
-            case STATUS_15_FIRMWAREAPISTATUS -> statusFrame = StatusFrame.Status_15_FirmwareApiStatus;
-            case STATUS_17_TARGETS1 -> statusFrame = StatusFrame.Status_17_Targets1;
-            default -> {
-                statusFrame = StatusFrame.Status_1_General;
-                GreenLogger.log("Attempted application of non-applicable status frame " + frame + " to a VictorSPX, defaulting to Status 1 (General)");
-            }
-        }
-        return statusFrame;
-    }
-
-    public static CANSparkMaxLowLevel.PeriodicFrame toPeriodicFrame(PeriodicStatusFrame frame) {
-        CANSparkMaxLowLevel.PeriodicFrame periodicFrame;
-        switch (frame) {
-            case STATUS_0 -> periodicFrame = CANSparkMaxLowLevel.PeriodicFrame.kStatus0;
-            case STATUS_1 -> periodicFrame = CANSparkMaxLowLevel.PeriodicFrame.kStatus1;
-            case STATUS_2 -> periodicFrame = CANSparkMaxLowLevel.PeriodicFrame.kStatus2;
-            case STATUS_3 -> periodicFrame = CANSparkMaxLowLevel.PeriodicFrame.kStatus3;
-            case STATUS_4 -> periodicFrame = CANSparkMaxLowLevel.PeriodicFrame.kStatus4;
-            case STATUS_5 -> periodicFrame = CANSparkMaxLowLevel.PeriodicFrame.kStatus5;
-            case STATUS_6 -> periodicFrame = CANSparkMaxLowLevel.PeriodicFrame.kStatus6;
-            default -> {
-                GreenLogger.log("Cannot apply periodic frame status " + frame + " to SparkMax PeriodicFrame, defaulting to status 0");
-                periodicFrame = CANSparkMaxLowLevel.PeriodicFrame.kStatus0;
-            }
-        }
-        return periodicFrame;
-    }
-
-    /**
-     * Translates period milliseconds into a CTRE SensorVelocityMeasPeriod object
-     *
-     * @see SensorVelocityMeasPeriod
-     * @param periodms
-     * @return The translated object
-     */
-    public static SensorVelocityMeasPeriod toSensorVelocityMeasPeriod(int periodms) {
-        Integer[] possibilities = {1, 2, 5, 10, 20, 50, 100};
-        int closestPossible = closestTo(possibilities, periodms);
-
-        if (!Arrays.asList(possibilities).contains(periodms)) {
-            GreenLogger.log("Velocity measurement period converted from " + periodms + " ms to closest possible value, " + closestPossible + " ms");
-        }
-
-        SensorVelocityMeasPeriod sensorVelocityMeasPeriod;
-        switch (closestPossible){
-            case 1 -> sensorVelocityMeasPeriod = SensorVelocityMeasPeriod.Period_1Ms;
-            case 2 -> sensorVelocityMeasPeriod = SensorVelocityMeasPeriod.Period_2Ms;
-            case 5 -> sensorVelocityMeasPeriod = SensorVelocityMeasPeriod.Period_5Ms;
-            case 10 -> sensorVelocityMeasPeriod = SensorVelocityMeasPeriod.Period_10Ms;
-            case 50 -> sensorVelocityMeasPeriod = SensorVelocityMeasPeriod.Period_50Ms;
-            case 100 -> sensorVelocityMeasPeriod = SensorVelocityMeasPeriod.Period_100Ms;
-            default -> sensorVelocityMeasPeriod = SensorVelocityMeasPeriod.Period_20Ms; // 20 is our default
-        }
-        return sensorVelocityMeasPeriod;
     }
 
     /**
@@ -310,6 +173,28 @@ public class ConfigurationTranslator {
     }
 
     /**
+     * Translates CTRE ControlModeValue into 1816 GreenControlMode
+     * @see com.ctre.phoenix6.signals.ControlModeValue
+     * @see GreenControlMode
+     *
+     * @param controlMode The CTRE Control Mode Value
+     * @return The generalized translation
+     */
+    public static GreenControlMode toGreenControlMode(ControlModeValue controlMode) {
+        GreenControlMode greenControlMode;
+        switch (controlMode) {
+            case DutyCycleOut -> greenControlMode = GreenControlMode.PERCENT_OUTPUT;
+            case VelocityDutyCycle -> greenControlMode = GreenControlMode.VELOCITY_CONTROL;
+            case PositionDutyCycle -> greenControlMode = GreenControlMode.POSITION_CONTROL;
+            case MotionMagicDutyCycle -> greenControlMode = GreenControlMode.MOTION_PROFILE;
+            case Follower -> greenControlMode = GreenControlMode.FOLLOWER;
+            case MusicTone -> greenControlMode = GreenControlMode.MUSIC_TONE;
+            default -> greenControlMode = GreenControlMode.DISABLED;
+        }
+        return greenControlMode;
+    }
+
+    /**
      * Translates 1816 MotionCurveType into an int
      *
      * @param motionCurveType The Generalized motion curve type
@@ -322,6 +207,22 @@ public class ConfigurationTranslator {
             return motionCurveStrength;
         }
         return  0;
+    }
+
+    /**
+     * Translates Phoenix 6 CurrentLimitsConfig into Phoenix 5 SupplyCurrentLimitConfiguration
+     * @param currentLimitsConfigs The Phoenix 6 config
+     * @see CurrentLimitsConfigs
+     * @see SupplyCurrentLimitConfiguration
+     * @return The phoenix 5 config
+     */
+    public static SupplyCurrentLimitConfiguration toSupplyCurrentLimitConfiguration(CurrentLimitsConfigs currentLimitsConfigs) {
+        return new SupplyCurrentLimitConfiguration(
+                currentLimitsConfigs.SupplyCurrentLimitEnable,
+                currentLimitsConfigs.SupplyCurrentLimit,
+                currentLimitsConfigs.SupplyCurrentThreshold,
+                currentLimitsConfigs.SupplyTimeThreshold
+        );
     }
 
 }

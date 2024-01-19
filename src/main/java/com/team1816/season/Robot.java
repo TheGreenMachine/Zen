@@ -2,6 +2,7 @@ package com.team1816.season;
 
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.Injector;
+import com.team1816.lib.PlaylistManager;
 import com.team1816.lib.auto.Color;
 import com.team1816.lib.hardware.factory.RobotFactory;
 import com.team1816.lib.input_handler.*;
@@ -55,6 +56,9 @@ public class Robot extends TimedRobot {
     private Orchestrator orchestrator;
     private RobotState robotState;
 
+    private PlaylistManager playlistManager;
+    private boolean desireToPlaySong;
+
     /**
      * Subsystems
      */
@@ -81,7 +85,7 @@ public class Robot extends TimedRobot {
      * Timing
      */
     private double loopStart;
-    public static double looperDt;
+    public static double looperDt; //looptime delta
     public static double robotDt;
     public static double autoStart;
     public static double teleopStart;
@@ -104,6 +108,8 @@ public class Robot extends TimedRobot {
         Injector.registerModule(new SeasonModule());
         enabledLoop = new Looper(this);
         disabledLoop = new Looper(this);
+
+        desireToPlaySong = false;
 
         if (Constants.kLoggingRobot) {
             robotLoopLogger = new DoubleLogEntry(DataLogManager.getLog(), "Timings/Robot");
@@ -145,7 +151,6 @@ public class Robot extends TimedRobot {
             // can recognize the subsystem. To recognize your subsystem, just add it alongside the
             // drive, ledManager, and camera parameters.
 
-            drive = (Injector.get(Drive.Factory.class)).getInstance();
 
             // TODO: Set up any other subsystems here.
 
@@ -156,9 +161,10 @@ public class Robot extends TimedRobot {
             infrastructure = Injector.get(Infrastructure.class);
             subsystemManager = Injector.get(SubsystemLooper.class);
             autoModeManager = Injector.get(AutoModeManager.class);
+            playlistManager = Injector.get(PlaylistManager.class);
             collector = Injector.get(Collector.class);
 
-            subsystemManager.setSubsystems(drive, ledManager, camera, collector);
+
 
             /** Logging */
             if (Constants.kLoggingRobot) {
@@ -185,18 +191,26 @@ public class Robot extends TimedRobot {
                 DriverStation.startDataLog(DataLogManager.getLog(), false);
             }
 
+            drive = (Injector.get(Drive.Factory.class)).getInstance();
+
+            subsystemManager.setSubsystems(drive, ledManager, camera);
+
             subsystemManager.registerEnabledLoops(enabledLoop);
             subsystemManager.registerDisabledLoops(disabledLoop);
 
             // zeroing ypr - (-90) pigeon is mounted with the "y" axis facing forward
+            infrastructure.resetPigeon(Rotation2d.fromDegrees(-90));
             subsystemManager.zeroSensors();
 
             /** [Specific subsystem] not zeroed on boot up - letting ppl know */
             faulted = true;
 
+            SmartDashboard.putBoolean("PlaySong", false);
+
             /** Register inputHandler */
             inputHandler = Injector.get(InputHandler.class);
             DriverStation.silenceJoystickConnectionWarning(true);
+
 
             /** Driver Commands */
             inputHandler.listenAction(
@@ -208,7 +222,7 @@ public class Robot extends TimedRobot {
             );
 
             inputHandler.listenActionPressAndRelease(
-                    "collector",
+                    "intake",
                     (pressed) -> {
                         if (pressed) {
                             collector.setDesiredState(Collector.COLLECTOR_STATE.INTAKE);
@@ -279,6 +293,7 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         disabledLoop.stop();
+        orchestrator.stopSong();
         ledManager.setDefaultStatus(LedManager.RobotStatus.AUTONOMOUS);
         ledManager.indicateStatus(LedManager.RobotStatus.AUTONOMOUS);
 
@@ -300,6 +315,7 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         try {
             disabledLoop.stop();
+            orchestrator.stopSong();
             ledManager.setDefaultStatus(LedManager.RobotStatus.ENABLED);
             ledManager.indicateStatus(LedManager.RobotStatus.ENABLED);
 
@@ -319,6 +335,7 @@ public class Robot extends TimedRobot {
     @Override
     public void testInit() {
         try {
+            orchestrator.stopSong();
             double initTime = System.currentTimeMillis();
 
             ledManager.indicateStatus(LedManager.RobotStatus.ENABLED, LedManager.ControlState.BLINK);
@@ -365,6 +382,7 @@ public class Robot extends TimedRobot {
             subsystemManager.outputToSmartDashboard(); // update shuffleboard for subsystem values
             robotState.outputToSmartDashboard(); // update robot state on field for Field2D widget
             autoModeManager.outputToSmartDashboard(); // update shuffleboard selected auto mode
+            playlistManager.outputToSmartDashboard(); // update shuffleboard selected song
 
             SmartDashboard.putString("Git Hash", Constants.kGitHash);
         } catch (Throwable t) {
@@ -411,6 +429,9 @@ public class Robot extends TimedRobot {
                 drive.update();
             }
 
+            playlistManager.update();
+            desireToPlaySong = SmartDashboard.getBoolean("PlaySong", false);
+            orchestrator.playSong(desireToPlaySong);
         } catch (Throwable t) {
             faulted = true;
             throw t;

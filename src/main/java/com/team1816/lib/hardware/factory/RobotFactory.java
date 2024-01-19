@@ -1,8 +1,8 @@
 package com.team1816.lib.hardware.factory;
 
 import com.ctre.phoenix.led.CANdle;
-import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.google.common.io.Resources;
 import com.google.inject.Singleton;
 import com.team1816.lib.hardware.*;
@@ -15,7 +15,6 @@ import com.team1816.lib.hardware.components.ledManager.CanifierImpl;
 import com.team1816.lib.hardware.components.ledManager.GhostLEDManager;
 import com.team1816.lib.hardware.components.ledManager.ILEDManager;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
-import com.team1816.lib.hardware.components.motor.configurations.FeedbackDeviceType;
 import com.team1816.lib.hardware.components.pcm.*;
 import com.team1816.lib.hardware.components.sensor.GhostProximitySensor;
 import com.team1816.lib.hardware.components.sensor.IProximitySensor;
@@ -28,12 +27,10 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotBase;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Scanner;
 
 /**
  * This class employs the MotorFactory and SensorFactory with yaml integrations and is the initial entry point to
@@ -277,10 +274,10 @@ public class RobotFactory {
         return new SwerveModule(subsystemName, moduleConfig, canCoder);
     }
 
-    public CANCoder getCanCoder(String subsystemName, String name) {
+    public CANcoder getCanCoder(String subsystemName, String name) {
         var subsystem = getSubsystem(subsystemName);
         var module = subsystem.swerveModules.modules.get(name);
-        CANCoder canCoder = null;
+        CANcoder canCoder = null;
         if (
             module != null &&
                 module.canCoder != null &&
@@ -543,9 +540,9 @@ public class RobotFactory {
             pigeon = new PigeonIMUImpl(id);
         }
         if (getConstant("resetFactoryDefaults") > 0) {
-            pigeon.configFactoryDefault();
-            pigeon.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_1_General, 100);
-            pigeon.setStatusFramePeriod(PigeonIMU_StatusFrame.BiasedStatus_6_Accel, 100);
+            pigeon.configFactoryDefaults();
+            pigeon.set_StatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_1_General, 100);
+            pigeon.set_StatusFramePeriod(PigeonIMU_StatusFrame.BiasedStatus_6_Accel, 100);
         }
         return pigeon;
     }

@@ -1,11 +1,13 @@
 package com.team1816.lib.subsystems.drive;
 
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.Symmetry;
 import com.team1816.lib.hardware.PIDSlotConfiguration;
+import com.team1816.lib.hardware.components.motor.LazyTalonFX;
 import com.team1816.lib.subsystems.LedManager;
 import com.team1816.lib.subsystems.PidProvider;
 import com.team1816.lib.util.logUtil.GreenLogger;
@@ -32,7 +34,8 @@ import java.util.Objects;
  * A class that models a Swerve drivetrain
  */
 @Singleton
-public class SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
+public class
+SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
 
     /** Constants */
 
@@ -164,10 +167,12 @@ public class SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider 
     @Override
     public synchronized void writeToHardware() {
         if (controlState == ControlState.OPEN_LOOP) {
+
             SwerveDriveKinematics.desaturateWheelSpeeds(
                 desiredModuleStates,
                 kMaxVelOpenLoopMeters
             );
+
             for (int i = 0; i < 4; i++) {
                 swerveModules[i].setDesiredState(desiredModuleStates[i], true);
             }
@@ -184,6 +189,7 @@ public class SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider 
      */
     @Override
     public synchronized void readFromHardware() {
+        super.readFromHardware();
         double[] actualStates = new double[8];
         double[] desiredStates = new double[8];
         for (int i = 0; i < 4; i++) {
@@ -209,7 +215,7 @@ public class SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider 
         if (RobotBase.isSimulation()) {
             simulateGyroOffset();
         }
-        actualHeading = Rotation2d.fromDegrees(infrastructure.getYaw());
+        actualHeading = Rotation2d.fromDegrees(pigeon.getYawValue());
 
         swerveOdometry.update(actualHeading, actualModulePositions);
 
@@ -300,8 +306,8 @@ public class SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider 
      */
     @Override
     public void autoBalance(ChassisSpeeds fieldRelativeChassisSpeeds) {
-        double pitch = -infrastructure.getPitch();
-        double roll = infrastructure.getRoll();
+        double pitch = -pigeon.getPitchValue();
+        double roll = pigeon.getRollValue();
         double throttle = 0;
         double strafe = 0;
         var heading = Constants.EmptyRotation2d;
@@ -367,8 +373,8 @@ public class SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider 
         if (Constants.kLoggingDrivetrain) {
             drivetrainPoseLogger.append(new double[]{robotState.fieldToVehicle.getX(), robotState.fieldToVehicle.getY(), robotState.fieldToVehicle.getRotation().getDegrees()});
             drivetrainChassisSpeedsLogger.append(new double[]{robotState.deltaVehicle.vxMetersPerSecond, robotState.deltaVehicle.vyMetersPerSecond, robotState.deltaVehicle.omegaRadiansPerSecond});
-            gyroPitchLogger.append(infrastructure.getPitch());
-            gyroRollLogger.append(infrastructure.getRoll());
+            gyroPitchLogger.append(pigeon.getPitchValue());
+            gyroRollLogger.append(pigeon.getRollValue());
         }
     }
 
@@ -486,7 +492,7 @@ public class SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider 
      */
     @Override
     public void resetOdometry(Pose2d pose) {
-        actualHeading = Rotation2d.fromDegrees(infrastructure.getYaw());
+        actualHeading = Rotation2d.fromDegrees(pigeon.getYawValue());
         swerveOdometry.resetPosition(actualHeading, actualModulePositions, pose);
         swerveOdometry.update(actualHeading, actualModulePositions);
         updateRobotState();
@@ -576,6 +582,18 @@ public class SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider 
             .swerveModules.drivePID.getOrDefault("slot0", defaultPIDConfig)
             : defaultPIDConfig;
     }
+
+    /**
+     * Adds each motor to the orchestra object
+     */
+    public void configureOrchestra() {
+        for (SwerveModule s : swerveModules) {
+            orchestra.addInstrument((LazyTalonFX) (s.getDriveMotor()));
+            orchestra.addInstrument((LazyTalonFX) (s.getAzimuthMotor()));
+        }
+        System.out.println("Orchestra configured");
+    }
+
 
     /**
      * Returns the associated kinematics of the drivetrain

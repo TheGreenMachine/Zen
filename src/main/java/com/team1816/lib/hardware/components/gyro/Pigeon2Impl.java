@@ -1,7 +1,10 @@
 package com.team1816.lib.hardware.components.gyro;
 
-import com.ctre.phoenix.ErrorCode;
-import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.configs.Pigeon2Configuration;
+import com.ctre.phoenix6.hardware.Pigeon2;
+import com.team1816.lib.util.Util;
 
 /**
  * A class that interfaces with the Pigeon2
@@ -22,24 +25,47 @@ public class Pigeon2Impl extends Pigeon2 implements IPigeonIMU {
      * Returns gyroscopic yaw / transverse planar angle
      *
      * @return yaw (degrees)
-     * @see IPigeonIMU#getYaw()
+     * @see IPigeonIMU#getYawValue()
      */
     @Override
-    public double getYaw() {
-        return super.getYaw();
+    public double getYawValue() {
+        return super.getYaw().getValueAsDouble();
     }
 
     /**
-     * Returns x, y, and z acceleration in a casted fixed point double array
+     * Returns gyroscopic pitch
+     *
+     * @return yaw (degrees)
+     */
+    @Override
+    public double getPitchValue() {
+        return super.getPitch().getValueAsDouble();
+    }
+
+    /**
+     * Returns gyroscopic pitch
+     *
+     * @return yaw (degrees)
+     */
+    @Override
+    public double getRollValue() {
+        return super.getRoll().getValueAsDouble();
+    }
+
+
+    /**
+     * Returns x, y, and z acceleration in a fixed point double array
      *
      * @return acceleration
      * @see IPigeonIMU#getAcceleration()
      */
     @Override
     public double[] getAcceleration() {
-        short[] accel = new short[3];
-        getBiasedAccelerometer(accel);
-        return new double[]{accel[0], accel[1], accel[2]};
+        return new double[]{
+                super.getAccelerationX().getValueAsDouble(),
+                super.getAccelerationY().getValueAsDouble(),
+                super.getAccelerationZ().getValueAsDouble()
+        };
     }
 
     /**
@@ -50,32 +76,8 @@ public class Pigeon2Impl extends Pigeon2 implements IPigeonIMU {
      * @see IPigeonIMU#getAcceleration()
      */
     @Override
-    public ErrorCode setYaw(double angle) {
-        return super.setYaw(angle);
-    }
-
-    /**
-     * Sets the gyroscopic yaw to a specific angle
-     *
-     * @param angle (degrees)
-     * @return ErrorCode / void
-     * @see IPigeonIMU#setFusedHeading(double)
-     */
-    @Override
-    public ErrorCode setFusedHeading(double angle) {
-        return super.setYaw(angle);
-    }
-
-    /**
-     * Sets the accumulated z angle to angleDeg
-     *
-     * @param angle (degrees)
-     * @return ErrorCode / void
-     * @see IPigeonIMU#setAccumZAngle(double)
-     */
-    @Override
-    public ErrorCode setAccumZAngle(double angle) {
-        return super.setAccumZAngle(angle);
+    public void set_Yaw(double angle) {
+        super.setYaw(angle);
     }
 
     /**
@@ -93,10 +95,24 @@ public class Pigeon2Impl extends Pigeon2 implements IPigeonIMU {
      * Configures factory defaults
      *
      * @return ErrorCode / void
-     * @see IPigeonIMU#configFactoryDefault()
+     * @see IPigeonIMU#configFactoryDefaults()
      */
     @Override
-    public ErrorCode configFactoryDefault() {
-        return super.configFactoryDefault();
+    public void configFactoryDefaults() {
+        super.getConfigurator().apply(new Pigeon2Configuration());
+    }
+
+    @Override
+    public void set_StatusFramePeriod(PigeonIMU_StatusFrame statusFrame, int periodMs) {
+        BaseStatusSignal.setUpdateFrequencyForAll(
+                Util.msToHz(periodMs),
+                super.getAccelerationX(), //Don't you just love varargs? i don't
+                super.getAccelerationY(),
+                super.getAccelerationZ(),
+                super.getRoll(),
+                super.getPitch(),
+                super.getYaw(),
+                super.getAngularVelocityZWorld() //Used internally in Pigeon2
+        );
     }
 }

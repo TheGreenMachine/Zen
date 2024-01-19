@@ -12,3 +12,4 @@ bin/
 *.wpilog
 Compiler
 *.DS_Store
+ctre_sim
