@@ -198,8 +198,6 @@ public class Robot extends TimedRobot {
             subsystemManager.registerEnabledLoops(enabledLoop);
             subsystemManager.registerDisabledLoops(disabledLoop);
 
-            // zeroing ypr - (-90) pigeon is mounted with the "y" axis facing forward
-            infrastructure.resetPigeon(Rotation2d.fromDegrees(-90));
             subsystemManager.zeroSensors();
 
             /** [Specific subsystem] not zeroed on boot up - letting ppl know */
