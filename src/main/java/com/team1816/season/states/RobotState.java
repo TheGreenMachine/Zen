@@ -22,7 +22,6 @@ import java.util.List;
 
 @Singleton
 public class RobotState {
-
     /**
      * Odometry and field characterization
      */
@@ -40,6 +39,7 @@ public class RobotState {
     public boolean isPoseUpdated = true;
     public double vehicleToFloorProximityCentimeters = 0;
     public double drivetrainTemp = 0;
+    public boolean isAutoAiming = false;
 
     /**
      * Inertial characterization

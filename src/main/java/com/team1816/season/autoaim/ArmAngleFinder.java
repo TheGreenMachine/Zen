@@ -1,5 +1,7 @@
 package com.team1816.season.autoaim;
 
+import com.team1816.season.configuration.Constants;
+
 import java.util.Optional;
 
 //Based on EvenMoreGravCalcs
@@ -9,23 +11,21 @@ public class ArmAngleFinder {
      * Constants
      */
     //Positive
-    private static final double lengthOfArm = 12;
+    private static final double lengthOfArm = Constants.lengthOfArm;
     //0-180
-    private static final double angleBetweenArmAndShooterDegrees = 111.8;
+    private static final double angleBetweenArmAndShooterDegrees = Constants.angleBetweenArmAndShooterDegrees;
     private static final double angleBetweenArmAndShooterRadians = (Math.PI/180)*angleBetweenArmAndShooterDegrees;
     //Positive
-    private static final double outputVelocityPerSecond = 100;
+    private static final double outputVelocityPerSecond = Constants.outputVelocityPerSecond;
     //Negative
-    private static final double gravityPerSecond = -9.81;
+    private static final double gravityPerSecond = Constants.gravityPerSecond;
     //Nonzero
-    private static final double errorPerUnitDistance = 0.1;
+    private static final double errorPerUnitDistance = Constants.errorPerUnitDistance;
     //the robot looks down the positive y axis, and the right side is the positive x axis while the left is the negative x axis
-    private static final double axlePositionOffsetX = 0;
-    private static final double axlePositionOffsetY = 6;
-    private static final double axlePositionOffsetZ = 12;
-    //offsets counterclockwise, 0-2pi
-    private static final double axleRotationOffsetThetaRadians = 0;
-    private static final double heightOfTarget = 73.5 - axlePositionOffsetZ;
+    private static final double axlePositionOffsetX = Constants.axlePositionOffsetX;
+    private static final double axlePositionOffsetY = Constants.axlePositionOffsetY;
+    private static final double axlePositionOffsetZ = Constants.axlePositionOffsetZ;
+    private static final double heightOfTarget = Constants.heightOfTarget - axlePositionOffsetZ;
 
     //TODO account for how if the robot isnt pointed at the target, turning the robot to point to the target will offset the shooter position
 

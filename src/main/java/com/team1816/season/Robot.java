@@ -14,17 +14,22 @@ import com.team1816.lib.subsystems.vision.Camera;
 import com.team1816.lib.util.Util;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.auto.AutoModeManager;
+import com.team1816.season.autoaim.ArmAngleFinder;
+import com.team1816.season.autoaim.UseableMethods;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.configuration.DrivetrainTargets;
 import com.team1816.season.states.Orchestrator;
 import com.team1816.season.states.RobotState;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import javax.swing.*;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -221,6 +226,15 @@ public class Robot extends TimedRobot {
                     ActionState.PRESSED,
                     () -> {
 
+                    }
+            );
+
+            //grid1
+            inputHandler.listenAction(
+                    "autoAim",
+                    ActionState.PRESSED,
+                    ()-> {
+                        robotState.isAutoAiming = true;
                     }
             );
 
@@ -433,11 +447,37 @@ public class Robot extends TimedRobot {
     public void manualControl() {
         inputHandler.update();
 
-        drive.setTeleopInputs(
+        double strafe = inputHandler.getActionAsDouble("strafe");
+        double throttle = inputHandler.getActionAsDouble("throttle");
+
+        if (
+                robotState.isAutoAiming &&
+                        UseableMethods.robotInRange(robotState.fieldToVehicle.getTranslation().getDistance(new Translation2d(Constants.targetX, Constants.targetY)))
+        ) {
+            double rotation = UseableMethods.getRobotRotation(new Translation2d(Constants.targetX, Constants.targetY).minus(robotState.fieldToVehicle.getTranslation()));
+
+            //TODO maybe change this if robot is spazzing
+            if(Math.abs(robotState.fieldToVehicle.getRotation().getRadians() - rotation) < 1E-4) {
+                //TODO figure out the degree angle for rotation
+                rotation = (rotation - Math.PI) * 180;
+
+                drive.setTeleopInputs(
+                        -throttle,
+                        -strafe,
+                        rotation
+                );
+            }
+            //TODO do this when we finally get a shooter subsystem to read off of
+            else if(false);
+            else
+                robotState.isAutoAiming = false;
+        } else {
+            drive.setTeleopInputs(
                     -inputHandler.getActionAsDouble("throttle"),
                     -inputHandler.getActionAsDouble("strafe"),
-                     inputHandler.getActionAsDouble("rotation")
-        );
+                    inputHandler.getActionAsDouble("rotation")
+            );
+        }
     }
 
     /**
