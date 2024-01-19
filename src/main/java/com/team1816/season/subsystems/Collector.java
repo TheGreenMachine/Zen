@@ -24,26 +24,22 @@ public class Collector extends Subsystem {
      * Components
      */
     private final IGreenMotor intakeMotor;
-    private final IGreenMotor bridgeMotor;
 
     /**
      * Properties
      */
     public final double intakeSpeed;
-    public final double bridgeSpeed;
 
     /**
      * Logging
      */
     private DoubleLogEntry intakeVelocityLogger;
-    private DoubleLogEntry bridgeVelocityLogger;
 
     /**
      * States
      */
     private COLLECTOR_STATE desiredState = COLLECTOR_STATE.STOP;
     private double intakeVelocity = 0;
-    private double bridgeVelocity = 0;
     private boolean outputsChanged = false;
 
     /**
@@ -56,14 +52,11 @@ public class Collector extends Subsystem {
     public Collector(Infrastructure inf, RobotState rs) {
         super(NAME, inf, rs);
         intakeMotor = factory.getMotor(NAME, "intakeMotor");
-        bridgeMotor = factory.getMotor(NAME, "bridgeMotor");
 
         intakeSpeed = factory.getConstant(NAME, "intakeSpeed", -0.5);
-        bridgeSpeed = factory.getConstant(NAME, "bridgeSpeed", -0.5);
 
         if (Constants.kLoggingRobot) {
             intakeVelocityLogger = new DoubleLogEntry(DataLogManager.getLog(), "Collector/intakeVelocity");
-            bridgeVelocityLogger = new DoubleLogEntry(DataLogManager.getLog(), "Collector/bridgeVelocity");
         }
     }
 
@@ -85,7 +78,6 @@ public class Collector extends Subsystem {
     @Override
     public void readFromHardware() {
         intakeVelocity = intakeMotor.getSensorVelocity(0);
-        bridgeVelocity = bridgeMotor.getSensorVelocity(0);
 
         if (robotState.actualCollectorState != desiredState) {
             robotState.actualCollectorState = desiredState;
@@ -93,7 +85,6 @@ public class Collector extends Subsystem {
 
         if (Constants.kLoggingRobot) {
             intakeVelocityLogger.append(intakeVelocity);
-            bridgeVelocityLogger.append(bridgeVelocity);
         }
     }
 
@@ -109,11 +100,9 @@ public class Collector extends Subsystem {
             switch (desiredState) {
                 case STOP -> {
                     intakeMotor.set(GreenControlMode.PERCENT_OUTPUT, 0);
-                    bridgeMotor.set(GreenControlMode.PERCENT_OUTPUT, 0);
                 }
                 case INTAKE -> {
                     intakeMotor.set(GreenControlMode.PERCENT_OUTPUT, intakeSpeed);
-                    bridgeMotor.set(GreenControlMode.PERCENT_OUTPUT, bridgeSpeed);
                 }
             }
         }
@@ -155,15 +144,6 @@ public class Collector extends Subsystem {
      */
     public double getIntakeVelocity() {
         return intakeVelocity;
-    }
-
-    /**
-     * Returns the bridge motor of the collector velocity
-     *
-     * @return bridge velocity
-     */
-    public double getBridgeVelocity() {
-        return bridgeVelocity;
     }
 
     /**

@@ -121,21 +121,12 @@ subsystems:
         implemented: true
         motors:
             intakeMotor:
-                motorType: SparkMax
+                motorType: TalonFX
                 motorName: intakeMotor
                 id: 10
                 invertMotor: true
-                currentLimit: 30
-                currentLimitThreshold: 0
-                currentLimitTriggerTime: 0
-            bridgeMotor:
-                motorType: TalonFX
-                motorName: bridgeMotor
-                id: 11
-                invertMotor: false
         constants:
-            intakeSpeed: 0.4
-            bridgeSpeed: 0.4
+            intakeSpeed: -0.4
 infrastructure:
     canBusName: highSpeed
     ## Power Distribution ##
