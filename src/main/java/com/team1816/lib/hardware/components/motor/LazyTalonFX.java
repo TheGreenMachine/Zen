@@ -16,8 +16,7 @@ import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.configuration.Constants;
 import edu.wpi.first.wpilibj.DriverStation;
 
-public class
-LazyTalonFX extends TalonFX implements IGreenMotor {
+public class LazyTalonFX extends TalonFX implements IGreenMotor {
     protected double lastSet = Double.NaN;
     protected String name = "";
     protected ControlMode lastControlMode = null;
