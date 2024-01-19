@@ -196,6 +196,11 @@ public class TankDrive extends Drive implements DifferentialDrivetrain {
         updateRobotState();
     }
 
+    @Override
+    public void configureOrchestra() {
+
+    }
+
     /** Config */
 
     /**

@@ -325,9 +325,6 @@ public class MotorFactory {
             GreenLogger.log("        Inverting " + name + " with ID " + id);
         }
         motor.setInverted(invertMotor);
-        System.out.println("invert status? " + ((TalonFX) motor).getInverted());
-
-
     }
 
     private static SlotConfiguration toSlotConfiguration (

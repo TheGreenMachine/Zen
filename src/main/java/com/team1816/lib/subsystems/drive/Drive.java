@@ -1,5 +1,6 @@
 package com.team1816.lib.subsystems.drive;
 
+import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
@@ -28,6 +29,7 @@ import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -73,6 +75,8 @@ public abstract class Drive
      */
     protected static LedManager ledManager;
     protected IPigeonIMU pigeon;
+    public Orchestra orchestra;
+    public boolean orchestraInit = false;
 
     /**
      * Localized state
@@ -196,6 +200,7 @@ public abstract class Drive
     public Drive(LedManager lm, Infrastructure inf, RobotState rs) {
         super(NAME, inf, rs);
         ledManager = lm;
+        orchestra = new Orchestra();
 
         if (isDemoMode) {
             demoModeChooser = new SendableChooser<>();
@@ -218,6 +223,8 @@ public abstract class Drive
             drivetrainPoseLogger = new DoubleArrayLogEntry(DataLogManager.getLog(), "Drivetrain/Pose");
             drivetrainChassisSpeedsLogger = new DoubleArrayLogEntry(DataLogManager.getLog(), "Drivetrain/ChassisSpeeds");
         }
+
+
     }
 
     /**
@@ -528,6 +535,14 @@ public abstract class Drive
         if (pigeon == null) {
             createPigeon();
         }
+
+        if (!orchestraInit) {
+            if (RobotBase.isReal()) {
+                configureOrchestra();
+
+            }
+            orchestraInit = true;
+        }
         // zeroing ypr - (-90) pigeon is mounted with the "y" axis facing forward
         this.resetPigeon(Rotation2d.fromDegrees(-90));
 
@@ -640,6 +655,11 @@ public abstract class Drive
     public synchronized void readFromHardware() {
         robotState.gyroPos = new double[] {pigeon.getYawValue(), pigeon.getPitchValue(), pigeon.getRollValue()};
     }
+
+    /**
+     * Adds each motor to the orchestra object
+     */
+    public abstract void configureOrchestra();
 
     /**
      * Enum for the ControlState

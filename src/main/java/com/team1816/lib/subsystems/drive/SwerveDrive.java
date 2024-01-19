@@ -1,11 +1,13 @@
 package com.team1816.lib.subsystems.drive;
 
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.Symmetry;
 import com.team1816.lib.hardware.PIDSlotConfiguration;
+import com.team1816.lib.hardware.components.motor.LazyTalonFX;
 import com.team1816.lib.subsystems.LedManager;
 import com.team1816.lib.subsystems.PidProvider;
 import com.team1816.lib.util.logUtil.GreenLogger;
@@ -580,6 +582,18 @@ SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
             .swerveModules.drivePID.getOrDefault("slot0", defaultPIDConfig)
             : defaultPIDConfig;
     }
+
+    /**
+     * Adds each motor to the orchestra object
+     */
+    public void configureOrchestra() {
+        for (SwerveModule s : swerveModules) {
+            orchestra.addInstrument((LazyTalonFX) (s.getDriveMotor()));
+            orchestra.addInstrument((LazyTalonFX) (s.getAzimuthMotor()));
+        }
+        System.out.println("Orchestra configured");
+    }
+
 
     /**
      * Returns the associated kinematics of the drivetrain

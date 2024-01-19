@@ -75,8 +75,6 @@ public class SwerveDriveHelper implements DriveHelper {
             translationalInput.getY()
         );
 
-        System.out.println(translationalInputDirection);
-
 
         if (inputMagnitude < kDeadband) {
             translationalInput = new Translation2d();
