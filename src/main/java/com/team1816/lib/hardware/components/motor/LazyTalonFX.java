@@ -157,8 +157,9 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void setNeutralMode(NeutralMode neutralMode) {
-        super.setNeutralMode(neutralMode == NeutralMode.Brake ? NeutralModeValue.Brake : NeutralModeValue.Coast);
-        configurator.refresh(configs);
+        configurator.apply( //DON'T USE super.setInverted(), it doesn't refresh!
+                configs.MotorOutput.withNeutralMode(neutralMode == NeutralMode.Brake ? NeutralModeValue.Brake : NeutralModeValue.Coast)
+        );
     }
 
     @Override
@@ -168,8 +169,9 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void setInverted(boolean isInverted) {
-        super.setInverted(isInverted);
-        configurator.refresh(configs);
+        configurator.apply( //DON'T USE super.setInverted(), it doesn't refresh!
+                configs.MotorOutput.withInverted(isInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive)
+        );
     }
 
     @Override
