@@ -193,7 +193,7 @@ public class Robot extends TimedRobot {
 
             drive = (Injector.get(Drive.Factory.class)).getInstance();
 
-            subsystemManager.setSubsystems(drive, ledManager, camera);
+            subsystemManager.setSubsystems(drive, ledManager, camera, collector);
 
             subsystemManager.registerEnabledLoops(enabledLoop);
             subsystemManager.registerDisabledLoops(disabledLoop);
@@ -229,6 +229,18 @@ public class Robot extends TimedRobot {
                         }
                     }
             );
+
+            inputHandler.listenAction(
+                    "zeroPose",
+                    ActionState.PRESSED,
+                    () ->
+                            drive.zeroSensors(
+                                    robotState.allianceColor == Color.BLUE ?
+                                            Constants.kDefaultZeroingPose :
+                                            Constants.kFlippedZeroingPose
+                            )
+            );
+
 
             /** Operator Commands */
             inputHandler.listenAction(

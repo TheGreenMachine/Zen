@@ -124,9 +124,9 @@ subsystems:
                 motorType: TalonFX
                 motorName: intakeMotor
                 id: 10
-                invertMotor: true
+                invertMotor: false
         constants:
-            intakeSpeed: -0.4
+            intakeSpeed: -1 # THIS IS NOT MY FAULT IF IT MESSES UP. -Tag
 infrastructure:
     canBusName: highSpeed
     ## Power Distribution ##
