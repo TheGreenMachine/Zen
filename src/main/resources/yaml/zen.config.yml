@@ -95,17 +95,17 @@ subsystems:
                     allowableError: 5
         constants:
             ## Positional Configurations ##
-            maxVelTicks100ms: 12275.7 # ticks per 100ms
+            maxVelTicks100ms: 12275.7 # ticks per 100ms, not changing bcs used in ghostmotor
             openLoopRampRate: 0.1
             isSwerve: 1
-            encPPR: 14641
-            azimuthEncPPR: 4096
+            encPPR: 14641 #TODO
+            azimuthEncPPR: 4096 #TODO
             wheelDiameter: 4
             kTrackScrubFactor: 1.0
             ## Velocity Constraints ##
             maxRotVel: 18
-            trackWidth: 19.75 # inches
-            wheelbaseLength: 19.75 # inches
+            trackWidth: 22.75 # inches
+            wheelbaseLength: 22.75 # inches
             maxVelOpenLoop: 3.75 # meters/s (3.6)
             maxVelPathFollowing: 3.1 # meters/s (3.6)
             maxAccel: 1.5 # meters/s^2 (2.54)
