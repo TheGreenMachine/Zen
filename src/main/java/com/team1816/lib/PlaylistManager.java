@@ -74,7 +74,8 @@ public class PlaylistManager {
      */
     public enum Playlist {
         COCONUT_MALL("coconutMall"),
-        TIMBER_PITBULL("timber");
+        TIMBER_PITBULL("timber"),
+        AFRICA_TOTO("africaToto");
 
         final String path;
 
