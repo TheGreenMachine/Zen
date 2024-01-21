@@ -103,6 +103,7 @@ subsystems:
             maxVelTicks100ms: 12275.7 # ticks per 100ms
             openLoopRampRate: 0.1
             isSwerve: 1
+            isCTRSwerve: 1
             encPPR: 14641
             azimuthEncPPR: 4096
             wheelDiameter: 4
