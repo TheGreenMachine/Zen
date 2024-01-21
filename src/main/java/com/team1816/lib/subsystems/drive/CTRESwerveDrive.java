@@ -3,6 +3,7 @@ package com.team1816.lib.subsystems.drive;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -36,18 +37,34 @@ public class CTRESwerveDrive extends Drive {
     private DoubleLogEntry temperatureLogger;
 
     private SwerveDrivetrain train;
+    private SwerveModuleConstants[] swerveModules;
 
     private SwerveRequest request;
+
+    // module indices
+    public static final int kFrontLeft = 0;
+    public static final int kFrontRight = 1;
+    public static final int kBackLeft = 2;
+    public static final int kBackRight = 3;
 
     @Inject
     public CTRESwerveDrive(LedManager lm, Infrastructure inf, RobotState rs) {
         super(lm, inf, rs);
 
-        SwerveDrivetrainConstants constants = new SwerveDrivetrainConstants();
-        constants.CANbusName = "highSpeed"; // TODO: Make more flexible.
-        constants.Pigeon2Id = 32;
+        swerveModules = new SwerveModuleConstants[4];
 
-        train = new SwerveDrivetrain(constants);
+        swerveModules[kFrontLeft] = factory.getCTRESwerveModule(NAME, "frontLeft");
+        swerveModules[kFrontRight] = factory.getCTRESwerveModule(NAME, "frontRight");
+        swerveModules[kBackLeft] = factory.getCTRESwerveModule(NAME, "backLeft");
+        swerveModules[kBackRight] = factory.getCTRESwerveModule(NAME, "backRight");
+
+
+        SwerveDrivetrainConstants constants = new SwerveDrivetrainConstants()
+                .withCANbusName("highSpeed")
+                .withPigeon2Id(32); // TODO: Make more flexible.
+
+
+        train = new SwerveDrivetrain(constants, swerveModules);
         request = new SwerveRequest.Idle();
     }
 
@@ -178,6 +195,5 @@ public class CTRESwerveDrive extends Drive {
                 .swerveModules.drivePID.getOrDefault("slot0", defaultPIDConfig)
                 : defaultPIDConfig;
     }
-
 
 }

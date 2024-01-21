@@ -2,7 +2,9 @@ package com.team1816.lib.hardware.factory;
 
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.google.common.io.Resources;
 import com.google.inject.Singleton;
 import com.team1816.lib.hardware.*;
@@ -21,6 +23,7 @@ import com.team1816.lib.hardware.components.sensor.IProximitySensor;
 import com.team1816.lib.hardware.components.sensor.ProximitySensor;
 import com.team1816.lib.subsystems.drive.SwerveModule;
 import com.team1816.lib.util.logUtil.GreenLogger;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -249,6 +252,65 @@ public class RobotFactory {
         return followerMotor;
     }
 
+    public SwerveModuleConstants getCTRESwerveModule(String subsystemName, String name) {
+        var subsystem = getSubsystem(subsystemName);
+        ModuleConfiguration module = subsystem.swerveModules.modules.get(name);
+
+        if (module == null) {
+            DriverStation.reportError(
+                    "No swerve module with name " + name + " subsystem " + subsystemName,
+                    true
+            );
+            return null;
+        }
+
+        MotorConfiguration driveMotor = subsystem.motors.get(module.drive);
+        MotorConfiguration azimuthMotor = subsystem.motors.get(module.azimuth);
+
+        var canCoder = subsystem.canCoders.get(module.canCoder);
+
+        double moduleDistFromCenter = Units.inchesToMeters(getConstant("drivetrain", "wheelbaseLength") / 2); //this makes me sad
+        var moduleConfig = new SwerveModuleConstants()
+                // General Drivetrain
+                .withSpeedAt12VoltsMps(getConstant("drivetrain", "maxVelOpenLoop"))
+                .withFeedbackSource(SwerveModuleConstants.SteerFeedbackType.RemoteCANcoder)
+                // CANCoder
+                .withCANcoderId(canCoder)
+                .withCANcoderOffset(module.constants.get("encoderOffset"))
+                // General Motor
+                //.withCouplingGearRatio() TODO
+                .withWheelRadius(getConstant("drivetrain", "wheelDiameter") / 2)
+                .withLocationX(moduleDistFromCenter) //IMPORTANT: IF THIS IS NOT A SQUARE SWERVEDRIVE, THESE MUST BE DIFFERENT.
+                .withLocationY(moduleDistFromCenter)
+                // Drive Motor
+                .withDriveMotorClosedLoopOutput(com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType.Voltage)
+                .withDriveMotorGains(getSwervePIDConfigs(subsystemName, PIDConfig.Drive))
+                .withDriveMotorId(driveMotor.id)
+//                .withSlipCurrent() TODO
+//                .withDriveMotorGearRatio() TODO
+                .withDriveMotorInverted(driveMotor.invertMotor)
+                // Azimuth Motor
+                .withSteerMotorClosedLoopOutput(com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType.Voltage)
+                .withSteerMotorGains(getSwervePIDConfigs(subsystemName, PIDConfig.Azimuth))
+                .withSteerMotorId(azimuthMotor.id)
+//                .withSteerMotorGearRatio() TODO
+                .withSteerMotorInverted(azimuthMotor.invertMotor)
+                ;
+
+        if (RobotBase.isSimulation()) { //TODO
+            moduleConfig
+                    //Drive Motor
+                    .withDriveInertia(0)
+                    .withDriveFrictionVoltage(0)
+                    //Azimuth Motor
+                    .withSteerInertia(0)
+                    .withSteerFrictionVoltage(0)
+            ;
+        }
+
+        return moduleConfig;
+    }
+
     public SwerveModule getSwerveModule(String subsystemName, String name) {
         var subsystem = getSubsystem(subsystemName);
         ModuleConfiguration module = subsystem.swerveModules.modules.get(name);
@@ -468,6 +530,16 @@ public class RobotFactory {
         return getSubsystem(subsystemName).constants.get(name);
     }
 
+    public Slot0Configs getSwervePIDConfigs(String subsystemName, PIDConfig configType) {
+        PIDSlotConfiguration configs = getPidSlotConfig(subsystemName, "slot0", configType);
+
+        return new Slot0Configs()
+                .withKP(configs.kP)
+                .withKI(configs.kI)
+                .withKD(configs.kD)
+                .withKV(configs.kF);
+    }
+
     public PIDSlotConfiguration getPidSlotConfig(String subsystemName) {
         return getPidSlotConfig(subsystemName, "slot0", PIDConfig.Generic);
     }
@@ -484,17 +556,11 @@ public class RobotFactory {
         var subsystem = getSubsystem(subsystemName);
         Map<String, PIDSlotConfiguration> config = null;
         if (subsystem.implemented) {
-            switch (configType) {
-                case Azimuth:
-                    config = subsystem.swerveModules.azimuthPID;
-                    break;
-                case Drive:
-                    config = subsystem.swerveModules.drivePID;
-                    break;
-                case Generic:
-                    config = subsystem.pidConfig;
-                    break;
-            }
+            config = switch (configType) {
+                case Azimuth -> subsystem.swerveModules.azimuthPID;
+                case Drive -> subsystem.swerveModules.drivePID;
+                case Generic -> subsystem.pidConfig;
+            };
         }
         if (config != null && config.get(slot) != null) return config.get(slot);
         else {
@@ -589,7 +655,7 @@ public class RobotFactory {
         );
     }
 
-    private enum PIDConfig {
+    public enum PIDConfig {
         Azimuth,
         Drive,
         Generic,
