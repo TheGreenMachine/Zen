@@ -1,15 +1,12 @@
 package com.team1816.lib.hardware.components.motor;
 
 import com.ctre.phoenix.motorcontrol.*;
-import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
-import com.team1816.lib.Injector;
 import com.team1816.lib.hardware.components.motor.configurations.*;
-import com.team1816.lib.hardware.factory.RobotFactory;
 import com.team1816.lib.util.ConfigurationTranslator;
 import com.team1816.lib.util.Util;
 import com.team1816.lib.util.logUtil.GreenLogger;
@@ -278,12 +275,12 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     }
 
     @Override
-    public void setSensorPosition(double sensorPosition, int closedLoopSlotID) {
-        setSensorPosition(sensorPosition, 0, Constants.kLongCANTimeoutMs);
+    public void setSensorPosition(double sensorPosition) {
+        setSensorPosition(sensorPosition, Constants.kLongCANTimeoutMs);
     }
 
     @Override
-    public void setSensorPosition(double sensorPosition, int closedLoopSlotID, int timeoutMs) {
+    public void setSensorPosition(double sensorPosition, int timeoutMs) {
         super.setPosition(sensorPosition, timeoutMs / 1000.0);
     }
 
@@ -369,7 +366,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     }
 
     @Override
-    public void selectPIDSlot(int pidSlotID, int closedLoopSlotID) {
+    public void selectPIDSlot(int pidSlotID) {
         velocity.withSlot(pidSlotID);
         position.withSlot(pidSlotID);
         motionMagic.withSlot(pidSlotID);

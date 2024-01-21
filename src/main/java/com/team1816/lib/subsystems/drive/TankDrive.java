@@ -355,8 +355,8 @@ public class TankDrive extends Drive implements DifferentialDrivetrain {
      */
     public synchronized void setVelocity(DriveSignal signal) {
         if (controlState == ControlState.OPEN_LOOP) {
-            leftMain.selectPIDSlot(0, 0);
-            rightMain.selectPIDSlot(0, 0);
+            leftMain.selectPIDSlot(0);
+            rightMain.selectPIDSlot(0);
 
             leftMain.config_NeutralDeadband(0.0);
             rightMain.config_NeutralDeadband(0.0);

@@ -145,7 +145,7 @@ public interface IGreenMotor {
      * @param sensorPosition The position to be passed in
      * @param closedLoopSlotID Primary or Auxiliary PID
      */
-    void setSensorPosition(double sensorPosition, int closedLoopSlotID);
+    void setSensorPosition(double sensorPosition);
 
     /**
      * Sets the position currently read by the encoder as the value passed in
@@ -153,7 +153,7 @@ public interface IGreenMotor {
      * @param closedLoopSlotID Primary or Auxiliary PID
      * @param timeoutMs The CAN timeout time (in ms)
      */
-    void setSensorPosition(double sensorPosition, int closedLoopSlotID, int timeoutMs);
+    void setSensorPosition(double sensorPosition, int timeoutMs);
 
     /**
      * Makes a motor follow another motor
@@ -365,10 +365,10 @@ public interface IGreenMotor {
 
     /**
      * Selects which PID slot a motor is using
+     *
      * @param pidSlotID The slot id
-     * @param closedLoopSlotID Primary or auxiliary PID
      */
-    void selectPIDSlot(int pidSlotID, int closedLoopSlotID);
+    void selectPIDSlot(int pidSlotID);
 
     /**
      * Configures the integral zone for a PID slot

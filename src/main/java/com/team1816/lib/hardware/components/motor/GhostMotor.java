@@ -287,13 +287,13 @@ public class GhostMotor implements IGreenMotor {
     }
 
     @Override
-    public void setSensorPosition(double sensorPosition, int closedLoopSlotID) {
+    public void setSensorPosition(double sensorPosition) {
         processSet(GreenControlMode.POSITION_CONTROL, sensorPosition);
     }
 
     @Override
-    public void setSensorPosition(double sensorPosition, int closedLoopSlotID, int timeoutMs) {
-        setSensorPosition(sensorPosition, closedLoopSlotID);
+    public void setSensorPosition(double sensorPosition, int timeoutMs) {
+        setSensorPosition(sensorPosition);
     }
 
 
@@ -350,7 +350,7 @@ public class GhostMotor implements IGreenMotor {
     }
 
     @Override
-    public void selectPIDSlot(int pidSlotID, int closedLoopSlotID) {
+    public void selectPIDSlot(int pidSlotID) {
 
     }
 
