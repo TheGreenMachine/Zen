@@ -63,6 +63,13 @@ public class GreenLogger {
         if (entry instanceof DoubleArrayLogEntry) ((DoubleArrayLogEntry) entry).append(value);
     }
 
+    public static void appendQuickLog(String logName, boolean value) {
+        DataLogEntry entry = dynamicLogs.get(logName);
+        dynamicLogs.putIfAbsent(logName, new BooleanLogEntry(DataLogManager.getLog(), "GreenLogs/" + logName));
+        if (entry instanceof BooleanLogEntry) ((BooleanLogEntry) entry).append(value);
+
+    }
+
     public static void appendQuickLog(String logName, Object value) {
         DataLogEntry entry = dynamicLogs.get(logName);
         dynamicLogs.putIfAbsent(logName, new StringLogEntry(DataLogManager.getLog(), "GreenLogs/" + logName));
