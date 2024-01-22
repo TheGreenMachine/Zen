@@ -127,6 +127,7 @@ subsystems:
                 invertMotor: false
         constants:
             intakeSpeed: -1 # THIS IS NOT MY FAULT IF IT MESSES UP. -Tag
+            outtakeSpeed: 0.25
 infrastructure:
     canBusName: highSpeed
     ## Power Distribution ##
