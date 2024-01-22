@@ -3,78 +3,84 @@ package com.team1816.season.subsystems;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
+import com.team1816.lib.hardware.factory.SensorFactory;
 import com.team1816.lib.subsystems.Subsystem;
 import com.team1816.season.states.RobotState;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Shooter extends Subsystem {
 
+    /**
+     * Name
+     */
     private static final String NAME = "shooter";
 
     /**
      * Components
      */
-    private final IGreenMotor bridgeMotor;
     private final IGreenMotor shootMotor;
     private final DigitalInput noteSensor;
 
     /**
-     * Constants
+     * Properties
      */
-    private final double bridgeIntakeSpeed = factory.getConstant(NAME, "bridgeIntakeSpeed", -0.5);
-    private final double bridgeSpeakerSpeed = factory.getConstant(NAME, "bridgeSpeakerSpeed", 0.7);
-    private final double bridgeAmpSpeed = factory.getConstant(NAME, "bridgeAmpSpeed", 0.4);
-    private final double speakerSpeed = factory.getConstant(NAME, "speakerSpeed", 1);
-    private final double ampSpeed = factory.getConstant(NAME, "ampSpeed", 0.2);
+    public final double shootPower;
 
     /**
      * States
      */
-    private SHOOTER_STATE desiredShooterState = SHOOTER_STATE.STOW;
-    private SHOOTER_STATE actualShooterState = SHOOTER_STATE.STOW;
-    private boolean outputsChanged = false;
+    private ROLLER_STATE desiredShootState = ROLLER_STATE.STOP;
+    private boolean shootOutputsChanged = false;
 
     /**
-     * Base parameters needed to instantiate a subsystem
+     * Base constructor needed to instantiate a shooter
      *
-     * @param inf  Infrastructure
-     * @param rs   RobotState
+     * @param inf Infrastructure
+     * @param rs  RobotState
      */
     public Shooter(Infrastructure inf, RobotState rs) {
         super(NAME, inf, rs);
-        bridgeMotor = factory.getMotor(NAME, "bridgeMotor");
         shootMotor = factory.getMotor(NAME, "shootMotor");
-        noteSensor = new DigitalInput((int) factory.getConstant(NAME, "noteSensorID", -1));
+        noteSensor = new DigitalInput((int) factory.getConstant(NAME, "noteSensorChannel", 0));
+
+        shootPower = factory.getConstant(NAME, "shootPower", 0.70);
     }
 
+    /**
+     * Sets the desired state of the shooter
+     *
+     * @param desiredShootState SHOOT_STATE
+     */
+    public void setDesiredShootState(ROLLER_STATE desiredShootState) {
+        this.desiredShootState = desiredShootState;
+        shootOutputsChanged = true;
+    }
+
+    /**
+     * Reads actual outputs from shoot motor
+     *
+     * @see Subsystem#readFromHardware()
+     */
     @Override
     public void readFromHardware() {
-
     }
 
+    /**
+     * Writes outputs to shoot motor
+     *
+     * @see Subsystem#writeToHardware()
+     */
     @Override
     public void writeToHardware() {
-        switch(desiredShooterState){
-            case STOW -> {
-                bridgeMotor.set(GreenControlMode.PERCENT_OUTPUT, 0);
-                shootMotor.set(GreenControlMode.PERCENT_OUTPUT, 0);
-            }
-            case BRIDGE_INTAKE -> {
-                bridgeMotor.set(GreenControlMode.PERCENT_OUTPUT, bridgeIntakeSpeed);
-                shootMotor.set(GreenControlMode.PERCENT_OUTPUT, 0);
-            }
-            case SHOOT_SPEAKER -> {
-                if(shootMotor.getSensorVelocity(0) >= speakerSpeed){
-                    bridgeMotor.set(GreenControlMode.PERCENT_OUTPUT, bridgeSpeakerSpeed);
-                    shootMotor.set(GreenControlMode.PERCENT_OUTPUT, speakerSpeed);
-                } else {
-                    bridgeMotor.set(GreenControlMode.PERCENT_OUTPUT, 0);
-                    shootMotor.set(GreenControlMode.PERCENT_OUTPUT, speakerSpeed);
+        if (shootOutputsChanged) {
+            shootOutputsChanged = false;
+            switch (desiredShootState) {
+                case STOP -> {
+                    shootMotor.set(GreenControlMode.PERCENT_OUTPUT, 0);
                 }
-            }
-            case SHOOT_AMP -> {
-                bridgeMotor.set(GreenControlMode.PERCENT_OUTPUT, bridgeAmpSpeed);
-                shootMotor.set(GreenControlMode.PERCENT_OUTPUT, ampSpeed);
+                case SHOOT_SPEAKER -> {
+                    shootMotor.set(GreenControlMode.PERCENT_OUTPUT, shootPower);
+                }
             }
         }
     }
@@ -94,16 +100,35 @@ public class Shooter extends Subsystem {
         return false;
     }
 
-    public enum SHOOTER_STATE {
-        STOW,
-        BRIDGE_INTAKE,
-        SHOOT_SPEAKER,
-        SHOOT_AMP
+    /**
+     * Returns the desired shoot state
+     *
+     * @return desired shoot state
+     */
+    public ROLLER_STATE getDesiredShootState() {
+        return desiredShootState;
     }
 
-    public enum REV_STATE {
-        IDLE,
-        AMP,
-        SPEAKER
+    /**
+     * Shooter enum
+     */
+    public enum ROLLER_STATE {
+        STOP(0),
+        SHOOT_SPEAKER(factory.getConstant(NAME, "speakerShootSpeed", 0.70)),
+        SHOOT_AMP(factory.getConstant(NAME, "ampShootSpeed", 0.40));
+        final double velocity;
+        ROLLER_STATE (double velocity) {
+            this.velocity = velocity;
+        }
+        public boolean inDesiredSpeedRange (double actualVelocity) {
+            return actualVelocity < 1.1 * velocity && actualVelocity > 0.9 * velocity;
+        }
+    }
+    public enum FEEDER_STATE {
+        STOP,
+        SHOOT_SPEAKER,
+        SHOOT_AMP,
+        REV_SPEAKER,
+        REV_AMP
     }
 }
