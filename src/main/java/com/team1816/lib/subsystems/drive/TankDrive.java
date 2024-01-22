@@ -243,8 +243,8 @@ public class TankDrive extends Drive implements DifferentialDrivetrain {
      * @see this#zeroSensors(Pose2d)
      */
     public synchronized void resetEncoders() {
-        leftMain.setSensorPosition(0, 0, 0);
-        rightMain.setSensorPosition(0, 0, 0);
+        leftMain.setSensorPosition(0, 0);
+        rightMain.setSensorPosition(0, 0);
         leftActualDistance = 0;
         rightActualDistance = 0;
     }
