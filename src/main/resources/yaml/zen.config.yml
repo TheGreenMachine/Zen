@@ -127,6 +127,7 @@ subsystems:
                 invertMotor: true
         constants:
             intakeSpeed: -0.4
+            outtakeSpeed: 0.25
 infrastructure:
     canBusName: highSpeed
     ## Power Distribution ##

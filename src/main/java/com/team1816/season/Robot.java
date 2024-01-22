@@ -225,7 +225,7 @@ public class Robot extends TimedRobot {
                         if (pressed) {
                             collector.setDesiredState(Collector.COLLECTOR_STATE.INTAKE);
                         } else {
-                            collector.setDesiredState(Collector.COLLECTOR_STATE.STOP);
+                            collector.setDesiredState(Collector.COLLECTOR_STATE.OUTTAKE);
                         }
                     }
             );

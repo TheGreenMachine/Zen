@@ -29,6 +29,7 @@ public class Collector extends Subsystem {
      * Properties
      */
     public final double intakeSpeed;
+    public final double outtakeSpeed;
 
     /**
      * Logging
@@ -54,6 +55,7 @@ public class Collector extends Subsystem {
         intakeMotor = factory.getMotor(NAME, "intakeMotor");
 
         intakeSpeed = factory.getConstant(NAME, "intakeSpeed", -0.5);
+        outtakeSpeed = factory.getConstant(NAME, "outtakeSpeed", 0.25);
 
         if (Constants.kLoggingRobot) {
             intakeVelocityLogger = new DoubleLogEntry(DataLogManager.getLog(), "Collector/intakeVelocity");
@@ -104,6 +106,9 @@ public class Collector extends Subsystem {
                 case INTAKE -> {
                     intakeMotor.set(GreenControlMode.PERCENT_OUTPUT, intakeSpeed);
                 }
+                case OUTTAKE -> {
+                    intakeMotor.set(GreenControlMode.PERCENT_OUTPUT, outtakeSpeed);
+                }
             }
         }
     }
@@ -152,5 +157,6 @@ public class Collector extends Subsystem {
     public enum COLLECTOR_STATE {
         STOP,
         INTAKE,
+        OUTTAKE
     }
 }
