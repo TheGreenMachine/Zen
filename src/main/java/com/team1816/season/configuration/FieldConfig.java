@@ -43,7 +43,6 @@ public class FieldConfig {
         if (RobotBase.isSimulation()) {
             // Initialize April Tag Poses
             List<Pose2d> aprilTagPoses = new ArrayList<>();
-            System.out.println(fiducialTargets.size());
             for (int i = 0; i <= fiducialTargets.size(); i++) {
                 if (!fiducialTargets.containsKey(i)) {
                     aprilTagPoses.add(
