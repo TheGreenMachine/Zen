@@ -117,6 +117,23 @@ subsystems:
         implemented: false
         constants:
             useMultiTargetOdometry: 1
+    shooter:
+        implemented: true
+        motors:
+            rollerMotor:
+                motorType: TalonFX
+                motorName: rollerMotor
+                id: 10 # ?
+                invertMotor: false # ?
+            feederMotor:
+                motorType: SparkMax
+                motorName: feederMotor
+                id: 11 # ?
+                invertMotor: false # ?
+        constants:
+            noteSensorChannel: 0
+            rollerSpeakerShootSpeed: 0.70
+            rollerAmpShootSpeed: 0.40
 infrastructure:
     canBusName: highSpeed
     ## Power Distribution ##
