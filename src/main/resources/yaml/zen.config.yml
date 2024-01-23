@@ -125,6 +125,12 @@ subsystems:
                 motorName: intakeMotor
                 id: 10
                 invertMotor: false
+        pidConfig:
+            slot0:
+                kP: 0.043
+                Ki: 0
+                kD: 0.00001
+                kF: 0.0099
         constants:
             intakeSpeed: -1 # THIS IS NOT MY FAULT IF IT MESSES UP. -Tag
             outtakeSpeed: 0.25
