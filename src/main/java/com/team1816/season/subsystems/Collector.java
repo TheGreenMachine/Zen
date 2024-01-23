@@ -101,13 +101,13 @@ public class Collector extends Subsystem {
             outputsChanged = false;
             switch (desiredState) {
                 case STOP -> {
-                    intakeMotor.set(GreenControlMode.PERCENT_OUTPUT, 0);
+                    intakeMotor.set(GreenControlMode.VELOCITY_CONTROL, 0);
                 }
                 case INTAKE -> {
-                    intakeMotor.set(GreenControlMode.PERCENT_OUTPUT, intakeSpeed);
+                    intakeMotor.set(GreenControlMode.VELOCITY_CONTROL, intakeSpeed);
                 }
                 case OUTTAKE -> {
-                    intakeMotor.set(GreenControlMode.PERCENT_OUTPUT, outtakeSpeed);
+                    intakeMotor.set(GreenControlMode.VELOCITY_CONTROL, outtakeSpeed);
                 }
             }
         }
