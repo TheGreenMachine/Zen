@@ -36,7 +36,7 @@ public class Constants {
     /**
      * Git Hash
      */
-    public static final String kGitHash = factory.getGitHash();
+    public static final String kGitHash = RobotFactory.getGitHash();
 
     /**
      * CAN Timeouts
