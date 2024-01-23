@@ -278,7 +278,7 @@ public class RobotFactory {
                 .withCANcoderId(canCoder)
                 .withCANcoderOffset(module.constants.get("encoderOffset"))
                 // General Motor
-//                .withCouplingGearRatio() TODO: Lock drive in place, rotate azimuth 3x, divide drive rotations diff by 3 and that's this!
+                .withCouplingGearRatio(3.5713) //Might actually be negative
                 .withWheelRadius(getConstant("drivetrain", "wheelDiameter") / 2)
                 .withLocationX(moduleDistFromCenter) //IMPORTANT: IF THIS IS NOT A SQUARE SWERVEDRIVE, THESE MUST BE DIFFERENT.
                 .withLocationY(moduleDistFromCenter)
