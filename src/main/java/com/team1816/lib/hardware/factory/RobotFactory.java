@@ -278,7 +278,7 @@ public class RobotFactory {
                 .withCANcoderId(canCoder)
                 .withCANcoderOffset(module.constants.get("encoderOffset"))
                 // General Motor
-                //.withCouplingGearRatio() TODO
+//                .withCouplingGearRatio() TODO: Lock drive in place, rotate azimuth 3x, divide drive rotations diff by 3 and that's this!
                 .withWheelRadius(getConstant("drivetrain", "wheelDiameter") / 2)
                 .withLocationX(moduleDistFromCenter) //IMPORTANT: IF THIS IS NOT A SQUARE SWERVEDRIVE, THESE MUST BE DIFFERENT.
                 .withLocationY(moduleDistFromCenter)
@@ -287,13 +287,13 @@ public class RobotFactory {
                 .withDriveMotorGains(getSwervePIDConfigs(subsystemName, PIDConfig.Drive))
                 .withDriveMotorId(driveMotor.id)
 //                .withSlipCurrent() TODO
-//                .withDriveMotorGearRatio() TODO
+                .withDriveMotorGearRatio(6.75)
                 .withDriveMotorInverted(driveMotor.invertMotor)
                 // Azimuth Motor
                 .withSteerMotorClosedLoopOutput(com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType.Voltage)
                 .withSteerMotorGains(getSwervePIDConfigs(subsystemName, PIDConfig.Azimuth))
                 .withSteerMotorId(azimuthMotor.id)
-//                .withSteerMotorGearRatio() TODO
+                .withSteerMotorGearRatio(12.8)
                 .withSteerMotorInverted(azimuthMotor.invertMotor)
                 ;
 
