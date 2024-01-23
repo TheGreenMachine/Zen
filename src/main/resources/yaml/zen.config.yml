@@ -132,6 +132,7 @@ infrastructure:
 inputHandler: competition
 constants:
     zeroingButton: 9 # channel of DIO port
+    enableMusic: 0
     ## Drivetrain ##
     minAllowablePoseError: 0.1
     maxAllowablePoseError: 5
