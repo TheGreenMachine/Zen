@@ -19,7 +19,7 @@ public class TopSpeakerToNoteOnePath extends AutoPath {
     @Override
     protected List<Rotation2d> getWaypointHeadings() {
         return List.of(
-                Rotation2d.fromDegrees(-125),
+                Rotation2d.fromDegrees(60),
                 Rotation2d.fromDegrees(0),
                 Rotation2d.fromDegrees(0)
         );
