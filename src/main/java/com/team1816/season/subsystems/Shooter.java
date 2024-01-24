@@ -4,6 +4,7 @@ import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.subsystems.Subsystem;
+import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
 import edu.wpi.first.wpilibj.DigitalInput;
 
@@ -33,6 +34,8 @@ public class Shooter extends Subsystem {
     private FEEDER_STATE desiredFeederState = FEEDER_STATE.STOP;
     private boolean rollerOutputsChanged = false;
     private boolean feederOutputsChanged = false;
+    private double rollerVelocity = 0;
+    private double feederVelocity = 0;
 
     /**
      * Base constructor needed to instantiate a shooter
@@ -76,6 +79,20 @@ public class Shooter extends Subsystem {
      */
     @Override
     public void readFromHardware() {
+        rollerVelocity = rollerMotor.getSensorVelocity(0);
+        feederVelocity = feederMotor.getSensorVelocity(0);
+
+        if (robotState.actualRollerState != desiredRollerState) {
+            robotState.actualRollerState = desiredRollerState;
+        }
+
+        if (robotState.actualFeederState != desiredFeederState) {
+            robotState.actualFeederState = desiredFeederState;
+        }
+
+        if (robotState.isBeamBreakTriggered == noteSensor.get()) {
+            robotState.isBeamBreakTriggered = !noteSensor.get();
+        }
     }
 
     /**

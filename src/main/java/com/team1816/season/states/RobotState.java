@@ -6,6 +6,7 @@ import com.team1816.lib.auto.PathFinder;
 import com.team1816.lib.util.visionUtil.VisionPoint;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.configuration.FieldConfig;
+import com.team1816.season.subsystems.Shooter;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -52,7 +53,9 @@ public class RobotState {
      * Orchestrator states
      */
 
-    // TODO: Insert any states that you may need to keep track of.
+    public Shooter.ROLLER_STATE actualRollerState = Shooter.ROLLER_STATE.STOP;
+    public Shooter.FEEDER_STATE actualFeederState = Shooter.FEEDER_STATE.STOP;
+    public boolean isBeamBreakTriggered = false;
 
     public VisionPoint superlativeTarget = new VisionPoint();
     public List<VisionPoint> visibleTargets = new ArrayList<>();
