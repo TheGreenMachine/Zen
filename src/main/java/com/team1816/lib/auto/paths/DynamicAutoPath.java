@@ -10,7 +10,21 @@ import java.util.List;
 public abstract class DynamicAutoPath extends AutoPath{
     public List<Pose2d> waypoints;
     public boolean hasCachedWaypoints = false;
-    private ArrayList<Rotation2d> headings;
+    public List<Rotation2d> headings;
+
+    public List<Pose2d> updateWaypoints(List<Pose2d> waypoints) {
+        if (!hasCachedWaypoints) {
+            this.waypoints = waypoints;
+        }
+        return this.waypoints;
+    }
+
+    public List<Rotation2d> updateHeadings(List<Rotation2d> headings) {
+        if (!hasCachedWaypoints) {
+            this.headings = headings;
+        }
+        return this.headings;
+    }
 
     public List<Pose2d> getInverseWaypoints() {
         ArrayList<Pose2d> waypointsInverted = new ArrayList<Pose2d>(getWaypoints());
