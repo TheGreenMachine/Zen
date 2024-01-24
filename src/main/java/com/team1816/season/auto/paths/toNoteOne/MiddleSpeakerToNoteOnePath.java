@@ -10,20 +10,20 @@ import java.util.List;
 public class MiddleSpeakerToNoteOnePath extends DynamicAutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
-        return List.of(
+        return updateWaypoints(List.of(
                 new Pose2d(1.3, 5.62, Rotation2d.fromDegrees(68)),
                 new Pose2d(1.72, 6.61, Rotation2d.fromDegrees(61)),
                 new Pose2d(2.6, 6.99, Rotation2d.fromDegrees(0))
-        );
+        ));
     }
 
     @Override
     protected List<Rotation2d> getWaypointHeadings() {
-        return List.of(
+        return updateHeadings(List.of(
                 Rotation2d.fromDegrees(0),
                 Rotation2d.fromDegrees(0),
                 Rotation2d.fromDegrees(0)
-        );
+        ));
     }
 
     @Override

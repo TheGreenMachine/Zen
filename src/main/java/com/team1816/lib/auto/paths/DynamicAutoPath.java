@@ -1,5 +1,6 @@
 package com.team1816.lib.auto.paths;
 
+import com.team1816.lib.auto.Color;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -8,6 +9,11 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class DynamicAutoPath extends AutoPath{
+
+    public DynamicAutoPath() {}
+    public DynamicAutoPath(Color color) {
+        super(color);
+    }
     public List<Pose2d> waypoints;
     public boolean hasCachedWaypoints = false;
     public List<Rotation2d> headings;
