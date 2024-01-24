@@ -32,6 +32,6 @@ public class TopSpeakerToNoteTwoPath extends DynamicAutoPath {
 
     @Override
     protected boolean usingApp() {
-        return false;
+        return true;
     }
 }
