@@ -181,6 +181,7 @@ public class AutoModeManager {
         DRIVE_STRAIGHT,
 
         // New Auto Modes : 20??
+        TEST
     }
 
     /**
@@ -198,6 +199,8 @@ public class AutoModeManager {
 //                return new TuneDrivetrainMode();
 //            case LIVING_ROOM:
 //                return (new LivingRoomMode(color));
+            case TEST:
+                return new TestMode();
             default:
                 GreenLogger.log("Defaulting to drive straight mode");
                 return new DriveStraightMode();

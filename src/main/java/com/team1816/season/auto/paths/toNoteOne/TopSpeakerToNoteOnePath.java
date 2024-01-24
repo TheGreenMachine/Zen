@@ -1,12 +1,13 @@
 package com.team1816.season.auto.paths.toNoteOne;
 
 import com.team1816.lib.auto.paths.AutoPath;
+import com.team1816.lib.auto.paths.DynamicAutoPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 import java.util.List;
 
-public class TopSpeakerToNoteOnePath extends AutoPath {
+public class TopSpeakerToNoteOnePath extends DynamicAutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return List.of(

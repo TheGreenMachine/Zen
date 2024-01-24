@@ -1,19 +1,23 @@
 package com.team1816.season.auto.paths.toNoteOne;
 
-import com.team1816.lib.auto.paths.AutoPath;
+import com.team1816.lib.auto.paths.DynamicAutoPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 import java.util.List;
 
-public class BottomSpeakerToNoteOnePath extends AutoPath {
+public class BottomSpeakerToNoteOnePath extends DynamicAutoPath {
+
     @Override
     protected List<Pose2d> getWaypoints() {
-        return List.of(
-                new Pose2d(0.77, 4.4, Rotation2d.fromDegrees(0)),
-                new Pose2d(1.87, 5.58, Rotation2d.fromDegrees(67)),
-                new Pose2d(2.96, 6.99, Rotation2d.fromDegrees(0))
-        );
+        if (!hasCachedWaypoints) {
+            this.waypoints = List.of(
+                    new Pose2d(0.77, 4.4, Rotation2d.fromDegrees(0)),
+                    new Pose2d(1.87, 5.58, Rotation2d.fromDegrees(67)),
+                    new Pose2d(2.96, 6.99, Rotation2d.fromDegrees(0))
+            );
+        }
+        return waypoints;
     }
 
     @Override
