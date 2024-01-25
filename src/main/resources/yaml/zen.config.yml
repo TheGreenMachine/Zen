@@ -61,6 +61,8 @@ subsystems:
                     drive: FLDr
                     azimuth: FLAz
                     canCoder: FLEnc
+                    invertX: false
+                    invertY: false
                     constants:
                         encoderOffset: 117 #was 99 #1442 remote, 110 pid0
                         invertSensorPhase: 1
@@ -68,13 +70,18 @@ subsystems:
                     drive: FRDr
                     azimuth: FRAz
                     canCoder: FREnc
+                    invertX: false
+                    invertY: true
                     constants:
+                        invertX:
                         encoderOffset: 1626 #was 1589 # 683 remote, 1589 pid0
                         invertSensorPhase: 1
                 backLeft:
                     drive: RLDr
                     azimuth: RLAz
                     canCoder: RLEnc
+                    invertX: true
+                    invertY: false
                     constants:
                         encoderOffset: 2592 #was 556 #1149 remote, 556 pid0
                         invertSensorPhase: 1
@@ -82,6 +89,8 @@ subsystems:
                     drive: RRDr
                     azimuth: RRAz
                     canCoder: RREnc
+                    invertX: true
+                    invertY: false
                     constants:
                         encoderOffset: 2856 #was 2854,  #1150 remote, 2854 id0
                         invertSensorPhase: 1

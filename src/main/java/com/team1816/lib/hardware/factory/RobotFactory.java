@@ -270,6 +270,9 @@ public class RobotFactory {
         var canCoder = subsystem.canCoders.get(module.canCoder);
 
         double moduleDistFromCenter = Units.inchesToMeters(getConstant("drivetrain", "wheelbaseLength") / 2); //this makes me sad
+        double moduleXDist = moduleDistFromCenter * (module.invertX ? 1 : -1);
+        double moduleYDist = moduleDistFromCenter * (module.invertY ? 1 : -1);
+
         var moduleConfig = new SwerveModuleConstants()
                 // General Drivetrain
                 .withSpeedAt12VoltsMps(getConstant("drivetrain", "maxVelOpenLoop"))
@@ -278,10 +281,10 @@ public class RobotFactory {
                 .withCANcoderId(canCoder)
                 .withCANcoderOffset(module.constants.get("encoderOffset"))
                 // General Motor
-                .withCouplingGearRatio(0) //Might actually be negative
+                .withCouplingGearRatio(3.5713) //Might actually be negative
                 .withWheelRadius(getConstant("drivetrain", "wheelDiameter") / 2)
-                .withLocationX(moduleDistFromCenter) //IMPORTANT: IF THIS IS NOT A SQUARE SWERVEDRIVE, THESE MUST BE DIFFERENT.
-                .withLocationY(moduleDistFromCenter)
+                .withLocationX(moduleXDist) //IMPORTANT: IF THIS IS NOT A SQUARE SWERVEDRIVE, THESE MUST BE DIFFERENT.
+                .withLocationY(moduleYDist)
                 // Drive Motor
                 .withDriveMotorClosedLoopOutput(com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType.Voltage)
                 .withDriveMotorGains(getSwervePIDConfigs(subsystemName, PIDConfig.Drive))
