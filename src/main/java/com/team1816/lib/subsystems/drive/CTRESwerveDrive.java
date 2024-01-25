@@ -27,6 +27,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 
 import java.util.ArrayList;
@@ -82,8 +83,8 @@ public class CTRESwerveDrive extends Drive {
         fieldCentricRequest = new SwerveRequest.FieldCentric()
                 .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
                 .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagic)
-                .withDeadband(0.15)
-                .withRotationalDeadband(0.05);
+                .withDeadband(0.15 * kMaxVelOpenLoopMeters)
+                .withRotationalDeadband(0.05 * kMaxAngularSpeed);
 
         if (Constants.kLoggingRobot) {
             gyroPitchLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Pitch");
@@ -101,16 +102,20 @@ public class CTRESwerveDrive extends Drive {
     @Override
     public synchronized void readFromHardware() {
         super.readFromHardware();
-        train.updateSimState(Robot.looperDt / 1000, RobotController.getBatteryVoltage());
+
         for (int i = 0; i < 4; i++) {
             motorTemperatures.get(i).refresh();
         }
+
 
         updateRobotState();
     }
 
     @Override
     public void updateRobotState() {
+        if (RobotBase.isSimulation()) {
+            train.updateSimState(Robot.looperDt / 1000, RobotController.getBatteryVoltage());
+        }
         robotState.fieldToVehicle = train.getState().Pose;
         robotState.driverRelativeFieldToVehicle = new Pose2d( // for inputs ONLY
                 robotState.fieldToVehicle.getTranslation(),
@@ -192,7 +197,10 @@ public class CTRESwerveDrive extends Drive {
 //
 //        request = speeds_request;
 
-        request = fieldCentricRequest.withVelocityY(strafe).withVelocityX(forward).withRotationalRate(rotation);
+        request = fieldCentricRequest
+                .withVelocityY(strafe * kMaxVelOpenLoopMeters)
+                .withVelocityX(forward * kMaxVelOpenLoopMeters)
+                .withRotationalRate(rotation * kMaxAngularSpeed);
 
         setOpenLoop(null);
     }
