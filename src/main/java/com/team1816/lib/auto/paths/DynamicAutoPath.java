@@ -42,9 +42,7 @@ public abstract class DynamicAutoPath extends AutoPath{
                         Rotation2d.fromDegrees(waypoint.getRotation().getDegrees() - 180)
                 )
         );
-
         Collections.reverse(waypointsInverted);
-
         return waypointsInverted;
     }
 

@@ -9,12 +9,15 @@ import com.team1816.lib.auto.modes.DriveStraightMode;
 import com.team1816.lib.auto.paths.AutoPath;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.auto.modes.*;
+import com.team1816.season.auto.paths.toNoteOne.AmpToNoteOnePath;
 import com.team1816.season.auto.paths.toNoteOne.BottomSpeakerToNoteOnePath;
 import com.team1816.season.auto.paths.toNoteOne.MiddleSpeakerToNoteOnePath;
 import com.team1816.season.auto.paths.toNoteOne.TopSpeakerToNoteOnePath;
+import com.team1816.season.auto.paths.toNoteThree.AmpToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteThree.BottomSpeakerToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteThree.MiddleSpeakerToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteThree.TopSpeakerToNoteThreePath;
+import com.team1816.season.auto.paths.toNoteTwo.AmpToNoteTwoPath;
 import com.team1816.season.auto.paths.toNoteTwo.BottomSpeakerToNoteTwoPath;
 import com.team1816.season.auto.paths.toNoteTwo.MiddleSpeakerToNoteTwoPath;
 import com.team1816.season.auto.paths.toNoteTwo.TopSpeakerToNoteTwoPath;
@@ -323,19 +326,22 @@ public class AutoModeManager {
             collectToShoot = switch (shootOne) {
                 case TOP_SPEAKER -> new TopSpeakerToNoteOnePath().withInversedWaypoints();
                 case MIDDLE_SPEAKER -> new MiddleSpeakerToNoteOnePath().withInversedWaypoints();
-                default -> new BottomSpeakerToNoteOnePath().withInversedWaypoints();
+                case BOTTOM_SPEAKER -> new BottomSpeakerToNoteOnePath().withInversedWaypoints();
+                case AMP -> new AmpToNoteOnePath().withInversedWaypoints();
             };
         } else if (collectOne == DesiredCollect.MIDDLE_NOTE) {
             collectToShoot = switch (shootOne) {
                 case TOP_SPEAKER -> new TopSpeakerToNoteTwoPath().withInversedWaypoints();
                 case MIDDLE_SPEAKER -> new MiddleSpeakerToNoteTwoPath().withInversedWaypoints();
-                default -> new BottomSpeakerToNoteTwoPath().withInversedWaypoints();
+                case BOTTOM_SPEAKER -> new BottomSpeakerToNoteTwoPath().withInversedWaypoints();
+                case AMP -> new AmpToNoteTwoPath().withInversedWaypoints();
             };
         } else {
             collectToShoot = switch (shootOne) {
                 case TOP_SPEAKER -> new TopSpeakerToNoteThreePath().withInversedWaypoints();
                 case MIDDLE_SPEAKER -> new MiddleSpeakerToNoteThreePath().withInversedWaypoints();
-                default -> new BottomSpeakerToNoteThreePath().withInversedWaypoints();
+                case BOTTOM_SPEAKER -> new BottomSpeakerToNoteThreePath().withInversedWaypoints();
+                case AMP -> new AmpToNoteThreePath().withInversedWaypoints();
             };
         }
 
