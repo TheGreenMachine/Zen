@@ -134,6 +134,9 @@ subsystems:
             noteSensorChannel: 0
             rollerSpeakerShootSpeed: 0.70
             rollerAmpShootSpeed: 0.40
+            feederSpeakerShootSpeed: 0.70
+            feederAmpShootSpeed: 0.40
+            velocityErrorMargin: 0.1
 infrastructure:
     canBusName: highSpeed
     ## Power Distribution ##
