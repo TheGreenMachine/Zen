@@ -278,7 +278,7 @@ public class RobotFactory {
                 .withCANcoderId(canCoder)
                 .withCANcoderOffset(module.constants.get("encoderOffset"))
                 // General Motor
-                .withCouplingGearRatio(3.5713) //Might actually be negative
+                .withCouplingGearRatio(0) //Might actually be negative
                 .withWheelRadius(getConstant("drivetrain", "wheelDiameter") / 2)
                 .withLocationX(moduleDistFromCenter) //IMPORTANT: IF THIS IS NOT A SQUARE SWERVEDRIVE, THESE MUST BE DIFFERENT.
                 .withLocationY(moduleDistFromCenter)
@@ -298,14 +298,14 @@ public class RobotFactory {
                 ;
 
         if (RobotBase.isSimulation()) { //TODO
-            moduleConfig
-                    //Drive Motor
-                    .withDriveInertia(0)
-                    .withDriveFrictionVoltage(0)
-                    //Azimuth Motor
-                    .withSteerInertia(0)
-                    .withSteerFrictionVoltage(0)
-            ;
+//            moduleConfig
+//                    //Drive Motor
+//                    .withDriveInertia(0)
+//                    .withDriveFrictionVoltage(0)
+//                    //Azimuth Motor
+//                    .withSteerInertia(0)
+//                    .withSteerFrictionVoltage(0)
+//            ;
         }
 
         return moduleConfig;

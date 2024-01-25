@@ -3,6 +3,7 @@ package com.team1816.lib.subsystems.drive;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.google.inject.Inject;
@@ -11,6 +12,7 @@ import com.team1816.lib.Infrastructure;
 import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.Symmetry;
 import com.team1816.lib.hardware.PIDSlotConfiguration;
+import com.team1816.lib.hardware.components.gyro.CTREPigeonWrapper;
 import com.team1816.lib.subsystems.LedManager;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.lib.util.team254.DriveSignal;
@@ -24,12 +26,15 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.RobotController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
 public class CTRESwerveDrive extends Drive {
-    private StatusSignal<Double>[] motorTemperatures;
+    private final ArrayList<StatusSignal<Double>> motorTemperatures = new ArrayList<>();
 
     /**
      * Logging
@@ -40,6 +45,7 @@ public class CTRESwerveDrive extends Drive {
     private SwerveModuleConstants[] swerveModules;
 
     private SwerveRequest request;
+    private SwerveRequest.FieldCentric fieldCentricRequest;
 
     // module indices
     public static final int kFrontLeft = 0;
@@ -50,6 +56,7 @@ public class CTRESwerveDrive extends Drive {
     @Inject
     public CTRESwerveDrive(LedManager lm, Infrastructure inf, RobotState rs) {
         super(lm, inf, rs);
+        temperatureLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/moduleTemps");
 
         swerveModules = new SwerveModuleConstants[4];
 
@@ -66,6 +73,22 @@ public class CTRESwerveDrive extends Drive {
 
         train = new SwerveDrivetrain(constants, swerveModules);
         request = new SwerveRequest.Idle();
+
+        for (int i = 0; i < 4; i++) {
+            System.out.println("setting " + i + " to " + train.getModule(i).getDriveMotor().getDeviceTemp());
+            motorTemperatures.add(train.getModule(i).getDriveMotor().getDeviceTemp());
+        }
+
+        fieldCentricRequest = new SwerveRequest.FieldCentric()
+                .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
+                .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagic)
+                .withDeadband(0.15)
+                .withRotationalDeadband(0.05);
+
+        if (Constants.kLoggingRobot) {
+            gyroPitchLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Pitch");
+            gyroRollLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Roll");
+        }
     }
 
     @Override
@@ -78,9 +101,9 @@ public class CTRESwerveDrive extends Drive {
     @Override
     public synchronized void readFromHardware() {
         super.readFromHardware();
-
+        train.updateSimState(Robot.looperDt / 1000, RobotController.getBatteryVoltage());
         for (int i = 0; i < 4; i++) {
-            motorTemperatures[i] = train.getModule(i).getDriveMotor().getDeviceTemp();
+            motorTemperatures.get(i).refresh();
         }
 
         updateRobotState();
@@ -109,8 +132,8 @@ public class CTRESwerveDrive extends Drive {
                 );
         robotState.deltaVehicle = cs;
 
-        temperatureLogger.append(motorTemperatures[0].getValueAsDouble());
-        robotState.drivetrainTemp = motorTemperatures[0].getValueAsDouble();
+        temperatureLogger.append(motorTemperatures.get(0).getValueAsDouble());
+        robotState.drivetrainTemp = motorTemperatures.get(0).getValueAsDouble();
 
         robotState.vehicleToFloorProximityCentimeters = infrastructure.getMaximumProximity();
 
@@ -154,19 +177,22 @@ public class CTRESwerveDrive extends Drive {
         if (controlState != ControlState.OPEN_LOOP) {
             GreenLogger.log("Switching to open loop.");
             controlState = ControlState.OPEN_LOOP;
+            fieldCentricRequest.withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
         }
     }
 
     @Override
     public void setTeleopInputs(double forward, double strafe, double rotation) {
-        SwerveRequest.ApplyChassisSpeeds speeds_request = new SwerveRequest.ApplyChassisSpeeds();
+//        SwerveRequest.ApplyChassisSpeeds speeds_request = new SwerveRequest.ApplyChassisSpeeds();
+//
+////        speeds_request.Speeds = chassisSpeed;
+//        // TODO: Elena suggested that this maybe would work.
+//        // Explanation: Pythagorean theorem.
+//        speeds_request.Speeds = new ChassisSpeeds(forward, strafe, rotation);
+//
+//        request = speeds_request;
 
-//        speeds_request.Speeds = chassisSpeed;
-        // TODO: Elena suggested that this maybe would work.
-        // Explanation: Pythagorean theorem.
-        speeds_request.Speeds = new ChassisSpeeds(forward, strafe, rotation);
-
-        request = speeds_request;
+        request = fieldCentricRequest.withVelocityY(strafe).withVelocityX(forward).withRotationalRate(rotation);
 
         setOpenLoop(null);
     }
@@ -194,6 +220,11 @@ public class CTRESwerveDrive extends Drive {
                 .getSubsystem(NAME)
                 .swerveModules.drivePID.getOrDefault("slot0", defaultPIDConfig)
                 : defaultPIDConfig;
+    }
+
+    @Override
+    public void createPigeon() {
+        super.pigeon = new CTREPigeonWrapper(train.getPigeon2());
     }
 
 }
