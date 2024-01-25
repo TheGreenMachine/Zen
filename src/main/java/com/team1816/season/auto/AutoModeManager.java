@@ -119,6 +119,10 @@ public class AutoModeManager {
         desiredAuto = DesiredAuto.DRIVE_STRAIGHT;
         teamColor = Color.RED;
         robotState.allianceColor = teamColor;
+
+        desiredStart = ShootPos.TOP_SPEAKER;
+        desiredFirstCollect = DesiredCollect.TOP_NOTE;
+        desiredFirstShoot = ShootPos.TOP_SPEAKER;
     }
 
     /**
@@ -144,7 +148,7 @@ public class AutoModeManager {
 
         boolean autoChanged = desiredAuto != selectedAuto;
         boolean colorChanged = teamColor != selectedColor;
-        boolean dynamicAutoChanged = selectedStartPos == desiredStart && selectedFirstCollect == desiredFirstCollect && selectedFirstShoot == desiredFirstShoot;
+        boolean dynamicAutoChanged = selectedStartPos != desiredStart || selectedFirstCollect != desiredFirstCollect || selectedFirstShoot != desiredFirstShoot;
 
         // if auto has been changed, update selected auto mode + thread
         if (autoChanged || colorChanged || dynamicAutoChanged) {
@@ -160,6 +164,7 @@ public class AutoModeManager {
             if (selectedAuto == DesiredAuto.TWO_SCORE) {
                 autoMode = generateDynamicAutoMode(selectedAuto, selectedColor, selectedStartPos, selectedFirstCollect, selectedFirstShoot);
             } else {
+                dynamicAutoChanged = false; //Stops unnecessary defaulting/zeroing
                 autoMode = generateAutoMode(selectedAuto, selectedColor);
             }
 
@@ -169,6 +174,11 @@ public class AutoModeManager {
         teamColor = selectedColor;
         robotState.allianceColor = teamColor;
 
+        desiredStart = selectedStartPos;
+        desiredFirstCollect = selectedFirstCollect;
+        desiredFirstShoot = selectedFirstShoot;
+
+
         //Legacy 2023 pathfinder code
 //                if (robotState.allianceColor == Color.BLUE) {
 //            robotState.pathFinder = new PathFinder(List.of(Constants.blueChargeStation));
@@ -176,7 +186,7 @@ public class AutoModeManager {
 //            robotState.pathFinder = new PathFinder(List.of(Constants.redChargeStation));
 //        }
 
-        return autoChanged || colorChanged;
+        return autoChanged || colorChanged || dynamicAutoChanged;
     }
 
     /**
