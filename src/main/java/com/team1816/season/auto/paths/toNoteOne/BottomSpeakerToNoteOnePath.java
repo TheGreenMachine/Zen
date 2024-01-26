@@ -1,5 +1,6 @@
 package com.team1816.season.auto.paths.toNoteOne;
 
+import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -7,6 +8,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import java.util.List;
 
 public class BottomSpeakerToNoteOnePath extends DynamicAutoPath {
+
+    public BottomSpeakerToNoteOnePath() {}
+    public BottomSpeakerToNoteOnePath(Color color) {super(color);}
+
 
     @Override
     protected List<Pose2d> getWaypoints() {

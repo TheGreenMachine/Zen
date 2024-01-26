@@ -14,6 +14,7 @@ public abstract class DynamicAutoPath extends AutoPath{
     public DynamicAutoPath(Color color) {
         super(color);
     }
+
     public List<Pose2d> waypoints;
     public boolean hasCachedWaypoints = false;
     public List<Rotation2d> headings;
