@@ -292,31 +292,31 @@ public class AutoModeManager {
     }
 
     private AutoMode generateDynamicAutoMode(DesiredAuto mode, Color color, ShootPos selectedStart, DesiredCollect selectedCollect, ShootPos selectedShoot) {
-        return new TwoScoreMode(generateDynamicPathList(selectedStart,selectedCollect,selectedShoot));
+        return new TwoScoreMode(generateDynamicPathList(color, selectedStart,selectedCollect,selectedShoot));
     }
 
-    private List<AutoPath> generateDynamicPathList(ShootPos start, DesiredCollect collectOne, ShootPos shootOne) {
+    private List<AutoPath> generateDynamicPathList(Color color, ShootPos start, DesiredCollect collectOne, ShootPos shootOne) {
         //TODO generalize?
 
         // Start -> first collect
         AutoPath startToCollect;
         if (start == ShootPos.TOP_SPEAKER) {
             startToCollect = switch (collectOne) {
-                case TOP_NOTE -> new TopSpeakerToNoteOnePath();
-                case MIDDLE_NOTE -> new TopSpeakerToNoteTwoPath();
-                case BOTTOM_NOTE -> new TopSpeakerToNoteThreePath();
+                case TOP_NOTE -> new TopSpeakerToNoteOnePath(color);
+                case MIDDLE_NOTE -> new TopSpeakerToNoteTwoPath(color);
+                case BOTTOM_NOTE -> new TopSpeakerToNoteThreePath(color);
             };
         } else if (start == ShootPos.MIDDLE_SPEAKER) {
             startToCollect = switch (collectOne) {
-                case TOP_NOTE -> new MiddleSpeakerToNoteOnePath();
-                case MIDDLE_NOTE -> new MiddleSpeakerToNoteTwoPath();
-                case BOTTOM_NOTE -> new MiddleSpeakerToNoteThreePath();
+                case TOP_NOTE -> new MiddleSpeakerToNoteOnePath(color);
+                case MIDDLE_NOTE -> new MiddleSpeakerToNoteTwoPath(color);
+                case BOTTOM_NOTE -> new MiddleSpeakerToNoteThreePath(color);
             };
         } else {
             startToCollect = switch (collectOne) {
-                case TOP_NOTE -> new BottomSpeakerToNoteOnePath();
-                case MIDDLE_NOTE -> new BottomSpeakerToNoteTwoPath();
-                case BOTTOM_NOTE -> new BottomSpeakerToNoteThreePath();
+                case TOP_NOTE -> new BottomSpeakerToNoteOnePath(color);
+                case MIDDLE_NOTE -> new BottomSpeakerToNoteTwoPath(color);
+                case BOTTOM_NOTE -> new BottomSpeakerToNoteThreePath(color);
             };
         }
 
@@ -324,24 +324,24 @@ public class AutoModeManager {
         AutoPath collectToShoot; //TODO make amp paths
         if (collectOne == DesiredCollect.TOP_NOTE) {
             collectToShoot = switch (shootOne) {
-                case TOP_SPEAKER -> new TopSpeakerToNoteOnePath().withInversedWaypoints();
-                case MIDDLE_SPEAKER -> new MiddleSpeakerToNoteOnePath().withInversedWaypoints();
-                case BOTTOM_SPEAKER -> new BottomSpeakerToNoteOnePath().withInversedWaypoints();
-                case AMP -> new AmpToNoteOnePath().withInversedWaypoints();
+                case TOP_SPEAKER -> new TopSpeakerToNoteOnePath(color).withInversedWaypoints();
+                case MIDDLE_SPEAKER -> new MiddleSpeakerToNoteOnePath(color).withInversedWaypoints();
+                case BOTTOM_SPEAKER -> new BottomSpeakerToNoteOnePath(color).withInversedWaypoints();
+                case AMP -> new AmpToNoteOnePath(color).withInversedWaypoints();
             };
         } else if (collectOne == DesiredCollect.MIDDLE_NOTE) {
             collectToShoot = switch (shootOne) {
-                case TOP_SPEAKER -> new TopSpeakerToNoteTwoPath().withInversedWaypoints();
-                case MIDDLE_SPEAKER -> new MiddleSpeakerToNoteTwoPath().withInversedWaypoints();
-                case BOTTOM_SPEAKER -> new BottomSpeakerToNoteTwoPath().withInversedWaypoints();
-                case AMP -> new AmpToNoteTwoPath().withInversedWaypoints();
+                case TOP_SPEAKER -> new TopSpeakerToNoteTwoPath(color).withInversedWaypoints();
+                case MIDDLE_SPEAKER -> new MiddleSpeakerToNoteTwoPath(color).withInversedWaypoints();
+                case BOTTOM_SPEAKER -> new BottomSpeakerToNoteTwoPath(color).withInversedWaypoints();
+                case AMP -> new AmpToNoteTwoPath(color).withInversedWaypoints();
             };
         } else {
             collectToShoot = switch (shootOne) {
-                case TOP_SPEAKER -> new TopSpeakerToNoteThreePath().withInversedWaypoints();
-                case MIDDLE_SPEAKER -> new MiddleSpeakerToNoteThreePath().withInversedWaypoints();
-                case BOTTOM_SPEAKER -> new BottomSpeakerToNoteThreePath().withInversedWaypoints();
-                case AMP -> new AmpToNoteThreePath().withInversedWaypoints();
+                case TOP_SPEAKER -> new TopSpeakerToNoteThreePath(color).withInversedWaypoints();
+                case MIDDLE_SPEAKER -> new MiddleSpeakerToNoteThreePath(color).withInversedWaypoints();
+                case BOTTOM_SPEAKER -> new BottomSpeakerToNoteThreePath(color).withInversedWaypoints();
+                case AMP -> new AmpToNoteThreePath(color).withInversedWaypoints();
             };
         }
 
