@@ -19,6 +19,20 @@ public class RobotYamlTests {
         loadConfig("zodiac_pro");
     }
 
+    @Test
+    public void seasonYamlTest() {
+        loadConfig("zen"); //TODO update this every season!
+    }
+
+    @Test
+    public void alphaYamlTest() {
+        loadConfig("alpha");
+    }
+    @Test
+    public void braveYamlTest() {
+        loadConfig("bravo");
+    }
+
     private void loadConfig(String configName) {
         RobotConfiguration config = null;
         try {
@@ -26,7 +40,7 @@ public class RobotYamlTests {
                 YamlConfig.loadFrom(
                     this.getClass()
                         .getClassLoader()
-                        .getResourceAsStream("yaml/" +configName + ".config.yml")
+                        .getResourceAsStream("yaml/" + configName + ".config.yml")
                 );
         } catch (YAMLException e) {
             e.printStackTrace();
