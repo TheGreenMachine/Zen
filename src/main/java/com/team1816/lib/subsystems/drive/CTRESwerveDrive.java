@@ -36,17 +36,27 @@ import java.util.List;
 @Singleton
 public class CTRESwerveDrive extends Drive {
     private final ArrayList<StatusSignal<Double>> motorTemperatures = new ArrayList<>();
+    /**
+     * Components
+     */
+    private SwerveDrivetrain train;
+    private SwerveModuleConstants[] swerveModules;
+
+    /**
+     * Control
+     */
+    private SwerveRequest request;
+    private SwerveRequest.FieldCentric fieldCentricRequest;
+
+    /**
+     * Properties
+     */
+    private SwerveDriveKinematics swerveKinematics;
 
     /**
      * Logging
      */
     private DoubleLogEntry temperatureLogger;
-
-    private SwerveDrivetrain train;
-    private SwerveModuleConstants[] swerveModules;
-
-    private SwerveRequest request;
-    private SwerveRequest.FieldCentric fieldCentricRequest;
 
     // module indices
     public static final int kFrontLeft = 0;
@@ -75,6 +85,13 @@ public class CTRESwerveDrive extends Drive {
         train = new SwerveDrivetrain(constants, swerveModules);
         request = new SwerveRequest.Idle();
 
+        Translation2d[] moduleLocations = new Translation2d[4];
+        for (int i = 0; i < 4; i++) {
+            moduleLocations[i] = new Translation2d(swerveModules[i].LocationX, swerveModules[i].LocationY);
+        }
+
+        swerveKinematics = new SwerveDriveKinematics(moduleLocations);
+
         for (int i = 0; i < 4; i++) {
             System.out.println("setting " + i + " to " + train.getModule(i).getDriveMotor().getDeviceTemp());
             motorTemperatures.add(train.getModule(i).getDriveMotor().getDeviceTemp());
@@ -102,6 +119,8 @@ public class CTRESwerveDrive extends Drive {
     @Override
     public synchronized void readFromHardware() {
         super.readFromHardware();
+
+        chassisSpeed = swerveKinematics.toChassisSpeeds(train.getState().ModuleStates);
 
         for (int i = 0; i < 4; i++) {
             motorTemperatures.get(i).refresh();
