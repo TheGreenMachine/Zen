@@ -20,6 +20,7 @@ import com.team1816.season.configuration.Constants;
 import com.team1816.season.configuration.DrivetrainTargets;
 import com.team1816.season.states.Orchestrator;
 import com.team1816.season.states.RobotState;
+import com.team1816.season.subsystems.Shooter;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -66,6 +67,7 @@ public class Robot extends TimedRobot {
 
     private LedManager ledManager;
     private Camera camera;
+    private Shooter shooter;
 
 
     /**
@@ -161,6 +163,7 @@ public class Robot extends TimedRobot {
             subsystemManager = Injector.get(SubsystemLooper.class);
             autoModeManager = Injector.get(AutoModeManager.class);
             playlistManager = Injector.get(PlaylistManager.class);
+            shooter = Injector.get(Shooter.class);
 
 
 
@@ -191,7 +194,7 @@ public class Robot extends TimedRobot {
 
             drive = (Injector.get(Drive.Factory.class)).getInstance();
 
-            subsystemManager.setSubsystems(drive, ledManager, camera);
+            subsystemManager.setSubsystems(drive, ledManager, camera, shooter);
 
             subsystemManager.registerEnabledLoops(enabledLoop);
             subsystemManager.registerDisabledLoops(disabledLoop);
@@ -218,10 +221,10 @@ public class Robot extends TimedRobot {
             );
             /** Operator Commands */
             inputHandler.listenAction(
-                    "OperatorAction",
+                    "ShootAmp",
                     ActionState.PRESSED,
                     () -> {
-
+                        shooter.setDesiredRollerState(Shooter.ROLLER_STATE.SHOOT_AMP);
                     }
             );
 
