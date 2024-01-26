@@ -24,27 +24,11 @@ public class OrchestratorTest {
         state.resetPosition();
     }
 
-    @Test
-    public void testSetStopped() {
-    }
+    //TODO test clear threads?
 
-    @Test
-    public void testSetCollecting() {
-    }
+    //TODO test calculateSingleTargetTranslation;
 
-    @Test
-    public void testSetRevving() {
-    }
+    //TODO if we want to test update/calc from camera, we'll need to create a setupMockRobotState
 
-    @Test
-    public void testSetFiring() {
-    }
-
-    @Test
-    public void testGetDistance() {
-    }
-
-    @Test
-    public void testGetPredictedDistance() {
-    }
+    //TODO test any pertinent season-specific actions
 }
