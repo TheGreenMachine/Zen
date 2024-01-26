@@ -1,31 +1,55 @@
-#TODO should probably either delete or fully revamp this class
+#FALLBACK yaml. This is a copy of zen.config.yml
 subsystems:
     drivetrain:
         implemented: true
-        falcons:
-            FLDr: 7
-            FRDr: 10 #1
-            RLDr: 18 #13
-            RRDr: 15
-            FLAz: 8
-            FRAz: 11
-            RLAz: 19
-            RRAz: 14
+        motors:
+            FLDr:
+                motorType: TalonFX
+                motorName: FLDr
+                id: 1
+                invertMotor: true
+            FRDr:
+                motorType: TalonFX
+                motorName: FRDr
+                id: 2
+                invertMotor: false
+            RLDr:
+                motorType: TalonFX
+                motorName: BLDr
+                id: 3
+                invertMotor: true
+            RRDr:
+                motorType: TalonFX
+                motorName: BRDr
+                id: 4
+                invertMotor: false
+            FLAz:
+                motorType: TalonFX
+                motorName: FLAz
+                id: 5
+                invertMotor: false
+            FRAz:
+                motorType: TalonFX
+                motorName: FRAz
+                id: 6
+                invertMotor: false
+            RLAz:
+                motorType: TalonFX
+                motorName: BLAz
+                id: 7
+                invertMotor: false
+            RRAz:
+                motorType: TalonFX
+                motorName: BRAz
+                id: 8
+                invertMotor: false
         canCoders:
-            FLEnc: 9 #TODO check values
-            FREnc: 12
-            RLEnc: 17
-            RREnc: 16
-        invertMotor:
-            - FLAz
-            - FRAz
-            - RLAz
-            - RRAz
-            - FRDr
-            - RRDr
+            FLEnc: 20
+            FREnc: 21
+            RLEnc: 22
+            RREnc: 23
         invertCanCoder:
-            - FREnc
-            - BREnc
+            - FLEnc
         swerveModules:
             modules:
                 frontLeft:
@@ -33,72 +57,91 @@ subsystems:
                     azimuth: FLAz
                     canCoder: FLEnc
                     constants:
-                        encoderOffset: -2121
+                        encoderOffset: 0.646240  #remote, -0.155273 rotor
                         invertSensorPhase: 1
                 frontRight:
                     drive: FRDr
                     azimuth: FRAz
                     canCoder: FREnc
                     constants:
-                        encoderOffset: -1715
+                        encoderOffset: 0.775391 #remote, -0.091797 rotor
                         invertSensorPhase: 1
                 backLeft:
                     drive: RLDr
                     azimuth: RLAz
                     canCoder: RLEnc
                     constants:
-                        encoderOffset: -3141
+                        encoderOffset: 0.444824 #remote, 0.049316 rotor
                         invertSensorPhase: 1
                 backRight:
                     drive: RRDr
                     azimuth: RRAz
                     canCoder: RREnc
                     constants:
-                        encoderOffset: -2863
+                        encoderOffset: 0.511475  #remote, -0.309082 rotor
                         invertSensorPhase: 1
             drivePID:
                 slot0:
-                    kP: 0.1
-                    kI: 0.0001
-                    kD: 4.0
-                    kF: 0.0499
+                    kP: 0.008007
+                    kI: 0.002001
+                    kD: 0.000400
+                    kF: 0.009989
             azimuthPID:
                 slot0:
-                    kP: 4.0 # 6.0
-                    kI: 0.0005
-                    kD: 30
+                    kP: 7.6
+                    kI: 1.5
+                    kD: 0.15
                     kF: 0
+                    allowableError: 5
         constants:
-            pigeonId: 13
-            pigeonOnTalon: -1
-            kP: 0.1 # 0.18 # TODO: tune PID, these are temporary PID values from Zeta
-            kI: 0.0001 # 0.018
-            kD: 4.0 # 3.6
-            kF: 0.0475813
-            iZone: 0
-            currentFloorCheck: .12
-            currentEpsilonCheck: .2
-            rpmFloorCheck: 2000
-            rpmEpsilonCheck: 60
-            openLoopRampRate: 0.8
+            ## Positional Configurations ##
+            maxVelTicks100ms: 12275.7 # ticks per 100ms, not changing bcs used in ghostmotor
+            openLoopRampRate: 0.1
             isSwerve: 1
-            encPPR: 21770
-            azimuthEncPPR: 4096
-            azimuthAllowableErrorTicks: 20
-            azimuthHomeAdjustmentDegrees: 1
+            encPPR: 14641
+            azimuthEncPPR: 4096 
+            wheelDiameter: 4
+            kTrackScrubFactor: 1.0
+            ## Velocity Constraints ##
+            maxRotVel: 18
+            trackWidth: 22.75 # inches
+            wheelbaseLength: 22.75 # inches
+            maxVelOpenLoop: 3.75 # meters/s (3.6)
+            maxVelPathFollowing: 3.1 # meters/s (3.6)
+            maxAccel: 1.5 # meters/s^2 (2.54)
             isDemoMode: 0
-pcm: 8
+            ## Auto Balance ##
+            autoBalanceDivider: 50
+            autoBalanceThreshold: 2.5 # degrees
+    camera:
+        implemented: false
+        constants:
+            useMultiTargetOdometry: 1
+infrastructure:
+    canBusName: highSpeed
+    ## Power Distribution ##
+    pdId: 25
+    pdIsRev: true
+    ## Pneumatics Control ##
+    compressorEnabled: false
+    pcmIsRev: false
+    pcmId: -1
+    ## Pigeon ##
+    pigeonId: 32
+    isPigeon2: true
+inputHandler: competition
 constants:
-    maxVelTicks100ms: 12275.7 # ticks per 100ms TODO make into constant unique to each subsystem
-    maxRotVel: 11.5
-    maxVel: 120 # 160 # 240 # inches/s # 22560 native units ---30
-    maxAccel: 100 # inches/s^2
-    sensorPhase: 0
-    kTrackScrubFactor: 1.0
-    verbose: 0 # 0 or 1
+    zeroingButton: 9 # channel of DIO port
+    enableMusic: 0
+    ## Drivetrain ##
+    minAllowablePoseError: 0.1
+    maxAllowablePoseError: 5
+    soundOnConfig: 0 #If this is false, It will still beep on robot bootup.
     ## Logging ##
+    logRobot: 1 # 0 or 1
+    logDrivetrain: 1 # 0 or 1
+    configStatusFrames: 0 # 0 or 1
     ## General ##
     teleopFieldCentric: 1 # 0 or 1
-    compressorEnabled: 0 # 0 or 1
-    wheelDiameter: 4
-    kLooperDt: .020 # seconds
+    kLooperDt: .025 # seconds
+    resetFactoryDefaults: 1 # whether motors get reset to factory default

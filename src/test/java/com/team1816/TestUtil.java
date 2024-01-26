@@ -1,5 +1,6 @@
 package com.team1816;
 
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.team1816.lib.Injector;
 import com.team1816.lib.hardware.PIDSlotConfiguration;
 import com.team1816.lib.hardware.SubsystemConfig;
@@ -47,6 +48,7 @@ public class TestUtil {
         when(sm.getActualState()).thenReturn(new SwerveModuleState());
         when(mockFactory.getSwerveModule(anyString(), anyString()))
             .thenAnswer(input -> sm);
+        when(mockFactory.getCanCoder(anyString(), anyString())).thenReturn(mock(CANcoder.class));
         Injector.register(mockFactory);
     }
 }
