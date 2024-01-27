@@ -2,6 +2,7 @@ package com.team1816.lib.hardware.components.motor;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.team1816.lib.hardware.components.motor.configurations.*;
+import com.team1816.lib.util.driveUtil.DriveConversions;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.Robot;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -78,6 +79,10 @@ public class GhostMotor implements IGreenMotor {
 
     @Override
     public void set(GreenControlMode Mode, double demand) {
+        if (Mode == GreenControlMode.VELOCITY_CONTROL) {
+            demand = DriveConversions.metersPerSecondToTicksPer100ms(DriveConversions.rotationsToMeters(demand);
+        }
+
         processSet(Mode, demand);
     }
 
