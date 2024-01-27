@@ -281,7 +281,7 @@ public class RobotFactory {
                 .withCANcoderId(canCoder)
                 .withCANcoderOffset(module.constants.get("encoderOffset"))
                 // General Motor
-                .withCouplingGearRatio(3.5713) //Might actually be negative
+                .withCouplingGearRatio(3.5713) //3.5713
                 .withWheelRadius(getConstant("drivetrain", "wheelDiameter") / 2)
                 .withLocationX(moduleXDist) //IMPORTANT: IF THIS IS NOT A SQUARE SWERVEDRIVE, THESE MUST BE DIFFERENT.
                 .withLocationY(moduleYDist)

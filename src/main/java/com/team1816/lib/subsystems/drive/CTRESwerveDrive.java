@@ -47,6 +47,7 @@ public class CTRESwerveDrive extends Drive {
      */
     private SwerveRequest request;
     private SwerveRequest.FieldCentric fieldCentricRequest;
+    private SwerveRequest.PointWheelsAt pointWheelsAt;
 
     /**
      * Properties
@@ -100,8 +101,13 @@ public class CTRESwerveDrive extends Drive {
         fieldCentricRequest = new SwerveRequest.FieldCentric()
                 .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
                 .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagic)
-                .withDeadband(0.15 * kMaxVelOpenLoopMeters)
+                .withDeadband(0.1 * kMaxVelOpenLoopMeters)
                 .withRotationalDeadband(0.05 * kMaxAngularSpeed);
+
+        pointWheelsAt = new SwerveRequest.PointWheelsAt()
+                .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
+                .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagic)
+                .withModuleDirection(Rotation2d.fromDegrees(0));
 
         if (Constants.kLoggingRobot) {
             gyroPitchLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Pitch");
@@ -112,6 +118,7 @@ public class CTRESwerveDrive extends Drive {
     @Override
     public synchronized void writeToHardware() {
         if (controlState == ControlState.OPEN_LOOP) {
+//            train.setControl(pointWheelsAt);
             train.setControl(request);
         }
     }
@@ -128,6 +135,11 @@ public class CTRESwerveDrive extends Drive {
 
 
         updateRobotState();
+    }
+
+    @Override
+    public void configureOrchestra() {
+
     }
 
     @Override

@@ -59,7 +59,7 @@ subsystems:
                     invertX: false
                     invertY: false
                     constants:
-                        encoderOffset: 0.641846  #remote, -0.155273 rotor
+                        encoderOffset: -0.159
                         invertSensorPhase: 1
                 frontRight:
                     drive: FRDr
@@ -68,7 +68,7 @@ subsystems:
                     invertX: false
                     invertY: true
                     constants:
-                        encoderOffset: 0.772705  #remote, -0.091797 rotor
+                        encoderOffset: -0.79  #remote, -0.091797 rotor
                         invertSensorPhase: 1
                 backLeft:
                     drive: RLDr
@@ -77,16 +77,16 @@ subsystems:
                     invertX: true
                     invertY: false
                     constants:
-                        encoderOffset: 0.450195 #remote, 0.049316 rotor
+                        encoderOffset: 0.058 #remote, 0.049316 rotor
                         invertSensorPhase: 1
                 backRight:
                     drive: RRDr
                     azimuth: RRAz
                     canCoder: RREnc
                     invertX: true
-                    invertY: false
+                    invertY: true
                     constants:
-                        encoderOffset: 0.507568  #remote, -0.309082 rotor
+                        encoderOffset: -0.015  #remote, -0.309082 rotor
                         invertSensorPhase: 1
             drivePID:
                 slot0:
@@ -106,15 +106,16 @@ subsystems:
             maxVelTicks100ms: 12275.7 # ticks per 100ms, not changing bcs used in ghostmotor
             openLoopRampRate: 0.1
             isSwerve: 1
+            isCTRSwerve: 1
             encPPR: 14641 #TODO
             azimuthEncPPR: 4096 #TODO
             wheelDiameter: 4
             kTrackScrubFactor: 1.0
             ## Velocity Constraints ##
-            maxRotVel: 18
+            maxRotVel: 5
             trackWidth: 22.75 # inches
             wheelbaseLength: 22.75 # inches
-            maxVelOpenLoop: 3.75 # meters/s (3.6)
+            maxVelOpenLoop: 1.5 # meters/s (3.6)
             maxVelPathFollowing: 3.1 # meters/s (3.6)
             maxAccel: 1.5 # meters/s^2 (2.54)
             isDemoMode: 0
