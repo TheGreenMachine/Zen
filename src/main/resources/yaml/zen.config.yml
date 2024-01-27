@@ -130,6 +130,11 @@ subsystems:
                 motorName: feederMotor
                 id: 11 # ?
                 invertMotor: false # ?
+            pivotMotor:
+                motorType: TalonFX
+                motorName: pivotMotor
+                id: 12 # ?
+                invertMotor: false # ?
         constants:
             noteSensorChannel: 0
             rollerSpeakerShootSpeed: 0.70
@@ -137,6 +142,8 @@ subsystems:
             feederSpeakerShootSpeed: 0.70
             feederAmpShootSpeed: 0.40
             velocityErrorMargin: 0.1
+            pivotSpeakerShootPosition: 0.5
+            pivotAmpShootPosition: 1.0
 infrastructure:
     canBusName: highSpeed
     ## Power Distribution ##
