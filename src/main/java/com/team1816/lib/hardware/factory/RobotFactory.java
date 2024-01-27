@@ -270,8 +270,8 @@ public class RobotFactory {
         var canCoder = subsystem.canCoders.get(module.canCoder);
 
         double moduleDistFromCenter = Units.inchesToMeters(getConstant("drivetrain", "wheelbaseLength") / 2); //this makes me sad
-        double moduleXDist = moduleDistFromCenter * (module.invertX ? 1 : -1);
-        double moduleYDist = moduleDistFromCenter * (module.invertY ? 1 : -1);
+        double moduleXDist = moduleDistFromCenter * (module.invertX ? -1 : 1);
+        double moduleYDist = moduleDistFromCenter * (module.invertY ? -1 : 1);
 
         var moduleConfig = new SwerveModuleConstants()
                 // General Drivetrain
