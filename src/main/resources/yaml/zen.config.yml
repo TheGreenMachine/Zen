@@ -57,28 +57,28 @@ subsystems:
                     azimuth: FLAz
                     canCoder: FLEnc
                     constants:
-                        encoderOffset: 0.646240  #remote, -0.155273 rotor
+                        encoderOffset: 0.641846  #remote, -0.155273 rotor
                         invertSensorPhase: 1
                 frontRight:
                     drive: FRDr
                     azimuth: FRAz
                     canCoder: FREnc
                     constants:
-                        encoderOffset: 0.775391 #remote, -0.091797 rotor
+                        encoderOffset: 0.772705  #remote, -0.091797 rotor
                         invertSensorPhase: 1
                 backLeft:
                     drive: RLDr
                     azimuth: RLAz
                     canCoder: RLEnc
                     constants:
-                        encoderOffset: 0.444824 #remote, 0.049316 rotor
+                        encoderOffset: 0.450195 #remote, 0.049316 rotor
                         invertSensorPhase: 1
                 backRight:
                     drive: RRDr
                     azimuth: RRAz
                     canCoder: RREnc
                     constants:
-                        encoderOffset: 0.511475  #remote, -0.309082 rotor
+                        encoderOffset: 0.507568  #remote, -0.309082 rotor
                         invertSensorPhase: 1
             drivePID:
                 slot0:
