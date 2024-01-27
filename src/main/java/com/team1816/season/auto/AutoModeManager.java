@@ -193,7 +193,7 @@ public class AutoModeManager {
     private AutoMode generateAutoMode(DesiredAuto mode, Color color) {
         switch (mode) {
             case DO_NOTHING:
-                return new DoNothingMode();
+                return new TestMode();
 //            case TUNE_DRIVETRAIN: // commented for competition purposes
 //                return new TuneDrivetrainMode();
 //            case LIVING_ROOM:

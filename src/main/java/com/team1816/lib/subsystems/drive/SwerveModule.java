@@ -16,6 +16,7 @@ import com.team1816.season.configuration.Constants;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -132,8 +133,8 @@ public class SwerveModule implements ISwerveModule {
                 getActualState().angle
         );
         driveDemandMPS = desired_state.speedMetersPerSecond;
-        double driveDemandTP100MS =
-                DriveConversions.metersPerSecondToTicksPer100ms(
+        double driveDemandRPS =
+                DriveConversions.metersToRotations(
                         desired_state.speedMetersPerSecond
                 );
         azimuthDemandDeg = desired_state.angle.getDegrees();
@@ -143,7 +144,7 @@ public class SwerveModule implements ISwerveModule {
                         + mModuleConfig.azimuthEncoderHomeOffset;
 
         if (!isOpenLoop) {
-            driveMotor.set(GreenControlMode.VELOCITY_CONTROL, driveDemandTP100MS);
+            driveMotor.set(GreenControlMode.VELOCITY_CONTROL, driveDemandRPS);
         } else {
             driveDemandMPS *= Drive.kMaxVelOpenLoopMeters;
             driveMotor.set(GreenControlMode.PERCENT_OUTPUT, desired_state.speedMetersPerSecond); // lying to it - speedMetersPerSecond passed in is actually percent output (1 to -1)
@@ -368,7 +369,7 @@ public class SwerveModule implements ISwerveModule {
                 checkAzimuth = false;
                 break;
             }
-            setPoint += DriveConversions.convertRadiansToTicks(Math.PI / 2);
+            setPoint += Units.radiansToRotations(Math.PI / 2);
         }
 
         return checkDrive && checkAzimuth;
