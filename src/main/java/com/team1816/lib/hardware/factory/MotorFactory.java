@@ -2,7 +2,6 @@ package com.team1816.lib.hardware.factory;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.*;
-import com.ctre.phoenix.sensors.*;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
@@ -10,7 +9,6 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.team1816.lib.hardware.MotorConfiguration;
 import com.team1816.lib.hardware.PIDSlotConfiguration;
 import com.team1816.lib.hardware.SubsystemConfig;
-import com.team1816.lib.hardware.components.DeviceIdMismatchException;
 import com.team1816.lib.hardware.components.motor.*;
 import com.team1816.lib.hardware.components.motor.configurations.FeedbackDeviceType;
 import com.team1816.lib.util.logUtil.GreenLogger;
@@ -259,7 +257,7 @@ public class MotorFactory {
         }
 
         // Setting to PID slot 0 and primary closed loop
-        motor.selectPIDSlot(0,0);
+        motor.selectPIDSlot(0);
 
         // Current limits
         motor.configCurrentLimit(
@@ -280,16 +278,7 @@ public class MotorFactory {
 
         // inversion
         int id = motor.getDeviceID();
-        if (id != motorConfiguration.id && RobotBase.isReal()) {
-            GreenLogger.log(new DeviceIdMismatchException(name));
-        } else {
-            boolean invertMotor = motorConfiguration.invertMotor;
-            if (invertMotor) {
-                GreenLogger.log("        Inverting " + name + " with ID " + id);
-            }
-            motor.setInverted(invertMotor);
 
-        }
 
         motor.setNeutralMode(NEUTRAL_MODE);
 
@@ -327,6 +316,12 @@ public class MotorFactory {
             motor.selectFeedbackSensor(FeedbackDeviceType.HALL_SENSOR); // Only using hall sensors on sparks at the moment
         }
 
+        //Inversion last because other things might override?
+        boolean invertMotor = motorConfiguration.invertMotor;
+        if (invertMotor) {
+            GreenLogger.log("        Inverting " + name + " with ID " + id);
+        }
+        motor.setInverted(invertMotor);
     }
 
     private static SlotConfiguration toSlotConfiguration (

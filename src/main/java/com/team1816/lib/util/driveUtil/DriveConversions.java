@@ -40,8 +40,24 @@ public class DriveConversions {
         return convertRadiansToTicks(Units.degreesToRadians(degrees));
     }
 
+    public static double convertDegreesToRotations(double degrees) {
+        return degrees / 360;
+    }
+
+    public static double convertRotationsToDegrees(double rotations) {
+        return rotations * 360;
+    }
+
     public static double rotationsToMeters(double rotations) {
         return rotations * (kWheelCircumferenceMeters);
+    }
+
+    public static double convertToMPS(double input, boolean usingRotations) {
+        return usingRotations ? rotationsToMeters(input) : ticksToMeters(input) * 10;
+    }
+
+    public static double metersToRotations(double meters) {
+        return meters / kWheelCircumferenceMeters;
     }
 
     public static double metersPerSecondToTicksPer100ms(double meters_per_second) {

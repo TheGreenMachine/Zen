@@ -59,7 +59,7 @@ subsystems:
                     invertX: false
                     invertY: false
                     constants:
-                        encoderOffset: 0.646240  #remote, -0.155273 rotor
+                        encoderOffset: 0.641846  #remote, -0.155273 rotor
                         invertSensorPhase: 1
                 frontRight:
                     drive: FRDr
@@ -68,7 +68,7 @@ subsystems:
                     invertX: false
                     invertY: true
                     constants:
-                        encoderOffset: 0.775391 #remote, -0.091797 rotor
+                        encoderOffset: 0.772705  #remote, -0.091797 rotor
                         invertSensorPhase: 1
                 backLeft:
                     drive: RLDr
@@ -77,7 +77,7 @@ subsystems:
                     invertX: true
                     invertY: false
                     constants:
-                        encoderOffset: 0.444824 #remote, 0.049316 rotor
+                        encoderOffset: 0.450195 #remote, 0.049316 rotor
                         invertSensorPhase: 1
                 backRight:
                     drive: RRDr
@@ -86,7 +86,7 @@ subsystems:
                     invertX: true
                     invertY: false
                     constants:
-                        encoderOffset: 0.511475  #remote, -0.309082 rotor
+                        encoderOffset: 0.507568  #remote, -0.309082 rotor
                         invertSensorPhase: 1
             drivePID:
                 slot0:
@@ -103,12 +103,11 @@ subsystems:
                     allowableError: 5
         constants:
             ## Positional Configurations ##
-            maxVelTicks100ms: 12275.7 # ticks per 100ms
+            maxVelTicks100ms: 12275.7 # ticks per 100ms, not changing bcs used in ghostmotor
             openLoopRampRate: 0.1
             isSwerve: 1
-            isCTRSwerve: 1
-            encPPR: 14641
-            azimuthEncPPR: 4096
+            encPPR: 14641 #TODO
+            azimuthEncPPR: 4096 #TODO
             wheelDiameter: 4
             kTrackScrubFactor: 1.0
             ## Velocity Constraints ##

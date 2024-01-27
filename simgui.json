@@ -82,6 +82,7 @@
       "/SmartDashboard/Demo Mode": "String Chooser",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Mech 2D": "Mechanism2d",
+      "/SmartDashboard/Playlist": "String Chooser",
       "/SmartDashboard/Robot color": "String Chooser",
       "/SmartDashboard/SendableChooser[0]": "String Chooser",
       "/SmartDashboard/SendableChooser[2]": "String Chooser",
@@ -135,8 +136,7 @@
           "style": "Line",
           "weight": 1.0
         },
-        "bottom": 544,
-        "builtin": "2024 Crescendo",
+        "bottom": 1476,
         "camera": {
           "arrowSize": 0,
           "arrows": false,
@@ -149,10 +149,10 @@
           "length": 0.010000001639127731,
           "width": 0.010000001639127731
         },
-        "height": 8.013679504394531,
-        "left": 46,
-        "right": 1088,
-        "top": 36,
+        "height": 8.210550308227539,
+        "left": 150,
+        "right": 2961,
+        "top": 79,
         "turret": {
           "arrowWeight": 3.0,
           "style": "Line"
