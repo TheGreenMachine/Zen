@@ -33,9 +33,10 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     protected VelocityDutyCycle velocity = new VelocityDutyCycle(0);
     protected PositionDutyCycle position = new PositionDutyCycle(0);
     protected MotionMagicDutyCycle motionMagic = new MotionMagicDutyCycle(0);
-    protected Follower following = new Follower(0, false);
     protected NeutralOut neutral = new NeutralOut();
     protected StaticBrake brake = new StaticBrake();
+    public Follower following = new Follower(0, false); //So as to allow for invert in respect to leader easily
+
 
     public LazyTalonFX(int deviceNumber, String motorName, String canBus) {
         super(deviceNumber, canBus);

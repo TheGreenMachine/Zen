@@ -2,6 +2,7 @@ package com.team1816.season.subsystems;
 
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
+import com.team1816.lib.hardware.components.motor.LazyTalonFX;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.subsystems.Subsystem;
 import com.team1816.season.configuration.Constants;
@@ -23,6 +24,7 @@ public class Shooter extends Subsystem {
     private final IGreenMotor rollerMotor;
     private final IGreenMotor feederMotor;
     private final IGreenMotor pivotMotor;
+    private final IGreenMotor pivotFollowMotor;
     private final DigitalInput noteSensor;
 
     /**
@@ -80,6 +82,8 @@ public class Shooter extends Subsystem {
         rollerMotor = factory.getMotor(NAME, "rollerMotor");
         feederMotor = factory.getMotor(NAME, "feederMotor");
         pivotMotor = factory.getMotor(NAME, "pivotMotor");
+        pivotFollowMotor = factory.getFollowerMotor(NAME, "pivotFollowMotor", pivotMotor);
+        ((LazyTalonFX) pivotFollowMotor).following.withOpposeMasterDirection(true); //JANK IMPLEMENTATION FIX FIX FIX LATER
         noteSensor = new DigitalInput((int) factory.getConstant(NAME, "noteSensorChannel", 0));
 
         // shootPower = factory.getConstant(NAME, "shootPower", 0.70);
