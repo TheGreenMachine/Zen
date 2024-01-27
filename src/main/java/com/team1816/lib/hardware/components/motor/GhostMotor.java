@@ -80,7 +80,7 @@ public class GhostMotor implements IGreenMotor {
     @Override
     public void set(GreenControlMode Mode, double demand) {
         if (Mode == GreenControlMode.VELOCITY_CONTROL) {
-            demand = DriveConversions.metersPerSecondToTicksPer100ms(DriveConversions.rotationsToMeters(demand);
+            demand = DriveConversions.metersPerSecondToTicksPer100ms(DriveConversions.rotationsToMeters(demand));
         }
 
         processSet(Mode, demand);
