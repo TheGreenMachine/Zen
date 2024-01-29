@@ -25,7 +25,7 @@ public class Camera extends Subsystem{
      * Properties
      */
     private static final String NAME = "camera";
-    private static final String CAM = "snakeyboi";
+    private static final String CAM = "HP_True_Vision_HD_Camera";
     public static final AprilTagFieldLayout kTagLayout =
             AprilTagFields.kDefaultField.loadAprilTagLayoutField();
     private static final Transform3d robotToCam = new Transform3d();
