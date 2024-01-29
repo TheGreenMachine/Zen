@@ -114,7 +114,7 @@ subsystems:
             autoBalanceDivider: 50
             autoBalanceThreshold: 2.5 # degrees
     camera:
-        implemented: false
+        implemented: true
         constants:
             useMultiTargetOdometry: 1
 infrastructure:

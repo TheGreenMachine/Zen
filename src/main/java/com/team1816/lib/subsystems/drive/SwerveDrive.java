@@ -17,10 +17,14 @@ import com.team1816.lib.util.team254.SwerveDriveSignal;
 import com.team1816.season.Robot;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
@@ -99,6 +103,7 @@ SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
      * Odometry variables
      */
     private final SwerveDriveOdometry swerveOdometry;
+    private final SwerveDrivePoseEstimator swerveEstimator;
     private final SwerveDriveHelper swerveDriveHelper = new SwerveDriveHelper();
 
     /**
@@ -146,6 +151,8 @@ SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
                 Constants.EmptyRotation2d,
                 actualModulePositions
             );
+
+        swerveEstimator = robotState.swerveEstimator;
 
         if (Constants.kLoggingDrivetrain) {
             desStatesLogger = new DoubleArrayLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/DesStates");
@@ -218,6 +225,7 @@ SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
         actualHeading = Rotation2d.fromDegrees(pigeon.getYawValue());
 
         swerveOdometry.update(actualHeading, actualModulePositions);
+        swerveEstimator.update(actualHeading, actualModulePositions);
 
         if (Constants.kLoggingDrivetrain) {
             ((DoubleArrayLogEntry) desStatesLogger).append(desiredStates);
@@ -345,6 +353,7 @@ SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
     @Override
     public void updateRobotState() {
         robotState.fieldToVehicle = swerveOdometry.getPoseMeters();
+        robotState.fieldToVehicle = swerveEstimator.getEstimatedPosition();
         robotState.driverRelativeFieldToVehicle = new Pose2d( // for inputs ONLY
             robotState.fieldToVehicle.getTranslation(),
             (robotState.allianceColor == Color.BLUE && Constants.fieldSymmetry == Symmetry.AXIS) ? robotState.fieldToVehicle.getRotation() : robotState.fieldToVehicle.getRotation().rotateBy(Rotation2d.fromDegrees(180))
@@ -495,6 +504,8 @@ SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
         actualHeading = Rotation2d.fromDegrees(pigeon.getYawValue());
         swerveOdometry.resetPosition(actualHeading, actualModulePositions, pose);
         swerveOdometry.update(actualHeading, actualModulePositions);
+        swerveEstimator.resetPosition(actualHeading, actualModulePositions, pose);
+        swerveEstimator.update(actualHeading, actualModulePositions);
         updateRobotState();
     }
 

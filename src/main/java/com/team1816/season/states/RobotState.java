@@ -3,11 +3,14 @@ package com.team1816.season.states;
 import com.google.inject.Singleton;
 import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.PathFinder;
+import com.team1816.lib.subsystems.drive.SwerveDrive;
 import com.team1816.lib.util.visionUtil.VisionPoint;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.configuration.FieldConfig;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import edu.wpi.first.wpilibj.util.Color8Bit;
@@ -40,6 +43,18 @@ public class RobotState {
     public boolean isPoseUpdated = true;
     public double vehicleToFloorProximityCentimeters = 0;
     public double drivetrainTemp = 0;
+    public SwerveDrivePoseEstimator swerveEstimator =
+            new SwerveDrivePoseEstimator(
+                    SwerveDrive.swerveKinematics,
+                    Constants.EmptyRotation2d,
+                    new SwerveModulePosition[]{
+                            new SwerveModulePosition(),
+                            new SwerveModulePosition(),
+                            new SwerveModulePosition(),
+                            new SwerveModulePosition()
+                    },
+                    new Pose2d() //TODO figure out what to initialize this to
+            );
 
     /**
      * Inertial characterization

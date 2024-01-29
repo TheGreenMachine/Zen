@@ -1,282 +1,139 @@
 package com.team1816.lib.subsystems.vision;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.team1816.lib.Infrastructure;
-import com.team1816.lib.subsystems.LedManager;
 import com.team1816.lib.subsystems.Subsystem;
-import com.team1816.lib.util.logUtil.GreenLogger;
-import com.team1816.lib.util.visionUtil.GreenSimVisionSystem;
-import com.team1816.lib.util.visionUtil.GreenSimVisionTarget;
-import com.team1816.lib.util.visionUtil.VisionPoint;
-import com.team1816.season.configuration.Constants;
-import com.team1816.season.configuration.FieldConfig;
 import com.team1816.season.states.RobotState;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
+import jakarta.inject.Inject;
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
-import org.photonvision.estimation.TargetModel;
-import org.photonvision.simulation.PhotonCameraSim;
-import org.photonvision.simulation.SimCameraProperties;
-import org.photonvision.simulation.VisionSystemSim;
-import org.photonvision.simulation.VisionTargetSim;
-import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.targeting.PhotonPipelineResult;
 
-import java.util.ArrayList;
+import java.util.Optional;
 
-/**
- * Camera interface that utilizes PhotonVision for target detection and measurement
- */
-@Singleton
-public class Camera extends Subsystem {
+public class Camera extends Subsystem{
+    /**
+     * Properties
+     */
+    private static final String NAME = "camera";
+    private static final String CAM = "snakeyboi";
+    public static final AprilTagFieldLayout kTagLayout =
+            AprilTagFields.kDefaultField.loadAprilTagLayoutField();
+    private static final Transform3d robotToCam = new Transform3d();
 
     /**
      * Components
      */
     private PhotonCamera cam;
-    private VisionSystemSim simVisionSystem;
+    private final PhotonPoseEstimator photonEstimator;
 
     /**
-     * Simulation
+     * Something
      */
-    private PhotonCameraSim simCam;
+    private double lastEstTimestamp = 0;
+    public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
+    public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
-    /**
-     * Constants
-     */
-    private static final String NAME = "camera";
-    private boolean usingMultiTargetOdometry = true;
-    private final int numTargets = FieldConfig.fiducialTargets.size();
-
-    /**
-     * State
-     */
-    public boolean cameraEnabled;
-    private PhotonTrackedTarget bestTrackedTarget;
-    private DoubleArrayLogEntry visionTargetLogger;
-
-
-    /**
-     * Instantiates a camera with the base subsystem properties
-     *
-     * @param ledManager LedManager
-     * @param inf        Infrastructure
-     * @param rs         RobotState
-     */
     @Inject
-    public Camera(LedManager ledManager, Infrastructure inf, RobotState rs) {
+    public Camera(Infrastructure inf, RobotState rs){
         super(NAME, inf, rs);
-        cameraEnabled = this.isImplemented();
+        cam = new PhotonCamera(CAM);
+        photonEstimator = new PhotonPoseEstimator(kTagLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCam);
+        photonEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
+    }
 
-        usingMultiTargetOdometry = factory.getConstant(NAME, "useMultiTargetOdometry") > 0;
-
-        if (cameraEnabled) {
-            cam = new PhotonCamera("snakeyes");
-            if (Constants.kLoggingRobot) {
-                visionTargetLogger = new DoubleArrayLogEntry(DataLogManager.getLog(), "Camera/SeenPoints");
-            }
-        }
-
-        if (RobotBase.isSimulation()) {
-            simVisionSystem = new VisionSystemSim("photonvision");
-            var simCamConfig = new SimCameraProperties();
-
-            simCamConfig.setCalibration(
-                    3840,
-                    1080,
-                    new Rotation2d(90,60) // Diagonal FOV
-            );
-            simCamConfig.setFPS(30);
-
-            simCam = new PhotonCameraSim(
-                    cameraEnabled ? cam : new PhotonCamera("ZED"),
-                    simCamConfig,
-                    0,
-                    25
-            );
-
-            simVisionSystem.addCamera(
-                    simCam,
-                    new Transform3d( //Untested based on https://github.com/PhotonVision/photonvision/blob/master/photonlib-java-examples/simaimandrange/src/main/java/frc/robot/sim/VisionSim.java
-                        Constants.kCameraMountingOffset3D,
-                        new Rotation3d(0, -Constants.kCameraMountingOffset.getRotation().getRadians(), 0)
-                    )
-            );
-
-            VisionTargetSim[] targets = new VisionTargetSim[numTargets];
-
-            FieldConfig.fiducialTargets.forEach((index, target) -> {
-                        targets[index-1] = new VisionTargetSim(target, TargetModel.kAprilTag36h11);
-                    }
-            );
-
-            simVisionSystem.addVisionTargets(targets);
-            simCam.enableDrawWireframe(true);
-        }
-        PhotonCamera.setVersionCheckEnabled(false);
+    public PhotonPipelineResult getLatestResult() {
+        return cam.getLatestResult();
     }
 
     /**
-     * Sets the camera to be enabled
+     * The latest estimated robot pose on the field from vision data. This may be empty. This should
+     * only be called once per loop.
      *
-     * @param cameraEnabled boolean
+     * @return An {@link EstimatedRobotPose} with an estimated pose, estimate timestamp, and targets
+     *     used for estimation.
      */
-    public void setCameraEnabled(boolean cameraEnabled) {
-        if (this.isImplemented()) {
-            this.cameraEnabled = cameraEnabled;
-        } else {
-            GreenLogger.log("Camera Not Implemented...");
-        }
+    public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
+        Optional<EstimatedRobotPose> visionEst = photonEstimator.update();
+        double latestTimestamp = cam.getLatestResult().getTimestampSeconds();
+        boolean newResult = Math.abs(latestTimestamp - lastEstTimestamp) > 1e-5;
+
+        if (newResult) lastEstTimestamp = latestTimestamp;
+        return visionEst;
     }
 
     /**
-     * Periodically reads inputs and polls visible camera targets
+     * The standard deviations of the estimated pose from {@link #getEstimatedGlobalPose()}, for use
+     * with {@link edu.wpi.first.math.estimator.SwerveDrivePoseEstimator SwerveDrivePoseEstimator}.
+     * This should only be used when there are targets visible.
+     *
+     * @param estimatedPose The estimated pose to guess standard deviations for.
      */
+    public Matrix<N3, N1> getEstimationStdDevs(Pose2d estimatedPose) {
+        var estStdDevs = kSingleTagStdDevs;
+        var targets = getLatestResult().getTargets();
+        int numTags = 0;
+        double avgDist = 0;
+        for (var tgt : targets) {
+            var tagPose = photonEstimator.getFieldTags().getTagPose(tgt.getFiducialId());
+            if (tagPose.isEmpty()) continue;
+            numTags++;
+            avgDist +=
+                    tagPose.get().toPose2d().getTranslation().getDistance(estimatedPose.getTranslation());
+        }
+        if (numTags == 0) return estStdDevs;
+        avgDist /= numTags;
+        // Decrease std devs if multiple targets are visible
+        if (numTags > 1) estStdDevs = kMultiTagStdDevs;
+        // Increase std devs based on (average) distance
+        if (numTags == 1 && avgDist > 4)
+            estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+        else estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30));
+
+        return estStdDevs;
+    }
+
+    @Override
     public void readFromHardware() {
-        if (RobotBase.isSimulation()) {
-            simVisionSystem.update(robotState.fieldToVehicle);
-            if(simVisionSystem.getCameraPose(simCam).isPresent())
-                robotState.field
-                    .getObject("camera")
-                    .setPose(
-                        simVisionSystem.getCameraPose(simCam).get().toPose2d()
-                    );
-        }
-        robotState.superlativeTarget = getPoint();
-        robotState.visibleTargets = getPoints();
+        // Correct pose estimate with vision measurements
+        var visionEst = getEstimatedGlobalPose();
+        visionEst.ifPresent(
+            est -> {
+                var estPose = est.estimatedPose.toPose2d();
+                // Change our trust in the measurement based on the tags we can see
+                var estStdDevs = getEstimationStdDevs(estPose);
 
-        if (Constants.kLoggingRobot && cameraEnabled) {
-            var targetPose = robotState.fieldToVehicle;
-
-            Pose3d aprilTagPose = FieldConfig.fiducialTargets.get(robotState.superlativeTarget.id);
-            if (aprilTagPose != null) {
-                targetPose = aprilTagPose.toPose2d();
-            }
-
-            visionTargetLogger.append(new double[]{targetPose.getX(), targetPose.getY(), targetPose.getRotation().getDegrees()});
-        }
+                robotState.swerveEstimator.addVisionMeasurement(
+                    est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+            });
     }
 
-
-    /**
-     * Polls targets from the camera and returns the best target as a singular VisionPoint
-     *
-     * @return VisionPoint
-     * @see VisionPoint
-     */
-    public VisionPoint getPoint() {
-        VisionPoint targets = new VisionPoint();
-        if (isImplemented()) {
-            VisionPoint p = new VisionPoint();
-            var result = cam.getLatestResult();
-            if (!result.hasTargets()) {
-                return targets;
-            }
-            var bestTarget = result.getBestTarget();
-            p.id = bestTarget.getFiducialId();
-            p.cameraToTarget = bestTarget.getBestCameraToTarget(); // missing method in PhotonTrackedTarget
-            return p;
-        }
-        return targets;
-    }
-
-    /**
-     * Polls targets from the camera and returns the best target as a list of VisionPoints (reduces computational overhead)
-     *
-     * @return List of VisionPoint
-     * @see VisionPoint
-     */
-    public ArrayList<VisionPoint> getPoints() {
-        ArrayList<VisionPoint> targets = new ArrayList<>();
-        if (isImplemented()) {
-            var result = cam.getLatestResult();
-            if (!result.hasTargets()) {
-                return targets;
-            }
-            var bestTarget = result.getBestTarget();
-            for (PhotonTrackedTarget target : result.getTargets()) {
-                VisionPoint p = new VisionPoint();
-                p.id = target.getFiducialId();
-                p.cameraToTarget = target.getBestCameraToTarget();
-                targets.add(p);
-            }
-        }
-        return targets;
-    }
-
-    /**
-     * Polls targets from the camera and returns all targets as a list of VisionPoints
-     *
-     * @return List of VisionPoints
-     */
-    public ArrayList<VisionPoint> getPointsAlternate() {
-        ArrayList<VisionPoint> targets = new ArrayList<>();
-        var result = cam.getLatestResult();
-        if (!result.hasTargets()) {
-            return targets;
-        }
-
-        double m = 0xFFFFFF; // big number
-        PhotonTrackedTarget principal_RANSAC = null;
-
-        for (PhotonTrackedTarget target : result.targets) {
-            var p = new VisionPoint();
-            if (target.getBestCameraToTarget() != null) {
-                p.cameraToTarget = target.getBestCameraToTarget();
-                p.id = target.getFiducialId();
-                targets.add(p);
-
-                if (m > p.cameraToTarget.getTranslation().getNorm()) {
-                    m = p.cameraToTarget.getTranslation().getNorm();
-                    principal_RANSAC = target;
-                }
-            }
-        }
-
-        bestTrackedTarget = principal_RANSAC;
-
-        return targets;
-    }
-
-    /**
-     * Returns if multi-target odometry calculation is desired
-     */
-    public boolean isUsingMultiTargetOdometryCalculation() {
-        return usingMultiTargetOdometry;
-    }
-
-    /**
-     * Functionality: nonexistent
-     */
     @Override
     public void writeToHardware() {
+
     }
 
-    /**
-     * Functionality: nonexistent
-     */
     @Override
     public void zeroSensors() {
+
     }
 
-    /**
-     * Tests the camera
-     *
-     * @return true if tests passed
-     */
-    @Override
-    public boolean testSubsystem() {
-        return true;
-    }
-
-    /**
-     * Functionality: nonexistent
-     */
     @Override
     public void stop() {
+
     }
 
+    @Override
+    public boolean testSubsystem() {
+        return false;
+    }
 }
