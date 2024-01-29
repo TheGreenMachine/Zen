@@ -7,7 +7,6 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
@@ -47,7 +46,7 @@ public class Camera extends Subsystem{
     public Camera(Infrastructure inf, RobotState rs){
         super(NAME, inf, rs);
         cam = new PhotonCamera(CAM);
-        photonEstimator = new PhotonPoseEstimator(kTagLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCam);
+        photonEstimator = new PhotonPoseEstimator(kTagLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cam, robotToCam);
         photonEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
     }
 
@@ -68,6 +67,9 @@ public class Camera extends Subsystem{
         boolean newResult = Math.abs(latestTimestamp - lastEstTimestamp) > 1e-5;
 
         if (newResult) lastEstTimestamp = latestTimestamp;
+
+        System.out.println(visionEst);
+
         return visionEst;
     }
 
