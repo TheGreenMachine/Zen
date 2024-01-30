@@ -121,7 +121,7 @@ subsystems:
         implemented: true
         motors:
             intakeMotor:
-                motorType: TalonFX
+                motorType: SparkMax
                 motorName: intakeMotor
                 id: 10
                 invertMotor: false

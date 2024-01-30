@@ -10,9 +10,9 @@ driver:
     buttonpad:
         b: brakeMode
         a: autoTargetAlign
+        y: toggleIntakeOuttake
     axes:
         rightTrigger: slowMode
-        leftTrigger: intake
     buttons:
         start: zeroPose
 operator:

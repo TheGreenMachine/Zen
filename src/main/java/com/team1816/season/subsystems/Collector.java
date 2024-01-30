@@ -33,14 +33,15 @@ public class Collector extends Subsystem {
     /**
      * Logging
      */
-    private DoubleLogEntry intakeVelocityLogger;
-    //TODO Current draw logger!
+    private DoubleLogEntry intakeCurrentDrawLogger;
 
     /**
      * States
      */
     private COLLECTOR_STATE desiredState = COLLECTOR_STATE.STOP;
-    private double intakeVelocity = 0;
+    private double actualIntakeVelocity = 0;
+    private double desiredIntakeVelocity = 0;
+    private double intakeCurrentDraw = 0;
     private boolean outputsChanged = false;
 
     /**
@@ -58,8 +59,9 @@ public class Collector extends Subsystem {
         outtakeSpeed = factory.getConstant(NAME, "outtakeSpeed", 0.25);
 
         if (Constants.kLoggingRobot) {
-            //TODO initialize desStatesLogger and actStatesLogger (from Subsystem super class)
-            intakeVelocityLogger = new DoubleLogEntry(DataLogManager.getLog(), "Collector/intakeVelocity");
+            desStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Collector/desiredIntakeVelocity");
+            actStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Collector/actualIntakeVelocity");
+            intakeCurrentDrawLogger = new DoubleLogEntry(DataLogManager.getLog(), "Collector/intakeCurrentDraw");
         }
     }
 
@@ -80,14 +82,17 @@ public class Collector extends Subsystem {
      */
     @Override
     public void readFromHardware() {
-        intakeVelocity = intakeMotor.getSensorVelocity(0);
+        actualIntakeVelocity = intakeMotor.getSensorVelocity(0);
+        intakeCurrentDraw = intakeMotor.getMotorOutputCurrent();
 
         if (robotState.actualCollectorState != desiredState) {
             robotState.actualCollectorState = desiredState;
         }
 
         if (Constants.kLoggingRobot) {
-            intakeVelocityLogger.append(intakeVelocity);
+            ((DoubleLogEntry) actStatesLogger).append(actualIntakeVelocity);
+            ((DoubleLogEntry) desStatesLogger).append(desiredIntakeVelocity);
+            intakeCurrentDrawLogger.append(intakeCurrentDraw);
         }
     }
 
@@ -101,17 +106,17 @@ public class Collector extends Subsystem {
         if (outputsChanged) {
             outputsChanged = false;
             switch (desiredState) {
-                //TODO change to variable assignment with a set() after the switch - reduces points of failure
                 case STOP -> {
-                    intakeMotor.set(GreenControlMode.VELOCITY_CONTROL, 0);
+                    desiredIntakeVelocity = 0;
                 }
                 case INTAKE -> {
-                    intakeMotor.set(GreenControlMode.VELOCITY_CONTROL, intakeSpeed);
+                    desiredIntakeVelocity = intakeSpeed;
                 }
                 case OUTTAKE -> {
-                    intakeMotor.set(GreenControlMode.VELOCITY_CONTROL, outtakeSpeed);
+                    desiredIntakeVelocity = outtakeSpeed;
                 }
             }
+            intakeMotor.set(GreenControlMode.VELOCITY_CONTROL, desiredIntakeVelocity);
         }
     }
 
@@ -122,7 +127,7 @@ public class Collector extends Subsystem {
 
     @Override
     public void stop() {
-        //TODO make this.
+        desiredState = COLLECTOR_STATE.STOP;
     }
 
     /**
@@ -151,7 +156,7 @@ public class Collector extends Subsystem {
      * @return intake velocity
      */
     public double getIntakeVelocity() {
-        return intakeVelocity;
+        return actualIntakeVelocity;
     }
 
     /**
