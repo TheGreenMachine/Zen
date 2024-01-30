@@ -61,6 +61,15 @@ public class SwerveTest {
         verifyStates(swerveDrive.getStates(), maxVel, 0, 0);
     }
 
+    @Test
+    public void testTeleopStrafe() {
+        swerveDrive.setTeleopInputs(0,1,0);
+        swerveDrive.writeToHardware();
+        swerveDrive.readFromHardware();
+        verifyStates(swerveDrive.getStates(), 0, maxVel, 0);
+    }
+
+
     public static void registerInjects() {
         Injector.register(mock(Infrastructure.class));
         Injector.register(RobotState.class);
