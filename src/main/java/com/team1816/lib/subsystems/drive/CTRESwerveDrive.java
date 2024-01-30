@@ -16,8 +16,6 @@ import com.team1816.lib.hardware.components.gyro.CTREPigeonWrapper;
 import com.team1816.lib.subsystems.LedManager;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.lib.util.team254.DriveSignal;
-import com.team1816.lib.util.team254.SwerveDriveHelper;
-import com.team1816.lib.util.team254.SwerveDriveSignal;
 import com.team1816.season.Robot;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
@@ -31,7 +29,6 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Singleton
 public class CTRESwerveDrive extends Drive {
@@ -47,7 +44,8 @@ public class CTRESwerveDrive extends Drive {
      */
     private SwerveRequest request;
     private SwerveRequest.FieldCentric fieldCentricRequest;
-    private SwerveRequest.PointWheelsAt pointWheelsAt;
+    private SwerveRequest.PointWheelsAt wheelsAt0Request;
+    private ModuleRequest autoRequest;
 
     /**
      * Properties
@@ -84,7 +82,7 @@ public class CTRESwerveDrive extends Drive {
 
 
         train = new SwerveDrivetrain(constants, swerveModules);
-        request = new SwerveRequest.Idle();
+
 
         Translation2d[] moduleLocations = new Translation2d[4];
         for (int i = 0; i < 4; i++) {
@@ -94,7 +92,6 @@ public class CTRESwerveDrive extends Drive {
         swerveKinematics = new SwerveDriveKinematics(moduleLocations);
 
         for (int i = 0; i < 4; i++) {
-            System.out.println("setting " + i + " to " + train.getModule(i).getDriveMotor().getDeviceTemp());
             motorTemperatures.add(train.getModule(i).getDriveMotor().getDeviceTemp());
         }
 
@@ -104,10 +101,17 @@ public class CTRESwerveDrive extends Drive {
                 .withDeadband(0.1 * kMaxVelOpenLoopMeters)
                 .withRotationalDeadband(0.05 * kMaxAngularSpeed);
 
-        pointWheelsAt = new SwerveRequest.PointWheelsAt()
+        wheelsAt0Request = new SwerveRequest.PointWheelsAt()
                 .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
                 .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagic)
                 .withModuleDirection(Rotation2d.fromDegrees(0));
+
+        autoRequest = new ModuleRequest()
+                .withModuleStates(new SwerveModuleState[4]);
+
+        request = wheelsAt0Request;
+
+        train.setControl(request);
 
         if (Constants.kLoggingRobot) {
             gyroPitchLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Pitch");
@@ -118,7 +122,6 @@ public class CTRESwerveDrive extends Drive {
     @Override
     public synchronized void writeToHardware() {
         if (controlState == ControlState.OPEN_LOOP) {
-//            train.setControl(pointWheelsAt);
             train.setControl(request);
         }
     }
@@ -132,7 +135,6 @@ public class CTRESwerveDrive extends Drive {
         for (int i = 0; i < 4; i++) {
             motorTemperatures.get(i).refresh();
         }
-
 
         updateRobotState();
     }
@@ -199,12 +201,12 @@ public class CTRESwerveDrive extends Drive {
 
     @Override
     public void stop() {
-        // TODO: Figure out what would be considered stop with the swervedrivetrain.
+        train.setControl(new SwerveRequest.FieldCentric());
     }
 
     @Override
     public boolean testSubsystem() {
-        // TODO: Figure out what would be considered testing system.
+        //TODO
         return true;
     }
 
@@ -219,25 +221,17 @@ public class CTRESwerveDrive extends Drive {
 
     @Override
     public void setTeleopInputs(double forward, double strafe, double rotation) {
-//        SwerveRequest.ApplyChassisSpeeds speeds_request = new SwerveRequest.ApplyChassisSpeeds();
-//
-////        speeds_request.Speeds = chassisSpeed;
-//        // TODO: Elena suggested that this maybe would work.
-//        // Explanation: Pythagorean theorem.
-//        speeds_request.Speeds = new ChassisSpeeds(forward, strafe, rotation);
-//
-//        request = speeds_request;
 
         request = fieldCentricRequest
-                .withVelocityY(strafe * kMaxVelOpenLoopMeters)
-                .withVelocityX(forward * kMaxVelOpenLoopMeters)
-                .withRotationalRate(rotation * kMaxAngularSpeed);
+                .withVelocityY(strafe)
+                .withVelocityX(forward)
+                .withRotationalRate(rotation); //These will need to be multiplied, but i want to test first
 
         setOpenLoop(null);
     }
 
     @Override
-    public synchronized void setBraking(boolean braking) {
+    public synchronized void setBraking(boolean braking) { //TODO
         isBraking = braking;
 
         if (braking) {
