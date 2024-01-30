@@ -53,6 +53,10 @@ public class DriveConversions {
         return rotations * (kWheelCircumferenceMeters);
     }
 
+    public static double metersToRotations(double meters) {
+        return meters / (kWheelCircumferenceMeters);
+    }
+
     public static double convertToMPS(double input, boolean usingRotations) {
         return usingRotations ? rotationsToMeters(input) : ticksToMeters(input) * 10;
     }

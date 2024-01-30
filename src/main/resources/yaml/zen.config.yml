@@ -95,7 +95,7 @@ subsystems:
                     allowableError: 5
         constants:
             ## Positional Configurations ##
-            maxVelTicks100ms: 12275.7 # ticks per 100ms, not changing bcs used in ghostmotor
+            maxVelTicks100ms: 12275.7 # ticks per 100ms - make same as encPPR
             openLoopRampRate: 0.1
             isSwerve: 1
             encPPR: 14641 #TODO
