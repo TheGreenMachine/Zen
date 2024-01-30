@@ -1,6 +1,5 @@
 package com.team1816.lib.subsystems.drive;
 
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.team1816.lib.Infrastructure;
@@ -34,8 +33,7 @@ import java.util.Objects;
  * A class that models a Swerve drivetrain
  */
 @Singleton
-public class
-SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
+public class SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
 
     /** Constants */
 
@@ -468,7 +466,6 @@ SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
      *
      * @return SwerveModule[]
      */
-    @Override
     public SwerveModule[] getSwerveModules() {
         return swerveModules;
     }

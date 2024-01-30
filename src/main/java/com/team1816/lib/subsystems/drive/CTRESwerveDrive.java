@@ -14,6 +14,7 @@ import com.team1816.lib.auto.Symmetry;
 import com.team1816.lib.hardware.PIDSlotConfiguration;
 import com.team1816.lib.hardware.components.gyro.CTREPigeonWrapper;
 import com.team1816.lib.subsystems.LedManager;
+import com.team1816.lib.util.driveUtil.DriveConversions;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.lib.util.team254.DriveSignal;
 import com.team1816.season.Robot;
@@ -29,15 +30,23 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Singleton
-public class CTRESwerveDrive extends Drive {
+public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystems.drive.SwerveDrivetrain {
     private final ArrayList<StatusSignal<Double>> motorTemperatures = new ArrayList<>();
     /**
      * Components
      */
     private SwerveDrivetrain train;
     private SwerveModuleConstants[] swerveModules;
+
+    /**
+     * Trajectory
+     */
+    protected List<Rotation2d> headingsList;
+    protected int trajectoryIndex = 0;
+
 
     /**
      * Control
@@ -260,4 +269,50 @@ public class CTRESwerveDrive extends Drive {
         super.pigeon = new CTREPigeonWrapper(train.getPigeon2());
     }
 
+    /**
+     * Returns the list of headings for following a path that are transposed onto a path
+     *
+     * @return trajectoryHeadings
+     */
+    public Rotation2d getTrajectoryHeadings() {
+        if (headingsList == null) {
+            return Constants.EmptyRotation2d;
+        } else if (trajectoryIndex > headingsList.size() - 1) {
+            return headingsList.get(headingsList.size() - 1);
+        }
+        if (
+                getTrajectoryTimestamp() >
+                        trajectory.getStates().get(trajectoryIndex).timeSeconds ||
+                        trajectoryIndex == 0
+        ) trajectoryIndex++;
+        if (trajectoryIndex >= headingsList.size()) {
+            GreenLogger.log(headingsList.get(headingsList.size() - 1) + " = max");
+            return headingsList.get(headingsList.size() - 1);
+        }
+        double timeBetweenPoints =
+                (
+                        trajectory.getStates().get(trajectoryIndex).timeSeconds -
+                                trajectory.getStates().get(trajectoryIndex - 1).timeSeconds
+                );
+        Rotation2d heading;
+        heading =
+                headingsList
+                        .get(trajectoryIndex - 1)
+                        .interpolate(
+                                headingsList.get(trajectoryIndex),
+                                getTrajectoryTimestamp() / timeBetweenPoints
+                        );
+        return heading;
+    }
+
+
+    @Override
+    public void setModuleStates(SwerveModuleState... desiredStates) {
+        for (int i = 0; i < 4; i++) {
+            desiredStates[i].speedMetersPerSecond =
+                    DriveConversions.metersToRotations(desiredStates[i].speedMetersPerSecond);
+        }
+
+        train.setControl(autoRequest.withModuleStates(desiredStates));
+    }
 }
