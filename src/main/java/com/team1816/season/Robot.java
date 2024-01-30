@@ -219,6 +219,7 @@ public class Robot extends TimedRobot {
                     }
             );
 
+            //TODO change controls to a one-press toggle, intake vs outtake (for testing)
             inputHandler.listenActionPressAndRelease(
                     "intake",
                     (pressed) -> {

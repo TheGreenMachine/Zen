@@ -1,6 +1,5 @@
 package com.team1816.season.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.team1816.lib.Infrastructure;
@@ -35,6 +34,7 @@ public class Collector extends Subsystem {
      * Logging
      */
     private DoubleLogEntry intakeVelocityLogger;
+    //TODO Current draw logger!
 
     /**
      * States
@@ -58,6 +58,7 @@ public class Collector extends Subsystem {
         outtakeSpeed = factory.getConstant(NAME, "outtakeSpeed", 0.25);
 
         if (Constants.kLoggingRobot) {
+            //TODO initialize desStatesLogger and actStatesLogger (from Subsystem super class)
             intakeVelocityLogger = new DoubleLogEntry(DataLogManager.getLog(), "Collector/intakeVelocity");
         }
     }
@@ -100,6 +101,7 @@ public class Collector extends Subsystem {
         if (outputsChanged) {
             outputsChanged = false;
             switch (desiredState) {
+                //TODO change to variable assignment with a set() after the switch - reduces points of failure
                 case STOP -> {
                     intakeMotor.set(GreenControlMode.VELOCITY_CONTROL, 0);
                 }
@@ -115,12 +117,12 @@ public class Collector extends Subsystem {
 
     @Override
     public void zeroSensors() {
-
+        //No implementation
     }
 
     @Override
     public void stop() {
-
+        //TODO make this.
     }
 
     /**
@@ -130,6 +132,7 @@ public class Collector extends Subsystem {
      */
     @Override
     public boolean testSubsystem() {
+        //TODO make this once the rest of the subsystem is done and tested
         return false;
     }
 
