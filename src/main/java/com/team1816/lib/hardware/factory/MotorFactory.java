@@ -79,7 +79,8 @@ public class MotorFactory {
             IGreenMotor main,
             SubsystemConfig subsystem,
             Map<String, PIDSlotConfiguration> pidConfigList,
-            String canBus
+            String canBus,
+            boolean opposeLeaderDirection
     ) {
         final IGreenMotor talon = createTalon(
                 id,
@@ -93,7 +94,7 @@ public class MotorFactory {
         GreenLogger.log(
                 "Slaving talon on " + id + " to talon on " + main.getDeviceID()
         );
-        talon.follow(main);
+        talon.follow(main, opposeLeaderDirection);
         return talon;
     }
 
@@ -146,7 +147,7 @@ public class MotorFactory {
         GreenLogger.log(
                 "Slaving victor on " + id + " to talon on " + main.getDeviceID()
         );
-        victor.follow(main);
+        victor.follow(main, false);
         return victor;
     }
 
@@ -181,11 +182,11 @@ public class MotorFactory {
             String name,
             SubsystemConfig subsystem,
             Map<String, PIDSlotConfiguration> pidConfigList,
-            IGreenMotor leader
+            IGreenMotor leader,
+            boolean oppposeLeaderDirection
     ) {
         IGreenMotor followerSpark = createSpark(id, name, subsystem, pidConfigList);
-        followerSpark.follow(leader);
-        followerSpark.setInverted(leader.getInverted());
+        followerSpark.follow(leader, oppposeLeaderDirection);
         return followerSpark;
     }
 

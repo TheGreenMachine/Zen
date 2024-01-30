@@ -432,13 +432,15 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     }
 
     @Override
-    public void follow(IGreenMotor leader) {
+    public void follow(IGreenMotor leader, boolean opposeLeaderDirection) {
         isFollower = true;
         // ONLY works to follow other Talons.
         if (leader.get_MotorType() != MotorType.TalonFX) {
             GreenLogger.log("TalonFX cannot follow non-Talon motor " + leader.getName() + " of type " + leader.get_MotorType());
         } else {
-            following.withMasterID(leader.getDeviceID());
+            following
+                    .withMasterID(leader.getDeviceID())
+                    .withOpposeMasterDirection(opposeLeaderDirection);
             set(GreenControlMode.FOLLOWER, 0);
         }
     }

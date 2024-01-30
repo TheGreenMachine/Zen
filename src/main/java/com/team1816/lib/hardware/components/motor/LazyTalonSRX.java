@@ -300,7 +300,7 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
     }
 
     @Override
-    public void follow(IGreenMotor leader) {
+    public void follow(IGreenMotor leader, boolean opposeLeaderDirection) {
         isFollower = true;
         // ONLY works to follow CTRE Motor Controllers.
         if (leader.get_MotorType() == MotorType.SparkMax || leader.get_MotorType() == MotorType.GHOST) {

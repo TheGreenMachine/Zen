@@ -180,7 +180,8 @@ public class RobotFactory {
     public IGreenMotor getFollowerMotor(
         String subsystemName,
         String name,
-        IGreenMotor main
+        IGreenMotor main,
+        boolean opposeLeaderDirection
     ) {
         IGreenMotor followerMotor = null;
         var subsystem = getSubsystem(subsystemName);
@@ -196,7 +197,8 @@ public class RobotFactory {
                                 main,
                                 subsystem,
                                 subsystem.pidConfig,
-                                config.infrastructure.canBusName
+                                config.infrastructure.canBusName,
+                                opposeLeaderDirection
                             );
                     }
                     case TalonSRX -> {
@@ -208,7 +210,8 @@ public class RobotFactory {
                                 main,
                                 subsystem,
                                 subsystem.pidConfig,
-                                config.infrastructure.canBusName
+                                config.infrastructure.canBusName,
+                                opposeLeaderDirection
                             );
                     }
                     case SparkMax -> {
@@ -217,7 +220,8 @@ public class RobotFactory {
                             name,
                             subsystem,
                             subsystem.pidConfig,
-                            main
+                            main,
+                            opposeLeaderDirection
                         );
                     }
                     case VictorSPX -> {

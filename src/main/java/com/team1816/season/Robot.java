@@ -208,8 +208,6 @@ public class Robot extends TimedRobot {
 
             /** Register inputHandler */
             inputHandler = Injector.get(InputHandler.class);
-            DriverStation.silenceJoystickConnectionWarning(true);
-
 
             /** Driver Commands */
             inputHandler.listenAction(
@@ -219,6 +217,10 @@ public class Robot extends TimedRobot {
 
                     }
             );
+
+            //TODO add one for shoot speaker
+            //TODO add one for just feeding
+            //TODO make sure you're setting both the feeder and shooter states - they're both needed
             /** Operator Commands */
             inputHandler.listenAction(
                     "ShootAmp",

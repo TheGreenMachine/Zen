@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Shooter extends Subsystem {
 
+    //TODO separate your variables - ex. rollerstate, feederstate, pivotstate, then empty line before next vars
     /**
      * Name
      */
@@ -25,12 +26,8 @@ public class Shooter extends Subsystem {
     private final IGreenMotor feederMotor;
     private final IGreenMotor pivotMotor;
     private final IGreenMotor pivotFollowMotor;
-    private final DigitalInput noteSensor;
 
-    /**
-     * Properties
-     */
-    // public final double shootPower;
+    private final DigitalInput noteSensor; // BeamBreak
 
     /**
      * States
@@ -50,6 +47,7 @@ public class Shooter extends Subsystem {
     /**
      * Constants
      */
+    //TODO separate your static and non-statics with a line
     private static final double velocityErrorMargin = factory.getConstant(NAME, "velocityErrorMargin", 0.1);
     private static final double rollerSpeakerShootSpeed = factory.getConstant(NAME, "rollerSpeakerShootSpeed", 0.70);
     private static final double rollerAmpShootSpeed = factory.getConstant(NAME, "rollerAmpShootSpeed", 0.40);
@@ -82,13 +80,18 @@ public class Shooter extends Subsystem {
         rollerMotor = factory.getMotor(NAME, "rollerMotor");
         feederMotor = factory.getMotor(NAME, "feederMotor");
         pivotMotor = factory.getMotor(NAME, "pivotMotor");
-        pivotFollowMotor = factory.getFollowerMotor(NAME, "pivotFollowMotor", pivotMotor);
-        ((LazyTalonFX) pivotFollowMotor).following.withOpposeMasterDirection(true); //JANK IMPLEMENTATION FIX FIX FIX LATER
+
+        // TODO We want the main and follower to oppose each other (Go opposite directions)
+        // TODO Currently, the main and followers' positive power is opposite, so opposeMasterDirection will be false
+        // TODO I added "opposeLeaderDirection" as a parameter of getFollowerMotor
+        // TODO You guys will need to grab the result from YAML.
+        pivotFollowMotor = factory.getFollowerMotor(NAME, "pivotFollowMotor", pivotMotor, false);
         noteSensor = new DigitalInput((int) factory.getConstant(NAME, "noteSensorChannel", 0));
 
         // shootPower = factory.getConstant(NAME, "shootPower", 0.70);
 
         if (Constants.kLoggingRobot) {
+            //TODO desStatesLogger, actStatesLogger from Subsystem super class
             actualRollerVelocityLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Roller/actualRollerVelocity");
             actualFeederVelocityLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Feeder/actualFeederVelocity");
             rollerCurrentDrawLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Roller/rollerMotorCurrentDraw");
@@ -155,6 +158,7 @@ public class Shooter extends Subsystem {
     public void readFromHardware() {
         actualRollerVelocity = rollerMotor.getSensorVelocity(0);
         actualFeederVelocity = feederMotor.getSensorVelocity(0);
+        //TODO log pivot position
         rollerCurrentDraw = rollerMotor.getMotorOutputCurrent();
         feederCurrentDraw = feederMotor.getMotorOutputCurrent();
         pivotCurrentDraw = pivotMotor.getMotorOutputCurrent();
@@ -211,6 +215,7 @@ public class Shooter extends Subsystem {
         if (feederOutputsChanged) {
             feederOutputsChanged = false;
             double desiredFeederVelocity = 0;
+            //TODO transfer state, if trying to transfer but the sensor is triggered STOP
             switch (desiredFeederState) {
                 case STOP -> {
                     desiredFeederVelocity = 0;
@@ -226,6 +231,7 @@ public class Shooter extends Subsystem {
             desiredFeederVelocityLogger.append(desiredFeederVelocity);
         }
         if (pivotOutputsChanged) {
+            //TODO do pivot how feeder and shooter are done
             pivotOutputsChanged = false;
             switch (desiredPivotState) {
                 case STOW -> {
@@ -243,16 +249,17 @@ public class Shooter extends Subsystem {
 
     @Override
     public void zeroSensors() {
-
+        //TODO set pivot sensor pos to 0
     }
 
     @Override
     public void stop() {
-
+        //TODO stop feeder/shooter motors
     }
 
     @Override
     public boolean testSubsystem() {
+        //TODO eventually.
         return false;
     }
 
@@ -299,10 +306,13 @@ public class Shooter extends Subsystem {
         STOP(0),
         SHOOT_SPEAKER(rollerSpeakerShootSpeed),
         SHOOT_AMP(rollerAmpShootSpeed);
+
         final double velocity;
+
         ROLLER_STATE (double velocity) {
             this.velocity = velocity;
         }
+
         public boolean inDesiredSpeedRange (double actualVelocity) {
             return actualVelocity < (1+velocityErrorMargin) * velocity && actualVelocity > (1-velocityErrorMargin) * velocity;
         }
@@ -311,7 +321,7 @@ public class Shooter extends Subsystem {
     /**
      * Feeder enum
      */
-    public enum FEEDER_STATE {
+    public enum FEEDER_STATE { //TODO we need Transfer/bridge/feeding/whatever state
         STOP,
         SHOOT_SPEAKER,
         SHOOT_AMP

@@ -344,11 +344,11 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
     }
 
     @Override
-    public void follow(IGreenMotor leader) {
+    public void follow(IGreenMotor leader, boolean opposeLeaderDirection) {
         if (leader instanceof LazySparkMax) {
-            super.follow((CANSparkMax) leader);
+            super.follow((CANSparkMax) leader, opposeLeaderDirection);
         } else {
-            super.follow(ExternalFollower.kFollowerPhoenix, leader.getDeviceID());
+            super.follow(ExternalFollower.kFollowerPhoenix, leader.getDeviceID(), opposeLeaderDirection);
         }
     }
 

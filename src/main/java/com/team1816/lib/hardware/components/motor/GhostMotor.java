@@ -405,7 +405,7 @@ public class GhostMotor implements IGreenMotor {
     }
 
     @Override
-    public void follow(IGreenMotor leader) {
+    public void follow(IGreenMotor leader, boolean opposeLeaderDirection) {
 
     }
 

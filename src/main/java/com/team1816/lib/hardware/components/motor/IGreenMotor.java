@@ -158,8 +158,9 @@ public interface IGreenMotor {
     /**
      * Makes a motor follow another motor
      * @param leader The motor to follow
+     * @param opposeLeaderDirection Whether to move opposite to the leader (ONLY IMPLEMENTED FOR TALONFX AND SPARKMAX)
      */
-    void follow(IGreenMotor leader);
+    void follow(IGreenMotor leader, boolean opposeLeaderDirection);
 
     /** Configurations */
     // Current limits
