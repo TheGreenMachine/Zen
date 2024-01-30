@@ -281,7 +281,7 @@ public class RobotFactory {
                 .withCANcoderId(canCoder)
                 .withCANcoderOffset(module.constants.get("encoderOffset"))
                 // General Motor
-                .withCouplingGearRatio(3.5713) //3.5713
+                .withCouplingGearRatio(0) //3.5713
                 .withWheelRadius(getConstant("drivetrain", "wheelDiameter") / 2)
                 .withLocationX(moduleXDist) //IMPORTANT: IF THIS IS NOT A SQUARE SWERVEDRIVE, THESE MUST BE DIFFERENT.
                 .withLocationY(moduleYDist)
@@ -289,7 +289,7 @@ public class RobotFactory {
                 .withDriveMotorClosedLoopOutput(com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType.Voltage)
                 .withDriveMotorGains(getSwervePIDConfigs(subsystemName, PIDConfig.Drive))
                 .withDriveMotorId(driveMotor.id)
-//                .withSlipCurrent() TODO
+//                .withSlipCurrent()
                 .withDriveMotorGearRatio(6.75)
                 .withDriveMotorInverted(driveMotor.invertMotor)
                 // Azimuth Motor

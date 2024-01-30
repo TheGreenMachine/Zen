@@ -92,6 +92,7 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
 
         train = new SwerveDrivetrain(constants, swerveModules);
 
+        train.getDaqThread().setThreadPriority(99);
 
         Translation2d[] moduleLocations = new Translation2d[4];
         for (int i = 0; i < 4; i++) {
@@ -139,7 +140,9 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
     public synchronized void readFromHardware() {
         super.readFromHardware();
 
-        chassisSpeed = swerveKinematics.toChassisSpeeds(train.getState().ModuleStates);
+        if (train.getState().ModuleStates != null) {
+            chassisSpeed = swerveKinematics.toChassisSpeeds(train.getState().ModuleStates);
+        }
 
         for (int i = 0; i < 4; i++) {
             motorTemperatures.get(i).refresh();
@@ -232,9 +235,9 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
     public void setTeleopInputs(double forward, double strafe, double rotation) {
 
         request = fieldCentricRequest
-                .withVelocityY(strafe)
-                .withVelocityX(forward)
-                .withRotationalRate(rotation); //These will need to be multiplied, but i want to test first
+                .withVelocityY(strafe * kMaxVelOpenLoopMeters)
+                .withVelocityX(forward * kMaxVelOpenLoopMeters)
+                .withRotationalRate(rotation * kMaxAngularSpeed * Math.PI); //These will need to be multiplied, but i want to test first
 
         setOpenLoop(null);
     }
