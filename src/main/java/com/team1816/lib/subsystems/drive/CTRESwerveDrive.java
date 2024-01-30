@@ -108,8 +108,8 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
         fieldCentricRequest = new SwerveRequest.FieldCentric()
                 .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
                 .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagic)
-                .withDeadband(0.1 * kMaxVelOpenLoopMeters)
-                .withRotationalDeadband(0.05 * kMaxAngularSpeed);
+                .withDeadband(0.15 * kMaxVelOpenLoopMeters)
+                .withRotationalDeadband(0.1 * kMaxAngularSpeed);
 
         wheelsAt0Request = new SwerveRequest.PointWheelsAt()
                 .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)

@@ -12,7 +12,7 @@ subsystems:
                 motorType: TalonFX
                 motorName: FRDr
                 id: 2
-                invertMotor: false
+                invertMotor: true
             RLDr:
                 motorType: TalonFX
                 motorName: BLDr
@@ -112,7 +112,7 @@ subsystems:
             wheelDiameter: 4
             kTrackScrubFactor: 1.0
             ## Velocity Constraints ##
-            maxRotVel: 2
+            maxRotVel: 2 #Pi radians/sec
             trackWidth: 22.75 # inches
             wheelbaseLength: 22.75 # inches
             maxVelOpenLoop: 2 # meters/s (3.6)
