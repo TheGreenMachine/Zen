@@ -53,6 +53,8 @@ public class SwerveTest {
         swerveDrive.zeroSensors();
     }
 
+
+    //FIXME these work independently but not together. teardown of swerve in between with after needed?
     @Test
     public void testTeleopForward() {
         swerveDrive.setTeleopInputs(1,0,0);
