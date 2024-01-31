@@ -61,6 +61,7 @@ subsystems:
                     constants:
                         encoderOffset: -0.159
                         couplingRatio: 3.548
+                        freeSpin12VRPS: 109
                         invertSensorPhase: 1
                 frontRight:
                     drive: FRDr
@@ -71,6 +72,7 @@ subsystems:
                     constants:
                         encoderOffset: -0.79  #remote, -0.091797 rotor
                         couplingRatio: 3.571
+                        freeSpin12VRPS: 108
                         invertSensorPhase: 1
                 backLeft:
                     drive: RLDr
@@ -81,6 +83,7 @@ subsystems:
                     constants:
                         encoderOffset: 0.058 #remote, 0.049316 rotor
                         couplingRatio: 3.551
+                        freeSpin12VRPS: 110
                         invertSensorPhase: 1
                 backRight:
                     drive: RRDr
@@ -91,6 +94,7 @@ subsystems:
                     constants:
                         encoderOffset: -0.015  #remote, -0.309082 rotor
                         couplingRatio: 3.593
+                        freeSpin12VRPS: 109
                         invertSensorPhase: 1
             drivePID:
                 slot0:
@@ -120,11 +124,11 @@ subsystems:
             trackWidth: 22.75 # inches
             wheelbaseLength: 22.75 # inches
             maxVelOpenLoop: 5 # meters/s (3.6)
+            maxVel12VMPS: 5.2
             maxVelPathFollowing: 3 # meters/s (3.6)
             maxAccel: 1.5 # meters/s^2 (2.54)
             isDemoMode: 0
             ## Swerve Characterization ##
-            12VoltFreeMPS: 5.0 # Falcon 500
             driveGearRatio: 6.75 # L2
             azimuthGearRatio: 12.8 # MK4
             ## Auto Balance ##

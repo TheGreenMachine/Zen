@@ -51,7 +51,6 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
     protected List<Rotation2d> headingsList;
     protected int trajectoryIndex = 0;
 
-
     /**
      * Control
      */
@@ -64,6 +63,9 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
      * Properties
      */
     private SwerveDriveKinematics swerveKinematics;
+
+    private double maxVel12MPS = factory.getConstant(NAME,"maxVel12VMPS");
+    private double driveScalar = kMaxVelOpenLoopMeters / maxVel12MPS;
 
     /**
      * Logging
@@ -291,8 +293,8 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
     public void setTeleopInputs(double throttle, double strafe, double rotation) {
 
         request = fieldCentricRequest
-                .withVelocityX(throttle * kMaxVelOpenLoopMeters)
-                .withVelocityY(strafe * kMaxVelOpenLoopMeters) //TODO if 12volt speed != 5, add some kind of ratio
+                .withVelocityX(throttle * maxVel12MPS * driveScalar)
+                .withVelocityY(strafe * maxVel12MPS * driveScalar)
                 .withRotationalRate(rotation * kMaxAngularSpeed * Math.PI); //These will need to be multiplied, but i want to test first
 
         if (Constants.kLoggingDrivetrain) {

@@ -6,6 +6,7 @@ import com.team1816.lib.util.Util;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 
+import static com.team1816.lib.subsystems.drive.Drive.kDriveWheelDiameterInches;
 import static com.team1816.lib.subsystems.drive.Drive.kWheelCircumferenceMeters;
 
 /**
@@ -15,6 +16,8 @@ public class DriveConversions {
 
     private static final double azimuthPPR = SwerveModule.ModuleConfig.kAzimuthPPR;
     private static final double drivePPR = Drive.driveEncPPR;
+
+    private static final double wheelRadiusMeters = Units.inchesToMeters(kDriveWheelDiameterInches / 2);
 
     public static double ticksToMeters(double ticks) {
         return ticks / drivePPR * kWheelCircumferenceMeters;
@@ -50,6 +53,11 @@ public class DriveConversions {
 
     public static double rotationsToMeters(double rotations) {
         return rotations * (kWheelCircumferenceMeters);
+    }
+
+    public static double canonicalRotationsToMeters(double rotations, double gearRatio) {
+        return (2 * Math.PI * wheelRadiusMeters * rotations)
+                / gearRatio;
     }
 
     public static double convertToMPS(double input, boolean usingRotations) {

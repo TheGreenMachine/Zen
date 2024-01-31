@@ -22,6 +22,7 @@ import com.team1816.lib.hardware.components.sensor.GhostProximitySensor;
 import com.team1816.lib.hardware.components.sensor.IProximitySensor;
 import com.team1816.lib.hardware.components.sensor.ProximitySensor;
 import com.team1816.lib.subsystems.drive.SwerveModule;
+import com.team1816.lib.util.driveUtil.DriveConversions;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -275,9 +276,12 @@ public class RobotFactory {
 
         boolean usingPhoenixPro = getConstant("isProLicensed", 0) > 0;
 
+        double driveGearRatio = getConstant("drivetrain", "driveGearRatio", 6.75);
+
         var moduleConfig = new SwerveModuleConstants()
                 // General Drivetrain
-                .withSpeedAt12VoltsMps(getConstant("drivetrain", "12VoltFreeMPS"))
+                .withSpeedAt12VoltsMps(
+                        DriveConversions.canonicalRotationsToMeters(module.constants.get("freeSpin12VRPS"), driveGearRatio))
                 .withFeedbackSource(usingPhoenixPro
                         ? SwerveModuleConstants.SteerFeedbackType.FusedCANcoder
                         : SwerveModuleConstants.SteerFeedbackType.RemoteCANcoder)
@@ -296,7 +300,7 @@ public class RobotFactory {
                 .withDriveMotorGains(getSwervePIDConfigs(subsystemName, PIDConfig.Drive))
                 .withDriveMotorId(driveMotor.id)
 //                .withSlipCurrent()
-                .withDriveMotorGearRatio(getConstant("drivetrain", "driveGearRatio", 6.75))
+                .withDriveMotorGearRatio(driveGearRatio)
                 .withDriveMotorInverted(driveMotor.invertMotor)
                 // Azimuth Motor
                 .withSteerMotorClosedLoopOutput(usingPhoenixPro
@@ -304,7 +308,7 @@ public class RobotFactory {
                         : com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType.Voltage)
                 .withSteerMotorGains(getSwervePIDConfigs(subsystemName, PIDConfig.Azimuth))
                 .withSteerMotorId(azimuthMotor.id)
-                .withSteerMotorGearRatio(getConstant("drivetrain", "steerGearRatio", 12.8))
+                .withSteerMotorGearRatio(getConstant("drivetrain", "azimuthGearRatio", 12.8))
                 .withSteerMotorInverted(azimuthMotor.invertMotor)
                 ;
 
