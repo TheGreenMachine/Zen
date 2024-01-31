@@ -12,7 +12,7 @@ import com.team1816.lib.Infrastructure;
 import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.Symmetry;
 import com.team1816.lib.hardware.PIDSlotConfiguration;
-import com.team1816.lib.hardware.components.gyro.CTREPigeonWrapper;
+import com.team1816.lib.hardware.components.gyro.Pigeon2Wrapper;
 import com.team1816.lib.subsystems.LedManager;
 import com.team1816.lib.util.driveUtil.DriveConversions;
 import com.team1816.lib.util.logUtil.GreenLogger;
@@ -327,7 +327,7 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
 
     @Override
     public void createPigeon() {
-        super.pigeon = new CTREPigeonWrapper(train.getPigeon2());
+        super.pigeon = new Pigeon2Wrapper(train.getPigeon2());
     }
 
     /**

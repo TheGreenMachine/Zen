@@ -7,6 +7,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import com.google.inject.Inject;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.PIDSlotConfiguration;
+import com.team1816.lib.hardware.components.gyro.IPigeon2;
 import com.team1816.lib.hardware.components.gyro.IPigeonIMU;
 import com.team1816.lib.hardware.components.gyro.Pigeon2Impl;
 import com.team1816.lib.hardware.factory.RobotFactory;
@@ -638,17 +639,8 @@ public abstract class Drive
 
     public void resetPigeon(Rotation2d angle) {
         GreenLogger.log("resetting Pigeon");
-        if (pigeon instanceof Pigeon2Impl) {
-
-            Pigeon2Configuration configs = new Pigeon2Configuration();
-            ((Pigeon2Impl) pigeon).getConfigurator().refresh(configs);
-
-            ((Pigeon2Impl) pigeon).getConfigurator().apply(
-                    configs.MountPose
-                            .withMountPoseYaw(angle.getDegrees())
-                            .withMountPosePitch(0)
-                            .withMountPoseRoll(0)
-            );
+        if (pigeon instanceof IPigeon2) {
+            ((IPigeon2) pigeon).configMountPose(angle);
         }
     }
 
