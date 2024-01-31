@@ -60,6 +60,7 @@ subsystems:
                     invertY: false
                     constants:
                         encoderOffset: -0.159
+                        couplingRatio: 3.548
                         invertSensorPhase: 1
                 frontRight:
                     drive: FRDr
@@ -69,6 +70,7 @@ subsystems:
                     invertY: true
                     constants:
                         encoderOffset: -0.79  #remote, -0.091797 rotor
+                        couplingRatio: 3.571
                         invertSensorPhase: 1
                 backLeft:
                     drive: RLDr
@@ -78,6 +80,7 @@ subsystems:
                     invertY: false
                     constants:
                         encoderOffset: 0.058 #remote, 0.049316 rotor
+                        couplingRatio: 3.551
                         invertSensorPhase: 1
                 backRight:
                     drive: RRDr
@@ -87,6 +90,7 @@ subsystems:
                     invertY: true
                     constants:
                         encoderOffset: -0.015  #remote, -0.309082 rotor
+                        couplingRatio: 3.593
                         invertSensorPhase: 1
             drivePID:
                 slot0:
@@ -115,7 +119,7 @@ subsystems:
             maxRotVel: 2 #Pi radians/sec
             trackWidth: 22.75 # inches
             wheelbaseLength: 22.75 # inches
-            maxVelOpenLoop: 3.75 # meters/s (3.6)
+            maxVelOpenLoop: 2.5 # meters/s (3.6)
             maxVelPathFollowing: 3 # meters/s (3.6)
             maxAccel: 1.5 # meters/s^2 (2.54)
             isDemoMode: 0
