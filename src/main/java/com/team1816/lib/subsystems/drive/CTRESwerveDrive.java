@@ -314,6 +314,7 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
         for (int i = 0; i < 4; i++) {
             desiredStates[i].speedMetersPerSecond =
                     DriveConversions.metersToRotations(desiredStates[i].speedMetersPerSecond);
+            //TODO this may need to be switched to canonical MPS
         }
 
         train.setControl(autoRequest.withModuleStates(desiredStates));
