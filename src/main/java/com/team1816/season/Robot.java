@@ -453,7 +453,7 @@ public class Robot extends TimedRobot {
         drive.setTeleopInputs(
                     -inputHandler.getActionAsDouble("throttle"),
                     -inputHandler.getActionAsDouble("strafe"),
-                     inputHandler.getActionAsDouble("rotation")
+                     -inputHandler.getActionAsDouble("rotation")
         );
     }
 

@@ -291,10 +291,11 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
 
     @Override
     public void setTeleopInputs(double throttle, double strafe, double rotation) {
+        double inputScale = new Translation2d(throttle, strafe).getNorm();
 
         request = fieldCentricRequest
-                .withVelocityX(throttle * maxVel12MPS * driveScalar)
-                .withVelocityY(strafe * maxVel12MPS * driveScalar)
+                .withVelocityX(throttle * inputScale * maxVel12MPS * driveScalar)
+                .withVelocityY(strafe * inputScale * maxVel12MPS * driveScalar)
                 .withRotationalRate(rotation * kMaxAngularSpeed * Math.PI); //These will need to be multiplied, but i want to test first
 
         if (Constants.kLoggingDrivetrain) {
