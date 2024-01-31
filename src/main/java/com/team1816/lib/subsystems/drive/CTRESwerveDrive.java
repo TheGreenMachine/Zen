@@ -24,6 +24,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
@@ -364,6 +365,20 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
                                 getTrajectoryTimestamp() / timeBetweenPoints
                         );
         return heading;
+    }
+
+    /**
+     * Starts a trajectory to be followed with headings (rotate while moving)
+     *
+     * @param trajectory Trajectory
+     * @param headings   Headings (for swerve)
+     * @see Drive#startTrajectory(Trajectory, List)
+     */
+    @Override
+    public void startTrajectory(Trajectory trajectory, List<Rotation2d> headings) {
+        super.startTrajectory(trajectory, headings);
+        headingsList = headings;
+        trajectoryIndex = 0;
     }
 
 
