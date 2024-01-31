@@ -184,7 +184,7 @@ public class Robot extends TimedRobot {
                 }
 
                 // Characterize SignalLogger
-                SignalLogger.setPath(logFileDir + "/CTRELogs");
+                SignalLogger.setPath(logFileDir + "/CTRELogs"); //IMPORTANT: CAN ONLY OPEN .hoot FILES ON WINDOWS
                 SignalLogger.enableAutoLogging(DriverStation.isFMSAttached());
                 SignalLogger.start();
 
