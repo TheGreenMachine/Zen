@@ -1,15 +1,25 @@
+# Java / IntelliJ / Gradle
 venv
 .idea
 .run
 build
 .gradle
+bin/
+Compiler
+# FRC
 networktables.json
 shuffleboard_config.json
 simgui-ds.json
 simgui-window.json
-bin/
+ctre_sim
+# Logs
 *.bag
 *.wpilog
-Compiler
+*.hoot
+# Mac
 *.DS_Store
-ctre_sim
+# Crash logs
+*.log
+# Heap dump log
+*.hprof
+

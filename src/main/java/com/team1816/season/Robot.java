@@ -1,5 +1,6 @@
 package com.team1816.season;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.Injector;
 import com.team1816.lib.PlaylistManager;
@@ -181,6 +182,12 @@ public class Robot extends TimedRobot {
                         logFileDir = System.getProperty("user.dir") + "/";
                     }
                 }
+
+                // Characterize SignalLogger
+                SignalLogger.setPath(logFileDir + "/CTRELogs"); //IMPORTANT: CAN ONLY OPEN .hoot FILES ON WINDOWS
+                SignalLogger.enableAutoLogging(DriverStation.isFMSAttached());
+                SignalLogger.start();
+
                 // start logging
                 DataLogManager.start(logFileDir, "", Constants.kLooperDt);
                 if (RobotBase.isReal()) {
