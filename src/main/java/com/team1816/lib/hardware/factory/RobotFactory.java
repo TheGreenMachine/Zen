@@ -309,14 +309,14 @@ public class RobotFactory {
                 ;
 
         if (RobotBase.isSimulation()) { //TODO
-//            moduleConfig
-//                    //Drive Motor
-//                    .withDriveInertia(0.00001)
-//                    .withDriveFrictionVoltage(0)
-//                    //Azimuth Motor
-//                    .withSteerInertia(0.000001)
-//                    .withSteerFrictionVoltage(0)
-//            ;
+            moduleConfig
+                    //Drive Motor
+                    .withDriveInertia(0.00001)
+                    .withDriveFrictionVoltage(0)
+                    //Azimuth Motor
+                    .withSteerInertia(0.000001)
+                    .withSteerFrictionVoltage(0)
+            ;
         }
 
         return moduleConfig;

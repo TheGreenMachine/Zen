@@ -24,6 +24,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -34,6 +35,7 @@ import java.util.List;
 
 @Singleton
 public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystems.drive.SwerveDrivetrain {
+
     private final ArrayList<StatusSignal<Double>> motorTemperatures = new ArrayList<>();
     /**
      * Components
@@ -65,6 +67,10 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
      * Logging
      */
     private DoubleLogEntry temperatureLogger;
+    private DoubleArrayLogEntry inputLogger; //X, Y, Rotation - raw -1 to 1 from setTeleopInputs
+
+    private ArrayList<DoubleLogEntry> desiredModuleStatesLogger;
+    private ArrayList<DoubleLogEntry> actualModuleStatesLogger;
 
     // module indices
     public static final int kFrontLeft = 0;
@@ -75,7 +81,6 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
     @Inject
     public CTRESwerveDrive(LedManager lm, Infrastructure inf, RobotState rs) {
         super(lm, inf, rs);
-        temperatureLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/moduleTemps");
 
         swerveModules = new SwerveModuleConstants[4];
 
@@ -124,8 +129,24 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
         train.setControl(request);
 
         if (Constants.kLoggingRobot) {
+            temperatureLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/moduleTemps");
+            desStatesLogger = new DoubleArrayLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/DesiredSpeeds");
+            inputLogger = new DoubleArrayLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Inputs");
             gyroPitchLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Pitch");
             gyroRollLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Roll");
+
+            desiredModuleStatesLogger = new ArrayList<>();
+            actualModuleStatesLogger = new ArrayList<>();
+            for (int i = 0; i < 4; i++) {
+                desiredModuleStatesLogger.add(new DoubleLogEntry(DataLogManager.getLog(),
+                        "Drivetrain/Swerve/DesiredModuleStates/" + toModuleName(i) +"/speedMPS"));
+                desiredModuleStatesLogger.add(new DoubleLogEntry(DataLogManager.getLog(),
+                        "Drivetrain/Swerve/DesiredModuleStates/" + toModuleName(i) +"/angleDegrees"));
+                actualModuleStatesLogger.add(new DoubleLogEntry(DataLogManager.getLog(),
+                        "Drivetrain/Swerve/ActualModuleStates/" + toModuleName(i) +"/speedMPS"));
+                actualModuleStatesLogger.add(new DoubleLogEntry(DataLogManager.getLog(),
+                        "Drivetrain/Swerve/ActualModuleStates/" + toModuleName(i) +"/angleDegrees"));
+            }
         }
     }
 
@@ -182,18 +203,49 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
                 );
         robotState.deltaVehicle = cs;
 
-        temperatureLogger.append(motorTemperatures.get(0).getValueAsDouble());
         robotState.drivetrainTemp = motorTemperatures.get(0).getValueAsDouble();
 
         robotState.vehicleToFloorProximityCentimeters = infrastructure.getMaximumProximity();
 
 //        swerveOdometry.update(Rotation2d.fromDegrees(train.getPigeon2().getAngle()));
 
+
         if (Constants.kLoggingDrivetrain) {
+            double[] desiredSpeeds = getDesiredSpeeds();
+
+            ((DoubleArrayLogEntry) desStatesLogger).append(desiredSpeeds);
+            temperatureLogger.append(motorTemperatures.get(0).getValueAsDouble());
             drivetrainPoseLogger.append(new double[]{robotState.fieldToVehicle.getX(), robotState.fieldToVehicle.getY(), robotState.fieldToVehicle.getRotation().getDegrees()});
             drivetrainChassisSpeedsLogger.append(new double[]{robotState.deltaVehicle.vxMetersPerSecond, robotState.deltaVehicle.vyMetersPerSecond, robotState.deltaVehicle.omegaRadiansPerSecond});
             gyroPitchLogger.append(pigeon.getPitchValue());
             gyroRollLogger.append(pigeon.getRollValue());
+
+            var desiredModuleStates = swerveKinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(
+                    desiredSpeeds[0],
+                    desiredSpeeds[1],
+                    desiredSpeeds[2],
+                    robotState.fieldToVehicle.getRotation()
+            ));
+
+
+            SwerveDriveKinematics.desaturateWheelSpeeds(
+                    desiredModuleStates,
+                    kMaxVelOpenLoopMeters
+            );
+            var actualModuleStates = train.getState().ModuleStates;
+
+            for (int i = 0; i < 4; i++) {
+                var optimizedDesiredState = SwerveModuleState.optimize(desiredModuleStates[i], robotState.fieldToVehicle.getRotation());
+                //TODO may need to discretize if the difference in speeds is too severe - may just be free spin though
+                desiredModuleStatesLogger.get(i * 2).append(optimizedDesiredState.speedMetersPerSecond);
+                desiredModuleStatesLogger.get(i * 2 + 1).append(optimizedDesiredState.angle.getDegrees());
+
+                if (actualModuleStates!= null) {
+                    actualModuleStatesLogger.get(i * 2).append(actualModuleStates[i].speedMetersPerSecond);
+                    actualModuleStatesLogger.get(i * 2 + 1).append(actualModuleStates[i].angle.getDegrees());
+                }
+            }
+
         }
     }
 
@@ -232,13 +284,16 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
     }
 
     @Override
-    public void setTeleopInputs(double forward, double strafe, double rotation) {
+    public void setTeleopInputs(double throttle, double strafe, double rotation) {
 
         request = fieldCentricRequest
+                .withVelocityX(throttle * kMaxVelOpenLoopMeters)
                 .withVelocityY(strafe * kMaxVelOpenLoopMeters) //TODO if 12volt speed != 5, add some kind of ratio
-                .withVelocityX(forward * kMaxVelOpenLoopMeters)
                 .withRotationalRate(rotation * kMaxAngularSpeed * Math.PI); //These will need to be multiplied, but i want to test first
 
+        if (Constants.kLoggingDrivetrain) {
+            inputLogger.append(new double[] {throttle, strafe, rotation});
+        }
         setOpenLoop(null);
     }
 
@@ -318,5 +373,33 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
         }
 
         train.setControl(autoRequest.withModuleStates(desiredStates));
+    }
+
+    public double[] getDesiredSpeeds() {
+        if (request instanceof SwerveRequest.FieldCentric) {
+           return new double[]{
+                ((SwerveRequest.FieldCentric) request).VelocityX,
+                ((SwerveRequest.FieldCentric) request).VelocityY,
+                ((SwerveRequest.FieldCentric) request).RotationalRate
+           };
+        } else if (request instanceof ModuleRequest) {
+            ChassisSpeeds moduleSpeeds = swerveKinematics.toChassisSpeeds(((ModuleRequest) request).moduleStates);
+            return new double[] {
+                    moduleSpeeds.vxMetersPerSecond,
+                    moduleSpeeds.vyMetersPerSecond,
+                    moduleSpeeds.omegaRadiansPerSecond
+            };
+        } else {
+            return new double[3];
+        }
+    }
+    public String toModuleName(int moduleIndex) {
+        return switch (moduleIndex) {
+            case 0 -> "frontLeft";
+            case 1 -> "frontRight";
+            case 2 -> "backLeft";
+            case 3 -> "backRight";
+            default -> "unknown";
+        };
     }
 }
