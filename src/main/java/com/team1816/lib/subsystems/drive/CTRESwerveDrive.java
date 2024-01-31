@@ -86,8 +86,8 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
 
 
         SwerveDrivetrainConstants constants = new SwerveDrivetrainConstants()
-                .withCANbusName("highSpeed")
-                .withPigeon2Id(32); // TODO: Make more flexible.
+                .withCANbusName(factory.getCanBusName())
+                .withPigeon2Id(factory.getPigeonID());
 
 
         train = new SwerveDrivetrain(constants, swerveModules);
@@ -235,7 +235,7 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
     public void setTeleopInputs(double forward, double strafe, double rotation) {
 
         request = fieldCentricRequest
-                .withVelocityY(strafe * kMaxVelOpenLoopMeters)
+                .withVelocityY(strafe * kMaxVelOpenLoopMeters) //TODO if 12volt speed != 5, add some kind of ratio
                 .withVelocityX(forward * kMaxVelOpenLoopMeters)
                 .withRotationalRate(rotation * kMaxAngularSpeed * Math.PI); //These will need to be multiplied, but i want to test first
 

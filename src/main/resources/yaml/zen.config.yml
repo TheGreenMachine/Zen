@@ -119,12 +119,14 @@ subsystems:
             maxRotVel: 2 #Pi radians/sec
             trackWidth: 22.75 # inches
             wheelbaseLength: 22.75 # inches
-            maxVelOpenLoop: 2.5 # meters/s (3.6)
+            maxVelOpenLoop: 5 # meters/s (3.6)
             maxVelPathFollowing: 3 # meters/s (3.6)
             maxAccel: 1.5 # meters/s^2 (2.54)
             isDemoMode: 0
             ## Swerve Characterization ##
-            12VoltFreeMPS: 5.0
+            12VoltFreeMPS: 5.0 # Falcon 500
+            driveGearRatio: 6.75 # L2
+            azimuthGearRatio: 12.8 # MK4
             ## Auto Balance ##
             autoBalanceDivider: 50
             autoBalanceThreshold: 2.5 # degrees
@@ -158,4 +160,5 @@ constants:
     ## General ##
     teleopFieldCentric: 1 # 0 or 1
     kLooperDt: .025 # seconds
+    isProLicensed: 0
     resetFactoryDefaults: 1 # whether motors get reset to factory default

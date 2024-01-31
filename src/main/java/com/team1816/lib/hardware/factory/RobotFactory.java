@@ -273,10 +273,14 @@ public class RobotFactory {
         double moduleXDist = moduleDistFromCenter * (module.invertX ? -1 : 1);
         double moduleYDist = moduleDistFromCenter * (module.invertY ? -1 : 1);
 
+        boolean usingPhoenixPro = getConstant("isProLicensed", 0) > 0;
+
         var moduleConfig = new SwerveModuleConstants()
                 // General Drivetrain
                 .withSpeedAt12VoltsMps(getConstant("drivetrain", "12VoltFreeMPS"))
-                .withFeedbackSource(SwerveModuleConstants.SteerFeedbackType.RemoteCANcoder)
+                .withFeedbackSource(usingPhoenixPro
+                        ? SwerveModuleConstants.SteerFeedbackType.FusedCANcoder
+                        : SwerveModuleConstants.SteerFeedbackType.RemoteCANcoder)
                 // CANCoder
                 .withCANcoderId(canCoder)
                 .withCANcoderOffset(module.constants.get("encoderOffset"))
@@ -286,29 +290,33 @@ public class RobotFactory {
                 .withLocationX(moduleXDist) //IMPORTANT: IF THIS IS NOT A SQUARE SWERVEDRIVE, THESE MUST BE DIFFERENT.
                 .withLocationY(moduleYDist)
                 // Drive Motor
-                .withDriveMotorClosedLoopOutput(com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType.Voltage)
+                .withDriveMotorClosedLoopOutput(usingPhoenixPro
+                        ? com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType.TorqueCurrentFOC
+                        : com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType.Voltage)
                 .withDriveMotorGains(getSwervePIDConfigs(subsystemName, PIDConfig.Drive))
                 .withDriveMotorId(driveMotor.id)
 //                .withSlipCurrent()
-                .withDriveMotorGearRatio(6.75)
+                .withDriveMotorGearRatio(getConstant("drivetrain", "driveGearRatio", 6.75))
                 .withDriveMotorInverted(driveMotor.invertMotor)
                 // Azimuth Motor
-                .withSteerMotorClosedLoopOutput(com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType.Voltage)
+                .withSteerMotorClosedLoopOutput(usingPhoenixPro
+                        ? com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType.TorqueCurrentFOC
+                        : com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType.Voltage)
                 .withSteerMotorGains(getSwervePIDConfigs(subsystemName, PIDConfig.Azimuth))
                 .withSteerMotorId(azimuthMotor.id)
-                .withSteerMotorGearRatio(12.8)
+                .withSteerMotorGearRatio(getConstant("drivetrain", "steerGearRatio", 12.8))
                 .withSteerMotorInverted(azimuthMotor.invertMotor)
                 ;
 
         if (RobotBase.isSimulation()) { //TODO
-            moduleConfig
-                    //Drive Motor
-                    .withDriveInertia(0.00001)
-                    .withDriveFrictionVoltage(0)
-                    //Azimuth Motor
-                    .withSteerInertia(0.000001)
-                    .withSteerFrictionVoltage(0)
-            ;
+//            moduleConfig
+//                    //Drive Motor
+//                    .withDriveInertia(0.00001)
+//                    .withDriveFrictionVoltage(0)
+//                    //Azimuth Motor
+//                    .withSteerInertia(0.000001)
+//                    .withSteerFrictionVoltage(0)
+//            ;
         }
 
         return moduleConfig;
@@ -640,6 +648,14 @@ public class RobotFactory {
 
     public boolean isCompressorEnabled() {
         return config.infrastructure.compressorEnabled;
+    }
+
+    public String getCanBusName() {
+        return config.infrastructure.canBusName;
+    }
+
+    public int getPigeonID() {
+        return config.infrastructure.pigeonId;
     }
 
     private void reportGhostWarning(
