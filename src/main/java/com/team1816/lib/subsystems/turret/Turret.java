@@ -94,24 +94,24 @@ public class Turret extends Subsystem implements PidProvider {
         kDeltaXScalar = factory.getConstant(NAME, "deltaXScalar", 1);
 
         // Define PPR values and determine whether to offset set positions by absEnc south pos
-        kAbsPPR = (int) factory.getConstant(NAME, "absPPR");
-        kTurretPPR = (int) factory.getConstant(NAME, "turretPPR");
+        kAbsPPR = (int) factory.getConstant(NAME, "absPPR", 4096);
+        kTurretPPR = (int) factory.getConstant(NAME, "turretPPR", 4096);
         kRatioTurretAbs = (double) kTurretPPR / kAbsPPR;
         kAbsTicksSouthOffset =
             kRatioTurretAbs == 1
-                ? ((int) factory.getConstant(NAME, "absPosTicksSouth"))
+                ? ((int) factory.getConstant(NAME, "absPosTicksSouth", 1000))
                 : 0;
 
         // define limits + when turret should wrap around
         kRevLimit =
             Math.min(
-                (int) factory.getConstant(NAME, "fwdLimit"),
-                (int) factory.getConstant(NAME, "revLimit")
+                (int) factory.getConstant(NAME, "fwdLimit", 3653),
+                (int) factory.getConstant(NAME, "revLimit", -700)
             );
         kFwdLimit =
             Math.max(
-                (int) factory.getConstant(NAME, "fwdLimit"),
-                (int) factory.getConstant(NAME, "revLimit")
+                (int) factory.getConstant(NAME, "fwdLimit", 3653),
+                (int) factory.getConstant(NAME, "revLimit", -700)
             );
         int MASK = Math.abs((kRevLimit + kTurretPPR) - (kFwdLimit)) / 2; // this value is truncated
         kFwdWrapAroundPos = kFwdLimit + MASK;

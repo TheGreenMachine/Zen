@@ -77,8 +77,8 @@ public class ExampleSubsystem extends Subsystem {
             To get anything from the factory, just call
             factory.get[whatever const/comp you need](NAME - your subsystem in yaml, yaml name of what you need);
          */
-        someDouble = factory.getConstant(NAME, "someDouble");
-        isBrakeMode = factory.getConstant(NAME, "isBrakeMode") > 0; // since yml constants are doubles by default, convert to bool
+        someDouble = factory.getConstant(NAME, "someDouble", 0);
+        isBrakeMode = factory.getConstant(NAME, "isBrakeMode", 0) > 0; // since yml constants are doubles by default, convert to bool
 
         launchMotor = factory.getMotor(NAME, "launchMotor");
         superGigaSuperVacuumPumpingPiston = factory.getSolenoid(NAME, "brad"); // yml name doesn't match class name - try to avoid!

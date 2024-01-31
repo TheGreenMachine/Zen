@@ -21,7 +21,7 @@ public class DriveFactory implements Drive.Factory {
     public Drive getInstance() {
         if (mDrive == null) {
             boolean isSwerve =
-                Injector.get(RobotFactory.class).getConstant(Drive.NAME, "isSwerve") == 1;
+                Injector.get(RobotFactory.class).getConstant(Drive.NAME, "isSwerve", 0) == 1;
             if (isSwerve) {
                 mDrive = Injector.get(SwerveDrive.class);
             } else {

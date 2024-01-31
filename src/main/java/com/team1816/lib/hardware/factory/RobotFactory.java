@@ -237,7 +237,7 @@ public class RobotFactory {
             if (subsystem.implemented) reportGhostWarning("Motor", subsystemName, name);
             followerMotor =
                 MotorFactory.createGhostMotor(
-                    (int) getConstant(subsystemName, "maxVelTicks100ms"),
+                    (int) getConstant(subsystemName, "maxVelTicks100ms", 12275.7),
                     0,
                     name,
                     subsystem
@@ -397,10 +397,6 @@ public class RobotFactory {
         return false;
     }
 
-    public Double getConstant(String name) {
-        return getConstant(name, 0);
-    }
-
     public Map<String, Double> getConstants() {
         return config.constants;
     }
@@ -430,10 +426,6 @@ public class RobotFactory {
 
     public String getInputHandlerName() {
         return Objects.requireNonNullElse(config.inputHandler, "empty");
-    }
-
-    public double getConstant(String subsystemName, String name) {
-        return getConstant(subsystemName, name, 0.0);
     }
 
     public double getConstant(String subsystemName, String name, double defaultVal) {
@@ -539,7 +531,7 @@ public class RobotFactory {
             GreenLogger.log("Using old Pigeon for id: " + id);
             pigeon = new PigeonIMUImpl(id);
         }
-        if (getConstant("resetFactoryDefaults") > 0) {
+        if (getConstant("resetFactoryDefaults", 0) > 0) {
             pigeon.configFactoryDefaults();
             pigeon.set_StatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_1_General, 100);
             pigeon.set_StatusFramePeriod(PigeonIMU_StatusFrame.BiasedStatus_6_Accel, 100);

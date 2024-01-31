@@ -331,7 +331,7 @@ public class SwerveModule implements ISwerveModule {
      */
     public boolean checkSystem() {
         boolean checkDrive = true;
-        double actualmaxVelTicks100ms = factory.getConstant(NAME, "maxVelTicks100ms"); // if this isn't calculated right this test will fail
+        double actualmaxVelTicks100ms = factory.getConstant(NAME, "maxVelTicks100ms", 12275.7); // if this isn't calculated right this test will fail
         driveMotor.set(GreenControlMode.PERCENT_OUTPUT, 0.2);
         Timer.delay(1);
         if (
