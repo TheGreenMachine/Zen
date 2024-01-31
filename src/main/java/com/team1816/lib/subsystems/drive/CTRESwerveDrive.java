@@ -26,6 +26,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
@@ -68,6 +69,7 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
      */
     private DoubleLogEntry temperatureLogger;
     private DoubleArrayLogEntry inputLogger; //X, Y, Rotation - raw -1 to 1 from setTeleopInputs
+    private StringLogEntry controlRequestLogger;
 
     private ArrayList<DoubleLogEntry> desiredModuleStatesLogger;
     private ArrayList<DoubleLogEntry> actualModuleStatesLogger;
@@ -134,6 +136,7 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
             inputLogger = new DoubleArrayLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Inputs");
             gyroPitchLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Pitch");
             gyroRollLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Roll");
+            controlRequestLogger = new StringLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/ControlRequest");
 
             desiredModuleStatesLogger = new ArrayList<>();
             actualModuleStatesLogger = new ArrayList<>();
@@ -219,6 +222,8 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
             drivetrainChassisSpeedsLogger.append(new double[]{robotState.deltaVehicle.vxMetersPerSecond, robotState.deltaVehicle.vyMetersPerSecond, robotState.deltaVehicle.omegaRadiansPerSecond});
             gyroPitchLogger.append(pigeon.getPitchValue());
             gyroRollLogger.append(pigeon.getRollValue());
+            controlRequestLogger.append(request.getClass().getSimpleName());
+
 
             var desiredModuleStates = swerveKinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(
                     desiredSpeeds[0],
@@ -226,8 +231,6 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
                     desiredSpeeds[2],
                     robotState.fieldToVehicle.getRotation()
             ));
-
-
             SwerveDriveKinematics.desaturateWheelSpeeds(
                     desiredModuleStates,
                     kMaxVelOpenLoopMeters
