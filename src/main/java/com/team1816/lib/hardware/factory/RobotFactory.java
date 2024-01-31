@@ -275,7 +275,7 @@ public class RobotFactory {
 
         var moduleConfig = new SwerveModuleConstants()
                 // General Drivetrain
-                .withSpeedAt12VoltsMps(getConstant("drivetrain", "maxVelOpenLoop"))
+                .withSpeedAt12VoltsMps(getConstant("drivetrain", "12VoltFreeMPS"))
                 .withFeedbackSource(SwerveModuleConstants.SteerFeedbackType.RemoteCANcoder)
                 // CANCoder
                 .withCANcoderId(canCoder)

@@ -123,6 +123,8 @@ subsystems:
             maxVelPathFollowing: 3 # meters/s (3.6)
             maxAccel: 1.5 # meters/s^2 (2.54)
             isDemoMode: 0
+            ## Swerve Characterization ##
+            12VoltFreeMPS: 5.0
             ## Auto Balance ##
             autoBalanceDivider: 50
             autoBalanceThreshold: 2.5 # degrees
