@@ -131,7 +131,7 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
 
         request = wheelsAt0Request;
 
-        train.setControl(request);
+//        train.setControl(request);
 
         if (Constants.kLoggingRobot) {
             temperatureLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/moduleTemps");
@@ -159,7 +159,7 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
     @Override
     public synchronized void writeToHardware() {
         if (controlState == ControlState.OPEN_LOOP) {
-            train.setControl(request);
+//            train.setControl(request);
         }
     }
 
@@ -271,7 +271,7 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
 
     @Override
     public void stop() {
-        train.setControl(new SwerveRequest.FieldCentric());
+//        train.setControl(new SwerveRequest.FieldCentric());
     }
 
     @Override
@@ -393,7 +393,7 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
             //TODO this may need to be switched to canonical MPS
         }
 
-        train.setControl(autoRequest.withModuleStates(desiredStates));
+//        train.setControl(autoRequest.withModuleStates(desiredStates));
     }
 
     public double[] getDesiredSpeeds() {

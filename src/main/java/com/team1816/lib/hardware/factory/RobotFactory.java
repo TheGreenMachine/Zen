@@ -294,18 +294,14 @@ public class RobotFactory {
                 .withLocationX(moduleXDist) //IMPORTANT: IF THIS IS NOT A SQUARE SWERVEDRIVE, THESE MUST BE DIFFERENT.
                 .withLocationY(moduleYDist)
                 // Drive Motor
-                .withDriveMotorClosedLoopOutput(usingPhoenixPro
-                        ? com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType.TorqueCurrentFOC
-                        : com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType.Voltage)
+                .withDriveMotorClosedLoopOutput(com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType.Voltage)
                 .withDriveMotorGains(getSwervePIDConfigs(subsystemName, PIDConfig.Drive))
                 .withDriveMotorId(driveMotor.id)
 //                .withSlipCurrent()
                 .withDriveMotorGearRatio(driveGearRatio)
                 .withDriveMotorInverted(driveMotor.invertMotor)
                 // Azimuth Motor
-                .withSteerMotorClosedLoopOutput(usingPhoenixPro
-                        ? com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType.TorqueCurrentFOC
-                        : com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType.Voltage)
+                .withSteerMotorClosedLoopOutput(com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType.Voltage)
                 .withSteerMotorGains(getSwervePIDConfigs(subsystemName, PIDConfig.Azimuth))
                 .withSteerMotorId(azimuthMotor.id)
                 .withSteerMotorGearRatio(getConstant("drivetrain", "azimuthGearRatio", 12.8))
