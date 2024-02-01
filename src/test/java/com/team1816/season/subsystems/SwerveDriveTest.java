@@ -38,8 +38,8 @@ public class SwerveDriveTest {
         mInfra = mock(Infrastructure.class);
         Injector.register(mInfra);
         RobotFactory mockFactory = mock(RobotFactory.class);
-        when(mockFactory.getConstant("maxVelOpenLoop")).thenReturn(maxVel);
-        when(mockFactory.getConstant("maxRotVel")).thenReturn(maxRotVel);
+        when(mockFactory.getConstant("drivetrain","maxVelOpenLoop")).thenReturn(maxVel);
+        when(mockFactory.getConstant("drivetrain","maxRotVel")).thenReturn(maxRotVel);
         TestUtil.SetupMockRobotFactory(mockFactory);
         mDriveFactory = mock(Drive.Factory.class);
         Injector.register(mDriveFactory);

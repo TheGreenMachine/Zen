@@ -9,6 +9,7 @@ import com.team1816.lib.hardware.components.motor.IGreenMotor;
 import com.team1816.lib.hardware.components.pcm.ICompressor;
 import com.team1816.lib.hardware.factory.RobotFactory;
 import com.team1816.lib.subsystems.drive.SwerveModule;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -46,6 +47,7 @@ public class TestUtil {
         when(mockFactory.getPidSlotConfig(anyString())).thenReturn(slotConfig);
         var sm = mock(SwerveModule.class);
         when(sm.getActualState()).thenReturn(new SwerveModuleState());
+        when(sm.getActualPosition()).thenReturn(new SwerveModulePosition());
         when(mockFactory.getSwerveModule(anyString(), anyString()))
             .thenAnswer(input -> sm);
         when(mockFactory.getCanCoder(anyString(), anyString())).thenReturn(mock(CANcoder.class));
