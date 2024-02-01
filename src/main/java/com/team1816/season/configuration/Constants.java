@@ -39,6 +39,13 @@ public class Constants {
     public static final String kGitHash = RobotFactory.getGitHash();
 
     /**
+     * CANBus Characterization
+     */
+    public static final boolean kHasCANivore = factory.getConstant("hasCanivore", 0) > 0;
+    public static final String kCANivoreName = factory.getCANbusName();
+    public static final String kLowSpeedBusName = "rio";
+
+    /**
      * CAN Timeouts
      */
     public static final int kCANTimeoutMs = 10; // utility: on the fly updates

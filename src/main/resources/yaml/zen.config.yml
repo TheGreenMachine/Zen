@@ -144,4 +144,5 @@ constants:
     ## General ##
     teleopFieldCentric: 1 # 0 or 1
     kLooperDt: .025 # seconds
+    hasCanivore: 1 # 0 or 1
     resetFactoryDefaults: 1 # whether motors get reset to factory default

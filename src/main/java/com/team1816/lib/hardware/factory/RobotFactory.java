@@ -565,6 +565,10 @@ public class RobotFactory {
         return config.infrastructure.compressorEnabled;
     }
 
+    public String getCANbusName() {
+        return config.infrastructure.canBusName;
+    }
+
     private void reportGhostWarning(
         String type,
         String subsystemName,

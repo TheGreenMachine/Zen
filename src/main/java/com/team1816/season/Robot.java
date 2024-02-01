@@ -1,5 +1,6 @@
 package com.team1816.season;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.SignalLogger;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.Injector;
@@ -92,6 +93,9 @@ public class Robot extends TimedRobot {
 
     private DoubleLogEntry robotLoopLogger;
     private DoubleLogEntry looperLogger;
+    private DoubleLogEntry canivoreTrafficLogger;
+    private DoubleLogEntry lowSpeedTrafficLogger;
+
 
     /**
      * Properties
@@ -114,6 +118,11 @@ public class Robot extends TimedRobot {
         if (Constants.kLoggingRobot) {
             robotLoopLogger = new DoubleLogEntry(DataLogManager.getLog(), "Timings/Robot");
             looperLogger = new DoubleLogEntry(DataLogManager.getLog(), "Timings/RobotState");
+
+            if (Constants.kHasCANivore) {
+                canivoreTrafficLogger = new DoubleLogEntry(DataLogManager.getLog(), "CAN/highSpeedUtilization");
+            }
+            lowSpeedTrafficLogger = new DoubleLogEntry(DataLogManager.getLog(), "CAN/lowSpeedUtilization");
         }
     }
 
@@ -367,6 +376,11 @@ public class Robot extends TimedRobot {
             if (Constants.kLoggingRobot) {
                 looperLogger.append(looperDt);
                 robotLoopLogger.append(robotDt);
+
+                if (Constants.kHasCANivore) {
+                    canivoreTrafficLogger.append(CANBus.getStatus(Constants.kCANivoreName).BusUtilization);
+                }
+                lowSpeedTrafficLogger.append(CANBus.getStatus(Constants.kLowSpeedBusName).BusUtilization);
             }
 
             subsystemManager.outputToSmartDashboard(); // update shuffleboard for subsystem values
