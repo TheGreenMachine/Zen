@@ -13,11 +13,11 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Shooter extends Subsystem {
 
-    //TODO separate your variables - ex. rollerstate, feederstate, pivotstate, then empty line before next vars
     /**
      * Name
      */
     private static final String NAME = "shooter";
+
 
     /**
      * Components
@@ -29,45 +29,57 @@ public class Shooter extends Subsystem {
 
     private final DigitalInput noteSensor; // BeamBreak
 
+
     /**
      * States
      */
     private ROLLER_STATE desiredRollerState = ROLLER_STATE.STOP;
     private FEEDER_STATE desiredFeederState = FEEDER_STATE.STOP;
     private PIVOT_STATE desiredPivotState = PIVOT_STATE.STOW;
+
     private boolean rollerOutputsChanged = false;
     private boolean feederOutputsChanged = false;
     private boolean pivotOutputsChanged = false;
+
     private double actualRollerVelocity = 0;
     private double actualFeederVelocity = 0;
+
     private double rollerCurrentDraw;
     private double feederCurrentDraw;
     private double pivotCurrentDraw;
 
+    private double desiredPivotPosition = 0;
+    private double actualPivotPosition = 0;
+
+
     /**
      * Constants
      */
-    //TODO separate your static and non-statics with a line
     private static final double velocityErrorMargin = factory.getConstant(NAME, "velocityErrorMargin", 0.1);
     private static final double rollerSpeakerShootSpeed = factory.getConstant(NAME, "rollerSpeakerShootSpeed", 0.70);
     private static final double rollerAmpShootSpeed = factory.getConstant(NAME, "rollerAmpShootSpeed", 0.40);
+
     private final double feederSpeakerShootSpeed = factory.getConstant(NAME, "feederSpeakerShootSpeed", 0.70);
     private final double feederAmpShootSpeed = factory.getConstant(NAME, "feederAmpShootSpeed", 0.40);
+    private final double feederIntakeSpeed = factory.getConstant(NAME, "feederIntakeSpeed", 0.20);
+
     private final double pivotSpeakerShootPosition = factory.getConstant(NAME, "pivotSpeakerShootPosition", 0.5);
     private final double pivotAmpShootPosition = factory.getConstant(NAME, "pivotAmpShootPosition", 1.0);
+
 
     /**
      * Logging
      */
     private DoubleLogEntry actualRollerVelocityLogger;
     private DoubleLogEntry actualFeederVelocityLogger;
+
     private DoubleLogEntry rollerCurrentDrawLogger;
     private DoubleLogEntry feederCurrentDrawLogger;
     private DoubleLogEntry pivotCurrentDrawLogger;
+
     private DoubleLogEntry desiredRollerVelocityLogger;
     private DoubleLogEntry desiredFeederVelocityLogger;
-    private double rollerVelocity = 0;
-    private double feederVelocity = 0;
+
 
     /**
      * Base constructor needed to instantiate a shooter
@@ -91,12 +103,16 @@ public class Shooter extends Subsystem {
         // shootPower = factory.getConstant(NAME, "shootPower", 0.70);
 
         if (Constants.kLoggingRobot) {
-            //TODO desStatesLogger, actStatesLogger from Subsystem super class
+            desStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Pivot/desiredPivotPosition");
+            actStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Pivot/actualPivotPosition");
+
             actualRollerVelocityLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Roller/actualRollerVelocity");
             actualFeederVelocityLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Feeder/actualFeederVelocity");
+
             rollerCurrentDrawLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Roller/rollerMotorCurrentDraw");
             feederCurrentDrawLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Feeder/feederMotorCurrentDraw");
             pivotCurrentDrawLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Pivot/pivotMotorCurrentDraw");
+
             desiredRollerVelocityLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Roller/desiredRollerVelocity");
             desiredFeederVelocityLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Roller/desiredFeederVelocity");
         }
@@ -156,9 +172,11 @@ public class Shooter extends Subsystem {
      */
     @Override
     public void readFromHardware() {
+        actualPivotPosition = pivotMotor.getSensorPosition(0);
+
         actualRollerVelocity = rollerMotor.getSensorVelocity(0);
         actualFeederVelocity = feederMotor.getSensorVelocity(0);
-        //TODO log pivot position
+
         rollerCurrentDraw = rollerMotor.getMotorOutputCurrent();
         feederCurrentDraw = feederMotor.getMotorOutputCurrent();
         pivotCurrentDraw = pivotMotor.getMotorOutputCurrent();
@@ -180,8 +198,12 @@ public class Shooter extends Subsystem {
         }
 
         if (Constants.kLoggingRobot) {
+            ((DoubleLogEntry) desStatesLogger).append(desiredPivotPosition);
+            ((DoubleLogEntry) actStatesLogger).append(actualPivotPosition);
+
             actualRollerVelocityLogger.append(actualRollerVelocity);
             actualFeederVelocityLogger.append(actualFeederVelocity);
+
             rollerCurrentDrawLogger.append(rollerCurrentDraw);
             feederCurrentDrawLogger.append(feederCurrentDraw);
             pivotCurrentDrawLogger.append(pivotCurrentDraw);
@@ -226,24 +248,27 @@ public class Shooter extends Subsystem {
                 case SHOOT_AMP -> {
                     desiredFeederVelocity = feederAmpShootSpeed;
                 }
+                case INTAKE -> {
+                    desiredFeederVelocity = feederIntakeSpeed;
+                }
             }
             feederMotor.set(GreenControlMode.PERCENT_OUTPUT, desiredFeederVelocity);
             desiredFeederVelocityLogger.append(desiredFeederVelocity);
         }
         if (pivotOutputsChanged) {
-            //TODO do pivot how feeder and shooter are done
             pivotOutputsChanged = false;
             switch (desiredPivotState) {
                 case STOW -> {
-                    pivotMotor.set(GreenControlMode.POSITION_CONTROL, 0);
+                    desiredPivotPosition = 0;
                 }
                 case SHOOT_SPEAKER -> {
-                    pivotMotor.set(GreenControlMode.POSITION_CONTROL, pivotSpeakerShootPosition);
+                    desiredPivotPosition = pivotSpeakerShootPosition;
                 }
                 case SHOOT_AMP -> {
-                    pivotMotor.set(GreenControlMode.POSITION_CONTROL, pivotAmpShootPosition);
+                    desiredPivotPosition = pivotAmpShootPosition;
                 }
             }
+            pivotMotor.set(GreenControlMode.POSITION_CONTROL, desiredPivotPosition);
         }
     }
 
@@ -254,7 +279,8 @@ public class Shooter extends Subsystem {
 
     @Override
     public void stop() {
-        //TODO stop feeder/shooter motors
+        desiredRollerState = ROLLER_STATE.STOP;
+        desiredFeederState = FEEDER_STATE.STOP;
     }
 
     @Override
@@ -321,10 +347,11 @@ public class Shooter extends Subsystem {
     /**
      * Feeder enum
      */
-    public enum FEEDER_STATE { //TODO we need Transfer/bridge/feeding/whatever state
+    public enum FEEDER_STATE {
         STOP,
         SHOOT_SPEAKER,
-        SHOOT_AMP
+        SHOOT_AMP,
+        INTAKE
     }
 
     /**

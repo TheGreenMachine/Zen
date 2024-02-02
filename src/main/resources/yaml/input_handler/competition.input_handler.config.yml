@@ -20,5 +20,6 @@ operator:
     buttons:
         leftBumper: updatePoseWithCamera
     buttonpad:
+        a: ShootSpeaker
         b: ShootAmp
 demoMode: false

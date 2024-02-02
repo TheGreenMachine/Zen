@@ -229,6 +229,13 @@ public class Robot extends TimedRobot {
                         shooter.setDesiredRollerState(Shooter.ROLLER_STATE.SHOOT_AMP);
                     }
             );
+            inputHandler.listenAction(
+                    "ShootSpeaker",
+                    ActionState.PRESSED,
+                    () -> {
+                        shooter.setDesiredRollerState(Shooter.ROLLER_STATE.SHOOT_SPEAKER);
+                    }
+            );
 
             /** Buttonboard Commands */
 
