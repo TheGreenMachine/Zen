@@ -2,7 +2,6 @@ package com.team1816.season.subsystems;
 
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
-import com.team1816.lib.hardware.components.motor.LazyTalonFX;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.subsystems.Subsystem;
 import com.team1816.season.configuration.Constants;
@@ -65,6 +64,7 @@ public class Shooter extends Subsystem {
 
     private final double pivotSpeakerShootPosition = factory.getConstant(NAME, "pivotSpeakerShootPosition", 0.5);
     private final double pivotAmpShootPosition = factory.getConstant(NAME, "pivotAmpShootPosition", 1.0);
+    private final boolean opposeLeaderDirection = !((int)factory.getConstant(NAME, "invertFollowerMotor", 1.0) == 0);
 
 
     /**
@@ -92,12 +92,8 @@ public class Shooter extends Subsystem {
         rollerMotor = factory.getMotor(NAME, "rollerMotor");
         feederMotor = factory.getMotor(NAME, "feederMotor");
         pivotMotor = factory.getMotor(NAME, "pivotMotor");
+        pivotFollowMotor = factory.getFollowerMotor(NAME, "pivotFollowMotor", pivotMotor, opposeLeaderDirection);
 
-        // TODO We want the main and follower to oppose each other (Go opposite directions)
-        // TODO Currently, the main and followers' positive power is opposite, so opposeMasterDirection will be false
-        // TODO I added "opposeLeaderDirection" as a parameter of getFollowerMotor
-        // TODO You guys will need to grab the result from YAML.
-        pivotFollowMotor = factory.getFollowerMotor(NAME, "pivotFollowMotor", pivotMotor, false);
         noteSensor = new DigitalInput((int) factory.getConstant(NAME, "noteSensorChannel", 0));
 
         // shootPower = factory.getConstant(NAME, "shootPower", 0.70);
@@ -237,7 +233,6 @@ public class Shooter extends Subsystem {
         if (feederOutputsChanged) {
             feederOutputsChanged = false;
             double desiredFeederVelocity = 0;
-            //TODO transfer state, if trying to transfer but the sensor is triggered STOP
             switch (desiredFeederState) {
                 case STOP -> {
                     desiredFeederVelocity = 0;
@@ -248,8 +243,9 @@ public class Shooter extends Subsystem {
                 case SHOOT_AMP -> {
                     desiredFeederVelocity = feederAmpShootSpeed;
                 }
-                case INTAKE -> {
-                    desiredFeederVelocity = feederIntakeSpeed;
+                case TRANSFER -> {
+                    if(noteSensor.get())
+                        desiredFeederVelocity = feederIntakeSpeed;
                 }
             }
             feederMotor.set(GreenControlMode.PERCENT_OUTPUT, desiredFeederVelocity);
@@ -274,7 +270,7 @@ public class Shooter extends Subsystem {
 
     @Override
     public void zeroSensors() {
-        //TODO set pivot sensor pos to 0
+        pivotMotor.set(GreenControlMode.POSITION_CONTROL, 0);
     }
 
     @Override
@@ -351,7 +347,7 @@ public class Shooter extends Subsystem {
         STOP,
         SHOOT_SPEAKER,
         SHOOT_AMP,
-        INTAKE
+        TRANSFER
     }
 
     /**

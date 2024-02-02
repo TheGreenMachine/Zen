@@ -150,6 +150,7 @@ subsystems:
             velocityErrorMargin: 0.1
             pivotSpeakerShootPosition: 0.5
             pivotAmpShootPosition: 1.0
+            invertFollowerMotor: 0
 infrastructure:
     canBusName: highSpeed
     ## Power Distribution ##
