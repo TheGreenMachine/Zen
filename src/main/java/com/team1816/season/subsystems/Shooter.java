@@ -50,6 +50,8 @@ public class Shooter extends Subsystem {
     private double desiredPivotPosition = 0;
     private double actualPivotPosition = 0;
 
+    private boolean shootingSpeaker = false;
+
 
     /**
      * Constants
@@ -213,6 +215,13 @@ public class Shooter extends Subsystem {
      */
     @Override
     public void writeToHardware() {
+        if(shootingSpeaker) {
+            desiredRollerState = ROLLER_STATE.SHOOT_SPEAKER;
+            if(ROLLER_STATE.SHOOT_SPEAKER.inDesiredSpeedRange(actualRollerVelocity)) {
+                desiredFeederState = FEEDER_STATE.SHOOT_SPEAKER;
+                shootingSpeaker = false;
+            }
+        }
         if (rollerOutputsChanged) {
             rollerOutputsChanged = false;
             double desiredRollerVelocity = 0;
@@ -319,6 +328,13 @@ public class Shooter extends Subsystem {
      */
     public PIVOT_STATE getDesiredPivotState() {
         return desiredPivotState;
+    }
+
+    /**
+     * Sets the shooter to shoot into the speaker
+     */
+    public void shootSpeaker() {
+        shootingSpeaker = true;
     }
 
     /**

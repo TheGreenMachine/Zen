@@ -22,4 +22,6 @@ operator:
     buttonpad:
         a: ShootSpeaker
         b: ShootAmp
+        x: Feed
+        y: StopShooter
 demoMode: false

@@ -218,22 +218,34 @@ public class Robot extends TimedRobot {
                     }
             );
 
-            //TODO add one for shoot speaker
-            //TODO add one for just feeding
-            //TODO make sure you're setting both the feeder and shooter states - they're both needed
             /** Operator Commands */
             inputHandler.listenAction(
                     "ShootAmp",
                     ActionState.PRESSED,
                     () -> {
                         shooter.setDesiredRollerState(Shooter.ROLLER_STATE.SHOOT_AMP);
+                        shooter.setDesiredFeederState(Shooter.FEEDER_STATE.SHOOT_AMP);
                     }
             );
             inputHandler.listenAction(
                     "ShootSpeaker",
                     ActionState.PRESSED,
                     () -> {
-                        shooter.setDesiredRollerState(Shooter.ROLLER_STATE.SHOOT_SPEAKER);
+                        shooter.shootSpeaker();
+                    }
+            );
+            inputHandler.listenAction(
+                    "Feed",
+                    ActionState.PRESSED,
+                    () -> {
+                        shooter.setDesiredFeederState(Shooter.FEEDER_STATE.TRANSFER);
+                    }
+            );
+            inputHandler.listenAction(
+                    "StopShooter",
+                    ActionState.PRESSED,
+                    () -> {
+                        shooter.stop();
                     }
             );
 
