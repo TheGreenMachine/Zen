@@ -98,7 +98,7 @@ subsystems:
                         invertSensorPhase: 1
             drivePID:
                 slot0:
-                    kP: 0.025007
+                    kP: 0.008007 #0.025007
                     kI: 0.002001
                     kD: 0.000400
                     kF: 0.009989
