@@ -75,12 +75,7 @@ public class SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider 
     };
 
     // Kinematics (https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/swerve-drive-kinematics.html)
-    public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
-        kFrontLeftModulePosition,
-        kFrontRightModulePosition,
-        kBackLeftModulePosition,
-        kBackRightModulePosition
-    );
+    public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(kFrontLeftModulePosition, kFrontRightModulePosition, kBackLeftModulePosition, kBackRightModulePosition);
 
     /**
      * Components

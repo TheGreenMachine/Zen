@@ -26,7 +26,6 @@ public class DriveFactory implements Drive.Factory {
                 Injector.get(RobotFactory.class).getConstant(Drive.NAME, "isSwerve") == 1;
             boolean isCTRSwerve =
                     Injector.get(RobotFactory.class).getConstant(Drive.NAME, "isCTRSwerve") == 1;
-//                    && RobotBase.isReal(); //FIXME this is TEMPORARY until CTRE simulation is implemented
             if (isSwerve) {
                 if (isCTRSwerve) {
                     mDrive = Injector.get(CTRESwerveDrive.class);
