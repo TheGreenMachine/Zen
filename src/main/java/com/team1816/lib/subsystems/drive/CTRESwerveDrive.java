@@ -56,7 +56,6 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
      */
     private SwerveRequest request;
     private SwerveRequest.FieldCentric fieldCentricRequest;
-    private SwerveRequest.PointWheelsAt wheelsAt0Request;
     private ModuleRequest autoRequest;
 
     /**
@@ -121,17 +120,10 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
                 .withDeadband(0.15 * kMaxVelOpenLoopMeters)
                 .withRotationalDeadband(0.1 * kMaxAngularSpeed);
 
-        wheelsAt0Request = new SwerveRequest.PointWheelsAt()
-                .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
-                .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagic)
-                .withModuleDirection(Rotation2d.fromDegrees(0));
-
         autoRequest = new ModuleRequest()
                 .withModuleStates(new SwerveModuleState[4]);
 
-        request = wheelsAt0Request;
-
-        train.setControl(request);
+        request = fieldCentricRequest;
 
         if (Constants.kLoggingRobot) {
             temperatureLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/moduleTemps");
