@@ -189,6 +189,9 @@ public abstract class Drive
     protected DoubleArrayLogEntry drivetrainChassisSpeedsLogger;
     protected DoubleLogEntry gyroPitchLogger;
     protected DoubleLogEntry gyroRollLogger;
+    protected DoubleLogEntry gyroYawLogger;
+
+
 
     /**
      * Instantiates the Drive with base subsystem parameters and accounts for DemoMode
