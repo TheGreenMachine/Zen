@@ -46,6 +46,12 @@ def writeGitHashToFile() {
     }
 }
 
+def yellAtConsole(String message) {
+    String RED_TEXT = "\u001B[31m";
+    String RESET_TEXT = "\u001B[0m"
+    println(RED_TEXT + message + RESET_TEXT)
+}
+
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
 deploy {
@@ -155,18 +161,28 @@ jsonSchema2Pojo {
 
 task robotCADToAdvantageScope (type: Copy) {
     String currUserName = System.getProperty("user.name");
-    String customAssetFolder = "AdvantageScope/userAssets/Robot_${projectDir.getName()}"
+    String robotCADFolder = "Robot_${projectDir.getName()}"
 
+    String customAssetFolder = "AdvantageScope/userAssets"
+
+    String baseOutputDir; //For checking that AdvantageScope is on the system
     String outputDir;
+
     if (DefaultNativePlatform.currentOperatingSystem.isMacOsX()) {
-        outputDir = "/Users/${currUserName}/Library/Application Support/AdvantageScope/userAssets/Robot_Zen"
+        baseOutputDir = "/Users/${currUserName}/Library/Application Support/${customAssetFolder}"
+        outputDir = "/Users/${currUserName}/Library/Application Support/${customAssetFolder}/${robotCADFolder}"
     } else {
         //outputDir = ""TODO
     }  //Could add Debian linux if anyone wants to take a crack at it
 
-    copy {
-        from "${project.rootDir}/Robot_Zen"
-        into outputDir
+
+    if (new File(baseOutputDir).exists()) {
+        copy {
+            from "${project.rootDir}/${robotCADFolder}"
+            into outputDir
+        }
+    } else {
+        yellAtConsole("${outputDir} could not be found! Please ensure you have AdvantageScope properly downloaded.")
     }
 }
 
