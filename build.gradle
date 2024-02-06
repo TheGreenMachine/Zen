@@ -161,20 +161,19 @@ jsonSchema2Pojo {
 
 task robotCADToAdvantageScope (type: Copy) {
     String currUserName = System.getProperty("user.name");
+    boolean isWindows = DefaultNativePlatform.currentOperatingSystem.isWindows();
     String robotCADFolder = "Robot_${projectDir.getName()}"
-
-    String customAssetFolder = "AdvantageScope/userAssets"
+    String customAssetFolder = "AdvantageScope${isWindows ? "\\" : "/"}userAssets"; //don't need the ternary for execution but keeping for the warning
 
     String baseOutputDir; //For checking that AdvantageScope is on the system
-    String outputDir;
 
-    if (DefaultNativePlatform.currentOperatingSystem.isMacOsX()) {
+    if (isWindows) {
+        baseOutputDir = "C:\\Users\\${currUserName}\\AppData\\Roaming\\${customAssetFolder}"
+    } else { //Mac
         baseOutputDir = "/Users/${currUserName}/Library/Application Support/${customAssetFolder}"
-        outputDir = "/Users/${currUserName}/Library/Application Support/${customAssetFolder}/${robotCADFolder}"
-    } else {
-        //outputDir = ""TODO
-    }  //Could add Debian linux if anyone wants to take a crack at it
+    } //Could add Debian linux if anyone wants to take a crack at it
 
+    String outputDir = baseOutputDir + (isWindows ? "\\" : "/") + robotCADFolder;
 
     if (new File(baseOutputDir).exists()) {
         copy {
@@ -182,7 +181,7 @@ task robotCADToAdvantageScope (type: Copy) {
             into outputDir
         }
     } else {
-        yellAtConsole("${outputDir} could not be found! Please ensure you have AdvantageScope properly downloaded.")
+        yellAtConsole("${baseOutputDir} could not be found! Please ensure you have AdvantageScope properly downloaded.")
     }
 }
 
