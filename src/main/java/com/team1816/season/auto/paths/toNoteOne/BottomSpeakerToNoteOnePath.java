@@ -16,7 +16,7 @@ public class BottomSpeakerToNoteOnePath extends DynamicAutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return updateWaypoints(List.of(
-                new Pose2d(0.77, 4.4, Rotation2d.fromDegrees(0)),
+                new Pose2d(0.70, 4.35, Rotation2d.fromDegrees(0)),
                 new Pose2d(1.87, 5.58, Rotation2d.fromDegrees(67)),
                 new Pose2d(2.96, 6.99, Rotation2d.fromDegrees(0))
         ));
