@@ -153,6 +153,23 @@ jsonSchema2Pojo {
     )
 }
 
+task robotCADToAdvantageScope (type: Copy) {
+    String currUserName = System.getProperty("user.name");
+    String customAssetFolder = "AdvantageScope/userAssets/Robot_${projectDir.getName()}"
+
+    String outputDir;
+    if (DefaultNativePlatform.currentOperatingSystem.isMacOsX()) {
+        outputDir = "/Users/${currUserName}/Library/Application Support/AdvantageScope/userAssets/Robot_Zen"
+    } else {
+        //outputDir = ""TODO
+    }  //Could add Debian linux if anyone wants to take a crack at it
+
+    copy {
+        from "${project.rootDir}/Robot_Zen"
+        into outputDir
+    }
+}
+
 task runAlpha(type: JavaExec) {
     String jniDir = "${project.buildDir}/jni/release"
     environment "PATH", jniDir
@@ -221,6 +238,8 @@ task runZodiac(type: JavaExec) {
     classpath = files(jar)
     jvmArgs "-Djava.library.path=${jniDir}"
 }
+
+
 
 processResources {
     include '**/*.config.yml'
