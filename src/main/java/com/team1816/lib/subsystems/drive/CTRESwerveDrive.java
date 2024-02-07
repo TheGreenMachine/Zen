@@ -28,6 +28,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
+import edu.wpi.first.util.datalog.StructArrayLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
@@ -75,6 +76,9 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
 
     private ArrayList<DoubleLogEntry> desiredModuleStatesLogger;
     private ArrayList<DoubleLogEntry> actualModuleStatesLogger;
+
+    private StructArrayLogEntry<SwerveModuleState> desiredModuleStructLogger;
+    private StructArrayLogEntry<SwerveModuleState> actualModuleStructLogger;
 
     // module indices
     public static final int kFrontLeft = 0;
@@ -132,6 +136,9 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
             gyroPitchLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Pitch");
             gyroRollLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Roll");
             controlRequestLogger = new StringLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/ControlRequest");
+
+            desiredModuleStructLogger = StructArrayLogEntry.create(DataLogManager.getLog(), "Drivetrain/Swerve/DesiredStateStruct", SwerveModuleState.struct);
+            actualModuleStructLogger = StructArrayLogEntry.create(DataLogManager.getLog(), "Drivetrain/Swerve/ActualStateStruct", SwerveModuleState.struct);
 
             desiredModuleStatesLogger = new ArrayList<>();
             actualModuleStatesLogger = new ArrayList<>();
@@ -233,15 +240,19 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
             var actualModuleStates = train.getState().ModuleStates;
 
             for (int i = 0; i < 4; i++) {
-                var optimizedDesiredState = SwerveModuleState.optimize(desiredModuleStates[i], robotState.fieldToVehicle.getRotation());
-                //TODO may need to discretize if the difference in speeds is too severe - may just be free spin though
-                desiredModuleStatesLogger.get(i * 2).append(optimizedDesiredState.speedMetersPerSecond);
-                desiredModuleStatesLogger.get(i * 2 + 1).append(optimizedDesiredState.angle.getDegrees());
+                desiredModuleStates[i] = SwerveModuleState.optimize(desiredModuleStates[i], robotState.fieldToVehicle.getRotation());
+                desiredModuleStatesLogger.get(i * 2).append(desiredModuleStates[i].speedMetersPerSecond);
+                desiredModuleStatesLogger.get(i * 2 + 1).append(desiredModuleStates[i].angle.getDegrees());
 
                 if (actualModuleStates!= null) {
                     actualModuleStatesLogger.get(i * 2).append(actualModuleStates[i].speedMetersPerSecond);
                     actualModuleStatesLogger.get(i * 2 + 1).append(actualModuleStates[i].angle.getDegrees());
                 }
+            }
+
+            desiredModuleStructLogger.append(desiredModuleStates);
+            if (actualModuleStates != null) {
+                actualModuleStructLogger.append(actualModuleStates);
             }
 
         }
@@ -258,7 +269,6 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
         resetOdometry(pose);
         startingPose = pose;
         chassisSpeed = new ChassisSpeeds();
-        isBraking = false;
         isBraking = false;
     }
 
@@ -385,7 +395,9 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
                     DriveConversions.metersToRotations(desiredStates[i].speedMetersPerSecond);
         }
 
-        train.setControl(autoRequest.withModuleStates(desiredStates));
+        request = autoRequest.withModuleStates(desiredStates);
+
+        train.setControl(request);
     }
 
     public double[] getDesiredSpeeds() {

@@ -306,6 +306,8 @@ public class RobotFactory {
                 .withSteerMotorId(azimuthMotor.id)
                 .withSteerMotorGearRatio(getConstant("drivetrain", "azimuthGearRatio", 12.8))
                 .withSteerMotorInverted(azimuthMotor.invertMotor)
+                .withSteerFrictionVoltage(0)
+                .withDriveFrictionVoltage(0)
                 ;
 
         return moduleConfig;
