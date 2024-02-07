@@ -2,14 +2,16 @@ package com.team1816.lib.hardware.components.gyro;
 
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.configs.MountPoseConfigs;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.team1816.lib.util.Util;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 /**
  * A class that interfaces with the Pigeon2
  */
-public class Pigeon2Impl extends Pigeon2 implements IPigeonIMU {
+public class Pigeon2Impl extends Pigeon2 implements IPigeonIMU, IPigeon2 {
 
     /**
      * Instantiates a Pigeon2Impl
@@ -113,6 +115,15 @@ public class Pigeon2Impl extends Pigeon2 implements IPigeonIMU {
                 super.getPitch(),
                 super.getYaw(),
                 super.getAngularVelocityZWorld() //Used internally in Pigeon2
+        );
+    }
+
+    @Override
+    public void configMountPose(Rotation2d angle) {
+        super.getConfigurator().apply(new MountPoseConfigs()
+                .withMountPoseYaw(angle.getDegrees())
+                .withMountPosePitch(0)
+                .withMountPoseRoll(0)
         );
     }
 }

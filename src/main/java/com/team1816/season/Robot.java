@@ -1,5 +1,6 @@
 package com.team1816.season;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.Injector;
 import com.team1816.lib.PlaylistManager;
@@ -481,7 +482,7 @@ public class Robot extends TimedRobot {
         drive.setTeleopInputs(
                     -inputHandler.getActionAsDouble("throttle"),
                     -inputHandler.getActionAsDouble("strafe"),
-                     inputHandler.getActionAsDouble("rotation")
+                     -inputHandler.getActionAsDouble("rotation")
         );
     }
 

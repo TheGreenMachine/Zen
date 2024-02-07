@@ -12,12 +12,12 @@ subsystems:
                 motorType: TalonFX
                 motorName: FRDr
                 id: 2
-                invertMotor: false
+                invertMotor: true
             RLDr:
                 motorType: TalonFX
                 motorName: BLDr
                 id: 3
-                invertMotor: true
+                invertMotor: false
             RRDr:
                 motorType: TalonFX
                 motorName: BRDr
@@ -56,60 +56,81 @@ subsystems:
                     drive: FLDr
                     azimuth: FLAz
                     canCoder: FLEnc
+                    invertX: false
+                    invertY: false
                     constants:
-                        encoderOffset: 0.646240  #remote, -0.155273 rotor
+                        encoderOffset: 0.35302734375
+                        couplingRatio: 3.589
+                        freeSpin12VRPS: 100
                         invertSensorPhase: 1
                 frontRight:
                     drive: FRDr
                     azimuth: FRAz
                     canCoder: FREnc
+                    invertX: false
+                    invertY: true
                     constants:
-                        encoderOffset: 0.775391 #remote, -0.091797 rotor
+                        encoderOffset: -0.27294921875  #remote, -0.091797 rotor
+                        couplingRatio: 3.572
+                        freeSpin12VRPS: 101
                         invertSensorPhase: 1
                 backLeft:
                     drive: RLDr
                     azimuth: RLAz
                     canCoder: RLEnc
+                    invertX: true
+                    invertY: false
                     constants:
-                        encoderOffset: 0.444824 #remote, 0.049316 rotor
+                        encoderOffset: -0.009033203125 #feedback
+                        couplingRatio: 3.576
+                        freeSpin12VRPS: 104
                         invertSensorPhase: 1
                 backRight:
                     drive: RRDr
                     azimuth: RRAz
                     canCoder: RREnc
+                    invertX: true
+                    invertY: true
                     constants:
-                        encoderOffset: 0.511475  #remote, -0.309082 rotor
+                        encoderOffset: -0.015  #remote, -0.309082 rotor
+                        couplingRatio: 3.579
+                        freeSpin12VRPS: 102
                         invertSensorPhase: 1
             drivePID:
                 slot0:
-                    kP: 0.008007
-                    kI: 0.002001
-                    kD: 0.000400
-                    kF: 0.009989
+                    kP: 0.0065
+                    kI: 0
+                    kD: 0.00005
+                    kF: 0.00925
             azimuthPID:
                 slot0:
-                    kP: 7.6
-                    kI: 1.5
-                    kD: 0.15
+                    kP: 7
+                    kI: 0
+                    kD: 0
                     kF: 0
                     allowableError: 5
         constants:
             ## Positional Configurations ##
-            maxVelTicks100ms: 12275.7 # ticks per 100ms
+            maxVelTicks100ms: 12275.7 # ticks per 100ms, not changing bcs used in ghostmotor
             openLoopRampRate: 0.1
             isSwerve: 1
-            encPPR: 14641
-            azimuthEncPPR: 4096
+            isCTRSwerve: 1
+            encPPR: 14641 #TODO
+            azimuthEncPPR: 4096 #TODO
             wheelDiameter: 4
             kTrackScrubFactor: 1.0
             ## Velocity Constraints ##
-            maxRotVel: 18
-            trackWidth: 19.75 # inches
-            wheelbaseLength: 19.75 # inches
-            maxVelOpenLoop: 3.75 # meters/s (3.6)
+            maxRotVel: 2 #Pi radians/sec
+            trackWidth: 22.75 # inches
+            wheelbaseLength: 22.75 # inches
+            maxVelOpenLoop: 2.5 # meters/s (3.6)
+            maxVel12VMPS: 4.9
             maxVelPathFollowing: 3.1 # meters/s (3.6)
             maxAccel: 1.5 # meters/s^2 (2.54)
             isDemoMode: 0
+            ## Swerve Characterization ##
+            driveGearRatio: 6.75 # L2
+            azimuthGearRatio: 12.8 # MK4
             ## Auto Balance ##
             autoBalanceDivider: 50
             autoBalanceThreshold: 2.5 # degrees
@@ -160,4 +181,5 @@ constants:
     ## General ##
     teleopFieldCentric: 1 # 0 or 1
     kLooperDt: .025 # seconds
+    isProLicensed: 0
     resetFactoryDefaults: 1 # whether motors get reset to factory default

@@ -1,15 +1,12 @@
 package com.team1816.lib.hardware.components.motor;
 
 import com.ctre.phoenix.motorcontrol.*;
-import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
-import com.team1816.lib.Injector;
 import com.team1816.lib.hardware.components.motor.configurations.*;
-import com.team1816.lib.hardware.factory.RobotFactory;
 import com.team1816.lib.util.ConfigurationTranslator;
 import com.team1816.lib.util.Util;
 import com.team1816.lib.util.logUtil.GreenLogger;
@@ -157,7 +154,9 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void setNeutralMode(NeutralMode neutralMode) {
-        super.setNeutralMode(neutralMode == NeutralMode.Brake ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+        configurator.apply( //DON'T USE super.setInverted(), it doesn't refresh!
+                configs.MotorOutput.withNeutralMode(neutralMode == NeutralMode.Brake ? NeutralModeValue.Brake : NeutralModeValue.Coast)
+        );
     }
 
     @Override
@@ -167,7 +166,9 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
 
     @Override
     public void setInverted(boolean isInverted) {
-        configurator.apply(configs.MotorOutput.withInverted(isInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive));
+        configurator.apply( //DON'T USE super.setInverted(), it doesn't refresh!
+                configs.MotorOutput.withInverted(isInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive)
+        );
     }
 
     @Override
@@ -274,12 +275,12 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     }
 
     @Override
-    public void setSensorPosition(double sensorPosition, int closedLoopSlotID) {
-        setSensorPosition(sensorPosition, 0, Constants.kLongCANTimeoutMs);
+    public void setSensorPosition(double sensorPosition) {
+        setSensorPosition(sensorPosition, Constants.kLongCANTimeoutMs);
     }
 
     @Override
-    public void setSensorPosition(double sensorPosition, int closedLoopSlotID, int timeoutMs) {
+    public void setSensorPosition(double sensorPosition, int timeoutMs) {
         super.setPosition(sensorPosition, timeoutMs / 1000.0);
     }
 
@@ -365,7 +366,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     }
 
     @Override
-    public void selectPIDSlot(int pidSlotID, int closedLoopSlotID) {
+    public void selectPIDSlot(int pidSlotID) {
         velocity.withSlot(pidSlotID);
         position.withSlot(pidSlotID);
         motionMagic.withSlot(pidSlotID);
@@ -411,17 +412,6 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
         );
     }
 
-    public void configContinuousWrap(boolean enable) {
-        configs.ClosedLoopGeneral.ContinuousWrap = enable;
-        configurator.apply(configs);
-    }
-
-    public void configRotorOffset(double offset) {
-        configurator.apply(
-          configs.Feedback.withFeedbackRotorOffset(offset)
-        );
-    }
-
     @Override
     public boolean hasResetOccurred() {
         return super.hasResetOccurred();
@@ -442,7 +432,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
         isFollower = true;
         // ONLY works to follow other Talons.
         if (leader.get_MotorType() != MotorType.TalonFX) {
-           GreenLogger.log("TalonFX cannot follow non-Talon motor " + leader.getName() + " of type " + leader.get_MotorType());
+            GreenLogger.log("TalonFX cannot follow non-Talon motor " + leader.getName() + " of type " + leader.get_MotorType());
         } else {
             following.withMasterID(leader.getDeviceID());
             set(GreenControlMode.FOLLOWER, 0);
@@ -455,7 +445,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
         configs.Audio
                 .withBeepOnConfig(Constants.kSoundOnConfig)
                 .withBeepOnBoot(Constants.kSoundOnConfig)
-                .withAllowMusicDurDisable(true); //TODO change to yml?
+                .withAllowMusicDurDisable(Constants.kMusicEnabled);
         configurator.apply(configs);
     }
 

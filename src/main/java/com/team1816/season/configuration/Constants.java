@@ -36,7 +36,7 @@ public class Constants {
     /**
      * Git Hash
      */
-    public static final String kGitHash = factory.getGitHash();
+    public static final String kGitHash = RobotFactory.getGitHash();
 
     /**
      * CAN Timeouts
@@ -107,7 +107,8 @@ public class Constants {
     public static double kMaxProximityThresholdCentimeters = 25; // cm
     public static double preTargetDistance = 0.4; // m
 
-    public static boolean kSoundOnConfig = factory.getConstant("soundOnConfig") > 0;
+    public static final boolean kSoundOnConfig = factory.getConstant("soundOnConfig") > 0;
+    public static final boolean kMusicEnabled = factory.getConstant("enableMusic") > 0;
 
 
     /**
