@@ -548,7 +548,7 @@ public abstract class Drive
             orchestraInit = true;
         }
         // zeroing ypr - (-90) pigeon is mounted with the "y" axis facing forward
-        this.resetPigeon(Rotation2d.fromDegrees(90));
+        this.resetPigeon(Rotation2d.fromDegrees(-90));
 
         zeroSensors(getPose());
     }

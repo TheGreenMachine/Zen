@@ -7,7 +7,7 @@ subsystems:
                 motorType: TalonFX
                 motorName: FLDr
                 id: 1
-                invertMotor: true
+                invertMotor: false
             FRDr:
                 motorType: TalonFX
                 motorName: FRDr
@@ -22,7 +22,7 @@ subsystems:
                 motorType: TalonFX
                 motorName: BRDr
                 id: 4
-                invertMotor: false
+                invertMotor: true
             FLAz:
                 motorType: TalonFX
                 motorName: FLAz
@@ -81,7 +81,7 @@ subsystems:
                     invertX: true
                     invertY: false
                     constants:
-                        encoderOffset: -0.009033203125 #feedback
+                        encoderOffset: -0.44 #feedback
                         couplingRatio: 3.576
                         freeSpin12VRPS: 104
                         invertSensorPhase: 1
@@ -92,7 +92,7 @@ subsystems:
                     invertX: true
                     invertY: true
                     constants:
-                        encoderOffset: -0.015  #remote, -0.309082 rotor
+                        encoderOffset: -0.009033203125  #remote, -0.309082 rotor
                         couplingRatio: 3.579
                         freeSpin12VRPS: 102
                         invertSensorPhase: 1
@@ -144,8 +144,8 @@ subsystems:
             intakeMotor:
                 motorType: TalonFX
                 motorName: intakeMotor
-                id: 10
-                invertMotor: false
+                id: 16
+                invertMotor: true
         pidConfig:
             slot0:
                 kP: 0.043
@@ -153,12 +153,12 @@ subsystems:
                 kD: 0.00001
                 kF: 0.0099
         constants:
-            intakeSpeed:  -0.5
+            intakeSpeed:  -0.7
             outtakeSpeed: 0.25
 infrastructure:
     canBusName: highSpeed
     ## Power Distribution ##
-    pdId: 25
+    pdId: 1
     pdIsRev: true
     ## Pneumatics Control ##
     compressorEnabled: false
