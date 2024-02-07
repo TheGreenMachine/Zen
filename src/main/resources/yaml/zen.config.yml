@@ -70,7 +70,7 @@ subsystems:
                     invertX: false
                     invertY: true
                     constants:
-                        encoderOffset: 0.27294921875
+                        encoderOffset: -0.27294921875
                         couplingRatio: 3.572
                         freeSpin12VRPS: 101
                         invertSensorPhase: 1
@@ -81,7 +81,7 @@ subsystems:
                     invertX: true
                     invertY: false
                     constants:
-                        encoderOffset: 0.44
+                        encoderOffset: -0.44
                         couplingRatio: 3.576
                         freeSpin12VRPS: 104
                         invertSensorPhase: 1
@@ -92,7 +92,7 @@ subsystems:
                     invertX: true
                     invertY: true
                     constants:
-                        encoderOffset: 0.009033203125
+                        encoderOffset: -0.009033203125
                         couplingRatio: 3.579
                         freeSpin12VRPS: 102
                         invertSensorPhase: 1
@@ -139,7 +139,7 @@ subsystems:
         constants:
             useMultiTargetOdometry: 1
     collector:
-        implemented: true
+        implemented: false
         motors:
             intakeMotor:
                 motorType: TalonFX
