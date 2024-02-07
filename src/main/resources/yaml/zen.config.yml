@@ -153,8 +153,8 @@ subsystems:
                 kD: 0.00001
                 kF: 0.0099
         constants:
-            intakeSpeed:  -80
-            outtakeSpeed: 20
+            intakeSpeed:  -0.5
+            outtakeSpeed: 0.25
 infrastructure:
     canBusName: highSpeed
     ## Power Distribution ##

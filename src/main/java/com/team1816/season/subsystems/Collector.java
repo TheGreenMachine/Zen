@@ -116,7 +116,7 @@ public class Collector extends Subsystem {
                     desiredIntakeVelocity = outtakeSpeed;
                 }
             }
-            intakeMotor.set(GreenControlMode.VELOCITY_CONTROL, desiredIntakeVelocity);
+            intakeMotor.set(GreenControlMode.PERCENT_OUTPUT, desiredIntakeVelocity);
         }
     }
 
