@@ -215,11 +215,14 @@ public class Shooter extends Subsystem {
      */
     @Override
     public void writeToHardware() {
-        if(shootingSpeaker) {
+        if (shootingSpeaker) {
             desiredRollerState = ROLLER_STATE.SHOOT_SPEAKER;
-            if(ROLLER_STATE.SHOOT_SPEAKER.inDesiredSpeedRange(actualRollerVelocity)) {
+            if (ROLLER_STATE.SHOOT_SPEAKER.inDesiredSpeedRange(actualRollerVelocity)) {
                 desiredFeederState = FEEDER_STATE.SHOOT_SPEAKER;
-                shootingSpeaker = false;
+                if (!isBeamBreakTriggered()) {
+                    shootingSpeaker = false;
+                    setDesiredState(ROLLER_STATE.STOP, FEEDER_STATE.STOP, PIVOT_STATE.STOW);
+                }
             }
         }
         if (rollerOutputsChanged) {
@@ -253,7 +256,7 @@ public class Shooter extends Subsystem {
                     desiredFeederVelocity = feederAmpShootSpeed;
                 }
                 case TRANSFER -> {
-                    if(noteSensor.get())
+                    if (!isBeamBreakTriggered())
                         desiredFeederVelocity = feederIntakeSpeed;
                 }
             }
