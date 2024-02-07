@@ -59,9 +59,9 @@ subsystems:
                     invertX: false
                     invertY: false
                     constants:
-                        encoderOffset: -0.159
+                        encoderOffset: 0.35302734375
                         couplingRatio: 3.548
-                        freeSpin12VRPS: 109
+                        freeSpin12VRPS: 100
                         invertSensorPhase: 1
                 frontRight:
                     drive: FRDr
@@ -70,9 +70,9 @@ subsystems:
                     invertX: false
                     invertY: true
                     constants:
-                        encoderOffset: -0.79  #remote, -0.091797 rotor
+                        encoderOffset: -0.27294921875  #remote, -0.091797 rotor
                         couplingRatio: 3.571
-                        freeSpin12VRPS: 108
+                        freeSpin12VRPS: 101
                         invertSensorPhase: 1
                 backLeft:
                     drive: RLDr
@@ -81,9 +81,9 @@ subsystems:
                     invertX: true
                     invertY: false
                     constants:
-                        encoderOffset: 0.528310546875 #feedback
+                        encoderOffset: -0.009033203125 #feedback
                         couplingRatio: 3.551
-                        freeSpin12VRPS: 110
+                        freeSpin12VRPS: 104
                         invertSensorPhase: 1
                 backRight:
                     drive: RRDr
@@ -94,7 +94,7 @@ subsystems:
                     constants:
                         encoderOffset: -0.015  #remote, -0.309082 rotor
                         couplingRatio: 3.593
-                        freeSpin12VRPS: 109
+                        freeSpin12VRPS: 102
                         invertSensorPhase: 1
             drivePID:
                 slot0:
@@ -123,8 +123,8 @@ subsystems:
             maxRotVel: 2 #Pi radians/sec
             trackWidth: 22.75 # inches
             wheelbaseLength: 22.75 # inches
-            maxVelOpenLoop: 5 # meters/s (3.6)
-            maxVel12VMPS: 5.2
+            maxVelOpenLoop: 2.5 # meters/s (3.6)
+            maxVel12VMPS: 4.9
             maxVelPathFollowing: 3.1 # meters/s (3.6)
             maxAccel: 1.5 # meters/s^2 (2.54)
             isDemoMode: 0
