@@ -46,7 +46,7 @@ public class PathUtil {
             );
         }
         /* Configures trajectory constraints */
-        TrajectoryConfig config = new TrajectoryConfig(kMaxVelocity * 0.25, kMaxAccel);
+        TrajectoryConfig config = new TrajectoryConfig(kMaxVelocity, kMaxAccel);
         var baseTrajectory = edu.wpi.first.math.trajectory.TrajectoryGenerator.generateTrajectory(
             waypointsMeters,
             config
@@ -81,7 +81,7 @@ public class PathUtil {
             );
         }
         /* Configures trajectory constraints */
-        TrajectoryConfig config = new TrajectoryConfig(kMaxVelocity * 0.25, kMaxAccel);
+        TrajectoryConfig config = new TrajectoryConfig(kMaxVelocity, kMaxAccel);
         config.setStartVelocity(initial.vxMetersPerSecond);
         config.setEndVelocity(0);
         var baseTrajectory = edu.wpi.first.math.trajectory.TrajectoryGenerator.generateTrajectory(

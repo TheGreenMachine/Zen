@@ -190,6 +190,7 @@ public class Robot extends TimedRobot {
                     Util.cleanLogFiles();
                 }
                 DriverStation.startDataLog(DataLogManager.getLog(), false);
+                SignalLogger.start();
             }
 
             drive = (Injector.get(Drive.Factory.class)).getInstance();

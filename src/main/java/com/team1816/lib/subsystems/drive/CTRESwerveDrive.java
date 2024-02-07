@@ -259,6 +259,7 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
         startingPose = pose;
         chassisSpeed = new ChassisSpeeds();
         isBraking = false;
+        isBraking = false;
     }
 
     @Override
@@ -277,7 +278,7 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
         if (controlState != ControlState.OPEN_LOOP) {
             GreenLogger.log("Switching to open loop.");
             controlState = ControlState.OPEN_LOOP;
-            fieldCentricRequest.withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
+//            fieldCentricRequest.withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
         }
     }
 

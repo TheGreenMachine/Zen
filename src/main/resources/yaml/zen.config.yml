@@ -125,8 +125,8 @@ subsystems:
             wheelbaseLength: 22.75 # inches
             maxVelOpenLoop: 2.5 # meters/s (3.6)
             maxVel12VMPS: 4.9
-            maxVelPathFollowing: 3.1 # meters/s (3.6)
-            maxAccel: 1.5 # meters/s^2 (2.54)
+            maxVelPathFollowing: 3 # meters/s (3.6)
+            maxAccel: 1 # meters/s^2 (2.54)
             isDemoMode: 0
             ## Swerve Characterization ##
             driveGearRatio: 6.75 # L2
