@@ -60,7 +60,7 @@ subsystems:
                     invertY: false
                     constants:
                         encoderOffset: 0.35302734375
-                        couplingRatio: 3.548
+                        couplingRatio: 3.589
                         freeSpin12VRPS: 100
                         invertSensorPhase: 1
                 frontRight:
@@ -71,7 +71,7 @@ subsystems:
                     invertY: true
                     constants:
                         encoderOffset: -0.27294921875  #remote, -0.091797 rotor
-                        couplingRatio: 3.571
+                        couplingRatio: 3.572
                         freeSpin12VRPS: 101
                         invertSensorPhase: 1
                 backLeft:
@@ -82,7 +82,7 @@ subsystems:
                     invertY: false
                     constants:
                         encoderOffset: -0.009033203125 #feedback
-                        couplingRatio: 3.551
+                        couplingRatio: 3.576
                         freeSpin12VRPS: 104
                         invertSensorPhase: 1
                 backRight:
@@ -93,7 +93,7 @@ subsystems:
                     invertY: true
                     constants:
                         encoderOffset: -0.015  #remote, -0.309082 rotor
-                        couplingRatio: 3.593
+                        couplingRatio: 3.579
                         freeSpin12VRPS: 102
                         invertSensorPhase: 1
             drivePID:
