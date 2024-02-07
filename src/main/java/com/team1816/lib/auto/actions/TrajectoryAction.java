@@ -103,13 +103,14 @@ public class TrajectoryAction implements AutoAction {
             );
             thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
+
             command =
                 new SwerveControllerCommand(
                     trajectory,
                     drive::getPose,
                     swerveKinematics,
-                    new PIDController(kPXController, 0, kDXController),
-                    new PIDController(kPYController, 0, kDYController),
+                    new PIDController(10, 0, 0), //TODO validate these with DDay
+                    new PIDController(10, 0, 0.1),
                     thetaController,
                     ((SwerveDrivetrain) drive)::getTrajectoryHeadings,
                     ((SwerveDrivetrain) drive)::setModuleStates
