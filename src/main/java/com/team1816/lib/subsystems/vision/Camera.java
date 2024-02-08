@@ -2,6 +2,7 @@ package com.team1816.lib.subsystems.vision;
 
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.subsystems.Subsystem;
+import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -11,10 +12,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.RobotBase;
 import jakarta.inject.Inject;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.simulation.PhotonCameraSim;
+import org.photonvision.simulation.SimCameraProperties;
+import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 import java.util.Optional;
@@ -32,7 +37,9 @@ public class Camera extends Subsystem{
     /**
      * Components
      */
+    private VisionSystemSim visionSim;
     private PhotonCamera cam;
+    private PhotonCameraSim cameraSim;
     private final PhotonPoseEstimator photonEstimator;
 
     /**
@@ -46,6 +53,13 @@ public class Camera extends Subsystem{
     public Camera(Infrastructure inf, RobotState rs){
         super(NAME, inf, rs);
         cam = new PhotonCamera(CAM);
+        cam.setDriverMode(true);
+        cameraSim = new PhotonCameraSim(cam);
+
+        visionSim = new VisionSystemSim("SimVision");
+
+        visionSim.addCamera(cameraSim, Constants.kCameraMountingOffset3D);
+
         photonEstimator = new PhotonPoseEstimator(kTagLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cam, robotToCam);
         photonEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
     }
@@ -67,8 +81,6 @@ public class Camera extends Subsystem{
         boolean newResult = Math.abs(latestTimestamp - lastEstTimestamp) > 1e-5;
 
         if (newResult) lastEstTimestamp = latestTimestamp;
-
-        System.out.println(visionEst);
 
         return visionEst;
     }
@@ -106,6 +118,9 @@ public class Camera extends Subsystem{
 
     @Override
     public void readFromHardware() {
+        if (RobotBase.isSimulation()) {
+            visionSim.update(robotState.fieldToVehicle);
+        }
         // Correct pose estimate with vision measurements
         var visionEst = getEstimatedGlobalPose();
         visionEst.ifPresent(

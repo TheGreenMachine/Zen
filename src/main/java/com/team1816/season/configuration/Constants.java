@@ -80,10 +80,11 @@ public class Constants {
         Constants.EmptyRotation2d
     );
 
-    public static final Translation3d kCameraMountingOffset3D = new Translation3d(
+    public static final Transform3d kCameraMountingOffset3D = new Transform3d(
           0.20,
           0.19,
-          Constants.kCameraHeightMeters
+          Constants.kCameraHeightMeters,
+          new Rotation3d()
     );
 
     public static final Translation2d kTurretMountingOffset = new Translation2d(
