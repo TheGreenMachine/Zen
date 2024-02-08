@@ -19,6 +19,8 @@ public abstract class DynamicAutoPath extends AutoPath{
     public boolean hasCachedWaypoints = false;
     public List<Rotation2d> headings;
 
+    protected boolean isReversed;
+
     public List<Pose2d> updateWaypoints(List<Pose2d> waypoints) {
         if (!hasCachedWaypoints) {
             this.waypoints = waypoints;
@@ -52,6 +54,7 @@ public abstract class DynamicAutoPath extends AutoPath{
      * @return The Path with reversed waypoints
      */
     public DynamicAutoPath withInversedWaypoints() {
+        this.isReversed = true;
         this.waypoints = getInverseWaypoints();
         this.headings = new ArrayList<>(getWaypointHeadings());
         Collections.reverse(headings);
