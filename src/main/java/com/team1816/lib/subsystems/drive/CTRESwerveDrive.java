@@ -71,6 +71,7 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
     private double maxVel12MPS = factory.getConstant(NAME,"maxVel12VMPS");
     private double driveScalar = kMaxVelOpenLoopMeters / maxVel12MPS;
 
+
     /**
      * Logging
      */
@@ -125,7 +126,7 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
         fieldCentricRequest = new SwerveRequest.FieldCentric()
                 .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
                 .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagic)
-                .withDeadband(0.15 * kMaxVelOpenLoopMeters)
+                .withDeadband(0.1 * kMaxVelOpenLoopMeters)
                 .withRotationalDeadband(0.1 * kMaxAngularSpeed);
 
         autoRequest = new ModuleRequest()
@@ -133,7 +134,9 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
 
         request = fieldCentricRequest;
 
-        configMotors();
+//        if(RobotBase.isReal()) {
+//            configMotors();
+//        }
         if (Constants.kLoggingRobot) {
             temperatureLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/moduleTemps");
             desStatesLogger = new DoubleArrayLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/DesiredSpeeds");
@@ -299,8 +302,12 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
 
     @Override
     public void setTeleopInputs(double throttle, double strafe, double rotation) {
+
         double inputScale = new Translation2d(throttle, strafe).getNorm();
 
+        if (inputScale < 0.15) {
+            inputScale = 0;
+        }
         request = fieldCentricRequest
                 .withVelocityX(throttle * inputScale * maxVel12MPS * driveScalar)
                 .withVelocityY(strafe * inputScale * maxVel12MPS * driveScalar)
@@ -433,21 +440,4 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
         };
     }
 
-    private void configMotors() {
-        TalonFXConfiguration motorConfig = new TalonFXConfiguration();
-        TalonFXConfigurator motorConfigurator;
-
-        for (int i = 0; i < 4; i++) {
-            var swerveModule = train.getModule(i);
-            //Drive Configs
-            motorConfigurator = swerveModule.getDriveMotor().getConfigurator();
-            motorConfigurator.refresh(motorConfig);
-            motorConfigurator.apply(motorConfig.withOpenLoopRamps(new OpenLoopRampsConfigs().withDutyCycleOpenLoopRampPeriod(factory.getConstant(NAME, "openLoopRampRate"))));
-
-            //Steer configs
-            motorConfigurator = swerveModule.getSteerMotor().getConfigurator();
-            motorConfigurator.refresh(motorConfig);
-            motorConfigurator.apply(motorConfig.withClosedLoopRamps(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(factory.getConstant(NAME, "openLoopRampRate"))));
-        }
-    }
 }

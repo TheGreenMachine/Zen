@@ -75,7 +75,7 @@ public class AutoModeManager {
         autoMode = new DriveStraightMode();
         autoModeThread = new Thread(autoMode::run);
         desiredAuto = DesiredAuto.DRIVE_STRAIGHT;
-        teamColor = Color.RED;
+        teamColor = Color.BLUE;
         robotState.allianceColor = teamColor;
     }
 
