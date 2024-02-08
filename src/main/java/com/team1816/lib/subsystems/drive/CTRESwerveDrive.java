@@ -300,12 +300,6 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
         final double finalRotation;
 
         if (robotState.snapDirection != RobotState.SnappingDirection.NO_SNAP) {
-            double rotVal = MathUtil.inputModulus(
-                    robotState.driverRelativeFieldToVehicle.getRotation().getDegrees(),
-                    robotState.allianceColor == Color.BLUE ? -180 : 180,
-                    robotState.allianceColor == Color.BLUE ? 180 : -180
-            );
-
             /*
             * NOTE(Michael): The number 40 being used for the divisor may seem arbitrary
             * and it is. It's a number pulled directly from Zero's implementation
@@ -319,7 +313,7 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
             */
             finalRotation =
                     MathUtil.inputModulus(
-                            (robotState.snapDirection.value - rotVal),
+                            (robotState.snapDirection.value - pigeon.getYawValue()),
                             robotState.allianceColor == Color.BLUE ? -180 : 180,
                             robotState.allianceColor == Color.BLUE ?  180 : -180
                     ) / 40.0d;
