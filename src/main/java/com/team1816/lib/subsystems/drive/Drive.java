@@ -170,7 +170,7 @@ public abstract class Drive
         2 * Math.PI;
 
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
-        kMaxAngularSpeed,
+        kMaxAngularSpeed * Math.PI,
         kMaxAngularAccelerationRadiansPerSecondSquared
     );
     public double maxAllowablePoseError = factory.getConstant(
