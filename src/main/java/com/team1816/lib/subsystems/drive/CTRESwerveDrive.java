@@ -1,16 +1,11 @@
 package com.team1816.lib.subsystems.drive;
 
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
-import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.team1816.lib.Infrastructure;
@@ -25,7 +20,6 @@ import com.team1816.lib.util.team254.DriveSignal;
 import com.team1816.season.Robot;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -50,7 +44,7 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
     /**
      * Components
      */
-    private SwerveDrivetrain train;
+    private final SwerveDrivetrain train;
     private SwerveModuleConstants[] swerveModules;
 
     /**
@@ -64,7 +58,6 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
      */
     private SwerveRequest request;
     private SwerveRequest.FieldCentric fieldCentricRequest;
-    private SwerveRequest.FieldCentricFacingAngle fieldCentricFacingAngle;
     private ModuleRequest autoRequest;
 
     /**
@@ -93,8 +86,6 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
     public static final int kFrontRight = 1;
     public static final int kBackLeft = 2;
     public static final int kBackRight = 3;
-
-    private double actualRotationDegree = RobotState.SnappingDirection.NO_SNAP.value;
 
     @Inject
     public CTRESwerveDrive(LedManager lm, Infrastructure inf, RobotState rs) {
@@ -133,18 +124,6 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
                 .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagic)
                 .withDeadband(0.1 * kMaxVelOpenLoopMeters)
                 .withRotationalDeadband(0.1 * kMaxAngularSpeed);
-
-        fieldCentricFacingAngle = new SwerveRequest.FieldCentricFacingAngle()
-                .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
-                .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagic)
-                .withDeadband(0.11 * kMaxVelOpenLoopMeters)
-                .withRotationalDeadband(0.92 * kMaxAngularSpeed);
-
-        fieldCentricFacingAngle.HeadingController = new PhoenixPIDController(
-                7,
-                0,
-                0
-        );
 
         autoRequest = new ModuleRequest()
                 .withModuleStates(new SwerveModuleState[4]);
@@ -192,14 +171,6 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
             chassisSpeed = swerveKinematics.toChassisSpeeds(train.getState().ModuleStates);
         }
 
-        actualRotationDegree = pigeon.getYawValue();
-        // For whatever reason, this value can go into the 1000's
-        actualRotationDegree = MathUtil.inputModulus(
-                robotState.driverRelativeFieldToVehicle.getRotation().getDegrees(),
-                robotState.allianceColor == Color.BLUE ? -180 : 180,
-                robotState.allianceColor == Color.BLUE ? 180 : -180
-        );
-
         for (int i = 0; i < 4; i++) {
             motorTemperatures.get(i).refresh();
         }
@@ -241,21 +212,6 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
         robotState.drivetrainTemp = motorTemperatures.get(0).getValueAsDouble();
 
         robotState.vehicleToFloorProximityCentimeters = infrastructure.getMaximumProximity();
-
-        var difference = Math.abs(robotState.snapDirection.value - actualRotationDegree + 180);
-
-//        System.out.println("What would be the difference at each?");
-//        System.out.println("Front: " + Math.abs(RobotState.SnappingDirection.FRONT.value - actualRotationDegree + 180));
-//        System.out.println("Back: " + Math.abs(RobotState.SnappingDirection.BACK.value - actualRotationDegree + 180));
-//        System.out.println("Left: " + Math.abs(RobotState.SnappingDirection.LEFT.value - actualRotationDegree + 180));
-//        System.out.println("Right: " + Math.abs(RobotState.SnappingDirection.RIGHT.value - actualRotationDegree + 180));
-//
-//        if (difference < 3) {
-//            robotState.snapDirection = RobotState.SnappingDirection.NO_SNAP;
-//        }
-
-//        swerveOdometry.update(Rotation2d.fromDegrees(train.getPigeon2().getAngle()));
-
 
         if (Constants.kLoggingDrivetrain) {
             double[] desiredSpeeds = getDesiredSpeeds();
@@ -350,10 +306,23 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
                     robotState.allianceColor == Color.BLUE ? 180 : -180
             );
 
-            finalRotation = (((robotState.snapDirection.value + 180) - actualRotationDegree) % 360 - 180) / 40.0d;
-
-//            if (Math.abs(finalRotation) < 0.03)
-//                robotState.snapDirection = RobotState.SnappingDirection.NO_SNAP;
+            /*
+            * NOTE(Michael): The number 40 being used for the divisor may seem arbitrary
+            * and it is. It's a number pulled directly from Zero's implementation
+            * of their snapping system (Snap to Driver and Snap to Human Player).
+            *
+            * I don't know what the number may mean, but I suspect it has to do with
+            * turning the remainder robot angle into a full rotation.
+            *
+            * I believe it could be a configurable number in YAML, but that's up to
+            * you to decide. For now, the number 40 works pretty well.
+            */
+            finalRotation =
+                    MathUtil.inputModulus(
+                            (robotState.snapDirection.value - rotVal),
+                            robotState.allianceColor == Color.BLUE ? -180 : 180,
+                            robotState.allianceColor == Color.BLUE ?  180 : -180
+                    ) / 40.0d;
         } else {
             finalRotation = passedRotation;
         }
