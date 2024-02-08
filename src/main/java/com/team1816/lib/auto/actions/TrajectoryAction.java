@@ -96,9 +96,9 @@ public class TrajectoryAction implements AutoAction {
                 );
         } else if (drive instanceof SwerveDrivetrain) {
             var thetaController = new ProfiledPIDController(
-                kPThetaController,
-                kDThetaController,
+                10,
                 0,
+                1,
                 kThetaControllerConstraints
             );
             thetaController.enableContinuousInput(-Math.PI, Math.PI);
@@ -108,8 +108,8 @@ public class TrajectoryAction implements AutoAction {
                     trajectory,
                     drive::getPose,
                     swerveKinematics,
-                    new PIDController(10, 0, 0), //TODO validate these with DDay
-                    new PIDController(1, 0, 0),
+                    new PIDController(10, 0, 0), //Translational X Controller
+                    new PIDController(10, 0, 0), //Translational Y Controller
                     thetaController,
                     ((SwerveDrivetrain) drive)::getTrajectoryHeadings,
                     ((SwerveDrivetrain) drive)::setModuleStates
