@@ -1,6 +1,10 @@
 package com.team1816.lib.subsystems.drive;
 
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
+import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
@@ -21,6 +25,7 @@ import com.team1816.lib.util.team254.DriveSignal;
 import com.team1816.season.Robot;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -126,13 +131,13 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
         fieldCentricRequest = new SwerveRequest.FieldCentric()
                 .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
                 .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagic)
-                .withDeadband(0.15 * kMaxVelOpenLoopMeters)
+                .withDeadband(0.1 * kMaxVelOpenLoopMeters)
                 .withRotationalDeadband(0.1 * kMaxAngularSpeed);
 
         fieldCentricFacingAngle = new SwerveRequest.FieldCentricFacingAngle()
                 .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
                 .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagic)
-                .withDeadband(0.15 * kMaxVelOpenLoopMeters)
+                .withDeadband(0.11 * kMaxVelOpenLoopMeters)
                 .withRotationalDeadband(0.92 * kMaxAngularSpeed);
 
         fieldCentricFacingAngle.HeadingController = new PhoenixPIDController(
@@ -187,7 +192,7 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
             chassisSpeed = swerveKinematics.toChassisSpeeds(train.getState().ModuleStates);
         }
 
-        actualRotationDegree = train.getPigeon2().getRotation2d().getDegrees();
+        actualRotationDegree = pigeon.getYawValue();
         // For whatever reason, this value can go into the 1000's
         actualRotationDegree = MathUtil.inputModulus(actualRotationDegree, -180, 180);
 
@@ -320,7 +325,12 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
 
     @Override
     public void setTeleopInputs(double throttle, double strafe, double rotation) {
+
         double inputScale = new Translation2d(throttle, strafe).getNorm();
+
+        if (inputScale < 0.15) {
+            inputScale = 0;
+        }
 
         if (robotState.snapDirection != RobotState.SnappingDirection.NO_SNAP) {
             request = fieldCentricFacingAngle
@@ -331,7 +341,7 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
             request = fieldCentricRequest
                     .withVelocityX(throttle * inputScale * maxVel12MPS * driveScalar)
                     .withVelocityY(strafe * inputScale * maxVel12MPS * driveScalar)
-                    .withRotationalRate(rotation * kMaxAngularSpeed * Math.PI); //These will need to be multiplied, but i want to test first
+                    .withRotationalRate(rotation * kMaxAngularSpeed * Math.PI);
         }
 
         if (Constants.kLoggingDrivetrain) {
