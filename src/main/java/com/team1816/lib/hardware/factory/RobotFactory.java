@@ -156,7 +156,7 @@ public class RobotFactory {
             reportGhostWarning("Motor", subsystemName, name);
             motor =
                 MotorFactory.createGhostMotor(
-                    (int) (getConstant(subsystemName, "maxVelTicks100ms", 1, false)),
+                    (getConstant(subsystemName, "maxVelOpenLoop", 1, false)),
                     0,
                     name,
                     subsystem
