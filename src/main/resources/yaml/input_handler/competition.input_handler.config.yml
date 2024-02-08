@@ -7,19 +7,26 @@ driver:
             vertical: throttle
         right:
             horizontal: rotation
-    buttonpad:
-        b: brakeMode
-        a: autoTargetAlign
-        y: toggleIntakeOuttake
+#    buttonpad:
+#        b: brakeMode
+#        a: autoTargetAlign
+#        y: toggleIntakeOuttake
     axes:
         rightTrigger: slowMode
     buttons:
         start: zeroPose
-    dpad:
-        up: forwardRotate
-        down: backwardRotate
-        left: leftRotate
-        right: rightRotate
+#    dpad:
+#        up: forwardRotate
+#        down: backwardRotate
+#        left: leftRotate
+#        right: rightRotate
+
+    # Testing
+    buttonpad:
+        a: forwardRotate
+        b: backwardRotate
+        x: leftRotate
+        y: rightRotate
 operator:
     controllerType: Xbox
     rumble: false

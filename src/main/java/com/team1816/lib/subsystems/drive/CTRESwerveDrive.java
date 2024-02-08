@@ -194,7 +194,11 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
 
         actualRotationDegree = pigeon.getYawValue();
         // For whatever reason, this value can go into the 1000's
-        actualRotationDegree = MathUtil.inputModulus(actualRotationDegree, -180, 180);
+        actualRotationDegree = MathUtil.inputModulus(
+                robotState.driverRelativeFieldToVehicle.getRotation().getDegrees(),
+                robotState.allianceColor == Color.BLUE ? -180 : 180,
+                robotState.allianceColor == Color.BLUE ? 180 : -180
+        );
 
         for (int i = 0; i < 4; i++) {
             motorTemperatures.get(i).refresh();
@@ -238,11 +242,17 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
 
         robotState.vehicleToFloorProximityCentimeters = infrastructure.getMaximumProximity();
 
-        var difference = Math.abs(robotState.snapDirection.value - actualRotationDegree);
+        var difference = Math.abs(robotState.snapDirection.value - actualRotationDegree + 180);
 
-        if (difference < 3) {
-            robotState.snapDirection = RobotState.SnappingDirection.NO_SNAP;
-        }
+//        System.out.println("What would be the difference at each?");
+//        System.out.println("Front: " + Math.abs(RobotState.SnappingDirection.FRONT.value - actualRotationDegree + 180));
+//        System.out.println("Back: " + Math.abs(RobotState.SnappingDirection.BACK.value - actualRotationDegree + 180));
+//        System.out.println("Left: " + Math.abs(RobotState.SnappingDirection.LEFT.value - actualRotationDegree + 180));
+//        System.out.println("Right: " + Math.abs(RobotState.SnappingDirection.RIGHT.value - actualRotationDegree + 180));
+//
+//        if (difference < 3) {
+//            robotState.snapDirection = RobotState.SnappingDirection.NO_SNAP;
+//        }
 
 //        swerveOdometry.update(Rotation2d.fromDegrees(train.getPigeon2().getAngle()));
 
@@ -324,28 +334,37 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
     }
 
     @Override
-    public void setTeleopInputs(double throttle, double strafe, double rotation) {
-
+    public void setTeleopInputs(double throttle, double strafe, double passedRotation) {
         double inputScale = new Translation2d(throttle, strafe).getNorm();
 
         if (inputScale < 0.15) {
             inputScale = 0;
         }
 
+        final double finalRotation;
+
         if (robotState.snapDirection != RobotState.SnappingDirection.NO_SNAP) {
-            request = fieldCentricFacingAngle
-                    .withVelocityX(throttle * inputScale * maxVel12MPS * driveScalar)
-                    .withVelocityY(strafe * inputScale * maxVel12MPS * driveScalar)
-                    .withTargetDirection(Rotation2d.fromDegrees(robotState.snapDirection.value));
+            double rotVal = MathUtil.inputModulus(
+                    robotState.driverRelativeFieldToVehicle.getRotation().getDegrees(),
+                    robotState.allianceColor == Color.BLUE ? -180 : 180,
+                    robotState.allianceColor == Color.BLUE ? 180 : -180
+            );
+
+            finalRotation = (((robotState.snapDirection.value + 180) - actualRotationDegree) % 360 - 180) / 40.0d;
+
+            if (Math.abs(finalRotation) < 0.03)
+                robotState.snapDirection = RobotState.SnappingDirection.NO_SNAP;
         } else {
-            request = fieldCentricRequest
-                    .withVelocityX(throttle * inputScale * maxVel12MPS * driveScalar)
-                    .withVelocityY(strafe * inputScale * maxVel12MPS * driveScalar)
-                    .withRotationalRate(rotation * kMaxAngularSpeed * Math.PI);
+            finalRotation = passedRotation;
         }
 
+        request = fieldCentricRequest
+                .withVelocityX(throttle * inputScale * maxVel12MPS * driveScalar)
+                .withVelocityY(strafe * inputScale * maxVel12MPS * driveScalar)
+                .withRotationalRate(finalRotation * kMaxAngularSpeed * Math.PI);
+
         if (Constants.kLoggingDrivetrain) {
-            inputLogger.append(new double[] {throttle, strafe, rotation});
+            inputLogger.append(new double[] {throttle, strafe, finalRotation});
         }
         setOpenLoop(null);
     }
