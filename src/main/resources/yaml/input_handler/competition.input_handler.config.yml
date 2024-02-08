@@ -15,6 +15,11 @@ driver:
         rightTrigger: slowMode
     buttons:
         start: zeroPose
+    dpad:
+        up: forwardRotate
+        down: backwardRotate
+        left: leftRotate
+        right: rightRotate
 operator:
     controllerType: Xbox
     rumble: false

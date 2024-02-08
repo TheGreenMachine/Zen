@@ -11,6 +11,7 @@ import com.team1816.lib.input_handler.controlOptions.ActionState;
 import com.team1816.lib.loops.Looper;
 import com.team1816.lib.subsystems.LedManager;
 import com.team1816.lib.subsystems.SubsystemLooper;
+import com.team1816.lib.subsystems.drive.CTRESwerveDrive;
 import com.team1816.lib.subsystems.drive.Drive;
 import com.team1816.lib.subsystems.vision.Camera;
 import com.team1816.lib.util.Util;
@@ -218,6 +219,38 @@ public class Robot extends TimedRobot {
                     ActionState.PRESSED,
                     () -> {
 
+                    }
+            );
+
+            inputHandler.listenAction(
+                    "forwardRotate",
+                    ActionState.PRESSED,
+                    () -> {
+                        robotState.snapDirection = RobotState.SnappingDirection.FRONT;
+                    }
+            );
+
+            inputHandler.listenAction(
+                    "backwardRotate",
+                    ActionState.PRESSED,
+                    () -> {
+                        robotState.snapDirection = RobotState.SnappingDirection.BACK;
+                    }
+            );
+
+            inputHandler.listenAction(
+                    "leftRotate",
+                    ActionState.PRESSED,
+                    () -> {
+                        robotState.snapDirection = RobotState.SnappingDirection.LEFT;
+                    }
+            );
+
+            inputHandler.listenAction(
+                    "rightRotate",
+                    ActionState.PRESSED,
+                    () -> {
+                        robotState.snapDirection = RobotState.SnappingDirection.RIGHT;
                     }
             );
 

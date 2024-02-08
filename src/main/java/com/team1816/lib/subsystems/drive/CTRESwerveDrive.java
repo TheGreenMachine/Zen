@@ -6,6 +6,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.team1816.lib.Infrastructure;
@@ -20,6 +21,7 @@ import com.team1816.lib.util.team254.DriveSignal;
 import com.team1816.season.Robot;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -57,6 +59,7 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
      */
     private SwerveRequest request;
     private SwerveRequest.FieldCentric fieldCentricRequest;
+    private SwerveRequest.FieldCentricFacingAngle fieldCentricFacingAngle;
     private ModuleRequest autoRequest;
 
     /**
@@ -85,6 +88,8 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
     public static final int kFrontRight = 1;
     public static final int kBackLeft = 2;
     public static final int kBackRight = 3;
+
+    private double actualRotationDegree = RobotState.SnappingDirection.NO_SNAP.value;
 
     @Inject
     public CTRESwerveDrive(LedManager lm, Infrastructure inf, RobotState rs) {
@@ -123,6 +128,18 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
                 .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagic)
                 .withDeadband(0.15 * kMaxVelOpenLoopMeters)
                 .withRotationalDeadband(0.1 * kMaxAngularSpeed);
+
+        fieldCentricFacingAngle = new SwerveRequest.FieldCentricFacingAngle()
+                .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
+                .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagic)
+                .withDeadband(0.15 * kMaxVelOpenLoopMeters)
+                .withRotationalDeadband(0.92 * kMaxAngularSpeed);
+
+        fieldCentricFacingAngle.HeadingController = new PhoenixPIDController(
+                7,
+                0,
+                0
+        );
 
         autoRequest = new ModuleRequest()
                 .withModuleStates(new SwerveModuleState[4]);
@@ -170,6 +187,10 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
             chassisSpeed = swerveKinematics.toChassisSpeeds(train.getState().ModuleStates);
         }
 
+        actualRotationDegree = train.getPigeon2().getRotation2d().getDegrees();
+        // For whatever reason, this value can go into the 1000's
+        actualRotationDegree = MathUtil.inputModulus(actualRotationDegree, -180, 180);
+
         for (int i = 0; i < 4; i++) {
             motorTemperatures.get(i).refresh();
         }
@@ -211,6 +232,12 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
         robotState.drivetrainTemp = motorTemperatures.get(0).getValueAsDouble();
 
         robotState.vehicleToFloorProximityCentimeters = infrastructure.getMaximumProximity();
+
+        var difference = Math.abs(robotState.snapDirection.value - actualRotationDegree);
+
+        if (difference < 3) {
+            robotState.snapDirection = RobotState.SnappingDirection.NO_SNAP;
+        }
 
 //        swerveOdometry.update(Rotation2d.fromDegrees(train.getPigeon2().getAngle()));
 
@@ -288,7 +315,6 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
         if (controlState != ControlState.OPEN_LOOP) {
             GreenLogger.log("Switching to open loop.");
             controlState = ControlState.OPEN_LOOP;
-//            fieldCentricRequest.withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
         }
     }
 
@@ -296,10 +322,17 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
     public void setTeleopInputs(double throttle, double strafe, double rotation) {
         double inputScale = new Translation2d(throttle, strafe).getNorm();
 
-        request = fieldCentricRequest
-                .withVelocityX(throttle * inputScale * maxVel12MPS * driveScalar)
-                .withVelocityY(strafe * inputScale * maxVel12MPS * driveScalar)
-                .withRotationalRate(rotation * kMaxAngularSpeed * Math.PI); //These will need to be multiplied, but i want to test first
+        if (robotState.snapDirection != RobotState.SnappingDirection.NO_SNAP) {
+            request = fieldCentricFacingAngle
+                    .withVelocityX(throttle * inputScale * maxVel12MPS * driveScalar)
+                    .withVelocityY(strafe * inputScale * maxVel12MPS * driveScalar)
+                    .withTargetDirection(Rotation2d.fromDegrees(robotState.snapDirection.value));
+        } else {
+            request = fieldCentricRequest
+                    .withVelocityX(throttle * inputScale * maxVel12MPS * driveScalar)
+                    .withVelocityY(strafe * inputScale * maxVel12MPS * driveScalar)
+                    .withRotationalRate(rotation * kMaxAngularSpeed * Math.PI); //These will need to be multiplied, but i want to test first
+        }
 
         if (Constants.kLoggingDrivetrain) {
             inputLogger.append(new double[] {throttle, strafe, rotation});

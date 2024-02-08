@@ -50,6 +50,25 @@ public class RobotState {
     public Quaternion inertialReferenceOrientationState = Constants.EmptyQuaternion; // utilizes active multiplication
 
     /**
+     * Snapping Mode
+     */
+    public enum SnappingDirection {
+        FRONT(0),
+        BACK(180),
+        LEFT(90),
+        RIGHT(-90),
+        NO_SNAP(-360); // Some magic value.
+
+        public double value;
+
+        SnappingDirection(double value) {
+            this.value = value;
+        }
+    }
+
+    public SnappingDirection snapDirection = SnappingDirection.NO_SNAP;
+
+    /**
      * Orchestrator states
      */
 
