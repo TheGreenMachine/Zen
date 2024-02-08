@@ -1,6 +1,10 @@
 package com.team1816.lib.subsystems.drive;
 
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
+import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
@@ -129,6 +133,7 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
 
         request = fieldCentricRequest;
 
+        configMotors();
         if (Constants.kLoggingRobot) {
             temperatureLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/moduleTemps");
             desStatesLogger = new DoubleArrayLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/DesiredSpeeds");
@@ -426,5 +431,23 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
             case 3 -> "backRight";
             default -> "unknown";
         };
+    }
+
+    private void configMotors() {
+        TalonFXConfiguration motorConfig = new TalonFXConfiguration();
+        TalonFXConfigurator motorConfigurator;
+
+        for (int i = 0; i < 4; i++) {
+            var swerveModule = train.getModule(i);
+            //Drive Configs
+            motorConfigurator = swerveModule.getDriveMotor().getConfigurator();
+            motorConfigurator.refresh(motorConfig);
+            motorConfigurator.apply(motorConfig.withOpenLoopRamps(new OpenLoopRampsConfigs().withDutyCycleOpenLoopRampPeriod(factory.getConstant(NAME, "openLoopRampRate"))));
+
+            //Steer configs
+            motorConfigurator = swerveModule.getSteerMotor().getConfigurator();
+            motorConfigurator.refresh(motorConfig);
+            motorConfigurator.apply(motorConfig.withClosedLoopRamps(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(factory.getConstant(NAME, "openLoopRampRate"))));
+        }
     }
 }

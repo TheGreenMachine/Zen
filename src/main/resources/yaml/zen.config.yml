@@ -120,7 +120,7 @@ subsystems:
             wheelDiameter: 4
             kTrackScrubFactor: 1.0
             ## Velocity Constraints ##
-            maxRotVel: 2 #Pi radians/sec
+            maxRotVel: 0.8 #Pi radians/sec
             trackWidth: 22.75 # inches
             wheelbaseLength: 22.75 # inches
             maxVelOpenLoop: 2.5 # meters/s (3.6)
@@ -139,7 +139,7 @@ subsystems:
         constants:
             useMultiTargetOdometry: 1
     collector:
-        implemented: false
+        implemented: true
         motors:
             intakeMotor:
                 motorType: TalonFX
