@@ -180,27 +180,33 @@ public class Robot extends TimedRobot {
                 var robotName = System.getenv("ROBOT_NAME");
                 if (robotName == null) robotName = "default";
                 var logFileDir = "/home/lvuser/";
+                String OS_NAME = System.getProperty("os.name").toLowerCase();
                 // if there is a USB drive use it
                 if (Files.exists(Path.of("/media/sda1"))) {
                     logFileDir = "/media/sda1/";
                 }
+
+                // Characterize SignalLogger
+                SignalLogger.setPath(logFileDir);
+                SignalLogger.enableAutoLogging(DriverStation.isFMSAttached());
+
                 if (RobotBase.isSimulation()) {
-                    if (System.getProperty("os.name").toLowerCase().contains("win")) {
+                    if (OS_NAME.contains("win")) {
                         logFileDir = System.getenv("temp") + "\\";
                     } else {
                         logFileDir = System.getProperty("user.dir") + "/";
                     }
-                }
 
-                // Characterize SignalLogger
-                SignalLogger.setPath(logFileDir + "/CTRELogs"); //IMPORTANT: CAN ONLY OPEN .hoot FILES ON WINDOWS
-                SignalLogger.enableAutoLogging(DriverStation.isFMSAttached());
-                SignalLogger.start();
+                    if (!OS_NAME.contains("mac")) { //Can't open .hoot on mac so won't clog logs up in sim
+                        SignalLogger.start();
+                    }
+                }
 
                 // start logging
                 DataLogManager.start(logFileDir, "", Constants.kLooperDt);
                 if (RobotBase.isReal()) {
                     Util.cleanLogFiles();
+                    SignalLogger.start();
                 }
                 DriverStation.startDataLog(DataLogManager.getLog(), false);
             }

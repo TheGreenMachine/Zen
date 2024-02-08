@@ -72,7 +72,8 @@ public class Util {
         try (Stream<Path> stream = Files.list(Paths.get(logPath))) {
             var files = stream
                 .filter(file -> !Files.isDirectory(file)) //No folders
-                .filter(file -> file.toString().endsWith(".wpilog") ) //Only .wpiLog
+                .filter(file -> file.toString().endsWith(".wpilog") || file.toString().endsWith(".hoot")) //Only .wpiLog & hoot
+                    //TODO I'm not sure what the hoot match log file format is so we need to find that and include it in the second filter
                 .filter(file -> file.toString().chars().filter(ch -> ch == '_').count() == 2 )
                 .filter(file -> {
                     try {
