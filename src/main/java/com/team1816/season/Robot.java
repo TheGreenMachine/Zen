@@ -185,6 +185,12 @@ public class Robot extends TimedRobot {
                         logFileDir = System.getProperty("user.dir") + "/";
                     }
                 }
+
+                // Characterize SignalLogger
+                SignalLogger.setPath(logFileDir + "/CTRELogs");
+                SignalLogger.enableAutoLogging(DriverStation.isFMSAttached());
+                SignalLogger.start();
+
                 // start logging
                 DataLogManager.start(logFileDir, "", Constants.kLooperDt);
                 if (RobotBase.isReal()) {
