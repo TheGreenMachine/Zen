@@ -57,6 +57,8 @@ public class Camera extends Subsystem{
 
         if (RobotBase.isSimulation()) {
             cameraSim = new PhotonCameraSim(cam);
+            cameraSim.enableDrawWireframe(true);
+            cameraSim.setWireframeResolution(1);
             visionSim = new VisionSystemSim("SimVision");
             visionSim.addCamera(cameraSim, Constants.kCameraMountingOffset3D);
             visionSim.addAprilTags(kTagLayout);
