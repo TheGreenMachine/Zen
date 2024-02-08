@@ -222,35 +222,31 @@ public class Robot extends TimedRobot {
                     }
             );
 
-            inputHandler.listenAction(
+            inputHandler.listenActionPressAndRelease(
                     "forwardRotate",
-                    ActionState.PRESSED,
-                    () -> {
-                        robotState.snapDirection = RobotState.SnappingDirection.FRONT;
+                    (pressed) -> {
+                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.FRONT : RobotState.SnappingDirection.NO_SNAP;
                     }
             );
 
-            inputHandler.listenAction(
+            inputHandler.listenActionPressAndRelease(
                     "backwardRotate",
-                    ActionState.PRESSED,
-                    () -> {
-                        robotState.snapDirection = RobotState.SnappingDirection.BACK;
+                    (pressed) -> {
+                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.BACK : RobotState.SnappingDirection.NO_SNAP;
                     }
             );
 
-            inputHandler.listenAction(
+            inputHandler.listenActionPressAndRelease(
                     "leftRotate",
-                    ActionState.PRESSED,
-                    () -> {
-                        robotState.snapDirection = RobotState.SnappingDirection.LEFT;
+                    (pressed) -> {
+                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.LEFT : RobotState.SnappingDirection.NO_SNAP;
                     }
             );
 
-            inputHandler.listenAction(
+            inputHandler.listenActionPressAndRelease(
                     "rightRotate",
-                    ActionState.PRESSED,
-                    () -> {
-                        robotState.snapDirection = RobotState.SnappingDirection.RIGHT;
+                    (pressed) -> {
+                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.RIGHT : RobotState.SnappingDirection.NO_SNAP;
                     }
             );
 

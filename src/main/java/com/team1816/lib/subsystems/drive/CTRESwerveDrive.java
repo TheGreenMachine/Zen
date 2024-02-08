@@ -352,8 +352,8 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
 
             finalRotation = (((robotState.snapDirection.value + 180) - actualRotationDegree) % 360 - 180) / 40.0d;
 
-            if (Math.abs(finalRotation) < 0.03)
-                robotState.snapDirection = RobotState.SnappingDirection.NO_SNAP;
+//            if (Math.abs(finalRotation) < 0.03)
+//                robotState.snapDirection = RobotState.SnappingDirection.NO_SNAP;
         } else {
             finalRotation = passedRotation;
         }
