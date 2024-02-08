@@ -59,6 +59,7 @@ public class Camera extends Subsystem{
         visionSim = new VisionSystemSim("SimVision");
 
         visionSim.addCamera(cameraSim, Constants.kCameraMountingOffset3D);
+        visionSim.addAprilTags(kTagLayout);
 
         photonEstimator = new PhotonPoseEstimator(kTagLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cam, robotToCam);
         photonEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
