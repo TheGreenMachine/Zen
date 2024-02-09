@@ -31,7 +31,7 @@ public class LedManager extends Subsystem {
     public static final String NAME = "ledmanager";
 
     private static final boolean RAVE_ENABLED =
-        factory.getConstant(NAME, "raveEnabled") > 0;
+        factory.getConstant(NAME, "raveEnabled", 0) > 0;
     private static final double RAVE_SPEED = factory.getConstant(NAME, "raveSpeed", 1.0);
     private static final int MAX = (int) factory.getConstant(NAME, "maxLevel", 255);
     private static final int LED_STRIP_COUNT = (int) factory.getConstant(NAME, "ledStripCount", 0);

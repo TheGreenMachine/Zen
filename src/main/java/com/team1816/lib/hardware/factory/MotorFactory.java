@@ -115,12 +115,12 @@ public class MotorFactory {
     }
 
     public static IGreenMotor createGhostMotor(
-            int maxVelTicks100ms,
+            double maxVelRotationsPerSec,
             int absInitOffset,
             String name,
             SubsystemConfig subsystem
     ) {
-        IGreenMotor motor = new GhostMotor(maxVelTicks100ms, absInitOffset, name);
+        IGreenMotor motor = new GhostMotor(maxVelRotationsPerSec, absInitOffset, name);
         configMotor(motor, name, subsystem, null, -1);
         return motor;
     }

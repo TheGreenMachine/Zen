@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 
+import java.util.Arrays;
+
 import static java.lang.Double.NaN;
 
 public class GhostMotor implements IGreenMotor {
@@ -17,7 +19,7 @@ public class GhostMotor implements IGreenMotor {
     /**
      * Characterization
      */
-    private final int maxVelTicks100ms;
+    private final double maxVelRotationsPerSec;
     private final int absInitOffset;
     private int fwdLimit;
     private int revLimit;
@@ -36,9 +38,9 @@ public class GhostMotor implements IGreenMotor {
 
     protected double lastUpdate = 0;
 
-    public GhostMotor(int maxTickVel, int absInitOffset, String motorName) {
+    public GhostMotor(double maxVelMPS, int absInitOffset, String motorName) {
         this.absInitOffset = absInitOffset;
-        maxVelTicks100ms = maxTickVel;
+        this.maxVelRotationsPerSec = DriveConversions.metersToRotations(maxVelMPS);
         name = motorName;
     }
 
@@ -79,10 +81,6 @@ public class GhostMotor implements IGreenMotor {
 
     @Override
     public void set(GreenControlMode Mode, double demand) {
-        if (Mode == GreenControlMode.VELOCITY_CONTROL) {
-            demand = DriveConversions.metersPerSecondToTicksPer100ms(DriveConversions.rotationsToMeters(demand));
-        }
-
         processSet(Mode, demand);
     }
 
@@ -115,35 +113,37 @@ public class GhostMotor implements IGreenMotor {
 
         // whether motor needs to calculate new numbers - this
         double timeNow = Timer.getFPGATimestamp();
-        double dtBetweenCallsMS = (timeNow - lastUpdate) * 1000;
-        if (dtBetweenCallsMS < Robot.robotDt * 0.75) {
+        double dtBetweenCallsSec = (timeNow - lastUpdate);
+
+        if (dtBetweenCallsSec < (Robot.robotDt / 1000) * 0.75) {
             lastUpdate = timeNow;
             return;
         }
+
         lastUpdate = timeNow;
 
         // setting actual output
         if (controlMode == GreenControlMode.PERCENT_OUTPUT) {
             actualOutput[0] = desiredDemand[0];
-            actualOutput[1] = desiredDemand[0] * maxVelTicks100ms;
-            actualOutput[2] = lastPos + (actualOutput[1] / 100 * dtBetweenCallsMS);
+            actualOutput[1] = desiredDemand[0] * maxVelRotationsPerSec;
+            actualOutput[2] = lastPos + (actualOutput[1] * dtBetweenCallsSec);
         } else if (controlMode == GreenControlMode.VELOCITY_CONTROL) {
-            actualOutput[0] = desiredDemand[1] / maxVelTicks100ms;
+            actualOutput[0] = desiredDemand[1] / maxVelRotationsPerSec;
             actualOutput[1] = desiredDemand[1];
-            actualOutput[2] = lastPos + (actualOutput[1] / 100 * dtBetweenCallsMS);
+            actualOutput[2] = lastPos + (actualOutput[1] * dtBetweenCallsSec);
         } else if (controlMode == GreenControlMode.POSITION_CONTROL) {
-            double desaturatedVel = Math.signum(desiredDemand[2] - lastPos) * Math.min(maxVelTicks100ms, Math.abs(desiredDemand[2] - lastPos) / dtBetweenCallsMS * 100);
+            double desaturatedVel = Math.signum(desiredDemand[2] - lastPos) * Math.min(maxVelRotationsPerSec, Math.abs(desiredDemand[2] - lastPos) / dtBetweenCallsSec);
 
-            actualOutput[0] = desaturatedVel / maxVelTicks100ms;
+            actualOutput[0] = desaturatedVel / maxVelRotationsPerSec;
             actualOutput[1] = desaturatedVel;
-            actualOutput[2] = lastPos + (actualOutput[1] / 100 * dtBetweenCallsMS);
+            actualOutput[2] = lastPos + (actualOutput[1] * dtBetweenCallsSec);
         } else if (controlMode == GreenControlMode.MOTION_MAGIC) {
             // not accounting for accel rn - just using motionMagicCruiseVel
-            double accelAccountedVel = Math.min(motionMagicCruiseVel, Math.abs(actualOutput[1]) + (motionMagicAccel / 100 * dtBetweenCallsMS));
-            double desaturatedVel = Math.signum(desiredDemand[2] - lastPos) * Math.min(accelAccountedVel, Math.abs(desiredDemand[2] - lastPos) / dtBetweenCallsMS * 100);
-            actualOutput[0] = desaturatedVel / maxVelTicks100ms;
+            double accelAccountedVel = Math.min(motionMagicCruiseVel, Math.abs(actualOutput[1]) + (motionMagicAccel * dtBetweenCallsSec));
+            double desaturatedVel = Math.signum(desiredDemand[2] - lastPos) * Math.min(accelAccountedVel, Math.abs(desiredDemand[2] - lastPos) / dtBetweenCallsSec);
+            actualOutput[0] = desaturatedVel / maxVelRotationsPerSec;
             actualOutput[1] = desaturatedVel;
-            actualOutput[2] = lastPos + (actualOutput[1] / 100 * dtBetweenCallsMS);
+            actualOutput[2] = lastPos + (actualOutput[1] / dtBetweenCallsSec);
         }
 
         if (usingLimit) {

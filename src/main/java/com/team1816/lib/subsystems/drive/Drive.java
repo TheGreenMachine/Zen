@@ -112,7 +112,7 @@ public abstract class Drive
     /**
      * Constants
      */
-    public static final double driveEncPPR = factory.getConstant(NAME, "encPPR"); // Distance calibration
+    public static final double driveEncPPR = factory.getConstant(NAME, "encPPR", 14641); // Distance calibration
 
     // Chassis characterization
     public static final double kDriveWheelTrackWidthInches = factory.getConstant(
@@ -127,7 +127,8 @@ public abstract class Drive
     );
     public static final double kDriveWheelDiameterInches = factory.getConstant(
         NAME,
-        "wheelDiameter"
+        "wheelDiameter",
+        4
     );
 
     // Conversions
@@ -142,7 +143,8 @@ public abstract class Drive
 
     public static double kTrackScrubFactor = factory.getConstant(
         NAME,
-        "kTrackScrubFactor"
+        "kTrackScrubFactor",
+        1
     );
 
     // Constraints
@@ -153,11 +155,13 @@ public abstract class Drive
     );
     public static final double kPathFollowingMaxVelMeters = factory.getConstant(
         NAME,
-        "maxVelPathFollowing"
+        "maxVelPathFollowing",
+        3
     );
     public static final double kMaxVelOpenLoopMeters = factory.getConstant(
         NAME,
-        "maxVelOpenLoop"
+        "maxVelOpenLoop",
+        3
     );
 
     public static final double kPXController = 1;
@@ -166,7 +170,7 @@ public abstract class Drive
     public static final double kDYController = 0;
     public static final double kPThetaController = 4;
     public static final double kDThetaController = 0;
-    public static final double kMaxAngularSpeed = factory.getConstant(NAME, "maxRotVel"); // rad/sec
+    public static final double kMaxAngularSpeed = factory.getConstant(NAME, "maxRotVel", 2); // rad/sec
     public static final double kMaxAngularAccelerationRadiansPerSecondSquared =
         2 * Math.PI;
 

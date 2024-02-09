@@ -23,8 +23,8 @@ public class DriveFactory implements Drive.Factory {
         if (mDrive == null) {
             boolean isImplemented = factory.getSubsystem(Drive.NAME).implemented;
             if (isImplemented) {
-                boolean isSwerve = factory.getConstant(Drive.NAME, "isSwerve") == 1;
-                boolean isCTRSwerve = factory.getConstant(Drive.NAME, "isCTRSwerve") == 1;
+                boolean isSwerve = factory.getConstant(Drive.NAME, "isSwerve", 0) == 1;
+                boolean isCTRSwerve = factory.getConstant(Drive.NAME, "isCTRSwerve", 0) == 1;
                 if (isSwerve) {
                     if (isCTRSwerve) {
                         mDrive = Injector.get(CTRESwerveDrive.class);

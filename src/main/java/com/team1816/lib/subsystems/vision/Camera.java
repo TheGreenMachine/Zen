@@ -71,7 +71,7 @@ public class Camera extends Subsystem {
         super(NAME, inf, rs);
         cameraEnabled = this.isImplemented();
 
-        usingMultiTargetOdometry = factory.getConstant(NAME, "useMultiTargetOdometry") > 0;
+        usingMultiTargetOdometry = factory.getConstant(NAME, "useMultiTargetOdometry", 0) > 0;
 
         if (cameraEnabled) {
             cam = new PhotonCamera("snakeyes");

@@ -160,7 +160,7 @@ public class RobotFactory {
             reportGhostWarning("Motor", subsystemName, name);
             motor =
                 MotorFactory.createGhostMotor(
-                    (int) (getConstant(subsystemName, "maxVelTicks100ms", 1, false)),
+                        (int) (getConstant(subsystemName, "maxVelOpenLoop", 1, false)),
                     0,
                     name,
                     subsystem
@@ -241,7 +241,7 @@ public class RobotFactory {
             if (subsystem.implemented) reportGhostWarning("Motor", subsystemName, name);
             followerMotor =
                 MotorFactory.createGhostMotor(
-                    (int) getConstant(subsystemName, "maxVelTicks100ms"),
+                    (int) getConstant(subsystemName, "maxVelOpenLoop", 1),
                     0,
                     name,
                     subsystem
@@ -270,7 +270,7 @@ public class RobotFactory {
 
         var canCoder = subsystem.canCoders.get(module.canCoder);
 
-        double moduleDistFromCenter = Units.inchesToMeters(getConstant("drivetrain", "wheelbaseLength") / 2); //this makes me sad
+        double moduleDistFromCenter = Units.inchesToMeters(getConstant("drivetrain", "wheelbaseLength", 22.75) / 2); //this makes me sad
         double moduleXDist = moduleDistFromCenter * (module.invertX ? -1 : 1);
         double moduleYDist = moduleDistFromCenter * (module.invertY ? -1 : 1);
 
@@ -290,7 +290,7 @@ public class RobotFactory {
                 .withCANcoderOffset(module.constants.get("encoderOffset"))
                 // General Motor
                 .withCouplingGearRatio(module.constants.get("couplingRatio"))
-                .withWheelRadius(getConstant("drivetrain", "wheelDiameter") / 2)
+                .withWheelRadius(getConstant("drivetrain", "wheelDiameter", 4) / 2)
                 .withLocationX(moduleXDist) //IMPORTANT: IF THIS IS NOT A SQUARE SWERVEDRIVE, THESE MUST BE DIFFERENT.
                 .withLocationY(moduleYDist)
                 // Drive Motor
@@ -461,10 +461,6 @@ public class RobotFactory {
         return false;
     }
 
-    public Double getConstant(String name) {
-        return getConstant(name, 0);
-    }
-
     public Map<String, Double> getConstants() {
         return config.constants;
     }
@@ -494,10 +490,6 @@ public class RobotFactory {
 
     public String getInputHandlerName() {
         return Objects.requireNonNullElse(config.inputHandler, "empty");
-    }
-
-    public double getConstant(String subsystemName, String name) {
-        return getConstant(subsystemName, name, 0.0);
     }
 
     public double getConstant(String subsystemName, String name, double defaultVal) {
@@ -607,7 +599,7 @@ public class RobotFactory {
             GreenLogger.log("Using old Pigeon for id: " + id);
             pigeon = new PigeonIMUImpl(id);
         }
-        if (getConstant("resetFactoryDefaults") > 0) {
+        if (getConstant("resetFactoryDefaults", 0) > 0) {
             pigeon.configFactoryDefaults();
             pigeon.set_StatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_1_General, 100);
             pigeon.set_StatusFramePeriod(PigeonIMU_StatusFrame.BiasedStatus_6_Accel, 100);
@@ -665,7 +657,7 @@ public class RobotFactory {
         );
     }
 
-    public enum PIDConfig {
+    private enum PIDConfig {
         Azimuth,
         Drive,
         Generic,

@@ -161,7 +161,7 @@ public class SwerveModule implements ISwerveModule {
      */
     public void update() {
         driveActualMPS =
-                DriveConversions.convertToMPS(driveMotor.getSensorVelocity(0), cacheReal);
+                DriveConversions.rotationsToMeters(driveMotor.getSensorVelocity(0));
         azimuthActualDeg =
                 DriveConversions.convertRotationsToDegrees(
                         azimuthMotor.getSensorPosition(0) -
@@ -331,7 +331,7 @@ public class SwerveModule implements ISwerveModule {
      */
     public boolean checkSystem() {
         boolean checkDrive = true;
-        double actualmaxVelTicks100ms = factory.getConstant(NAME, "maxVelTicks100ms"); // if this isn't calculated right this test will fail
+        double actualmaxVelTicks100ms = factory.getConstant(NAME, "maxVelTicks100ms", 12275.7); // if this isn't calculated right this test will fail
         driveMotor.set(GreenControlMode.PERCENT_OUTPUT, 0.2);
         Timer.delay(1);
         if (

@@ -358,12 +358,12 @@ public class SwerveDrive extends Drive implements EnhancedSwerveDrive, PidProvid
             );
         robotState.deltaVehicle = cs;
 
-        temperatureLogger.append(motorTemperatures[0]);
         robotState.drivetrainTemp = motorTemperatures[0];
 
         robotState.vehicleToFloorProximityCentimeters = infrastructure.getMaximumProximity();
 
         if (Constants.kLoggingDrivetrain) {
+            temperatureLogger.append(motorTemperatures[0]);
             drivetrainPoseLogger.append(new double[]{robotState.fieldToVehicle.getX(), robotState.fieldToVehicle.getY(), robotState.fieldToVehicle.getRotation().getDegrees()});
             drivetrainChassisSpeedsLogger.append(new double[]{robotState.deltaVehicle.vxMetersPerSecond, robotState.deltaVehicle.vyMetersPerSecond, robotState.deltaVehicle.omegaRadiansPerSecond});
             gyroPitchLogger.append(pigeon.getPitchValue());
