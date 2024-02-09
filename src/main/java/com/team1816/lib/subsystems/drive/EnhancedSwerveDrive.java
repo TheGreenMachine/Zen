@@ -6,7 +6,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 /**
  * Base interface for a swerve drivetrain. Consists of a list of swerve modules.
  */
-public interface SwerveDrivetrain extends TrackableDrivetrain {
+public interface EnhancedSwerveDrive extends TrackableDrivetrain {
     Rotation2d getTrajectoryHeadings();
 
     void setModuleStates(SwerveModuleState... desiredStates);

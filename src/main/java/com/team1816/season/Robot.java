@@ -218,39 +218,51 @@ public class Robot extends TimedRobot {
             inputHandler = Injector.get(InputHandler.class);
             DriverStation.silenceJoystickConnectionWarning(true);
 
-
             /** Driver Commands */
             inputHandler.listenAction(
-                    "DriverAction",
+                    "zeroPose",
                     ActionState.PRESSED,
-                    () -> {
-
-                    }
+                    () ->
+                            drive.zeroSensors(
+                                    robotState.allianceColor == Color.BLUE ?
+                                            Constants.kDefaultZeroingPose :
+                                            Constants.kFlippedZeroingPose
+                            )
             );
 
             inputHandler.listenActionPressAndRelease(
-                    "forwardRotate",
+                    "brakeMode",
+                    drive::setBraking
+            );
+
+            inputHandler.listenActionPressAndRelease(
+                    "turboMode",
+                    drive::setTurboMode
+            );
+
+            inputHandler.listenActionPressAndRelease(
+                    "snapFromDriver",
                     (pressed) -> {
                         robotState.snapDirection = pressed ? RobotState.SnappingDirection.FRONT : RobotState.SnappingDirection.NO_SNAP;
                     }
             );
 
             inputHandler.listenActionPressAndRelease(
-                    "backwardRotate",
+                    "snapToDriver",
                     (pressed) -> {
                         robotState.snapDirection = pressed ? RobotState.SnappingDirection.BACK : RobotState.SnappingDirection.NO_SNAP;
                     }
             );
 
             inputHandler.listenActionPressAndRelease(
-                    "leftRotate",
+                    "snapLeft",
                     (pressed) -> {
                         robotState.snapDirection = pressed ? RobotState.SnappingDirection.LEFT : RobotState.SnappingDirection.NO_SNAP;
                     }
             );
 
             inputHandler.listenActionPressAndRelease(
-                    "rightRotate",
+                    "snapRight",
                     (pressed) -> {
                         robotState.snapDirection = pressed ? RobotState.SnappingDirection.RIGHT : RobotState.SnappingDirection.NO_SNAP;
                     }
@@ -268,36 +280,7 @@ public class Robot extends TimedRobot {
                     }
             );
 
-            inputHandler.listenAction(
-                    "zeroPose",
-                    ActionState.PRESSED,
-                    () ->
-                            drive.zeroSensors(
-                                    robotState.allianceColor == Color.BLUE ?
-                                            Constants.kDefaultZeroingPose :
-                                            Constants.kFlippedZeroingPose
-                            )
-            );
-
-
             /** Operator Commands */
-            inputHandler.listenAction(
-                    "OperatorAction",
-                    ActionState.PRESSED,
-                    () -> {
-
-                    }
-            );
-
-            /** Buttonboard Commands */
-
-            inputHandler.listenAction(
-                    "ButtonBoardAction",
-                    ActionState.PRESSED,
-                    () -> {
-
-                    }
-            );
 
         } catch (Throwable t) {
             faulted = true;

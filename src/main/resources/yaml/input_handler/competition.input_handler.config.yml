@@ -13,13 +13,14 @@ driver:
         y: toggleIntakeOuttake
     axes:
         rightTrigger: slowMode
+        leftTrigger: turboMode
     buttons:
         start: zeroPose
     dpad:
-        up: forwardRotate
-        down: backwardRotate
-        left: leftRotate
-        right: rightRotate
+        up: snapFromDriver
+        down: snapToDriver
+        left: snapLeft
+        right: snapRight
 operator:
     controllerType: Xbox
     rumble: false

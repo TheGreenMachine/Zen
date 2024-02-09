@@ -1,6 +1,8 @@
 package com.team1816.lib.subsystems.drive;
 
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.AudioConfigs;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
@@ -10,9 +12,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.auto.Color;
-import com.team1816.lib.auto.Symmetry;
 import com.team1816.lib.hardware.PIDSlotConfiguration;
 import com.team1816.lib.hardware.components.gyro.Pigeon2Wrapper;
+import com.team1816.lib.hardware.factory.MotorFactory;
 import com.team1816.lib.subsystems.LedManager;
 import com.team1816.lib.util.driveUtil.DriveConversions;
 import com.team1816.lib.util.logUtil.GreenLogger;
@@ -37,15 +39,20 @@ import edu.wpi.first.wpilibj.RobotController;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A Class that implements CTRE's SwerveDriveTrain class
+ * @see SwerveDrivetrain
+ */
 @Singleton
-public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystems.drive.SwerveDrivetrain {
+public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
 
-    private final ArrayList<StatusSignal<Double>> motorTemperatures = new ArrayList<>();
     /**
      * Components
      */
     private final SwerveDrivetrain train;
     private SwerveModuleConstants[] swerveModules;
+    private TalonFX[] motors;
+    private final AudioConfigs audioConfigs = MotorFactory.getAudioConfigs();
 
     /**
      * Trajectory
@@ -58,6 +65,7 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
      */
     private SwerveRequest request;
     private SwerveRequest.FieldCentric fieldCentricRequest;
+    private SwerveRequest.SwerveDriveBrake brakeRequest;
     private ModuleRequest autoRequest;
 
     /**
@@ -65,8 +73,28 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
      */
     private SwerveDriveKinematics swerveKinematics;
 
-    private double maxVel12MPS = factory.getConstant(NAME,"maxVel12VMPS");
-    private double driveScalar = kMaxVelOpenLoopMeters / maxVel12MPS;
+    // module indices
+    public static final int kFrontLeft = 0;
+    public static final int kFrontRight = 1;
+    public static final int kBackLeft = 2;
+    public static final int kBackRight = 3;
+
+    private static final double maxVel12MPS = factory.getConstant(NAME,"maxVel12VMPS");
+
+    private double driveScalar;
+    private static final double normalDriveScalar = kMaxVelOpenLoopMeters / maxVel12MPS;
+    private static final double slowDriveScalar = normalDriveScalar * factory.getConstant(NAME, "slowModeScalar");
+    private static final double turboDriveScalar = normalDriveScalar * factory.getConstant(NAME, "turboModeScalar");
+
+    private double rotationScalar;
+    private static final double slowRotationScalar = factory.getConstant(NAME, "slowModeScalar");
+    private static final double turboRotationScalar = factory.getConstant(NAME, "turboModeScalar");
+
+    private SPEED_MODE currentSpeedMode;
+
+    private final double driveDeadband = factory.getConstant(NAME, "driveDeadband");
+    private final double rotationalDeadband = factory.getConstant(NAME, "rotationalDeadband") * Math.PI;
+    private final double inputDeadband = factory.getConstant(NAME, "inputDeadband");
 
     /**
      * Logging
@@ -75,22 +103,19 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
     private DoubleArrayLogEntry inputLogger; //X, Y, Rotation - raw -1 to 1 from setTeleopInputs
     private StringLogEntry controlRequestLogger;
 
+    private final ArrayList<StatusSignal<Double>> motorTemperatures = new ArrayList<>();
+
     private ArrayList<DoubleLogEntry> desiredModuleStatesLogger;
     private ArrayList<DoubleLogEntry> actualModuleStatesLogger;
 
     private StructArrayLogEntry<SwerveModuleState> desiredModuleStructLogger;
     private StructArrayLogEntry<SwerveModuleState> actualModuleStructLogger;
 
-    // module indices
-    public static final int kFrontLeft = 0;
-    public static final int kFrontRight = 1;
-    public static final int kBackLeft = 2;
-    public static final int kBackRight = 3;
-
     @Inject
     public CTRESwerveDrive(LedManager lm, Infrastructure inf, RobotState rs) {
         super(lm, inf, rs);
 
+        // Module Characterization
         swerveModules = new SwerveModuleConstants[4];
 
         swerveModules[kFrontLeft] = factory.getCTRESwerveModule(NAME, "frontLeft");
@@ -98,38 +123,46 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
         swerveModules[kBackLeft] = factory.getCTRESwerveModule(NAME, "backLeft");
         swerveModules[kBackRight] = factory.getCTRESwerveModule(NAME, "backRight");
 
-
+        // Drivetrain characterization
         SwerveDrivetrainConstants constants = new SwerveDrivetrainConstants()
                 .withCANbusName(factory.getCanBusName())
                 .withPigeon2Id(factory.getPigeonID());
 
-
         train = new SwerveDrivetrain(constants, swerveModules);
+        train.getDaqThread().setThreadPriority(99); // Making Odometry thread top Priority
 
-        train.getDaqThread().setThreadPriority(99);
-
-        Translation2d[] moduleLocations = new Translation2d[4];
-        for (int i = 0; i < 4; i++) {
-            moduleLocations[i] = new Translation2d(swerveModules[i].LocationX, swerveModules[i].LocationY);
-        }
-
-        swerveKinematics = new SwerveDriveKinematics(moduleLocations);
-
-        for (int i = 0; i < 4; i++) {
-            motorTemperatures.add(train.getModule(i).getDriveMotor().getDeviceTemp());
-        }
-
+        // Control Request Characterization
         fieldCentricRequest = new SwerveRequest.FieldCentric()
                 .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
                 .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagic)
-                .withDeadband(0.1 * kMaxVelOpenLoopMeters)
-                .withRotationalDeadband(0.1 * kMaxAngularSpeed);
+                .withDeadband(driveDeadband * kMaxVelOpenLoopMeters)
+                .withRotationalDeadband(rotationalDeadband * kMaxAngularSpeed);
 
         autoRequest = new ModuleRequest()
                 .withModuleStates(new SwerveModuleState[4]);
 
+        brakeRequest = new SwerveRequest.SwerveDriveBrake()
+                .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
+                .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagic);
+
         request = fieldCentricRequest;
 
+        updateSpeedMode(SPEED_MODE.NORMAL);
+
+        // Kinematics characterization & storing motor references
+        Translation2d[] moduleLocations = new Translation2d[4];
+
+        motors = new TalonFX[8];
+        for (int i = 0; i < 4; i++) {
+            moduleLocations[i] = new Translation2d(swerveModules[i].LocationX, swerveModules[i].LocationY);
+
+            motors[i * 2] = train.getModule(i).getDriveMotor();
+            motors[i * 2 + 1] = train.getModule(i).getSteerMotor();
+        }
+
+        swerveKinematics = new SwerveDriveKinematics(moduleLocations);
+
+        // Logging
         if (Constants.kLoggingRobot) {
             temperatureLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/moduleTemps");
             desStatesLogger = new DoubleArrayLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/DesiredSpeeds");
@@ -143,25 +176,135 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
 
             desiredModuleStatesLogger = new ArrayList<>();
             actualModuleStatesLogger = new ArrayList<>();
+
+            String moduleName;
             for (int i = 0; i < 4; i++) {
+                moduleName = toModuleName(i);
                 desiredModuleStatesLogger.add(new DoubleLogEntry(DataLogManager.getLog(),
-                        "Drivetrain/Swerve/DesiredModuleStates/" + toModuleName(i) +"/speedMPS"));
+                        "Drivetrain/Swerve/DesiredModuleStates/" + moduleName +"/speedMPS"));
                 desiredModuleStatesLogger.add(new DoubleLogEntry(DataLogManager.getLog(),
-                        "Drivetrain/Swerve/DesiredModuleStates/" + toModuleName(i) +"/angleDegrees"));
+                        "Drivetrain/Swerve/DesiredModuleStates/" + moduleName +"/angleDegrees"));
                 actualModuleStatesLogger.add(new DoubleLogEntry(DataLogManager.getLog(),
-                        "Drivetrain/Swerve/ActualModuleStates/" + toModuleName(i) +"/speedMPS"));
+                        "Drivetrain/Swerve/ActualModuleStates/" + moduleName +"/speedMPS"));
                 actualModuleStatesLogger.add(new DoubleLogEntry(DataLogManager.getLog(),
-                        "Drivetrain/Swerve/ActualModuleStates/" + toModuleName(i) +"/angleDegrees"));
+                        "Drivetrain/Swerve/ActualModuleStates/" + moduleName +"/angleDegrees"));
+
+                motorTemperatures.add(motors[i].getDeviceTemp());
             }
         }
     }
 
+    /**
+     * Configuration
+     */
+
     @Override
-    public synchronized void writeToHardware() {
-        if (controlState == ControlState.OPEN_LOOP) {
-            train.setControl(request);
+    public void createPigeon() {
+        super.pigeon = new Pigeon2Wrapper(train.getPigeon2());
+    }
+
+    @Override
+    public void configureOrchestra() {
+        for (TalonFX motor : motors) {
+            motor.getConfigurator().apply(audioConfigs);
+            orchestra.addInstrument(motor);
         }
     }
+
+    /**
+     * Control
+     */
+
+    @Override
+    public void setTeleopInputs(double throttle, double strafe, double rotation) {
+        double inputScale = new Translation2d(throttle, strafe).getNorm();
+
+        if (inputScale < inputDeadband) {
+            inputScale = 0;
+        }
+
+        if (robotState.snapDirection != RobotState.SnappingDirection.NO_SNAP) {
+            rotation =
+                    MathUtil.inputModulus(
+                            (robotState.snapDirection.value - pigeon.getYawValue()),
+                            robotState.allianceColor == Color.BLUE ? -180 : 180,
+                            robotState.allianceColor == Color.BLUE ?  180 : -180
+                    ) / 40.0d;
+        }
+
+        if (isBraking) {
+            request = brakeRequest;
+        } else {
+            request = fieldCentricRequest
+                    .withVelocityX(throttle * inputScale * maxVel12MPS * driveScalar)
+                    .withVelocityY(strafe * inputScale * maxVel12MPS * driveScalar)
+                    .withRotationalRate(rotation * kMaxAngularSpeed * Math.PI * rotationScalar);
+        }
+
+        if (Constants.kLoggingDrivetrain) {
+            inputLogger.append(new double[] {throttle, strafe, rotation});
+        }
+
+        setOpenLoop(null);
+    }
+
+    @Override
+    public void setOpenLoop(DriveSignal signal) {
+        if (controlState != ControlState.OPEN_LOOP) {
+            GreenLogger.log("Switching to open loop.");
+            controlState = ControlState.OPEN_LOOP;
+        }
+    }
+
+    @Override
+    public synchronized void setBraking(boolean braking) {
+        isBraking = braking;
+
+        if (braking) {
+            setOpenLoop(DriveSignal.BRAKE);
+        }
+    }
+
+    @Override
+    public synchronized void setSlowMode(boolean slowMode) {
+        super.setSlowMode(slowMode);
+        updateSpeedMode(slowMode ? SPEED_MODE.SLOW : SPEED_MODE.NORMAL);
+    }
+
+    @Override
+    public synchronized void setTurboMode(boolean turboMode) {
+        super.setTurboMode(turboMode);
+        updateSpeedMode(turboMode ? SPEED_MODE.TURBO : SPEED_MODE.NORMAL);
+    }
+
+    @Override
+    public void setModuleStates(SwerveModuleState... desiredStates) {
+        for (int i = 0; i < 4; i++) {
+            desiredStates[i].speedMetersPerSecond =
+                    DriveConversions.metersToRotations(desiredStates[i].speedMetersPerSecond);
+        }
+
+        request = autoRequest.withModuleStates(desiredStates);
+
+        train.setControl(request);
+    }
+
+    private void updateSpeedMode(SPEED_MODE desiredSpeedMode) {
+        if (desiredSpeedMode != currentSpeedMode) {
+            GreenLogger.log("Speed Mode changed from: " + currentSpeedMode + " to: " + desiredSpeedMode);
+            currentSpeedMode = desiredSpeedMode;
+            driveScalar = currentSpeedMode.driveScalar;
+            rotationScalar = currentSpeedMode.rotationScalar;
+
+            fieldCentricRequest
+                    .withDeadband(driveDeadband * currentSpeedMode.driveScalar)
+                    .withRotationalDeadband(rotationalDeadband * currentSpeedMode.rotationScalar);
+        }
+    }
+
+    /**
+     * Subsystem periodic
+     */
 
     @Override
     public synchronized void readFromHardware() {
@@ -179,8 +322,39 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
     }
 
     @Override
-    public void configureOrchestra() {
+    public synchronized void writeToHardware() {
+        if (controlState == ControlState.OPEN_LOOP) {
+            train.setControl(request);
+        }
+    }
 
+    @Override
+    public boolean testSubsystem() {
+        //TODO
+        return true;
+    }
+
+    @Override
+    public void stop() {
+        train.setControl(new SwerveRequest.FieldCentric());
+    }
+
+    /**
+     * State updating
+     */
+
+    @Override
+    public void zeroSensors(Pose2d pose) {
+        resetOdometry(pose);
+        startingPose = pose;
+        chassisSpeed = new ChassisSpeeds();
+        isBraking = false;
+    }
+
+    @Override
+    public void resetOdometry(Pose2d pose) {
+        train.seedFieldRelative(pose);
+        updateRobotState();
     }
 
     @Override
@@ -189,16 +363,13 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
             train.updateSimState(Robot.looperDt / 1000, RobotController.getBatteryVoltage());
         }
         robotState.fieldToVehicle = train.getState().Pose;
-        robotState.driverRelativeFieldToVehicle = new Pose2d( // for inputs ONLY
-                robotState.fieldToVehicle.getTranslation(),
-                (robotState.allianceColor == Color.BLUE && Constants.fieldSymmetry == Symmetry.AXIS) ? robotState.fieldToVehicle.getRotation() : robotState.fieldToVehicle.getRotation().rotateBy(Rotation2d.fromDegrees(180))
-        );
 
         var cs = new ChassisSpeeds(
                 chassisSpeed.vxMetersPerSecond,
                 chassisSpeed.vyMetersPerSecond,
                 chassisSpeed.omegaRadiansPerSecond
         );
+
         robotState.calculatedVehicleAccel =
                 new ChassisSpeeds(
                         (cs.vxMetersPerSecond - robotState.deltaVehicle.vxMetersPerSecond) /
@@ -223,7 +394,6 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
             gyroPitchLogger.append(pigeon.getPitchValue());
             gyroRollLogger.append(pigeon.getRollValue());
             controlRequestLogger.append(request.getClass().getSimpleName());
-
 
             var desiredModuleStates = swerveKinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(
                     desiredSpeeds[0],
@@ -252,114 +422,25 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
             if (actualModuleStates != null) {
                 actualModuleStructLogger.append(actualModuleStates);
             }
-
         }
     }
 
+    /**
+     * Trajectory
+     */
+
+    /**
+     * Starts a trajectory to be followed with headings (rotate while moving)
+     *
+     * @param trajectory Trajectory
+     * @param headings   Headings (for swerve)
+     * @see Drive#startTrajectory(Trajectory, List)
+     */
     @Override
-    public void resetOdometry(Pose2d pose) {
-        train.seedFieldRelative(pose);
-        updateRobotState();
-    }
-
-    @Override
-    public void zeroSensors(Pose2d pose) {
-        resetOdometry(pose);
-        startingPose = pose;
-        chassisSpeed = new ChassisSpeeds();
-        isBraking = false;
-    }
-
-    @Override
-    public void stop() {
-        train.setControl(new SwerveRequest.FieldCentric());
-    }
-
-    @Override
-    public boolean testSubsystem() {
-        //TODO
-        return true;
-    }
-
-    @Override
-    public void setOpenLoop(DriveSignal signal) {
-        if (controlState != ControlState.OPEN_LOOP) {
-            GreenLogger.log("Switching to open loop.");
-            controlState = ControlState.OPEN_LOOP;
-        }
-    }
-
-    @Override
-    public void setTeleopInputs(double throttle, double strafe, double passedRotation) {
-        double inputScale = new Translation2d(throttle, strafe).getNorm();
-
-        if (inputScale < 0.15) {
-            inputScale = 0;
-        }
-
-        final double finalRotation;
-
-        if (robotState.snapDirection != RobotState.SnappingDirection.NO_SNAP) {
-            /*
-            * NOTE(Michael): The number 40 being used for the divisor may seem arbitrary
-            * and it is. It's a number pulled directly from Zero's implementation
-            * of their snapping system (Snap to Driver and Snap to Human Player).
-            *
-            * I don't know what the number may mean, but I suspect it has to do with
-            * turning the remainder robot angle into a full rotation.
-            *
-            * I believe it could be a configurable number in YAML, but that's up to
-            * you to decide. For now, the number 40 works pretty well.
-            */
-            finalRotation =
-                    MathUtil.inputModulus(
-                            (robotState.snapDirection.value - pigeon.getYawValue()),
-                            robotState.allianceColor == Color.BLUE ? -180 : 180,
-                            robotState.allianceColor == Color.BLUE ?  180 : -180
-                    ) / 40.0d;
-        } else {
-            finalRotation = passedRotation;
-        }
-
-        request = fieldCentricRequest
-                .withVelocityX(throttle * inputScale * maxVel12MPS * driveScalar)
-                .withVelocityY(strafe * inputScale * maxVel12MPS * driveScalar)
-                .withRotationalRate(finalRotation * kMaxAngularSpeed * Math.PI);
-
-        if (Constants.kLoggingDrivetrain) {
-            inputLogger.append(new double[] {throttle, strafe, finalRotation});
-        }
-        setOpenLoop(null);
-    }
-
-    @Override
-    public synchronized void setBraking(boolean braking) { //TODO
-        isBraking = braking;
-
-        if (braking) {
-            isBraking = true;
-            setOpenLoop(DriveSignal.BRAKE);
-        }
-    }
-
-    @Override
-    public PIDSlotConfiguration getPIDConfig() {
-        // NOTE: Stolen code from ServeDrive. Not sure if it works.
-        PIDSlotConfiguration defaultPIDConfig = new PIDSlotConfiguration();
-        defaultPIDConfig.kP = 0.0;
-        defaultPIDConfig.kI = 0.0;
-        defaultPIDConfig.kD = 0.0;
-        defaultPIDConfig.kF = 0.0;
-        return (factory.getSubsystem(NAME).implemented)
-                ? factory
-                .getSubsystem(NAME)
-                .swerveModules.drivePID.getOrDefault("slot0", defaultPIDConfig)
-                : defaultPIDConfig;
-    }
-
-    @Override
-    public void createPigeon() {
-        super.pigeon = new Pigeon2Wrapper(train.getPigeon2());
+    public void startTrajectory(Trajectory trajectory, List<Rotation2d> headings) {
+        super.startTrajectory(trajectory, headings);
+        headingsList = headings;
+        trajectoryIndex = 0;
     }
 
     /**
@@ -398,40 +479,18 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
         return heading;
     }
 
+
     /**
-     * Starts a trajectory to be followed with headings (rotate while moving)
-     *
-     * @param trajectory Trajectory
-     * @param headings   Headings (for swerve)
-     * @see Drive#startTrajectory(Trajectory, List)
+     * Utility
      */
-    @Override
-    public void startTrajectory(Trajectory trajectory, List<Rotation2d> headings) {
-        super.startTrajectory(trajectory, headings);
-        headingsList = headings;
-        trajectoryIndex = 0;
-    }
-
-
-    @Override
-    public void setModuleStates(SwerveModuleState... desiredStates) {
-        for (int i = 0; i < 4; i++) {
-            desiredStates[i].speedMetersPerSecond =
-                    DriveConversions.metersToRotations(desiredStates[i].speedMetersPerSecond);
-        }
-
-        request = autoRequest.withModuleStates(desiredStates);
-
-        train.setControl(request);
-    }
 
     public double[] getDesiredSpeeds() {
         if (request instanceof SwerveRequest.FieldCentric) {
-           return new double[]{
-                ((SwerveRequest.FieldCentric) request).VelocityX,
-                ((SwerveRequest.FieldCentric) request).VelocityY,
-                ((SwerveRequest.FieldCentric) request).RotationalRate
-           };
+            return new double[]{
+                    ((SwerveRequest.FieldCentric) request).VelocityX,
+                    ((SwerveRequest.FieldCentric) request).VelocityY,
+                    ((SwerveRequest.FieldCentric) request).RotationalRate
+            };
         } else if (request instanceof ModuleRequest) {
             ChassisSpeeds moduleSpeeds = swerveKinematics.toChassisSpeeds(((ModuleRequest) request).moduleStates);
             return new double[] {
@@ -443,6 +502,8 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
             return new double[3];
         }
     }
+
+
     public String toModuleName(int moduleIndex) {
         return switch (moduleIndex) {
             case 0 -> "frontLeft";
@@ -451,5 +512,33 @@ public class CTRESwerveDrive extends Drive implements com.team1816.lib.subsystem
             case 3 -> "backRight";
             default -> "unknown";
         };
+    }
+
+    @Override
+    public PIDSlotConfiguration getPIDConfig() {
+        PIDSlotConfiguration defaultPIDConfig = new PIDSlotConfiguration();
+        defaultPIDConfig.kP = 0.0;
+        defaultPIDConfig.kI = 0.0;
+        defaultPIDConfig.kD = 0.0;
+        defaultPIDConfig.kF = 0.0;
+        return (factory.getSubsystem(NAME).implemented)
+                ? factory
+                .getSubsystem(NAME)
+                .swerveModules.drivePID.getOrDefault("slot0", defaultPIDConfig)
+                : defaultPIDConfig;
+    }
+
+    private enum SPEED_MODE {
+        NORMAL(normalDriveScalar, 1),
+        SLOW(slowDriveScalar, slowRotationScalar),
+        TURBO(turboDriveScalar, turboRotationScalar);
+
+        final double driveScalar;
+        final double rotationScalar;
+
+        SPEED_MODE(double driveScalar, double rotationScalar) {
+            this.driveScalar = driveScalar;
+            this.rotationScalar = rotationScalar;
+        }
     }
 }

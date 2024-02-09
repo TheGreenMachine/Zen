@@ -48,8 +48,6 @@ subsystems:
             FREnc: 21
             RLEnc: 22
             RREnc: 23
-        invertCanCoder:
-            - FLEnc
         swerveModules:
             modules:
                 frontLeft:
@@ -109,31 +107,36 @@ subsystems:
                     kD: 0
                     kF: 0
                     allowableError: 5
+                slot1:
+                    kP: 100
+                    kI: 0
+                    kD: 0.01
+                    kF: 0
         constants:
             ## Positional Configurations ##
-            maxVelTicks100ms: 12275.7 # ticks per 100ms, not changing bcs used in ghostmotor
             openLoopRampRate: 0.1
             isSwerve: 1
             isCTRSwerve: 1
-            encPPR: 14641 #TODO
-            azimuthEncPPR: 4096 #TODO
-            wheelDiameter: 4
+            wheelDiameter: 4 #inches
             kTrackScrubFactor: 1.0
             ## Velocity Constraints ##
-            maxRotVel: 0.8 #Pi radians/sec
+            maxRotVel: 0.8 # Pi radians/sec
             trackWidth: 22.75 # inches
             wheelbaseLength: 22.75 # inches
-            maxVelOpenLoop: 2.5 # meters/s (3.6)
+            maxVelOpenLoop: 2.5 # meters/s
             maxVel12VMPS: 4.9
-            maxVelPathFollowing: 3 # meters/s (3.6)
-            maxAccel: 1 # meters/s^2 (2.54)
+            maxVelPathFollowing: 3 # meters/s
+            maxAccel: 1 # meters/s^2
             isDemoMode: 0
             ## Swerve Characterization ##
             driveGearRatio: 6.75 # L2
             azimuthGearRatio: 12.8 # MK4
-            ## Auto Balance ##
-            autoBalanceDivider: 50
-            autoBalanceThreshold: 2.5 # degrees
+            ## Control Configurations ##
+            slowModeScalar: 0.5
+            turboModeScalar: 2
+            driveDeadband: 0.1
+            rotationalDeadband: 0.1
+            inputDeadband: 0.15 # Deadband of the normalized input
     camera:
         implemented: false
         constants:

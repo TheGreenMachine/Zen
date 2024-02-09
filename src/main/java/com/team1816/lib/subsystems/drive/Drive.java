@@ -90,6 +90,7 @@ public abstract class Drive
 
     protected boolean isBraking;
     protected boolean isSlowMode;
+    protected boolean isTurboMode;
 
     protected boolean isAutoBalancing = false;
 
@@ -376,6 +377,16 @@ public abstract class Drive
     public void setSlowMode(boolean slowMode) {
         isSlowMode = slowMode;
     }
+
+    /**
+     * Sets the drivetrain to be in turbo mode which will modify the drive signals and the motor demands
+     *
+     * @param turboMode (boolean) isSlowMode
+     */
+    public void setTurboMode(boolean turboMode) {
+        isTurboMode = turboMode;
+    }
+
 
     /**
      * @return whether drivetrain is in slowMode

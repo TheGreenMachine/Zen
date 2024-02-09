@@ -4,7 +4,7 @@ import com.team1816.lib.Injector;
 import com.team1816.lib.auto.paths.AutoPath;
 import com.team1816.lib.subsystems.drive.Drive;
 import com.team1816.lib.subsystems.drive.SwerveDrive;
-import com.team1816.lib.subsystems.drive.SwerveDrivetrain;
+import com.team1816.lib.subsystems.drive.EnhancedSwerveDrive;
 import com.team1816.lib.subsystems.drive.TankDrive;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import edu.wpi.first.math.controller.PIDController;
@@ -94,7 +94,7 @@ public class TrajectoryAction implements AutoAction {
                     ),
                     ((TankDrive) drive)::updateTrajectoryVelocities
                 );
-        } else if (drive instanceof SwerveDrivetrain) {
+        } else if (drive instanceof EnhancedSwerveDrive) {
             var thetaController = new ProfiledPIDController(
                 10,
                 0,
@@ -111,8 +111,8 @@ public class TrajectoryAction implements AutoAction {
                     new PIDController(10, 0, 0), //Translational X Controller
                     new PIDController(10, 0, 0), //Translational Y Controller
                     thetaController,
-                    ((SwerveDrivetrain) drive)::getTrajectoryHeadings,
-                    ((SwerveDrivetrain) drive)::setModuleStates
+                    ((EnhancedSwerveDrive) drive)::getTrajectoryHeadings,
+                    ((EnhancedSwerveDrive) drive)::setModuleStates
                 );
         } else {
             GreenLogger.log(
