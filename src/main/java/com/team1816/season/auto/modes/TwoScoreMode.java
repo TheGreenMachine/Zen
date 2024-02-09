@@ -6,6 +6,7 @@ import com.team1816.lib.auto.actions.TrajectoryAction;
 import com.team1816.lib.auto.actions.WaitAction;
 import com.team1816.lib.auto.modes.AutoMode;
 import com.team1816.lib.auto.paths.AutoPath;
+import com.team1816.season.auto.actions.ShootAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ public class TwoScoreMode extends AutoMode {
     protected void routine() throws AutoModeEndedException {
         runAction(
             new SeriesAction(
+                    ShootAction()
                 trajectoryActions.get(0), trajectoryActions.get(1)
             )
         );
