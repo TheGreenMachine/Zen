@@ -28,7 +28,7 @@ public class TestUtil {
         when(mockFactory.getMotor(anyString(), anyString()))
             .thenReturn(mock(IGreenMotor.class));
         when(
-            mockFactory.getFollowerMotor(anyString(), anyString(), any(IGreenMotor.class))
+            mockFactory.getFollowerMotor(anyString(), anyString(), any(IGreenMotor.class), anyBoolean())
         )
             .thenReturn(mock(IGreenMotor.class));
         // for subsystems

@@ -76,11 +76,11 @@ public class TankDrive extends Drive implements DifferentialDrivetrain {
         super(lm, inf, rs);
         // configure motors
         leftMain = factory.getMotor(NAME, "leftMain");
-        leftFollowerA = factory.getFollowerMotor(NAME, "leftFollower", leftMain);
-        leftFollowerB = factory.getFollowerMotor(NAME, "leftFollowerTwo", leftMain);
+        leftFollowerA = factory.getFollowerMotor(NAME, "leftFollower", leftMain, false);
+        leftFollowerB = factory.getFollowerMotor(NAME, "leftFollowerTwo", leftMain, false);
         rightMain = factory.getMotor(NAME, "rightMain");
-        rightFollowerA = factory.getFollowerMotor(NAME, "rightFollower", rightMain);
-        rightFollowerB = factory.getFollowerMotor(NAME, "rightFollowerTwo", rightMain);
+        rightFollowerA = factory.getFollowerMotor(NAME, "rightFollower", rightMain, false);
+        rightFollowerB = factory.getFollowerMotor(NAME, "rightFollowerTwo", rightMain, false);
 
         // configure follower motor currentLimits
         var currentLimitConfig = new SupplyCurrentLimitConfiguration(

@@ -9,7 +9,10 @@ import com.team1816.season.states.RobotState;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
+@Singleton
 public class Shooter extends Subsystem {
 
     /**
@@ -89,6 +92,7 @@ public class Shooter extends Subsystem {
      * @param inf Infrastructure
      * @param rs  RobotState
      */
+    @Inject
     public Shooter(Infrastructure inf, RobotState rs) {
         super(NAME, inf, rs);
         rollerMotor = factory.getMotor(NAME, "rollerMotor");
