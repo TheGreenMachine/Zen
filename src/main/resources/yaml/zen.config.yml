@@ -7,22 +7,22 @@ subsystems:
                 motorType: TalonFX
                 motorName: FLDr
                 id: 1
-                invertMotor: true
+                invertMotor: false
             FRDr:
                 motorType: TalonFX
                 motorName: FRDr
                 id: 2
-                invertMotor: false
+                invertMotor: true
             RLDr:
                 motorType: TalonFX
                 motorName: BLDr
                 id: 3
-                invertMotor: true
+                invertMotor: false
             RRDr:
                 motorType: TalonFX
                 motorName: BRDr
                 id: 4
-                invertMotor: false
+                invertMotor: true
             FLAz:
                 motorType: TalonFX
                 motorName: FLAz
@@ -48,79 +48,120 @@ subsystems:
             FREnc: 21
             RLEnc: 22
             RREnc: 23
-        invertCanCoder:
-            - FLEnc
         swerveModules:
             modules:
                 frontLeft:
                     drive: FLDr
                     azimuth: FLAz
                     canCoder: FLEnc
+                    invertX: false
+                    invertY: false
                     constants:
-                        encoderOffset: 0.646240  #remote, -0.155273 rotor
+                        encoderOffset: 0.35302734375
+                        couplingRatio: 3.589
+                        freeSpin12VRPS: 100
                         invertSensorPhase: 1
                 frontRight:
                     drive: FRDr
                     azimuth: FRAz
                     canCoder: FREnc
+                    invertX: false
+                    invertY: true
                     constants:
-                        encoderOffset: 0.775391 #remote, -0.091797 rotor
+                        encoderOffset: -0.27294921875
+                        couplingRatio: 3.572
+                        freeSpin12VRPS: 101
                         invertSensorPhase: 1
                 backLeft:
                     drive: RLDr
                     azimuth: RLAz
                     canCoder: RLEnc
+                    invertX: true
+                    invertY: false
                     constants:
-                        encoderOffset: 0.444824 #remote, 0.049316 rotor
+                        encoderOffset: -0.44
+                        couplingRatio: 3.576
+                        freeSpin12VRPS: 104
                         invertSensorPhase: 1
                 backRight:
                     drive: RRDr
                     azimuth: RRAz
                     canCoder: RREnc
+                    invertX: true
+                    invertY: true
                     constants:
-                        encoderOffset: 0.511475  #remote, -0.309082 rotor
+                        encoderOffset: -0.009033203125
+                        couplingRatio: 3.579
+                        freeSpin12VRPS: 102
                         invertSensorPhase: 1
             drivePID:
                 slot0:
-                    kP: 0.008007
-                    kI: 0.002001
-                    kD: 0.000400
-                    kF: 0.009989
+                    kP: 0.0065
+                    kI: 0
+                    kD: 0.00005
+                    kF: 0.00925
             azimuthPID:
                 slot0:
-                    kP: 7.6
-                    kI: 1.5
-                    kD: 0.15
+                    kP: 7
+                    kI: 0
+                    kD: 0
                     kF: 0
                     allowableError: 5
+                slot1:
+                    kP: 100
+                    kI: 0
+                    kD: 0.01
+                    kF: 0
         constants:
             ## Positional Configurations ##
-            maxVelTicks100ms: 12275.7 # ticks per 100ms, not changing bcs used in ghostmotor
             openLoopRampRate: 0.1
             isSwerve: 1
-            encPPR: 14641 #TODO
-            azimuthEncPPR: 4096 #TODO
-            wheelDiameter: 4
+            isCTRSwerve: 1
+            wheelDiameter: 4 #inches
             kTrackScrubFactor: 1.0
             ## Velocity Constraints ##
-            maxRotVel: 18
+            maxRotVel: 0.8 # Pi radians/sec
             trackWidth: 22.75 # inches
             wheelbaseLength: 22.75 # inches
-            maxVelOpenLoop: 3.75 # meters/s (3.6)
-            maxVelPathFollowing: 3.1 # meters/s (3.6)
-            maxAccel: 1.5 # meters/s^2 (2.54)
+            maxVelOpenLoop: 2.5 # meters/s
+            maxVel12VMPS: 4.9
+            maxVelPathFollowing: 3 # meters/s
+            maxAccel: 1 # meters/s^2
             isDemoMode: 0
-            ## Auto Balance ##
-            autoBalanceDivider: 50
-            autoBalanceThreshold: 2.5 # degrees
+            ## Swerve Characterization ##
+            driveGearRatio: 6.75 # L2
+            azimuthGearRatio: 12.8 # MK4
+            ## Control Configurations ##
+            slowModeScalar: 0.5
+            turboModeScalar: 2
+            driveDeadband: 0.1
+            rotationalDeadband: 0.1
+            inputDeadband: 0.15 # Deadband of the normalized input
     camera:
         implemented: false
         constants:
             useMultiTargetOdometry: 1
+    collector:
+        implemented: true
+        motors:
+            intakeMotor:
+                motorType: TalonFX
+                motorName: intakeMotor
+                id: 16
+                invertMotor: true
+        pidConfig:
+            slot0:
+                kP: 0.043
+                Ki: 0
+                kD: 0.00001
+                kF: 0.0099
+        constants:
+            intakeSpeed:  -0.7
+            outtakeSpeed: 0.25
 infrastructure:
     canBusName: highSpeed
     ## Power Distribution ##
-    pdId: 25
+    pdId: 1
     pdIsRev: true
     ## Pneumatics Control ##
     compressorEnabled: false
@@ -132,6 +173,7 @@ infrastructure:
 inputHandler: competition
 constants:
     zeroingButton: 9 # channel of DIO port
+    enableMusic: 0
     ## Drivetrain ##
     minAllowablePoseError: 0.1
     maxAllowablePoseError: 5
@@ -143,4 +185,6 @@ constants:
     ## General ##
     teleopFieldCentric: 1 # 0 or 1
     kLooperDt: .025 # seconds
+    isProLicensed: 0
+    hasCanivore: 1 # 0 or 1
     resetFactoryDefaults: 1 # whether motors get reset to factory default

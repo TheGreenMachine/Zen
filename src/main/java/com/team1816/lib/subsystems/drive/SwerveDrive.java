@@ -1,6 +1,5 @@
 package com.team1816.lib.subsystems.drive;
 
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.team1816.lib.Infrastructure;
@@ -34,8 +33,7 @@ import java.util.Objects;
  * A class that models a Swerve drivetrain
  */
 @Singleton
-public class
-SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
+public class SwerveDrive extends Drive implements EnhancedSwerveDrive, PidProvider {
 
     /** Constants */
 
@@ -77,12 +75,7 @@ SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
     };
 
     // Kinematics (https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/swerve-drive-kinematics.html)
-    public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
-        kFrontLeftModulePosition,
-        kFrontRightModulePosition,
-        kBackLeftModulePosition,
-        kBackRightModulePosition
-    );
+    public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(kFrontLeftModulePosition, kFrontRightModulePosition, kBackLeftModulePosition, kBackRightModulePosition);
 
     /**
      * Components
@@ -365,12 +358,12 @@ SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
             );
         robotState.deltaVehicle = cs;
 
-        temperatureLogger.append(motorTemperatures[0]);
         robotState.drivetrainTemp = motorTemperatures[0];
 
         robotState.vehicleToFloorProximityCentimeters = infrastructure.getMaximumProximity();
 
         if (Constants.kLoggingDrivetrain) {
+            temperatureLogger.append(motorTemperatures[0]);
             drivetrainPoseLogger.append(new double[]{robotState.fieldToVehicle.getX(), robotState.fieldToVehicle.getY(), robotState.fieldToVehicle.getRotation().getDegrees()});
             drivetrainChassisSpeedsLogger.append(new double[]{robotState.deltaVehicle.vxMetersPerSecond, robotState.deltaVehicle.vyMetersPerSecond, robotState.deltaVehicle.omegaRadiansPerSecond});
             gyroPitchLogger.append(pigeon.getPitchValue());
@@ -468,7 +461,6 @@ SwerveDrive extends Drive implements SwerveDrivetrain, PidProvider {
      *
      * @return SwerveModule[]
      */
-    @Override
     public SwerveModule[] getSwerveModules() {
         return swerveModules;
     }

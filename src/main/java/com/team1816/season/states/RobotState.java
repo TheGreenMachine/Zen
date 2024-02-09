@@ -6,6 +6,7 @@ import com.team1816.lib.auto.PathFinder;
 import com.team1816.lib.util.visionUtil.VisionPoint;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.configuration.FieldConfig;
+import com.team1816.season.subsystems.Collector;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -49,10 +50,30 @@ public class RobotState {
     public Quaternion inertialReferenceOrientationState = Constants.EmptyQuaternion; // utilizes active multiplication
 
     /**
+     * Snapping Mode
+     */
+    public enum SnappingDirection {
+        FRONT(0),
+        BACK(180),
+        LEFT(90),
+        RIGHT(-90),
+        NO_SNAP(-360); // Some magic value.
+
+        public double value;
+
+        SnappingDirection(double value) {
+            this.value = value;
+        }
+    }
+
+    public SnappingDirection snapDirection = SnappingDirection.NO_SNAP;
+
+    /**
      * Orchestrator states
      */
 
     // TODO: Insert any states that you may need to keep track of.
+    public Collector.COLLECTOR_STATE actualCollectorState = Collector.COLLECTOR_STATE.STOP;
 
     public VisionPoint superlativeTarget = new VisionPoint();
     public List<VisionPoint> visibleTargets = new ArrayList<>();

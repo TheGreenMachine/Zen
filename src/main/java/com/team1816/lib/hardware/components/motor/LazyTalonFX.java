@@ -445,7 +445,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
         configs.Audio
                 .withBeepOnConfig(Constants.kSoundOnConfig)
                 .withBeepOnBoot(Constants.kSoundOnConfig)
-                .withAllowMusicDurDisable(true); //TODO change to yml?
+                .withAllowMusicDurDisable(Constants.kMusicEnabled);
         configurator.apply(configs);
     }
 
