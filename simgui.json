@@ -80,7 +80,10 @@
       "/SmartDashboard/Alliance color": "String Chooser",
       "/SmartDashboard/Auto mode": "String Chooser",
       "/SmartDashboard/Demo Mode": "String Chooser",
+      "/SmartDashboard/Dynamic Start": "String Chooser",
       "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/First collected note": "String Chooser",
+      "/SmartDashboard/First shooting position": "String Chooser",
       "/SmartDashboard/Mech 2D": "Mechanism2d",
       "/SmartDashboard/Playlist": "String Chooser",
       "/SmartDashboard/Robot color": "String Chooser",
@@ -92,6 +95,11 @@
     },
     "windows": {
       "/SmartDashboard/Auto mode": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Dynamic Start": {
         "window": {
           "visible": true
         }
@@ -128,7 +136,9 @@
             255.0
           ],
           "arrowWeight": 2.0,
-          "weight": 2.0
+          "length": 0.8889999985694885,
+          "weight": 2.0,
+          "width": 0.8889999985694885
         },
         "Trajectory": {
           "arrows": false,
@@ -136,8 +146,7 @@
           "style": "Line",
           "weight": 1.0
         },
-        "bottom": 544,
-        "builtin": "2024 Crescendo",
+        "bottom": 1476,
         "camera": {
           "arrowSize": 0,
           "arrows": false,
@@ -150,15 +159,25 @@
           "length": 0.010000001639127731,
           "width": 0.010000001639127731
         },
-        "height": 8.013679504394531,
-        "left": 46,
-        "right": 1088,
-        "top": 36,
+        "height": 8.210550308227539,
+        "left": 150,
+        "right": 2961,
+        "top": 79,
         "turret": {
           "arrowWeight": 3.0,
           "style": "Line"
         },
         "width": 16.541748046875,
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/First collected note": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/First shooting position": {
         "window": {
           "visible": true
         }

@@ -7,6 +7,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import com.google.inject.Inject;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.PIDSlotConfiguration;
+import com.team1816.lib.hardware.components.gyro.IPigeon2;
 import com.team1816.lib.hardware.components.gyro.IPigeonIMU;
 import com.team1816.lib.hardware.components.gyro.Pigeon2Impl;
 import com.team1816.lib.hardware.factory.RobotFactory;
@@ -89,6 +90,7 @@ public abstract class Drive
 
     protected boolean isBraking;
     protected boolean isSlowMode;
+    protected boolean isTurboMode;
 
     protected boolean isAutoBalancing = false;
 
@@ -110,7 +112,7 @@ public abstract class Drive
     /**
      * Constants
      */
-    public static final double driveEncPPR = factory.getConstant(NAME, "encPPR"); // Distance calibration
+    public static final double driveEncPPR = factory.getConstant(NAME, "encPPR", 14641); // Distance calibration
 
     // Chassis characterization
     public static final double kDriveWheelTrackWidthInches = factory.getConstant(
@@ -125,7 +127,8 @@ public abstract class Drive
     );
     public static final double kDriveWheelDiameterInches = factory.getConstant(
         NAME,
-        "wheelDiameter"
+        "wheelDiameter",
+        4
     );
 
     // Conversions
@@ -140,7 +143,8 @@ public abstract class Drive
 
     public static double kTrackScrubFactor = factory.getConstant(
         NAME,
-        "kTrackScrubFactor"
+        "kTrackScrubFactor",
+        1
     );
 
     // Constraints
@@ -151,11 +155,13 @@ public abstract class Drive
     );
     public static final double kPathFollowingMaxVelMeters = factory.getConstant(
         NAME,
-        "maxVelPathFollowing"
+        "maxVelPathFollowing",
+        3
     );
     public static final double kMaxVelOpenLoopMeters = factory.getConstant(
         NAME,
-        "maxVelOpenLoop"
+        "maxVelOpenLoop",
+        3
     );
 
     public static final double kPXController = 1;
@@ -164,12 +170,12 @@ public abstract class Drive
     public static final double kDYController = 0;
     public static final double kPThetaController = 4;
     public static final double kDThetaController = 0;
-    public static final double kMaxAngularSpeed = factory.getConstant(NAME, "maxRotVel"); // rad/sec
+    public static final double kMaxAngularSpeed = factory.getConstant(NAME, "maxRotVel", 2); // rad/sec
     public static final double kMaxAngularAccelerationRadiansPerSecondSquared =
         2 * Math.PI;
 
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
-        kMaxAngularSpeed,
+        kMaxAngularSpeed * Math.PI,
         kMaxAngularAccelerationRadiansPerSecondSquared
     );
     public double maxAllowablePoseError = factory.getConstant(
@@ -188,6 +194,9 @@ public abstract class Drive
     protected DoubleArrayLogEntry drivetrainChassisSpeedsLogger;
     protected DoubleLogEntry gyroPitchLogger;
     protected DoubleLogEntry gyroRollLogger;
+    protected DoubleLogEntry gyroYawLogger;
+
+
 
     /**
      * Instantiates the Drive with base subsystem parameters and accounts for DemoMode
@@ -372,6 +381,16 @@ public abstract class Drive
     public void setSlowMode(boolean slowMode) {
         isSlowMode = slowMode;
     }
+
+    /**
+     * Sets the drivetrain to be in turbo mode which will modify the drive signals and the motor demands
+     *
+     * @param turboMode (boolean) isSlowMode
+     */
+    public void setTurboMode(boolean turboMode) {
+        isTurboMode = turboMode;
+    }
+
 
     /**
      * @return whether drivetrain is in slowMode
@@ -638,17 +657,8 @@ public abstract class Drive
 
     public void resetPigeon(Rotation2d angle) {
         GreenLogger.log("resetting Pigeon");
-        if (pigeon instanceof Pigeon2Impl) {
-
-            Pigeon2Configuration configs = new Pigeon2Configuration();
-            ((Pigeon2Impl) pigeon).getConfigurator().refresh(configs);
-
-            ((Pigeon2Impl) pigeon).getConfigurator().apply(
-                    configs.MountPose
-                            .withMountPoseYaw(angle.getDegrees())
-                            .withMountPosePitch(0)
-                            .withMountPoseRoll(0)
-            );
+        if (pigeon instanceof IPigeon2) {
+            ((IPigeon2) pigeon).configMountPose(angle);
         }
     }
 

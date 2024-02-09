@@ -205,13 +205,13 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
     }
 
     @Override
-    public void setSensorPosition(double sensorPosition, int closedLoopSlotID) {
+    public void setSensorPosition(double sensorPosition) {
         encoder.setPosition(sensorPosition);
     }
 
     @Override
-    public void setSensorPosition(double sensorPosition, int closedLoopSlotID, int timeoutMs) {
-        setSensorPosition(sensorPosition, closedLoopSlotID);
+    public void setSensorPosition(double sensorPosition, int timeoutMs) {
+        setSensorPosition(sensorPosition);
     }
 
     @Override
@@ -274,7 +274,7 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
     }
 
     @Override
-    public void selectPIDSlot(int pidSlotID, int closedLoopSlotID) {
+    public void selectPIDSlot(int pidSlotID) {
         currentPIDSlot = pidSlotID;
     }
 

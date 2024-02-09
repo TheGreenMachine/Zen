@@ -36,7 +36,14 @@ public class Constants {
     /**
      * Git Hash
      */
-    public static final String kGitHash = factory.getGitHash();
+    public static final String kGitHash = RobotFactory.getGitHash();
+
+    /**
+     * CANBus Characterization
+     */
+    public static final boolean kHasCANivore = factory.getConstant("hasCanivore", 0) > 0;
+    public static final String kCANivoreName = factory.getCanBusName();
+    public static final String kLowSpeedBusName = "rio";
 
     /**
      * CAN Timeouts
@@ -107,7 +114,8 @@ public class Constants {
     public static double kMaxProximityThresholdCentimeters = 25; // cm
     public static double preTargetDistance = 0.4; // m
 
-    public static boolean kSoundOnConfig = factory.getConstant("soundOnConfig") > 0;
+    public static final boolean kSoundOnConfig = factory.getConstant("soundOnConfig", 1) > 0;
+    public static final boolean kMusicEnabled = factory.getConstant("enableMusic", 0) > 0;
 
 
     /**
@@ -117,8 +125,8 @@ public class Constants {
     public static final double kTurretZedRadius = Units.inchesToMeters(7); // meters
 
     public static final double kLoggingDiskPartitionRatio = 0.25; // percent of storage space allotted for logging
-    public static final boolean kLoggingRobot = factory.getConstant("logRobot") > 0;
-    public static final boolean kLoggingDrivetrain = factory.getConstant("logDrivetrain") > 0 && kLoggingRobot;
+    public static final boolean kLoggingRobot = factory.getConstant("logRobot", 1) > 0;
+    public static final boolean kLoggingDrivetrain = factory.getConstant("logDrivetrain", 1) > 0 && kLoggingRobot;
 
     public static final double kBallEjectionDuration = factory.getConstant(
         "shooter",

@@ -1,5 +1,7 @@
 package com.team1816.season;
 
+import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.SignalLogger;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.Injector;
 import com.team1816.lib.PlaylistManager;
@@ -10,17 +12,18 @@ import com.team1816.lib.input_handler.controlOptions.ActionState;
 import com.team1816.lib.loops.Looper;
 import com.team1816.lib.subsystems.LedManager;
 import com.team1816.lib.subsystems.SubsystemLooper;
+import com.team1816.lib.subsystems.drive.CTRESwerveDrive;
 import com.team1816.lib.subsystems.drive.Drive;
 import com.team1816.lib.subsystems.vision.Camera;
 import com.team1816.lib.util.Util;
 import com.team1816.lib.util.logUtil.GreenLogger;
-import com.team1816.lib.util.team254.LatchedBoolean;
 import com.team1816.season.auto.AutoModeManager;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.configuration.DrivetrainTargets;
 import com.team1816.season.states.Orchestrator;
 import com.team1816.season.states.RobotState;
 import com.team1816.season.subsystems.Shooter;
+import com.team1816.season.subsystems.Collector;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -65,6 +68,7 @@ public class Robot extends TimedRobot {
      */
     private Drive drive;
 
+    private Collector collector;
     private LedManager ledManager;
     private Camera camera;
     private Shooter shooter;
@@ -93,6 +97,9 @@ public class Robot extends TimedRobot {
 
     private DoubleLogEntry robotLoopLogger;
     private DoubleLogEntry looperLogger;
+    private DoubleLogEntry canivoreTrafficLogger;
+    private DoubleLogEntry lowSpeedTrafficLogger;
+
 
     /**
      * Properties
@@ -115,6 +122,11 @@ public class Robot extends TimedRobot {
         if (Constants.kLoggingRobot) {
             robotLoopLogger = new DoubleLogEntry(DataLogManager.getLog(), "Timings/Robot");
             looperLogger = new DoubleLogEntry(DataLogManager.getLog(), "Timings/RobotState");
+
+            if (Constants.kHasCANivore) {
+                canivoreTrafficLogger = new DoubleLogEntry(DataLogManager.getLog(), "CAN/highSpeedUtilization");
+            }
+            lowSpeedTrafficLogger = new DoubleLogEntry(DataLogManager.getLog(), "CAN/lowSpeedUtilization");
         }
     }
 
@@ -164,6 +176,7 @@ public class Robot extends TimedRobot {
             autoModeManager = Injector.get(AutoModeManager.class);
             playlistManager = Injector.get(PlaylistManager.class);
             shooter = Injector.get(Shooter.class);
+            collector = Injector.get(Collector.class);
 
 
 
@@ -173,28 +186,41 @@ public class Robot extends TimedRobot {
                 var robotName = System.getenv("ROBOT_NAME");
                 if (robotName == null) robotName = "default";
                 var logFileDir = "/home/lvuser/";
+                String OS_NAME = System.getProperty("os.name").toLowerCase();
                 // if there is a USB drive use it
                 if (Files.exists(Path.of("/media/sda1"))) {
                     logFileDir = "/media/sda1/";
                 }
+
+                // Characterize SignalLogger
+                SignalLogger.setPath(logFileDir);
+                SignalLogger.enableAutoLogging(DriverStation.isFMSAttached());
+
                 if (RobotBase.isSimulation()) {
-                    if (System.getProperty("os.name").toLowerCase().contains("win")) {
+                    if (OS_NAME.contains("win")) {
                         logFileDir = System.getenv("temp") + "\\";
                     } else {
                         logFileDir = System.getProperty("user.dir") + "/";
                     }
+
+                    if (!OS_NAME.contains("mac")) { //Can't open .hoot on mac so won't clog logs up in sim
+                        SignalLogger.start();
+                    }
                 }
+
                 // start logging
                 DataLogManager.start(logFileDir, "", Constants.kLooperDt);
                 if (RobotBase.isReal()) {
                     Util.cleanLogFiles();
+                    SignalLogger.start();
                 }
                 DriverStation.startDataLog(DataLogManager.getLog(), false);
+                SignalLogger.start();
             }
 
             drive = (Injector.get(Drive.Factory.class)).getInstance();
 
-            subsystemManager.setSubsystems(drive, ledManager, camera, shooter);
+            subsystemManager.setSubsystems(drive, ledManager, camera, collector, shooter);
 
             subsystemManager.registerEnabledLoops(enabledLoop);
             subsystemManager.registerDisabledLoops(disabledLoop);
@@ -209,12 +235,66 @@ public class Robot extends TimedRobot {
             /** Register inputHandler */
             inputHandler = Injector.get(InputHandler.class);
 
+
             /** Driver Commands */
             inputHandler.listenAction(
-                    "DriverAction",
+                    "zeroPose",
+                    ActionState.PRESSED,
+                    () ->
+                            drive.zeroSensors(
+                                    robotState.allianceColor == Color.BLUE ?
+                                            Constants.kDefaultZeroingPose :
+                                            Constants.kFlippedZeroingPose
+                            )
+            );
+
+            inputHandler.listenActionPressAndRelease(
+                    "brakeMode",
+                    drive::setBraking
+            );
+
+            inputHandler.listenActionPressAndRelease(
+                    "turboMode",
+                    drive::setTurboMode
+            );
+
+            inputHandler.listenActionPressAndRelease(
+                    "snapFromDriver",
+                    (pressed) -> {
+                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.FRONT : RobotState.SnappingDirection.NO_SNAP;
+                    }
+            );
+
+            inputHandler.listenActionPressAndRelease(
+                    "snapToDriver",
+                    (pressed) -> {
+                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.BACK : RobotState.SnappingDirection.NO_SNAP;
+                    }
+            );
+
+            inputHandler.listenActionPressAndRelease(
+                    "snapLeft",
+                    (pressed) -> {
+                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.LEFT : RobotState.SnappingDirection.NO_SNAP;
+                    }
+            );
+
+            inputHandler.listenActionPressAndRelease(
+                    "snapRight",
+                    (pressed) -> {
+                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.RIGHT : RobotState.SnappingDirection.NO_SNAP;
+                    }
+            );
+
+            inputHandler.listenAction(
+                    "toggleIntakeOuttake",
                     ActionState.PRESSED,
                     () -> {
-
+                        if (collector.getDesiredCollectorState() == Collector.COLLECTOR_STATE.OUTTAKE || collector.getDesiredCollectorState() == Collector.COLLECTOR_STATE.STOP) {
+                            collector.setDesiredState(Collector.COLLECTOR_STATE.INTAKE);
+                        } else {
+                            collector.setDesiredState(Collector.COLLECTOR_STATE.OUTTAKE);
+                        }
                     }
             );
 
@@ -248,17 +328,6 @@ public class Robot extends TimedRobot {
                         shooter.stop();
                     }
             );
-
-            /** Buttonboard Commands */
-
-            inputHandler.listenAction(
-                    "ButtonBoardAction",
-                    ActionState.PRESSED,
-                    () -> {
-
-                    }
-            );
-
         } catch (Throwable t) {
             faulted = true;
             throw t;
@@ -323,6 +392,7 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         try {
             disabledLoop.stop();
+            orchestrator.stopSong();
             ledManager.setDefaultStatus(LedManager.RobotStatus.ENABLED);
             ledManager.indicateStatus(LedManager.RobotStatus.ENABLED);
 
@@ -384,6 +454,11 @@ public class Robot extends TimedRobot {
             if (Constants.kLoggingRobot) {
                 looperLogger.append(looperDt);
                 robotLoopLogger.append(robotDt);
+
+                if (Constants.kHasCANivore) {
+                    canivoreTrafficLogger.append(CANBus.getStatus(Constants.kCANivoreName).BusUtilization);
+                }
+                lowSpeedTrafficLogger.append(CANBus.getStatus(Constants.kLowSpeedBusName).BusUtilization);
             }
 
             subsystemManager.outputToSmartDashboard(); // update shuffleboard for subsystem values
@@ -477,7 +552,7 @@ public class Robot extends TimedRobot {
         drive.setTeleopInputs(
                     -inputHandler.getActionAsDouble("throttle"),
                     -inputHandler.getActionAsDouble("strafe"),
-                     inputHandler.getActionAsDouble("rotation")
+                     -inputHandler.getActionAsDouble("rotation")
         );
     }
 

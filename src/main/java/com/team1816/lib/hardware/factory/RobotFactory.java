@@ -2,7 +2,9 @@ package com.team1816.lib.hardware.factory;
 
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.google.common.io.Resources;
 import com.google.inject.Singleton;
 import com.team1816.lib.hardware.*;
@@ -20,7 +22,9 @@ import com.team1816.lib.hardware.components.sensor.GhostProximitySensor;
 import com.team1816.lib.hardware.components.sensor.IProximitySensor;
 import com.team1816.lib.hardware.components.sensor.ProximitySensor;
 import com.team1816.lib.subsystems.drive.SwerveModule;
+import com.team1816.lib.util.driveUtil.DriveConversions;
 import com.team1816.lib.util.logUtil.GreenLogger;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -156,7 +160,7 @@ public class RobotFactory {
             reportGhostWarning("Motor", subsystemName, name);
             motor =
                 MotorFactory.createGhostMotor(
-                    (int) (getConstant(subsystemName, "maxVelTicks100ms", 1, false)),
+                        (int) (getConstant(subsystemName, "maxVelOpenLoop", 1, false)),
                     0,
                     name,
                     subsystem
@@ -241,7 +245,7 @@ public class RobotFactory {
             if (subsystem.implemented) reportGhostWarning("Motor", subsystemName, name);
             followerMotor =
                 MotorFactory.createGhostMotor(
-                    (int) getConstant(subsystemName, "maxVelTicks100ms"),
+                    (int) getConstant(subsystemName, "maxVelOpenLoop", 1),
                     0,
                     name,
                     subsystem
@@ -251,6 +255,66 @@ public class RobotFactory {
             followerMotor.setInverted(main.getInverted());
         }
         return followerMotor;
+    }
+
+    public SwerveModuleConstants getCTRESwerveModule(String subsystemName, String name) {
+        var subsystem = getSubsystem(subsystemName);
+        ModuleConfiguration module = subsystem.swerveModules.modules.get(name);
+
+        if (module == null) {
+            DriverStation.reportError(
+                    "No swerve module with name " + name + " subsystem " + subsystemName,
+                    true
+            );
+            return null;
+        }
+
+        MotorConfiguration driveMotor = subsystem.motors.get(module.drive);
+        MotorConfiguration azimuthMotor = subsystem.motors.get(module.azimuth);
+
+        var canCoder = subsystem.canCoders.get(module.canCoder);
+
+        double moduleDistFromCenter = Units.inchesToMeters(getConstant("drivetrain", "wheelbaseLength", 22.75) / 2); //this makes me sad
+        double moduleXDist = moduleDistFromCenter * (module.invertX ? -1 : 1);
+        double moduleYDist = moduleDistFromCenter * (module.invertY ? -1 : 1);
+
+        boolean usingPhoenixPro = getConstant("isProLicensed", 0) > 0;
+
+        double driveGearRatio = getConstant("drivetrain", "driveGearRatio", 6.75);
+
+        var moduleConfig = new SwerveModuleConstants()
+                // General Drivetrain
+                .withSpeedAt12VoltsMps(
+                        DriveConversions.canonicalRotationsToMeters(module.constants.get("freeSpin12VRPS"), driveGearRatio))
+                .withFeedbackSource(usingPhoenixPro
+                        ? SwerveModuleConstants.SteerFeedbackType.FusedCANcoder
+                        : SwerveModuleConstants.SteerFeedbackType.RemoteCANcoder)
+                // CANCoder
+                .withCANcoderId(canCoder)
+                .withCANcoderOffset(module.constants.get("encoderOffset"))
+                // General Motor
+                .withCouplingGearRatio(module.constants.get("couplingRatio"))
+                .withWheelRadius(getConstant("drivetrain", "wheelDiameter", 4) / 2)
+                .withLocationX(moduleXDist) //IMPORTANT: IF THIS IS NOT A SQUARE SWERVEDRIVE, THESE MUST BE DIFFERENT.
+                .withLocationY(moduleYDist)
+                // Drive Motor
+                .withDriveMotorClosedLoopOutput(com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType.Voltage)
+                .withDriveMotorGains(getSwervePIDConfigs(subsystemName, PIDConfig.Drive))
+                .withDriveMotorId(driveMotor.id)
+//                .withSlipCurrent(73.64)
+                .withDriveMotorGearRatio(driveGearRatio)
+                .withDriveMotorInverted(driveMotor.invertMotor)
+                // Azimuth Motor
+                .withSteerMotorClosedLoopOutput(com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType.Voltage)
+                .withSteerMotorGains(getSwervePIDConfigs(subsystemName, PIDConfig.Azimuth))
+                .withSteerMotorId(azimuthMotor.id)
+                .withSteerMotorGearRatio(getConstant("drivetrain", "azimuthGearRatio", 12.8))
+                .withSteerMotorInverted(azimuthMotor.invertMotor)
+                .withSteerFrictionVoltage(0)
+                .withDriveFrictionVoltage(0)
+                ;
+
+        return moduleConfig;
     }
 
     public SwerveModule getSwerveModule(String subsystemName, String name) {
@@ -401,10 +465,6 @@ public class RobotFactory {
         return false;
     }
 
-    public Double getConstant(String name) {
-        return getConstant(name, 0);
-    }
-
     public Map<String, Double> getConstants() {
         return config.constants;
     }
@@ -434,10 +494,6 @@ public class RobotFactory {
 
     public String getInputHandlerName() {
         return Objects.requireNonNullElse(config.inputHandler, "empty");
-    }
-
-    public double getConstant(String subsystemName, String name) {
-        return getConstant(subsystemName, name, 0.0);
     }
 
     public double getConstant(String subsystemName, String name, double defaultVal) {
@@ -472,6 +528,16 @@ public class RobotFactory {
         return getSubsystem(subsystemName).constants.get(name);
     }
 
+    public Slot0Configs getSwervePIDConfigs(String subsystemName, PIDConfig configType) {
+        PIDSlotConfiguration configs = getPidSlotConfig(subsystemName, "slot0", configType);
+
+        return new Slot0Configs()
+                .withKP(configs.kP)
+                .withKI(configs.kI)
+                .withKD(configs.kD)
+                .withKV(configs.kF);
+    }
+
     public PIDSlotConfiguration getPidSlotConfig(String subsystemName) {
         return getPidSlotConfig(subsystemName, "slot0", PIDConfig.Generic);
     }
@@ -488,17 +554,11 @@ public class RobotFactory {
         var subsystem = getSubsystem(subsystemName);
         Map<String, PIDSlotConfiguration> config = null;
         if (subsystem.implemented) {
-            switch (configType) {
-                case Azimuth:
-                    config = subsystem.swerveModules.azimuthPID;
-                    break;
-                case Drive:
-                    config = subsystem.swerveModules.drivePID;
-                    break;
-                case Generic:
-                    config = subsystem.pidConfig;
-                    break;
-            }
+            config = switch (configType) {
+                case Azimuth -> subsystem.swerveModules.azimuthPID;
+                case Drive -> subsystem.swerveModules.drivePID;
+                case Generic -> subsystem.pidConfig;
+            };
         }
         if (config != null && config.get(slot) != null) return config.get(slot);
         else {
@@ -543,7 +603,7 @@ public class RobotFactory {
             GreenLogger.log("Using old Pigeon for id: " + id);
             pigeon = new PigeonIMUImpl(id);
         }
-        if (getConstant("resetFactoryDefaults") > 0) {
+        if (getConstant("resetFactoryDefaults", 0) > 0) {
             pigeon.configFactoryDefaults();
             pigeon.set_StatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_1_General, 100);
             pigeon.set_StatusFramePeriod(PigeonIMU_StatusFrame.BiasedStatus_6_Accel, 100);
@@ -575,6 +635,14 @@ public class RobotFactory {
 
     public boolean isCompressorEnabled() {
         return config.infrastructure.compressorEnabled;
+    }
+
+    public String getCanBusName() {
+        return config.infrastructure.canBusName;
+    }
+
+    public int getPigeonID() {
+        return config.infrastructure.pigeonId;
     }
 
     private void reportGhostWarning(

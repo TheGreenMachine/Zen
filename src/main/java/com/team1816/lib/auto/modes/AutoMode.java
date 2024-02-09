@@ -6,7 +6,7 @@ import com.team1816.lib.auto.AutoModeEndedException;
 import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.actions.AutoAction;
 import com.team1816.lib.auto.actions.TrajectoryAction;
-import com.team1816.lib.subsystems.drive.SwerveDrive;
+import com.team1816.lib.subsystems.drive.EnhancedSwerveDrive;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
@@ -68,7 +68,7 @@ public abstract class AutoMode {
         robotState = Injector.get(RobotState.class);
 
         this.trajectoryActions = trajectoryActions;
-        boolean isSwerve = Injector.get(DriveFactory.class).getInstance() instanceof SwerveDrive;
+        boolean isSwerve = Injector.get(DriveFactory.class).getInstance() instanceof EnhancedSwerveDrive;
 
         if (trajectoryActions.isEmpty()) {
             if (robotState.allianceColor == Color.BLUE) {

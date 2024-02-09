@@ -2,19 +2,19 @@ package com.team1816.lib.hardware.factory;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.*;
-import com.ctre.phoenix.sensors.*;
+import com.ctre.phoenix6.configs.AudioConfigs;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.team1816.lib.hardware.MotorConfiguration;
 import com.team1816.lib.hardware.PIDSlotConfiguration;
 import com.team1816.lib.hardware.SubsystemConfig;
-import com.team1816.lib.hardware.components.DeviceIdMismatchException;
 import com.team1816.lib.hardware.components.motor.*;
 import com.team1816.lib.hardware.components.motor.configurations.FeedbackDeviceType;
+import com.team1816.lib.subsystems.drive.Drive;
 import com.team1816.lib.util.logUtil.GreenLogger;
+import com.team1816.season.configuration.Constants;
 import edu.wpi.first.wpilibj.RobotBase;
 
 import java.util.Map;
@@ -116,12 +116,12 @@ public class MotorFactory {
     }
 
     public static IGreenMotor createGhostMotor(
-            int maxVelTicks100ms,
+            double maxVelRotationsPerSec,
             int absInitOffset,
             String name,
             SubsystemConfig subsystem
     ) {
-        IGreenMotor motor = new GhostMotor(maxVelTicks100ms, absInitOffset, name);
+        IGreenMotor motor = new GhostMotor(maxVelRotationsPerSec, absInitOffset, name);
         configMotor(motor, name, subsystem, null, -1);
         return motor;
     }
@@ -261,7 +261,7 @@ public class MotorFactory {
         }
 
         // Setting to PID slot 0 and primary closed loop
-        motor.selectPIDSlot(0,0);
+        motor.selectPIDSlot(0);
 
         // Current limits
         motor.configCurrentLimit(
@@ -326,6 +326,13 @@ public class MotorFactory {
             GreenLogger.log("        Inverting " + name + " with ID " + id);
         }
         motor.setInverted(invertMotor);
+    }
+
+    public static AudioConfigs getAudioConfigs() { // No parameters because it's only needed for the CTRE Drivetrain
+        return new AudioConfigs()
+                .withBeepOnConfig(Constants.kSoundOnConfig)
+                .withBeepOnBoot(Constants.kSoundOnConfig)
+                .withAllowMusicDurDisable(Constants.kMusicEnabled);
     }
 
     private static SlotConfiguration toSlotConfiguration (

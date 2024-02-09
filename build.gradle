@@ -2,7 +2,7 @@ import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2024.1.1"
+    id "edu.wpi.first.GradleRIO" version "2024.2.1"
     id 'org.jsonschema2dataclass' version '4.0.1'
 }
 
@@ -44,6 +44,12 @@ def writeGitHashToFile() {
             file("$directory/$fileName") << line.trim() << "    \n"
         }
     }
+}
+
+def yellAtConsole(String message) {
+    String RED_TEXT = "\u001B[31m";
+    String RESET_TEXT = "\u001B[0m"
+    println(RED_TEXT + message + RESET_TEXT)
 }
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
@@ -153,6 +159,32 @@ jsonSchema2Pojo {
     )
 }
 
+task robotCADToAdvantageScope (type: Copy) {
+    String currUserName = System.getProperty("user.name");
+    boolean isWindows = DefaultNativePlatform.currentOperatingSystem.isWindows();
+    String robotCADFolder = "Robot_${projectDir.getName()}"
+    String customAssetFolder = "AdvantageScope${isWindows ? "\\" : "/"}userAssets"; //don't need the ternary for execution but keeping for the warning
+
+    String baseOutputDir; //For checking that AdvantageScope is on the system
+
+    if (isWindows) {
+        baseOutputDir = "C:\\Users\\${currUserName}\\AppData\\Roaming\\${customAssetFolder}"
+    } else { //Mac
+        baseOutputDir = "/Users/${currUserName}/Library/Application Support/${customAssetFolder}"
+    } //Could add Debian linux if anyone wants to take a crack at it
+
+    String outputDir = baseOutputDir + (isWindows ? "\\" : "/") + robotCADFolder;
+
+    if (new File(baseOutputDir).exists()) {
+        copy {
+            from "${project.rootDir}/${robotCADFolder}"
+            into outputDir
+        }
+    } else {
+        yellAtConsole("${baseOutputDir} could not be found! Please ensure you have AdvantageScope properly downloaded.")
+    }
+}
+
 task runAlpha(type: JavaExec) {
     String jniDir = "${project.buildDir}/jni/release"
     environment "PATH", jniDir
@@ -221,6 +253,8 @@ task runZodiac(type: JavaExec) {
     classpath = files(jar)
     jvmArgs "-Djava.library.path=${jniDir}"
 }
+
+
 
 processResources {
     include '**/*.config.yml'

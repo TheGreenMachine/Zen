@@ -186,13 +186,13 @@ public class LazyVictorSPX extends VictorSPX implements IGreenMotor {
     }
 
     @Override
-    public void setSensorPosition(double sensorPosition, int closedLoopSlotID) {
-        super.setSelectedSensorPosition(sensorPosition, closedLoopSlotID, Constants.kCANTimeoutMs);
+    public void setSensorPosition(double sensorPosition) {
+        super.setSelectedSensorPosition(sensorPosition, 0, Constants.kCANTimeoutMs);
     }
 
     @Override
-    public void setSensorPosition(double sensorPosition, int closedLoopSlotID, int timeoutMs) {
-        super.setSelectedSensorPosition(sensorPosition, closedLoopSlotID, timeoutMs);
+    public void setSensorPosition(double sensorPosition, int timeoutMs) {
+        super.setSelectedSensorPosition(sensorPosition, 0, timeoutMs);
     }
 
     @Override
@@ -246,8 +246,8 @@ public class LazyVictorSPX extends VictorSPX implements IGreenMotor {
     }
 
     @Override
-    public void selectPIDSlot(int pidSlotID, int closedLoopSlotID) {
-        super.selectProfileSlot(pidSlotID, closedLoopSlotID);
+    public void selectPIDSlot(int pidSlotID) {
+        super.selectProfileSlot(pidSlotID, 0);
     }
 
     @Override

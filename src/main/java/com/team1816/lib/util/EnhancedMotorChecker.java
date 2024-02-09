@@ -43,13 +43,13 @@ public class EnhancedMotorChecker {
             var name = subsystem.getSubsystemName();
             var factory = Injector.get(RobotFactory.class);
             return new EnhancedMotorChecker.CheckerConfig() {
-                {
-                    mCurrentFloor = factory.getConstant(name, "currentFloorCheck");
-                    mRPMFloor = factory.getConstant(name, "rpmFloorCheck");
-                    mCurrentEpsilon = factory.getConstant(name, "currentEpsilonCheck");
-                    mRPMEpsilon = factory.getConstant(name, "rpmEpsilonCheck");
-                    mRPMSupplier = () -> motor.getSensorVelocity(0);
-                }
+//                {
+//                    mCurrentFloor = factory.getConstant(name, "currentFloorCheck");
+//                    mRPMFloor = factory.getConstant(name, "rpmFloorCheck");
+//                    mCurrentEpsilon = factory.getConstant(name, "currentEpsilonCheck");
+//                    mRPMEpsilon = factory.getConstant(name, "rpmEpsilonCheck");
+//                    mRPMSupplier = () -> motor.getSensorVelocity(0);
+//                }
             };
         }
     }
