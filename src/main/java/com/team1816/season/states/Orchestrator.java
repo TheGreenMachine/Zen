@@ -3,6 +3,7 @@ package com.team1816.season.states;
 import com.ctre.phoenix6.StatusCode;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.team1816.lib.Injector;
 import com.team1816.lib.PlaylistManager;
 import com.team1816.lib.subsystems.LedManager;
 import com.team1816.lib.subsystems.drive.Drive;
@@ -11,6 +12,8 @@ import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.lib.util.visionUtil.VisionPoint;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.configuration.FieldConfig;
+import com.team1816.season.subsystems.Collector;
+import com.team1816.season.subsystems.Shooter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -37,6 +40,7 @@ public class Orchestrator {
     private static Drive drive;
     private static Camera camera;
     private static LedManager ledManager;
+    private static Collector collector;
 
     /**
      * Properties
@@ -68,6 +72,7 @@ public class Orchestrator {
         drive = df.getInstance();
         camera = cam;
         ledManager = led;
+        collector = Injector.get(Collector.class);
     }
 
     /**
@@ -259,6 +264,14 @@ public class Orchestrator {
             drive.resetOdometry(newRobotPose);
             robotState.fieldToVehicle = newRobotPose;
             robotState.isPoseUpdated = true;
+        }
+    }
+
+    public void autoSetCollectorState(){
+        if(!robotState.isBeamBreakTriggered && robotState.actualPivotState == Shooter.PIVOT_STATE.STOW){
+            collector.setDesiredState(Collector.COLLECTOR_STATE.INTAKE);
+        } else{
+            collector.setDesiredState(Collector.COLLECTOR_STATE.OUTTAKE);
         }
     }
 

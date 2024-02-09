@@ -286,18 +286,6 @@ public class Robot extends TimedRobot {
                     }
             );
 
-            inputHandler.listenAction(
-                    "toggleIntakeOuttake",
-                    ActionState.PRESSED,
-                    () -> {
-                        if (collector.getDesiredCollectorState() == Collector.COLLECTOR_STATE.OUTTAKE || collector.getDesiredCollectorState() == Collector.COLLECTOR_STATE.STOP) {
-                            collector.setDesiredState(Collector.COLLECTOR_STATE.INTAKE);
-                        } else {
-                            collector.setDesiredState(Collector.COLLECTOR_STATE.OUTTAKE);
-                        }
-                    }
-            );
-
             /** Operator Commands */
             inputHandler.listenAction(
                     "ShootAmp",
@@ -554,6 +542,8 @@ public class Robot extends TimedRobot {
                     -inputHandler.getActionAsDouble("strafe"),
                      -inputHandler.getActionAsDouble("rotation")
         );
+
+        orchestrator.autoSetCollectorState();
     }
 
     /**
