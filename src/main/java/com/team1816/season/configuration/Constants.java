@@ -42,7 +42,7 @@ public class Constants {
      * CANBus Characterization
      */
     public static final boolean kHasCANivore = factory.getConstant("hasCanivore", 0) > 0;
-    public static final String kCANivoreName = factory.getCANbusName();
+    public static final String kCANivoreName = factory.getCanBusName();
     public static final String kLowSpeedBusName = "rio";
 
     /**

@@ -79,22 +79,22 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
     public static final int kBackLeft = 2;
     public static final int kBackRight = 3;
 
-    private static final double maxVel12MPS = factory.getConstant(NAME,"maxVel12VMPS");
+    private static final double maxVel12MPS = factory.getConstant(NAME,"maxVel12VMPS", 5);
 
     private double driveScalar;
     private static final double normalDriveScalar = kMaxVelOpenLoopMeters / maxVel12MPS;
-    private static final double slowDriveScalar = normalDriveScalar * factory.getConstant(NAME, "slowModeScalar");
-    private static final double turboDriveScalar = normalDriveScalar * factory.getConstant(NAME, "turboModeScalar");
+    private static final double slowDriveScalar = normalDriveScalar * factory.getConstant(NAME, "slowModeScalar", 0.5);
+    private static final double turboDriveScalar = normalDriveScalar * factory.getConstant(NAME, "turboModeScalar", 2);
 
     private double rotationScalar;
-    private static final double slowRotationScalar = factory.getConstant(NAME, "slowModeScalar");
-    private static final double turboRotationScalar = factory.getConstant(NAME, "turboModeScalar");
+    private static final double slowRotationScalar = factory.getConstant(NAME, "slowModeScalar", 0.5);
+    private static final double turboRotationScalar = factory.getConstant(NAME, "turboModeScalar", 2);
 
     private SPEED_MODE currentSpeedMode;
 
-    private final double driveDeadband = factory.getConstant(NAME, "driveDeadband");
-    private final double rotationalDeadband = factory.getConstant(NAME, "rotationalDeadband") * Math.PI;
-    private final double inputDeadband = factory.getConstant(NAME, "inputDeadband");
+    private final double driveDeadband = factory.getConstant(NAME, "driveDeadband", 0.1);
+    private final double rotationalDeadband = factory.getConstant(NAME, "rotationalDeadband", 0.1) * Math.PI;
+    private final double inputDeadband = factory.getConstant(NAME, "inputDeadband", 0.15);
 
     /**
      * Logging
