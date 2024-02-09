@@ -9,13 +9,14 @@ driver:
             horizontal: rotation
     buttonpad:
         b: brakeMode
-        a: autoTargetAlign
-        y: toggleIntakeOuttake
+        a: revSpeaker
+        x: ampPivot
     axes:
         rightTrigger: slowMode
         leftTrigger: turboMode
     buttons:
         start: zeroPose
+        rightBumper: shoot
     dpad:
         up: snapFromDriver
         down: snapToDriver
@@ -27,8 +28,5 @@ operator:
     buttons:
         leftBumper: updatePoseWithCamera
     buttonpad:
-        a: ShootSpeaker
-        b: ShootAmp
-        x: Feed
         y: StopShooter
 demoMode: false

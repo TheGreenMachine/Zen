@@ -148,6 +148,10 @@ public class RobotState {
         triAxialAcceleration = new Double[]{0d, 0d, 0d};
 
         // TODO: Insert any state set up here.
+        actualPivotState = Shooter.PIVOT_STATE.STOW;
+        actualCollectorState = Collector.COLLECTOR_STATE.STOP;
+        actualFeederState = Shooter.FEEDER_STATE.STOP;
+        actualRollerState = Shooter.ROLLER_STATE.STOP;
 
         isPoseUpdated = true;
         superlativeTarget = new VisionPoint();

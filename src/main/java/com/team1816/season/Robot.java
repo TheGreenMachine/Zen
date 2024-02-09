@@ -288,25 +288,32 @@ public class Robot extends TimedRobot {
 
             /** Operator Commands */
             inputHandler.listenAction(
-                    "ShootAmp",
+                    "revSpeaker",
                     ActionState.PRESSED,
                     () -> {
-                        shooter.setDesiredRollerState(Shooter.ROLLER_STATE.SHOOT_AMP);
-                        shooter.setDesiredFeederState(Shooter.FEEDER_STATE.SHOOT_AMP);
+                        shooter.setDesiredRollerState(Shooter.ROLLER_STATE.SHOOT_SPEAKER);
+                    }
+            );
+            inputHandler.listenActionPressAndRelease(
+                    "shoot",
+                    (pressed) -> {
+                        if(pressed) {
+                            shooter.setDesiredFeederState(Shooter.FEEDER_STATE.SHOOT);
+                            if(shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.SHOOT_AMP)
+                                shooter.setDesiredRollerState(Shooter.ROLLER_STATE.SHOOT_AMP);
+                        }
+                        else
+                            shooter.setDesiredState(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP);
                     }
             );
             inputHandler.listenAction(
-                    "ShootSpeaker",
+                    "ampPivot",
                     ActionState.PRESSED,
                     () -> {
-                        shooter.shootSpeaker();
-                    }
-            );
-            inputHandler.listenAction(
-                    "Feed",
-                    ActionState.PRESSED,
-                    () -> {
-                        shooter.setDesiredFeederState(Shooter.FEEDER_STATE.TRANSFER);
+                        if(shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.STOW)
+                            shooter.setDesiredPivotState(Shooter.PIVOT_STATE.SHOOT_AMP);
+                        else
+                            shooter.setDesiredPivotState(Shooter.PIVOT_STATE.STOW);
                     }
             );
             inputHandler.listenAction(

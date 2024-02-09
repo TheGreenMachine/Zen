@@ -53,8 +53,6 @@ public class Shooter extends Subsystem {
     private double desiredPivotPosition = 0;
     private double actualPivotPosition = 0;
 
-    private boolean shootingSpeaker = false;
-
 
     /**
      * Constants
@@ -63,11 +61,9 @@ public class Shooter extends Subsystem {
     private static final double rollerSpeakerShootSpeed = factory.getConstant(NAME, "rollerSpeakerShootSpeed", 0.70);
     private static final double rollerAmpShootSpeed = factory.getConstant(NAME, "rollerAmpShootSpeed", 0.40);
 
-    private final double feederSpeakerShootSpeed = factory.getConstant(NAME, "feederSpeakerShootSpeed", 0.70);
-    private final double feederAmpShootSpeed = factory.getConstant(NAME, "feederAmpShootSpeed", 0.40);
+    private final double feederShootSpeed = factory.getConstant(NAME, "feederSpeakerShootSpeed", 0.70);
     private final double feederIntakeSpeed = factory.getConstant(NAME, "feederIntakeSpeed", 0.20);
 
-    private final double pivotSpeakerShootPosition = factory.getConstant(NAME, "pivotSpeakerShootPosition", 0.5);
     private final double pivotAmpShootPosition = factory.getConstant(NAME, "pivotAmpShootPosition", 1.0);
     private final boolean opposeLeaderDirection = !((int)factory.getConstant(NAME, "invertFollowerMotor", 1.0) == 0);
 
@@ -155,6 +151,16 @@ public class Shooter extends Subsystem {
      *
      * @param desiredRollerState ROLLER_STATE
      * @param desiredFeederState FEEDER_STATE
+     */
+    public void setDesiredState(ROLLER_STATE desiredRollerState, FEEDER_STATE desiredFeederState) {
+        setDesiredState(desiredRollerState, desiredFeederState, this.desiredPivotState);
+    }
+
+    /**
+     * Sets the desired state of the roller, feeder, and pivot
+     *
+     * @param desiredRollerState ROLLER_STATE
+     * @param desiredFeederState FEEDER_STATE
      * @param desiredPivotState PIVOT_STATE
      */
     public void setDesiredState(ROLLER_STATE desiredRollerState, FEEDER_STATE desiredFeederState, PIVOT_STATE desiredPivotState) {
@@ -219,16 +225,6 @@ public class Shooter extends Subsystem {
      */
     @Override
     public void writeToHardware() {
-        if (shootingSpeaker) {
-            desiredRollerState = ROLLER_STATE.SHOOT_SPEAKER;
-            if (ROLLER_STATE.SHOOT_SPEAKER.inDesiredSpeedRange(actualRollerVelocity)) {
-                desiredFeederState = FEEDER_STATE.SHOOT_SPEAKER;
-                if (!isBeamBreakTriggered()) {
-                    shootingSpeaker = false;
-                    setDesiredState(ROLLER_STATE.STOP, FEEDER_STATE.STOP, PIVOT_STATE.STOW);
-                }
-            }
-        }
         if (rollerOutputsChanged) {
             rollerOutputsChanged = false;
             double desiredRollerVelocity = 0;
@@ -253,11 +249,8 @@ public class Shooter extends Subsystem {
                 case STOP -> {
                     desiredFeederVelocity = 0;
                 }
-                case SHOOT_SPEAKER -> {
-                    desiredFeederVelocity = feederSpeakerShootSpeed;
-                }
-                case SHOOT_AMP -> {
-                    desiredFeederVelocity = feederAmpShootSpeed;
+                case SHOOT -> {
+                    desiredFeederVelocity = feederShootSpeed;
                 }
                 case TRANSFER -> {
                     if (!isBeamBreakTriggered())
@@ -272,9 +265,6 @@ public class Shooter extends Subsystem {
             switch (desiredPivotState) {
                 case STOW -> {
                     desiredPivotPosition = 0;
-                }
-                case SHOOT_SPEAKER -> {
-                    desiredPivotPosition = pivotSpeakerShootPosition;
                 }
                 case SHOOT_AMP -> {
                     desiredPivotPosition = pivotAmpShootPosition;
@@ -338,13 +328,6 @@ public class Shooter extends Subsystem {
     }
 
     /**
-     * Sets the shooter to shoot into the speaker
-     */
-    public void shootSpeaker() {
-        shootingSpeaker = true;
-    }
-
-    /**
      * Roller enum
      */
     public enum ROLLER_STATE {
@@ -368,8 +351,7 @@ public class Shooter extends Subsystem {
      */
     public enum FEEDER_STATE {
         STOP,
-        SHOOT_SPEAKER,
-        SHOOT_AMP,
+        SHOOT,
         TRANSFER
     }
 
@@ -378,7 +360,6 @@ public class Shooter extends Subsystem {
      */
     public enum PIVOT_STATE {
         STOW,
-        SHOOT_SPEAKER,
         SHOOT_AMP
     }
 }
