@@ -9,7 +9,6 @@ driver:
             horizontal: rotation
     buttonpad:
         b: brakeMode
-        a: revSpeaker
         x: ampPivot
     axes:
         rightTrigger: slowMode

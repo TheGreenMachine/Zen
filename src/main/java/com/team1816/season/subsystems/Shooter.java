@@ -1,7 +1,9 @@
 package com.team1816.season.subsystems;
 
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
+import com.team1816.lib.hardware.components.motor.LazyTalonFX;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.subsystems.Subsystem;
 import com.team1816.season.configuration.Constants;
@@ -98,6 +100,16 @@ public class Shooter extends Subsystem {
 
         noteSensor = new DigitalInput((int) factory.getConstant(NAME, "noteSensorChannel", 0));
 
+        rollerMotor.selectPIDSlot(1);
+        pivotMotor.selectPIDSlot(2);
+
+        pivotMotor.configForwardSoftLimit(55);
+        pivotMotor.configReverseSoftLimit(0);
+        pivotMotor.enableSoftLimits(true);
+
+//        ((LazyTalonFX) pivotMotor).getConfigurator().apply(
+//                new MotionMagicConfigs().withMotionMagicExpo_kA(0.06).withMotionMagicExpo_kV(0.05)
+//        );
         // shootPower = factory.getConstant(NAME, "shootPower", 0.70);
 
         if (Constants.kLoggingRobot) {
@@ -257,20 +269,20 @@ public class Shooter extends Subsystem {
                         desiredFeederVelocity = feederIntakeSpeed;
                 }
             }
-            feederMotor.set(GreenControlMode.PERCENT_OUTPUT, desiredFeederVelocity);
+            feederMotor.set(GreenControlMode.VELOCITY_CONTROL, desiredFeederVelocity);
             desiredFeederVelocityLogger.append(desiredFeederVelocity);
         }
         if (pivotOutputsChanged) {
             pivotOutputsChanged = false;
             switch (desiredPivotState) {
                 case STOW -> {
-                    desiredPivotPosition = 0;
+                    desiredPivotPosition = 3;
                 }
                 case SHOOT_AMP -> {
                     desiredPivotPosition = pivotAmpShootPosition;
                 }
             }
-            pivotMotor.set(GreenControlMode.POSITION_CONTROL, desiredPivotPosition);
+            pivotMotor.set(GreenControlMode.MOTION_MAGIC_EXPO, desiredPivotPosition);
         }
     }
 

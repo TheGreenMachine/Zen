@@ -78,6 +78,7 @@ public class RobotState {
     public Shooter.ROLLER_STATE actualRollerState = Shooter.ROLLER_STATE.STOP;
     public Shooter.FEEDER_STATE actualFeederState = Shooter.FEEDER_STATE.STOP;
     public Shooter.PIVOT_STATE actualPivotState = Shooter.PIVOT_STATE.STOW;
+    public boolean isShooting = false;
     public boolean isBeamBreakTriggered = false;
 
     public VisionPoint superlativeTarget = new VisionPoint();
