@@ -141,7 +141,7 @@ subsystems:
         constants:
             useMultiTargetOdometry: 1
     collector:
-        implemented: true
+        implemented: false
         motors:
             intakeMotor:
                 motorType: TalonFX
@@ -163,13 +163,13 @@ subsystems:
             rollerMotor:
                 motorType: TalonFX
                 motorName: rollerMotor
-                id: 11
-                invertMotor: false # ?
+                id: -11
+                invertMotor: false
             feederMotor:
                 motorType: SparkMax
                 motorName: feederMotor
-                id: 9
-                invertMotor: true # ?
+                id: -9
+                invertMotor: true
             pivotMotor:
                 motorType: TalonFX
                 motorName: pivotMotor
@@ -204,7 +204,7 @@ subsystems:
             feederAmpShootSpeed: 700
             feederIntakeSpeed: 500
             velocityErrorMargin: 0.1
-            pivotAmpShootPosition: 40
+            pivotAmpShootPosition: 37
             invertFollowerMotor: 0
 infrastructure:
     canBusName: highSpeed

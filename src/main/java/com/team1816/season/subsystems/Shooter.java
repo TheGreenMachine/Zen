@@ -2,6 +2,7 @@ package com.team1816.season.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
 import com.team1816.lib.hardware.components.motor.LazyTalonFX;
@@ -98,19 +99,22 @@ public class Shooter extends Subsystem {
         pivotMotor = factory.getMotor(NAME, "pivotMotor");
         pivotFollowMotor = factory.getFollowerMotor(NAME, "pivotFollowMotor", pivotMotor, opposeLeaderDirection);
 
-        noteSensor = new DigitalInput((int) factory.getConstant(NAME, "noteSensorChannel", -1));
+        noteSensor = new DigitalInput((int) factory.getConstant(NAME, "noteSensorChannel", 0));
 
         rollerMotor.selectPIDSlot(1);
         pivotMotor.selectPIDSlot(2);
 
-        pivotMotor.configForwardSoftLimit(55);
-        pivotMotor.configReverseSoftLimit(0);
-        pivotMotor.enableSoftLimits(true);
+//        pivotMotor.configForwardSoftLimit(55);
+//        pivotMotor.configReverseSoftLimit(0);
+//        pivotMotor.enableSoftLimits(true);
 
-//        ((LazyTalonFX) pivotMotor).getConfigurator().apply(
-//                new MotionMagicConfigs().withMotionMagicExpo_kA(0.06).withMotionMagicExpo_kV(0.05)
-//        );
-        // shootPower = factory.getConstant(NAME, "shootPower", 0.70);
+        if(pivotMotor instanceof TalonFX) {
+            ((LazyTalonFX) pivotMotor).getConfigurator().apply(
+                    new MotionMagicConfigs().withMotionMagicExpo_kA(0.06).withMotionMagicExpo_kV(0.05)
+            );
+        }
+
+
 
         if (Constants.kLoggingRobot) {
             desStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Pivot/desiredPivotPosition");
@@ -272,23 +276,23 @@ public class Shooter extends Subsystem {
             feederMotor.set(GreenControlMode.VELOCITY_CONTROL, desiredFeederVelocity);
             desiredFeederVelocityLogger.append(desiredFeederVelocity);
         }
-        if (pivotOutputsChanged) {
-            pivotOutputsChanged = false;
-            switch (desiredPivotState) {
-                case STOW -> {
-                    desiredPivotPosition = 3;
-                }
-                case SHOOT_AMP -> {
-                    desiredPivotPosition = pivotAmpShootPosition;
-                }
-            }
-            pivotMotor.set(GreenControlMode.MOTION_MAGIC_EXPO, desiredPivotPosition);
-        }
+//        if (pivotOutputsChanged) {
+//            pivotOutputsChanged = false;
+//            switch (desiredPivotState) {
+//                case STOW -> {
+//                    desiredPivotPosition = -0.08; //TODO yaml
+//                }
+//                case SHOOT_AMP -> {
+//                    desiredPivotPosition = pivotAmpShootPosition - 0.08;
+//                }
+//            }
+//            pivotMotor.set(GreenControlMode.MOTION_MAGIC_EXPO, desiredPivotPosition);
+//        }
     }
 
     @Override
     public void zeroSensors() {
-        pivotMotor.setSensorPosition(0, 0);
+        pivotMotor.setSensorPosition(0, 50);
     }
 
     public void setBraking(boolean braking) {

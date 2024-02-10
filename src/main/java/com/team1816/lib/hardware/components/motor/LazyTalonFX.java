@@ -23,7 +23,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     protected TalonFXConfigurator configurator;
     protected TalonFXConfiguration configs = new TalonFXConfiguration();
 
-    protected final double kCANTimeoutSeconds = Constants.kCANTimeoutMs / 1000.0;
+    protected final double kCANTimeoutSeconds = 0.050;
     protected final double kLongCANTimeoutSeconds = Constants.kLongCANTimeoutMs / 1000.0;
 
     protected DutyCycleOut dutyCycle = new DutyCycleOut(0);

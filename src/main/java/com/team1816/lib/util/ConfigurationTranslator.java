@@ -117,7 +117,7 @@ public class ConfigurationTranslator {
             case MOTION_PROFILE -> CTREControlMode = ControlMode.MotionProfile;
             case CURRENT -> CTREControlMode = ControlMode.Current;
             case FOLLOWER -> CTREControlMode = ControlMode.Follower;
-            case MOTION_MAGIC -> CTREControlMode = ControlMode.MotionMagic;
+            case MOTION_MAGIC, MOTION_MAGIC_EXPO -> CTREControlMode = ControlMode.MotionMagic;
             case MOTION_PROFILE_ARC -> CTREControlMode = ControlMode.MotionProfileArc;
             case MUSIC_TONE -> CTREControlMode = ControlMode.MusicTone;
             case DISABLED -> CTREControlMode = ControlMode.Disabled;
