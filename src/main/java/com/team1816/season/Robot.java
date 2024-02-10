@@ -72,6 +72,10 @@ public class Robot extends TimedRobot {
     private LedManager ledManager;
     private Camera camera;
     private Shooter shooter;
+    private DigitalInput zeroingButton;
+    private Boolean zeroing = false;
+    private boolean lastButton;
+
 
 
     /**
@@ -178,7 +182,7 @@ public class Robot extends TimedRobot {
             shooter = Injector.get(Shooter.class);
             collector = Injector.get(Collector.class);
 
-
+            zeroingButton = new DigitalInput((int) factory.getConstant("noteSensorChannel", -1));
 
             /** Logging */
             if (Constants.kLoggingRobot) {
@@ -497,8 +501,29 @@ public class Robot extends TimedRobot {
             }
 
             if (RobotBase.isReal()) {
-                // TODO: Logic for if the robot is not a simulation
-                // TODO: Also don't forget to add logic to make faulted false.
+                // logic for zeroing elevator
+                if (lastButton != zeroingButton.get() && lastButton) { // will only be true when changing from false to true
+                    if (zeroing == null) { // zeroing
+                        faulted = false;
+                        zeroing = true;
+                        shooter.zeroSensors();
+                        drive.resetPigeon(Rotation2d.fromDegrees(-90));
+                    } else if (zeroing) { // ready
+                        zeroing = false;
+                        shooter.setBraking(true);
+                    } else { // needs zeroing
+                        zeroing = null;
+                        shooter.setBraking(false);
+
+                        faulted = true;
+                    }
+                }
+                lastButton = zeroingButton.get();
+
+                if (ledManager.getCurrentControlStatus() == LedManager.RobotStatus.ZEROING) {
+                    // only keep looping through write if zeroing elevator cus we need to update its blinking
+                    ledManager.writeToHardware();
+                }
             }
 
             // Periodically check if drivers changed desired auto - if yes, then update the robot's position on the field

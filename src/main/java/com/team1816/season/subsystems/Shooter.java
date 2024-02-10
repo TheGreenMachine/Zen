@@ -1,5 +1,6 @@
 package com.team1816.season.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
@@ -32,7 +33,6 @@ public class Shooter extends Subsystem {
     private final IGreenMotor pivotFollowMotor;
 
     private final DigitalInput noteSensor; // BeamBreak
-
 
     /**
      * States
@@ -98,7 +98,7 @@ public class Shooter extends Subsystem {
         pivotMotor = factory.getMotor(NAME, "pivotMotor");
         pivotFollowMotor = factory.getFollowerMotor(NAME, "pivotFollowMotor", pivotMotor, opposeLeaderDirection);
 
-        noteSensor = new DigitalInput((int) factory.getConstant(NAME, "noteSensorChannel", 0));
+        noteSensor = new DigitalInput((int) factory.getConstant(NAME, "noteSensorChannel", -1));
 
         rollerMotor.selectPIDSlot(1);
         pivotMotor.selectPIDSlot(2);
@@ -288,7 +288,11 @@ public class Shooter extends Subsystem {
 
     @Override
     public void zeroSensors() {
-        pivotMotor.set(GreenControlMode.POSITION_CONTROL, 0);
+        pivotMotor.setSensorPosition(0, 0);
+    }
+
+    public void setBraking(boolean braking) {
+        pivotMotor.setNeutralMode(braking ? NeutralMode.Brake : NeutralMode.Coast);
     }
 
     @Override
