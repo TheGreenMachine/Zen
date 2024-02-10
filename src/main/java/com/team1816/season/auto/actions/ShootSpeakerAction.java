@@ -9,8 +9,6 @@ public class ShootSpeakerAction extends SeriesAction {
     public ShootSpeakerAction() {
         super(
                 new SeriesAction(
-                        new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW),
-                        new WaitAction(0.5),
                         new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT, Shooter.PIVOT_STATE.STOW),
                         new WaitAction(0.5)
                 )

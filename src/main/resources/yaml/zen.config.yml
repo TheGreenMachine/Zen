@@ -141,7 +141,7 @@ subsystems:
         constants:
             useMultiTargetOdometry: 1
     collector:
-        implemented: false
+        implemented: true
         motors:
             intakeMotor:
                 motorType: TalonFX
@@ -163,23 +163,25 @@ subsystems:
             rollerMotor:
                 motorType: TalonFX
                 motorName: rollerMotor
-                id: -11
+                id: 11
                 invertMotor: false
             feederMotor:
                 motorType: SparkMax
                 motorName: feederMotor
-                id: -9
+                id: 9
                 invertMotor: true
             pivotMotor:
                 motorType: TalonFX
                 motorName: pivotMotor
                 id: -12
                 invertMotor: true
+                currentLimit: 20
             pivotFollowMotor:
                 motorType: TalonFX
                 motorName: pivotFollowMotor
                 id: -13
                 invertMotor: false # ?
+                currentLimit: 20
         pidConfig:
             slot0:
                 kP: 0

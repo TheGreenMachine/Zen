@@ -219,6 +219,7 @@ public class Shooter extends Subsystem {
 
         if (robotState.isBeamBreakTriggered != isBeamBreakTriggered()) {
             robotState.isBeamBreakTriggered = isBeamBreakTriggered();
+            feederOutputsChanged = true;
         }
 
         if (Constants.kLoggingRobot) {
@@ -269,8 +270,9 @@ public class Shooter extends Subsystem {
                     desiredFeederVelocity = feederShootSpeed;
                 }
                 case TRANSFER -> {
-                    if (!isBeamBreakTriggered())
+                    if (!isBeamBreakTriggered()) {
                         desiredFeederVelocity = feederIntakeSpeed;
+                    }
                 }
             }
             feederMotor.set(GreenControlMode.VELOCITY_CONTROL, desiredFeederVelocity);

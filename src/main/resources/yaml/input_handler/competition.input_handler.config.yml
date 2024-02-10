@@ -11,11 +11,11 @@ driver:
         b: brakeMode
         x: ampPivot
     axes:
-        rightTrigger: slowMode
-        leftTrigger: turboMode
+        rightTrigger: turboMode
+        leftTrigger: slowMode
     buttons:
         start: zeroPose
-        rightBumper: shoot
+        leftBumper: shoot
     dpad:
         up: snapFromDriver
         down: snapToDriver

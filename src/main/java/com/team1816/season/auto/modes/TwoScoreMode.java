@@ -29,10 +29,12 @@ public class TwoScoreMode extends AutoMode {
                 new ShootSpeakerAction(),
                 new ParallelAction(
                     new CollectAction(Collector.COLLECTOR_STATE.INTAKE),
+                    new ShootAction(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.TRANSFER, Shooter.PIVOT_STATE.STOW),
                     trajectoryActions.get(0)
                 ),
                 trajectoryActions.get(1),
-                new ShootSpeakerAction()
+                new ShootSpeakerAction(),
+                new ShootAction(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW)
             )
         );
     }
