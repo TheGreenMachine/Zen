@@ -41,6 +41,7 @@ public class Orchestrator {
     private static Camera camera;
     private static LedManager ledManager;
     private static Collector collector;
+    private static Shooter shooter;
 
     /**
      * Properties
@@ -73,6 +74,7 @@ public class Orchestrator {
         camera = cam;
         ledManager = led;
         collector = Injector.get(Collector.class);
+        shooter = Injector.get(Shooter.class);
     }
 
     /**
@@ -268,10 +270,14 @@ public class Orchestrator {
     }
 
     public void autoSetCollectorState(){
-        if(!robotState.isBeamBreakTriggered && robotState.actualPivotState == Shooter.PIVOT_STATE.STOW){
-            collector.setDesiredState(Collector.COLLECTOR_STATE.INTAKE);
-        } else{
-            collector.setDesiredState(Collector.COLLECTOR_STATE.OUTTAKE);
+        if (!robotState.isShooting) {
+            if (!robotState.isBeamBreakTriggered && robotState.actualPivotState == Shooter.PIVOT_STATE.STOW) {
+                collector.setDesiredState(Collector.COLLECTOR_STATE.INTAKE);
+                shooter.setDesiredFeederState(Shooter.FEEDER_STATE.TRANSFER);
+            } else {
+                collector.setDesiredState(Collector.COLLECTOR_STATE.OUTTAKE);
+                shooter.setDesiredFeederState(Shooter.FEEDER_STATE.STOP);
+            }
         }
     }
 

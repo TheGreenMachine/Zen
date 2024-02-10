@@ -30,6 +30,8 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     protected VelocityDutyCycle velocity = new VelocityDutyCycle(0);
     protected PositionDutyCycle position = new PositionDutyCycle(0);
     protected MotionMagicDutyCycle motionMagic = new MotionMagicDutyCycle(0);
+    protected MotionMagicExpoDutyCycle motionMagicExpo = new MotionMagicExpoDutyCycle(0);
+
     protected NeutralOut neutral = new NeutralOut();
     protected StaticBrake brake = new StaticBrake();
     public Follower following = new Follower(0, false); //So as to allow for invert in respect to leader easily
@@ -112,6 +114,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
                     case VELOCITY_CONTROL -> controlRequest = velocity.withVelocity(demand);
                     case POSITION_CONTROL -> controlRequest = position.withPosition(demand);
                     case MOTION_MAGIC -> controlRequest = motionMagic.withPosition(demand);
+                    case MOTION_MAGIC_EXPO -> controlRequest = motionMagicExpo.withPosition(demand);
                     case BRAKE -> controlRequest = brake;
                     default -> controlRequest = neutral;
                 }
@@ -371,6 +374,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
         velocity.withSlot(pidSlotID);
         position.withSlot(pidSlotID);
         motionMagic.withSlot(pidSlotID);
+        motionMagicExpo.withSlot(pidSlotID);
     }
 
     @Override
@@ -464,6 +468,7 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
         velocity.withUpdateFreqHz(periodHz);
         position.withUpdateFreqHz(periodHz);
         motionMagic.withUpdateFreqHz(periodHz);
+        motionMagicExpo.withUpdateFreqHz(periodHz);
         following.withUpdateFreqHz(periodHz);
         neutral.withUpdateFreqHz(periodHz);
         brake.withUpdateFreqHz(periodHz);

@@ -23,6 +23,7 @@ public enum GreenControlMode {
     // CTRE Exclusive
     FOLLOWER,
     MOTION_MAGIC,
+    MOTION_MAGIC_EXPO,
     MOTION_PROFILE_ARC,
     MUSIC_TONE,
     DISABLED,

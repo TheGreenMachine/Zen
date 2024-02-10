@@ -259,6 +259,12 @@ public class Robot extends TimedRobot {
             );
 
             inputHandler.listenActionPressAndRelease(
+                    "slowMode",
+                    drive::setSlowMode
+            );
+
+
+            inputHandler.listenActionPressAndRelease(
                     "snapFromDriver",
                     (pressed) -> {
                         robotState.snapDirection = pressed ? RobotState.SnappingDirection.FRONT : RobotState.SnappingDirection.NO_SNAP;
@@ -297,10 +303,13 @@ public class Robot extends TimedRobot {
             inputHandler.listenActionPressAndRelease(
                     "shoot",
                     (pressed) -> {
-                        if(pressed) {
-                            shooter.setDesiredFeederState(Shooter.FEEDER_STATE.SHOOT);
-                            if(shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.SHOOT_AMP)
-                                shooter.setDesiredRollerState(Shooter.ROLLER_STATE.SHOOT_AMP);
+                        robotState.isShooting = pressed;
+                        if (pressed) {
+                            if (shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.SHOOT_AMP) {
+                                shooter.setDesiredState(Shooter.ROLLER_STATE.SHOOT_AMP, Shooter.FEEDER_STATE.SHOOT);
+                            } else {
+                                shooter.setDesiredState(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT);
+                            }
                         }
                         else
                             shooter.setDesiredState(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP);
