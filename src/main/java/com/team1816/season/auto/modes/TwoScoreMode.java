@@ -9,6 +9,7 @@ import com.team1816.lib.auto.modes.AutoMode;
 import com.team1816.lib.auto.paths.AutoPath;
 import com.team1816.season.auto.actions.CollectAction;
 import com.team1816.season.auto.actions.ShootAction;
+import com.team1816.season.auto.actions.ShootSpeakerAction;
 import com.team1816.season.states.RobotState;
 import com.team1816.season.subsystems.Collector;
 import com.team1816.season.subsystems.Shooter;
@@ -25,19 +26,13 @@ public class TwoScoreMode extends AutoMode {
     protected void routine() throws AutoModeEndedException {
         runAction(
             new SeriesAction(
-                new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW),
-                new WaitAction(0.5),
-                new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT, Shooter.PIVOT_STATE.STOW),
-                new WaitAction(0.5),
+                new ShootSpeakerAction(),
                 new ParallelAction(
                     new CollectAction(Collector.COLLECTOR_STATE.INTAKE),
                     trajectoryActions.get(0)
                 ),
                 trajectoryActions.get(1),
-                new CollectAction(Collector.COLLECTOR_STATE.OUTTAKE),
-                new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW),
-                new WaitAction(0.5),
-                new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT, Shooter.PIVOT_STATE.STOW)
+                new ShootSpeakerAction()
             )
         );
     }
