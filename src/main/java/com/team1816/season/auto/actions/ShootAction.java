@@ -12,7 +12,7 @@ public class ShootAction implements AutoAction {
     private Shooter.FEEDER_STATE desiredFeederState;
     private Shooter.PIVOT_STATE desiredPivotState;
 
-    public ShootAction(RobotState robotState, Shooter shooter, Shooter.ROLLER_STATE desiredRollerState, Shooter.FEEDER_STATE desiredFeederState, Shooter.PIVOT_STATE desiredPivotState) {
+    public ShootAction(Shooter.ROLLER_STATE desiredRollerState, Shooter.FEEDER_STATE desiredFeederState, Shooter.PIVOT_STATE desiredPivotState) {
         this.robotState = Injector.get(RobotState.class);
         this.shooter = Injector.get(Shooter.class);
         this.desiredRollerState = desiredRollerState;

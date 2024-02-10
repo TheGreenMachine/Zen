@@ -10,7 +10,7 @@ public class CollectAction implements AutoAction {
     private Collector collector;
     private Collector.COLLECTOR_STATE desiredState;
 
-    public CollectAction(RobotState robotState, Collector collector, Collector.COLLECTOR_STATE desiredState) {
+    public CollectAction(Collector.COLLECTOR_STATE desiredState) {
         this.robotState = Injector.get(RobotState.class);
         this.collector = Injector.get(Collector.class);
         this.desiredState = desiredState;
