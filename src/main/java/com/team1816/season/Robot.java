@@ -207,7 +207,6 @@ public class Robot extends TimedRobot {
                     } else {
                         logFileDir = System.getProperty("user.dir") + "/";
                     }
-
                     if (!OS_NAME.contains("mac")) { //Can't open .hoot on mac so won't clog logs up in sim
                         SignalLogger.start();
                     }
@@ -220,7 +219,6 @@ public class Robot extends TimedRobot {
                     SignalLogger.start();
                 }
                 DriverStation.startDataLog(DataLogManager.getLog(), false);
-                SignalLogger.start();
             }
 
             drive = (Injector.get(Drive.Factory.class)).getInstance();
