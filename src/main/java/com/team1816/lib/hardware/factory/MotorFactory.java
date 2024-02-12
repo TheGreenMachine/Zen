@@ -5,7 +5,9 @@ import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix6.configs.AudioConfigs;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.team1816.lib.hardware.MotorConfiguration;
 import com.team1816.lib.hardware.PIDSlotConfiguration;
@@ -256,9 +258,17 @@ public class MotorFactory {
                         motor.set_kF(slotNum, slotConfig.kF != null ? slotConfig.kF : 0);
                         motor.set_iZone(slotNum, slotConfig.iZone != null ? slotConfig.iZone : 0);
                         motor.configAllowableErrorClosedLoop(slotNum, slotConfig.allowableError != null ? slotConfig.allowableError : 0);
+
+                        if (motor instanceof LazyTalonFX) {
+                            ((LazyTalonFX) motor).set_GravityType(slotNum,
+                                    slotConfig.gravityType != null && slotConfig.gravityType.equalsIgnoreCase("cosine")
+                                            ? GravityTypeValue.Arm_Cosine : GravityTypeValue.Elevator_Static //Elevator is the default anyways
+                            );
+                        }
                     }
             );
         }
+
 
         // Setting to PID slot 0 and primary closed loop
         motor.selectPIDSlot(0);
@@ -316,6 +326,14 @@ public class MotorFactory {
 
             motor.setSensorPhase(invertSensorPhase);
 
+            // TalonFX-Exclusive Configs
+            if (motor instanceof LazyTalonFX) {
+                if (motorConfiguration.motionMagic != null) {
+                    // Motion Magic
+                    ((LazyTalonFX) motor).configMotionMagic(motorConfiguration.motionMagic);
+                }
+            }
+
         } else {
             motor.selectFeedbackSensor(FeedbackDeviceType.HALL_SENSOR); // Only using hall sensors on sparks at the moment
         }
@@ -326,6 +344,7 @@ public class MotorFactory {
             GreenLogger.log("        Inverting " + name + " with ID " + id);
         }
         motor.setInverted(invertMotor);
+
     }
 
     public static AudioConfigs getAudioConfigs() { // No parameters because it's only needed for the CTRE Drivetrain

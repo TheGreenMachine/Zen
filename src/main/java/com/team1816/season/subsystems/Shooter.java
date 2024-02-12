@@ -104,18 +104,6 @@ public class Shooter extends Subsystem {
         rollerMotor.selectPIDSlot(1);
         pivotMotor.selectPIDSlot(2);
 
-//        pivotMotor.configForwardSoftLimit(55);
-//        pivotMotor.configReverseSoftLimit(0);
-//        pivotMotor.enableSoftLimits(true);
-
-        if(pivotMotor instanceof TalonFX) {
-            ((LazyTalonFX) pivotMotor).getConfigurator().apply(
-                    new MotionMagicConfigs().withMotionMagicExpo_kA(0.06).withMotionMagicExpo_kV(0.05)
-            );
-        }
-
-
-
         if (Constants.kLoggingRobot) {
             desStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Pivot/desiredPivotPosition");
             actStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Pivot/actualPivotPosition");

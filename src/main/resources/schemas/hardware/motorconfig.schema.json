@@ -23,6 +23,9 @@
         },
         "invertMotor" : {
             "type": "boolean"
+        },
+        "motionMagic" :  {
+            "$ref": "motionmagicconfig.schema.json"
         }
     }
 }

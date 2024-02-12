@@ -176,6 +176,9 @@ subsystems:
                 id: -12
                 invertMotor: true
                 currentLimit: 20
+                motionMagic:
+                    expo_kV: 0.05
+                    expo_kA: 0.06
             pivotFollowMotor:
                 motorType: TalonFX
                 motorName: pivotFollowMotor
@@ -198,6 +201,7 @@ subsystems:
                 ki: 0
                 kD: 0.08
                 kF: 0
+                #TODO gravity type
         constants:
             noteSensorChannel: 0
             rollerSpeakerShootSpeed: 60

@@ -1,11 +1,13 @@
 package com.team1816.lib.hardware.components.motor;
 
 import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
+import com.team1816.lib.hardware.MotionMagicSlotConfiguration;
 import com.team1816.lib.hardware.components.motor.configurations.*;
 import com.team1816.lib.util.ConfigurationTranslator;
 import com.team1816.lib.util.Util;
@@ -367,6 +369,26 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
             case 2 -> configs.Slot2.withKV(kF);
         }
         configurator.apply(configs);
+    }
+
+    public void set_GravityType(int pidSlotID, GravityTypeValue gravityType) {
+        switch (pidSlotID) {
+            case 0 -> configs.Slot0.withGravityType(gravityType);
+            case 1 -> configs.Slot1.withGravityType(gravityType);
+            case 2 -> configs.Slot2.withGravityType(gravityType);
+        }
+        configurator.apply(configs);
+    }
+
+    public void configMotionMagic(MotionMagicSlotConfiguration config) {
+        configurator.apply(
+          new MotionMagicConfigs()
+                  .withMotionMagicCruiseVelocity(config.cruiseVelocity != null ? config.cruiseVelocity : 0)
+                  .withMotionMagicAcceleration(config.acceleration != null ? config.acceleration : 0)
+                  .withMotionMagicJerk(config.jerk != null ? config.jerk : 0)
+                  .withMotionMagicExpo_kV(config.expoKV != null ? config.expoKV : 0)
+                  .withMotionMagicExpo_kA(config.expoKA != null ? config.expoKA : 0)
+        );
     }
 
     @Override

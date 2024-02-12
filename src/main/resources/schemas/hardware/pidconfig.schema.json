@@ -19,6 +19,9 @@
         },
         "allowableError": {
             "type": "number"
+        },
+        "gravityType":{
+            "type": "string"
         }
     }
 }
