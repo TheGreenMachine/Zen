@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -331,18 +332,35 @@ public class AutoModeManager {
     }
 
     private AutoMode generateDynamicAutoMode(DesiredAuto mode, Color color, ShootPos selectedStart, DesiredCollect selectedCollect, ShootPos selectedShoot) {
-        return new TwoScoreMode(generateDynamicPathList(color, selectedStart,selectedCollect,selectedShoot));
+        return new TwoScoreMode(
+                generateDynamicPathList(color, List.of(selectedStart, selectedShoot), List.of(selectedCollect))
+        );
     }
 
-    private List<DynamicAutoPath> generateDynamicPathList(Color color, ShootPos start, DesiredCollect collectOne, ShootPos shootOne) {
-        Position startPosition = toPosition(start);
-        Position collectPosition = toPosition(collectOne);
-        Position shootPosition = toPosition(shootOne);
+    private List<DynamicAutoPath> generateDynamicPathList(Color color, List<ShootPos> shootPositions, List<DesiredCollect> collectPositions) {
+        ArrayList<DynamicAutoPath> paths = new ArrayList<>();
 
-        DynamicAutoPath startToCollect = DynamicAutoUtil.getDynamicPath(startPosition, collectPosition, color);
-        System.out.println(collectPosition + " & " + shootPosition);
-        DynamicAutoPath collectToShoot = DynamicAutoUtil.getReversedDynamicPath(collectPosition, shootPosition, color);
+        Position start;
+        Position end;
+        for (int i = 0; i < shootPositions.size() - 1; i++) {
+            start = toPosition(shootPositions.get(i));
+            end = toPosition(collectPositions.get(i));
 
-        return List.of(startToCollect, collectToShoot);
+            paths.add(DynamicAutoUtil.getDynamicPath(start, end, color));
+
+            start = toPosition(collectPositions.get(i));
+            end = toPosition(shootPositions.get(i+1));
+
+            paths.add(DynamicAutoUtil.getReversedDynamicPath(start, end, color));
+        }
+
+        if (collectPositions.size() >= shootPositions.size()) { //should provide the ability to have an ending collect
+            paths.add(DynamicAutoUtil.getDynamicPath(
+                    toPosition(shootPositions.get(shootPositions.size()-1)),
+                    toPosition(collectPositions.get(collectPositions.size()-1)),
+                    color));
+        }
+
+        return paths;
     }
 }
