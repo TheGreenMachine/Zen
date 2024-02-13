@@ -36,7 +36,7 @@ public class AmpToNoteThreePath extends DynamicAutoPath {
     protected List<Rotation2d> getWaypointHeadings() {
         return updateHeadings(List.of(
                 Rotation2d.fromDegrees(-90),
-                Rotation2d.fromDegrees(-90),
+                Rotation2d.fromDegrees(super.isReversed ? -90 : 0),
                 Rotation2d.fromDegrees(0)
         ));
     }
