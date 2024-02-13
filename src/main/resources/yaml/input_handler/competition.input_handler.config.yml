@@ -27,5 +27,6 @@ operator:
     buttons:
         leftBumper: updatePoseWithCamera
     buttonpad:
-        y: StopShooter
+        y: stopShooter
+        a: collectorOuttake
 demoMode: false
