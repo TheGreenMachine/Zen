@@ -383,7 +383,7 @@ public class AutoModeManager {
         } else if (mode == DesiredAuto.THREE_SCORE) {
             if (dynamicPathList.get(0).isAmpPath()) {
                 dynamicPathList.add(0, new StartToAmpPath());
-                return new ThreeScoreFromSpeakerMode(dynamicPathList);
+                return new ThreeScoreFromAmpMode(dynamicPathList);
             } else {
                 return new ThreeScoreFromSpeakerMode(dynamicPathList);
             }
