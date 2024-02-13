@@ -401,14 +401,12 @@ public class AutoModeManager {
             start = toPosition(shootPositions.get(i));
             end = toPosition(collectPositions.get(i));
 
-
-
             paths.add(DynamicAutoUtil.getDynamicPath(start, end, color).orElse(new MiddleSpeakerToNoteTwoPath()));
 
             start = toPosition(collectPositions.get(i));
             end = toPosition(shootPositions.get(i+1));
 
-            paths.add(DynamicAutoUtil.getReversedDynamicPath(start, end, color).orElse(new MiddleSpeakerToNoteTwoPath()));
+            paths.add(DynamicAutoUtil.getReversedDynamicPath(start, end, color).orElse(new MiddleSpeakerToNoteTwoPath().withInversedWaypoints()));
         }
 
         if (collectPositions.size() >= shootPositions.size()) { //should provide the ability to have an ending collect
