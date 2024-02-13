@@ -52,10 +52,15 @@ public class AutoModeManager {
      */
     private final SendableChooser<ShootPos> startPosChooser;
     private final SendableChooser<DesiredCollect> firstCollectChooser;
+    private final SendableChooser<DesiredCollect> secondCollectChooser;
     private final SendableChooser<ShootPos> firstShootChooser;
+    private final SendableChooser<ShootPos> secondShootChooser;
     private ShootPos desiredStart;
     private DesiredCollect desiredFirstCollect;
     private ShootPos desiredFirstShoot;
+    private DesiredCollect desiredSecondCollect;
+    private ShootPos desiredSecondShoot;
+
 
 
     /**
@@ -75,8 +80,12 @@ public class AutoModeManager {
         autoModeChooser = new SendableChooser<>(); // Shuffleboard dropdown menu to choose desired auto mode
         sideChooser = new SendableChooser<>(); // Shuffleboard dropdown menu to choose desired side / bumper color
         startPosChooser = new SendableChooser<>(); // Shuffleboard dropdown menu to choose desired starting position for dynamic auto
+
         firstCollectChooser = new SendableChooser<>(); // Shuffleboard dropdown menu to choose first desired note collected for dynamic auto
         firstShootChooser = new SendableChooser<>(); // Shuffleboard dropdown menu to choose first desired shoot position for dynamic auto
+
+        secondCollectChooser = new SendableChooser<>();
+        secondShootChooser = new SendableChooser<>();
 
         SmartDashboard.putData("Auto mode", autoModeChooser); // appends chooser to shuffleboard
 
@@ -97,7 +106,6 @@ public class AutoModeManager {
          * Dynamic Auto
          */
         SmartDashboard.putData("Dynamic Start", startPosChooser);
-        // Doing manually because can't start @ amp
         for (ShootPos shootPos : ShootPos.values()) {
             startPosChooser.addOption(shootPos.name(), shootPos);
         }
@@ -114,6 +122,19 @@ public class AutoModeManager {
             firstShootChooser.addOption(shootPos.name(), shootPos);
         }
         firstShootChooser.setDefaultOption(ShootPos.TOP_SPEAKER.name(), ShootPos.TOP_SPEAKER);
+
+
+        SmartDashboard.putData("Second collected note", secondCollectChooser);
+        for (DesiredCollect noteToCollect : DesiredCollect.values()) {
+            secondCollectChooser.addOption(noteToCollect.name(), noteToCollect);
+        }
+        secondCollectChooser.setDefaultOption(DesiredCollect.TOP_NOTE.name(), DesiredCollect.TOP_NOTE);
+
+        SmartDashboard.putData("Second shooting position", secondShootChooser);
+        for (ShootPos shootPos : ShootPos.values()) {
+            secondShootChooser.addOption(shootPos.name(), shootPos);
+        }
+        secondShootChooser.setDefaultOption(ShootPos.TOP_SPEAKER.name(), ShootPos.TOP_SPEAKER);
 
         DynamicAutoUtil.registerPaths(List.of(
                 new TopSpeakerToNoteOnePath(), new TopSpeakerToNoteTwoPath(), new TopSpeakerToNoteThreePath(),
@@ -148,8 +169,13 @@ public class AutoModeManager {
     public boolean update() {
         DesiredAuto selectedAuto = autoModeChooser.getSelected();
         ShootPos selectedStartPos = startPosChooser.getSelected();
+
         DesiredCollect selectedFirstCollect = firstCollectChooser.getSelected();
         ShootPos selectedFirstShoot = firstShootChooser.getSelected();
+
+        DesiredCollect selectedSecondCollect = secondCollectChooser.getSelected();
+        ShootPos selectedSecondShoot = secondShootChooser.getSelected();
+
 
         Color selectedColor = Color.BLUE;
 
@@ -162,7 +188,12 @@ public class AutoModeManager {
 
         boolean autoChanged = desiredAuto != selectedAuto;
         boolean colorChanged = teamColor != selectedColor;
-        boolean dynamicAutoChanged = selectedStartPos != desiredStart || selectedFirstCollect != desiredFirstCollect || selectedFirstShoot != desiredFirstShoot;
+        boolean dynamicAutoChanged = //TODO make iterative
+                selectedStartPos != desiredStart
+                || selectedFirstCollect != desiredFirstCollect
+                || selectedFirstShoot != desiredFirstShoot
+                || selectedSecondCollect != desiredSecondCollect
+                || selectedSecondShoot != desiredSecondShoot;
 
         // if auto has been changed, update selected auto mode + thread
         if (autoChanged || colorChanged || dynamicAutoChanged) {
@@ -175,11 +206,10 @@ public class AutoModeManager {
                 GreenLogger.log("Robot color changed from: " + teamColor + ", to: " + selectedColor);
             }
 
-            if (selectedAuto == DesiredAuto.TWO_SCORE || selectedAuto == DesiredAuto.SCORE_AND_EXIT) {
+            if (selectedAuto == DesiredAuto.TWO_SCORE || selectedAuto == DesiredAuto.SCORE_AND_EXIT || selectedAuto == DesiredAuto.THREE_SCORE) {
                 autoMode = generateDynamicAutoMode(selectedAuto, selectedColor,
-                        selectedStartPos,
-                        selectedFirstCollect,
-                        selectedFirstShoot
+                        List.of(selectedStartPos, selectedFirstShoot, selectedSecondShoot),
+                        List.of(selectedFirstCollect, selectedSecondCollect)
                 );
             } else {
                 dynamicAutoChanged = false; //Stops unnecessary defaulting/zeroing
@@ -269,6 +299,7 @@ public class AutoModeManager {
         // New Auto Modes : 2024
         TEST,
         TWO_SCORE,
+        THREE_SCORE,
         SCORE_AND_EXIT
     }
 
@@ -332,14 +363,16 @@ public class AutoModeManager {
 //                return (new LivingRoomMode(color));
             case TEST:
                 return new TestMode();
+            case DRIVE_STRAIGHT:
+                return new DriveStraightMode();
             default:
                 GreenLogger.log("Defaulting to drive straight mode");
                 return new DriveStraightMode();
         }
     }
 
-    private AutoMode generateDynamicAutoMode(DesiredAuto mode, Color color, ShootPos selectedStart, DesiredCollect selectedCollect, ShootPos selectedShoot) {
-        List<DynamicAutoPath> dynamicPathList = generateDynamicPathList(color, List.of(selectedStart, selectedShoot), List.of(selectedCollect));
+    private AutoMode generateDynamicAutoMode(DesiredAuto mode, Color color, List<ShootPos> shootPositions, List<DesiredCollect> collectPositions) {
+        List<DynamicAutoPath> dynamicPathList = generateDynamicPathList(color, shootPositions , collectPositions);
         if (mode == DesiredAuto.TWO_SCORE) {
             if (dynamicPathList.get(0).isAmpPath()) {
                 dynamicPathList.add(0, new StartToAmpPath());
@@ -347,6 +380,8 @@ public class AutoModeManager {
             } else {
                 return new TwoScoreFromSpeakerMode(dynamicPathList);
             }
+        } else if (mode == DesiredAuto.THREE_SCORE) {
+            return new ThreeScoreFromSpeakerMode(dynamicPathList);
         } else {
             return new ShootAndExitMode(dynamicPathList);
         }
