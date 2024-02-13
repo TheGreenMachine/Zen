@@ -21,6 +21,16 @@ public abstract class DynamicAutoPath extends AutoPath{
 
     protected boolean isReversed;
 
+    protected boolean isAmpPath = false;
+
+    protected void setAmpPath(boolean isAmpPath) {
+        this.isAmpPath = isAmpPath;
+    }
+
+    public boolean isAmpPath() {
+        return isAmpPath;
+    }
+
     public List<Pose2d> updateWaypoints(List<Pose2d> waypoints) {
         if (!hasCachedWaypoints) {
             this.waypoints = waypoints;

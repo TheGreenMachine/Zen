@@ -9,8 +9,13 @@ import java.util.List;
 
 public class AmpToNoteOnePath extends DynamicAutoPath {
 
-    public AmpToNoteOnePath() {}
-    public AmpToNoteOnePath(Color color) {super(color);}
+    public AmpToNoteOnePath() {
+        super.setAmpPath(true);
+    }
+    public AmpToNoteOnePath(Color color) {
+        super(color);
+        super.setAmpPath(true);
+    }
 
     @Override
     protected List<Pose2d> getWaypoints() {

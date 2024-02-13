@@ -8,8 +8,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import java.util.List;
 
 public class AmpToNoteTwoPath extends DynamicAutoPath {
-    public AmpToNoteTwoPath() {}
-    public AmpToNoteTwoPath(Color color) {super(color);}
+    public AmpToNoteTwoPath() {
+        super.setAmpPath(true);
+    }
+    public AmpToNoteTwoPath(Color color) {
+        super(color);
+        super.setAmpPath(true);
+    }
 
     @Override
     protected List<Pose2d> getWaypoints() {

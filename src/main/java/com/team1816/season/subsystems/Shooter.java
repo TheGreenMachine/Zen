@@ -68,7 +68,7 @@ public class Shooter extends Subsystem {
     private final double feederIntakeSpeed = factory.getConstant(NAME, "feederIntakeSpeed", 0.20);
 
     private final double pivotAmpShootPosition = factory.getConstant(NAME, "pivotAmpShootPosition", 1.0);
-    private final boolean opposeLeaderDirection = !((int)factory.getConstant(NAME, "invertFollowerMotor", 1.0) == 0);
+    private final boolean opposeLeaderDirection = ((int) factory.getConstant(NAME, "invertFollowerMotor", 0)) == 1;
 
 
     /**
@@ -244,7 +244,7 @@ public class Shooter extends Subsystem {
                     desiredRollerVelocity = rollerAmpShootSpeed;
                 }
             }
-            rollerMotor.set(GreenControlMode.PERCENT_OUTPUT, desiredRollerVelocity);
+            rollerMotor.set(GreenControlMode.VELOCITY_CONTROL, desiredRollerVelocity);
             desiredRollerVelocityLogger.append(desiredRollerVelocity);
         }
         if (feederOutputsChanged) {
@@ -266,18 +266,18 @@ public class Shooter extends Subsystem {
             feederMotor.set(GreenControlMode.VELOCITY_CONTROL, desiredFeederVelocity);
             desiredFeederVelocityLogger.append(desiredFeederVelocity);
         }
-//        if (pivotOutputsChanged) {
-//            pivotOutputsChanged = false;
-//            switch (desiredPivotState) {
-//                case STOW -> {
-//                    desiredPivotPosition = -0.08; //TODO yaml
-//                }
-//                case SHOOT_AMP -> {
-//                    desiredPivotPosition = pivotAmpShootPosition - 0.08;
-//                }
-//            }
-//            pivotMotor.set(GreenControlMode.MOTION_MAGIC_EXPO, desiredPivotPosition);
-//        }
+        if (pivotOutputsChanged) {
+            pivotOutputsChanged = false;
+            switch (desiredPivotState) {
+                case STOW -> {
+                    desiredPivotPosition = 1.5; //TODO yaml
+                }
+                case SHOOT_AMP -> {
+                    desiredPivotPosition = pivotAmpShootPosition;
+                }
+            }
+            pivotMotor.set(GreenControlMode.MOTION_MAGIC_EXPO, desiredPivotPosition);
+        }
     }
 
     @Override

@@ -116,7 +116,7 @@ subsystems:
             openLoopRampRate: 0.1
             isSwerve: 1
             isCTRSwerve: 1
-            wheelDiameter: 4 #inches
+            wheelDiameter: 3.9 #inches
             kTrackScrubFactor: 1.0
             ## Velocity Constraints ##
             maxRotVel: 0.8 # Pi radians/sec
@@ -173,16 +173,16 @@ subsystems:
             pivotMotor:
                 motorType: TalonFX
                 motorName: pivotMotor
-                id: -12
-                invertMotor: true
+                id: 12
+                invertMotor: false
                 currentLimit: 20
                 motionMagic:
-                    expo_kV: 0.05
-                    expo_kA: 0.06
+                    expoKV: 0.05
+                    expoKA: 0.06
             pivotFollowMotor:
                 motorType: TalonFX
                 motorName: pivotFollowMotor
-                id: -13
+                id: 13
                 invertMotor: false # ?
                 currentLimit: 20
         pidConfig:
@@ -199,9 +199,9 @@ subsystems:
             slot2:
                 kP: 0.6
                 ki: 0
-                kD: 0.08
+                kD: 0.03
                 kF: 0
-                #TODO gravity type
+                gravityType: cosine
         constants:
             noteSensorChannel: 0
             rollerSpeakerShootSpeed: 60
@@ -210,8 +210,8 @@ subsystems:
             feederAmpShootSpeed: 700
             feederIntakeSpeed: 500
             velocityErrorMargin: 0.1
-            pivotAmpShootPosition: 37
-            invertFollowerMotor: 0
+            pivotAmpShootPosition: 30
+            invertFollowerMotor: 1
 infrastructure:
     canBusName: highSpeed
     ## Power Distribution ##

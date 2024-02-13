@@ -8,6 +8,7 @@ import com.team1816.lib.auto.modes.DoNothingMode;
 import com.team1816.lib.auto.modes.DriveStraightMode;
 import com.team1816.lib.auto.paths.AutoPath;
 import com.team1816.lib.auto.modes.TuneDrivetrainMode;
+import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.auto.modes.*;
 import com.team1816.season.auto.paths.toNoteOne.AmpToNoteOnePath;
@@ -296,11 +297,11 @@ public class AutoModeManager {
         return new TwoScoreMode(generateDynamicPathList(color, selectedStart,selectedCollect,selectedShoot));
     }
 
-    private List<AutoPath> generateDynamicPathList(Color color, ShootPos start, DesiredCollect collectOne, ShootPos shootOne) {
+    private List<DynamicAutoPath> generateDynamicPathList(Color color, ShootPos start, DesiredCollect collectOne, ShootPos shootOne) {
         //TODO generalize?
 
         // Start -> first collect
-        AutoPath startToCollect;
+        DynamicAutoPath startToCollect;
         if (start == ShootPos.TOP_SPEAKER) {
             startToCollect = switch (collectOne) {
                 case TOP_NOTE -> new TopSpeakerToNoteOnePath(color);
@@ -322,7 +323,7 @@ public class AutoModeManager {
         }
 
         // Collect one -> Shoot one
-        AutoPath collectToShoot; //TODO make amp paths
+        DynamicAutoPath collectToShoot; //TODO make amp paths
         if (collectOne == DesiredCollect.TOP_NOTE) {
             collectToShoot = switch (shootOne) {
                 case TOP_SPEAKER -> new TopSpeakerToNoteOnePath(color).withInversedWaypoints();

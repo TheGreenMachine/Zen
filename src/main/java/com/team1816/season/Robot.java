@@ -229,6 +229,9 @@ public class Robot extends TimedRobot {
             subsystemManager.registerDisabledLoops(disabledLoop);
 
             subsystemManager.zeroSensors();
+            // zeroing ypr - (-90) pigeon is mounted with the "y" axis facing forward
+            drive.resetPigeon(Rotation2d.fromDegrees(-90));
+
 
             /** [Specific subsystem] not zeroed on boot up - letting ppl know */
             faulted = true;
@@ -314,8 +317,9 @@ public class Robot extends TimedRobot {
                                 shooter.setDesiredState(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT);
                             }
                         }
-                        else
-                            shooter.setDesiredState(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP);
+                        else {
+                            shooter.setDesiredState(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW);
+                        }
                     }
             );
             inputHandler.listenAction(

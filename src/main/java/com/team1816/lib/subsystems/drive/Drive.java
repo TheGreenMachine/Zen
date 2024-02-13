@@ -558,12 +558,9 @@ public abstract class Drive
         if (!orchestraInit) {
             if (RobotBase.isReal()) {
                 configureOrchestra();
-
             }
             orchestraInit = true;
         }
-        // zeroing ypr - (90) pigeon is mounted with the "y" axis facing forward
-        this.resetPigeon(Rotation2d.fromDegrees(90));
 
         zeroSensors(getPose());
     }

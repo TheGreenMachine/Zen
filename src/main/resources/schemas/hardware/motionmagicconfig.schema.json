@@ -11,10 +11,10 @@
     "jerk": {
       "type": "number"
     },
-    "expo_kV": {
+    "expoKV": {
       "type": "number"
     },
-    "expo_kA": {
+    "expoKA": {
       "type": "number"
     }
   }

@@ -9,8 +9,13 @@ import java.util.List;
 
 public class AmpToNoteThreePath extends DynamicAutoPath {
 
-    public AmpToNoteThreePath() {}
-    public AmpToNoteThreePath(Color color) {super(color);}
+    public AmpToNoteThreePath() {
+        super.setAmpPath(true);
+    }
+    public AmpToNoteThreePath(Color color) {
+        super(color);
+        super.setAmpPath(true);
+    }
 
     @Override
     protected List<Pose2d> getWaypoints() {
