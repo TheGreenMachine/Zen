@@ -396,19 +396,23 @@ public class AutoModeManager {
             start = toPosition(shootPositions.get(i));
             end = toPosition(collectPositions.get(i));
 
-            paths.add(DynamicAutoUtil.getDynamicPath(start, end, color));
+
+
+            paths.add(DynamicAutoUtil.getDynamicPath(start, end, color).orElse(new MiddleSpeakerToNoteTwoPath()));
 
             start = toPosition(collectPositions.get(i));
             end = toPosition(shootPositions.get(i+1));
 
-            paths.add(DynamicAutoUtil.getReversedDynamicPath(start, end, color));
+            paths.add(DynamicAutoUtil.getReversedDynamicPath(start, end, color).orElse(new MiddleSpeakerToNoteTwoPath()));
         }
 
         if (collectPositions.size() >= shootPositions.size()) { //should provide the ability to have an ending collect
             paths.add(DynamicAutoUtil.getDynamicPath(
                     toPosition(shootPositions.get(shootPositions.size()-1)),
                     toPosition(collectPositions.get(collectPositions.size()-1)),
-                    color));
+                    color)
+                    .orElse(new MiddleSpeakerToNoteTwoPath())
+            );
         }
 
         return paths;

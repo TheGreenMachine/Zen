@@ -6,9 +6,11 @@ import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.season.auto.paths.toNoteTwo.MiddleSpeakerToNoteTwoPath;
 import org.apache.commons.math3.util.Pair;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
 import static com.team1816.season.auto.AutoModeManager.Position;
@@ -39,21 +41,26 @@ public class DynamicAutoUtil {
        return true;
     }
 
-    public static DynamicAutoPath getDynamicPath(Position startPosition, Position endPosition, Color color) {
+    public static Optional<DynamicAutoPath> getDynamicPath(Position startPosition, Position endPosition, Color color) {
+        var callable = pathLookup.get(new Pair<>(startPosition, endPosition));
+
         try {
-            return pathLookup.getOrDefault(new Pair<>(startPosition, endPosition), defaultPathGetter).call().withColor(color);
+            return Optional.of(
+                    callable.call().withColor(color)
+            );
         } catch (Exception e) {
-            return new MiddleSpeakerToNoteTwoPath();
+            return Optional.empty();
         }
     }
 
-    public static DynamicAutoPath getReversedDynamicPath(Position startPosition, Position endPosition, Color color) {
-        return getDynamicPath(endPosition, startPosition, color).withInversedWaypoints();
+    public static Optional<DynamicAutoPath> getReversedDynamicPath(Position startPosition, Position endPosition, Color color) {
+        var path = getDynamicPath(endPosition, startPosition, color);
 
+        return path.map(DynamicAutoPath::withInversedWaypoints);
     }
 
-    public static List<TrajectoryAction> encapsulateAutoPaths(List<DynamicAutoPath> paths) {
-        List<TrajectoryAction> trajectories = new ArrayList<TrajectoryAction>();
+    public static List<TrajectoryAction> encapsulateAutoPaths(@Nonnull List<DynamicAutoPath> paths) {
+        List<TrajectoryAction> trajectories = new ArrayList<>();
 
         paths.forEach(path -> {
             trajectories.add(new TrajectoryAction(path));
