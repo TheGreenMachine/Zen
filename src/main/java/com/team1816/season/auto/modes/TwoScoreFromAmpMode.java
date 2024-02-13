@@ -21,6 +21,9 @@ public class TwoScoreFromAmpMode extends AutoMode {
     public TwoScoreFromAmpMode(List<DynamicAutoPath> paths) {
         super(DynamicAutoUtil.encapsulateAutoPaths(paths)); //TODO: Amp paths need reversal safety now.
         this.paths = new ArrayList<>(paths);
+        if (trajectoryActions.size() > 3) {
+            trajectoryActions.subList(3, trajectoryActions.size()).clear();
+        }
     }
 
     @Override

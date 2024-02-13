@@ -153,7 +153,6 @@ public class AutoModeManager {
 
         Color selectedColor = Color.BLUE;
 
-
         if (RobotBase.isSimulation()) {
             selectedColor = sideChooser.getSelected();
         } else if (RobotBase.isReal()) {
@@ -176,8 +175,12 @@ public class AutoModeManager {
                 GreenLogger.log("Robot color changed from: " + teamColor + ", to: " + selectedColor);
             }
 
-            if (selectedAuto == DesiredAuto.TWO_SCORE) {
-                autoMode = generateDynamicAutoMode(selectedAuto, selectedColor, selectedStartPos, selectedFirstCollect, selectedFirstShoot);
+            if (selectedAuto == DesiredAuto.TWO_SCORE || selectedAuto == DesiredAuto.SCORE_AND_EXIT) {
+                autoMode = generateDynamicAutoMode(selectedAuto, selectedColor,
+                        selectedStartPos,
+                        selectedFirstCollect,
+                        selectedFirstShoot
+                );
             } else {
                 dynamicAutoChanged = false; //Stops unnecessary defaulting/zeroing
                 autoMode = generateAutoMode(selectedAuto, selectedColor);
@@ -265,7 +268,8 @@ public class AutoModeManager {
 
         // New Auto Modes : 2024
         TEST,
-        TWO_SCORE
+        TWO_SCORE,
+        SCORE_AND_EXIT
     }
 
     public enum ShootPos {
@@ -336,12 +340,15 @@ public class AutoModeManager {
 
     private AutoMode generateDynamicAutoMode(DesiredAuto mode, Color color, ShootPos selectedStart, DesiredCollect selectedCollect, ShootPos selectedShoot) {
         List<DynamicAutoPath> dynamicPathList = generateDynamicPathList(color, List.of(selectedStart, selectedShoot), List.of(selectedCollect));
-
-        if (dynamicPathList.get(0).isAmpPath()) {
-            dynamicPathList.add(0, new StartToAmpPath());
-            return new TwoScoreFromAmpMode(dynamicPathList);
+        if (mode == DesiredAuto.TWO_SCORE) {
+            if (dynamicPathList.get(0).isAmpPath()) {
+                dynamicPathList.add(0, new StartToAmpPath());
+                return new TwoScoreFromAmpMode(dynamicPathList);
+            } else {
+                return new TwoScoreFromSpeakerMode(dynamicPathList);
+            }
         } else {
-            return new TwoScoreFromSpeakerMode(dynamicPathList);
+            return new ShootAndExitMode(dynamicPathList);
         }
     }
 
