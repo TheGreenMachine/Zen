@@ -24,6 +24,7 @@ import com.team1816.season.states.Orchestrator;
 import com.team1816.season.states.RobotState;
 import com.team1816.season.subsystems.Shooter;
 import com.team1816.season.subsystems.Collector;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.*;
@@ -230,6 +231,8 @@ public class Robot extends TimedRobot {
             subsystemManager.zeroSensors();
             // zeroing ypr - (-90) pigeon is mounted with the "y" axis facing forward
             drive.resetPigeon(Rotation2d.fromDegrees(-90));
+
+            CameraServer.startAutomaticCapture();
 
 
             /** [Specific subsystem] not zeroed on boot up - letting ppl know */

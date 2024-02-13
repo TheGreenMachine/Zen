@@ -87,6 +87,8 @@
       "/SmartDashboard/Mech 2D": "Mechanism2d",
       "/SmartDashboard/Playlist": "String Chooser",
       "/SmartDashboard/Robot color": "String Chooser",
+      "/SmartDashboard/Second collected note": "String Chooser",
+      "/SmartDashboard/Second shooting position": "String Chooser",
       "/SmartDashboard/SendableChooser[0]": "String Chooser",
       "/SmartDashboard/SendableChooser[2]": "String Chooser",
       "/SmartDashboard/Starting Position": "String Chooser",
@@ -143,7 +145,7 @@
         "Trajectory": {
           "arrows": false,
           "selectable": false,
-          "style": "Track",
+          "style": "Line",
           "weight": 1.0
         },
         "bottom": 1476,
@@ -183,6 +185,16 @@
         }
       },
       "/SmartDashboard/Robot color": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Second collected note": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Second shooting position": {
         "window": {
           "visible": true
         }
