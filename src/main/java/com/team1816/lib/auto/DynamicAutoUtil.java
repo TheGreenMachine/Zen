@@ -36,9 +36,8 @@ public class DynamicAutoUtil {
 
     private static HashMap<Pair<Position, Position>, Callable<DynamicAutoPath>> pathLookup = new HashMap<>() {};
 
-    public static boolean putToTable(Position startPosition, Position endPosition, Callable<DynamicAutoPath> pathGetter) {
+    public static void putToTable(Position startPosition, Position endPosition, Callable<DynamicAutoPath> pathGetter) {
        pathLookup.putIfAbsent(new Pair<>(startPosition, endPosition), pathGetter);
-       return true;
     }
 
     public static Optional<DynamicAutoPath> getDynamicPath(Position startPosition, Position endPosition, Color color) {
