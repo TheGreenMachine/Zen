@@ -381,7 +381,12 @@ public class AutoModeManager {
                 return new TwoScoreFromSpeakerMode(dynamicPathList);
             }
         } else if (mode == DesiredAuto.THREE_SCORE) {
-            return new ThreeScoreFromSpeakerMode(dynamicPathList);
+            if (dynamicPathList.get(0).isAmpPath()) {
+                dynamicPathList.add(0, new StartToAmpPath());
+                return new ThreeScoreFromSpeakerMode(dynamicPathList);
+            } else {
+                return new ThreeScoreFromSpeakerMode(dynamicPathList);
+            }
         } else {
             return new ShootAndExitMode(dynamicPathList);
         }
