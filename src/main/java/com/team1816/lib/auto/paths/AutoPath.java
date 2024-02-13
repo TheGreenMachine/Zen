@@ -54,6 +54,19 @@ public abstract class AutoPath {
         }
     }
 
+    public void updateColor(Color color) {
+        if (Constants.fieldSymmetry == Symmetry.AXIS && color == Color.RED) {
+            setReflected(true);
+            setRotated(false);
+        } else if (Constants.fieldSymmetry == Symmetry.ORIGIN && color == Color.RED) {
+            setReflected(false);
+            setRotated(true);
+        } else {
+            setReflected(false);
+            setRotated(false);
+        }
+    }
+
     /**
      * Sets the reflected state to passed argument
      *

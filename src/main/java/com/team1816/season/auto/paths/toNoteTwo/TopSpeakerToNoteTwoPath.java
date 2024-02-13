@@ -3,14 +3,23 @@ package com.team1816.season.auto.paths.toNoteTwo;
 import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.paths.AutoPath;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
+import com.team1816.season.auto.AutoModeManager;
+import com.team1816.season.auto.paths.toNoteOne.TopSpeakerToNoteOnePath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 import java.util.List;
 
 public class TopSpeakerToNoteTwoPath extends DynamicAutoPath {
-    public TopSpeakerToNoteTwoPath(){}
-    public TopSpeakerToNoteTwoPath(Color color){super(color);}
+    private static AutoModeManager.Position startingPos = AutoModeManager.Position.TOP_SPEAKER;
+    private static AutoModeManager.Position endingPos = AutoModeManager.Position.MIDDLE_NOTE;
+
+    public TopSpeakerToNoteTwoPath(){
+        super(startingPos, endingPos);
+    }
+    public TopSpeakerToNoteTwoPath(Color color){
+        super(color, startingPos, endingPos);
+    }
 
     @Override
     protected List<Pose2d> getWaypoints() {
@@ -36,4 +45,9 @@ public class TopSpeakerToNoteTwoPath extends DynamicAutoPath {
     protected boolean usingApp() {
         return true;
     }
+
+    public DynamicAutoPath getInstance() {
+        return new TopSpeakerToNoteTwoPath();
+    }
+
 }

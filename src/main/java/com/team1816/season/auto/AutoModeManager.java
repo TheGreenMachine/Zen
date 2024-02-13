@@ -3,10 +3,10 @@ package com.team1816.season.auto;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.team1816.lib.auto.Color;
+import com.team1816.lib.auto.DynamicAutoUtil;
 import com.team1816.lib.auto.modes.AutoMode;
 import com.team1816.lib.auto.modes.DoNothingMode;
 import com.team1816.lib.auto.modes.DriveStraightMode;
-import com.team1816.lib.auto.paths.AutoPath;
 import com.team1816.lib.auto.modes.TuneDrivetrainMode;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.lib.util.logUtil.GreenLogger;
@@ -111,6 +111,13 @@ public class AutoModeManager {
             firstShootChooser.addOption(shootPos.name(), shootPos);
         }
         firstShootChooser.setDefaultOption(ShootPos.TOP_SPEAKER.name(), ShootPos.TOP_SPEAKER);
+
+        DynamicAutoUtil.registerPaths(List.of(
+                new TopSpeakerToNoteOnePath(), new TopSpeakerToNoteTwoPath(), new TopSpeakerToNoteThreePath(),
+                new MiddleSpeakerToNoteOnePath(), new MiddleSpeakerToNoteTwoPath(), new MiddleSpeakerToNoteThreePath(),
+                new BottomSpeakerToNoteOnePath(), new BottomSpeakerToNoteTwoPath(), new BottomSpeakerToNoteThreePath(),
+                new AmpToNoteOnePath(), new AmpToNoteTwoPath(), new AmpToNoteThreePath()
+        ));
 
         reset();
     }
@@ -258,18 +265,48 @@ public class AutoModeManager {
         TWO_SCORE
     }
 
-    enum ShootPos {
+    public enum ShootPos {
         TOP_SPEAKER,
         MIDDLE_SPEAKER,
         BOTTOM_SPEAKER,
         AMP
     }
 
-    enum DesiredCollect {
+    public enum DesiredCollect {
         TOP_NOTE,
         MIDDLE_NOTE,
         BOTTOM_NOTE
     }
+
+    public enum Position { //For use in the dynamic lookup table
+        TOP_SPEAKER,
+        MIDDLE_SPEAKER,
+        BOTTOM_SPEAKER,
+        AMP,
+
+        TOP_NOTE,
+        MIDDLE_NOTE,
+        BOTTOM_NOTE
+    }
+
+    public static Position toPosition(ShootPos shootPosition) {
+        return switch (shootPosition) {
+            case AMP -> Position.AMP;
+            case TOP_SPEAKER -> Position.TOP_SPEAKER;
+            case MIDDLE_SPEAKER -> Position.MIDDLE_SPEAKER;
+            case BOTTOM_SPEAKER -> Position.BOTTOM_SPEAKER;
+        };
+    }
+
+    public static Position toPosition(DesiredCollect shootPosition) {
+        return switch (shootPosition) {
+            case TOP_NOTE -> Position.TOP_NOTE;
+            case MIDDLE_NOTE -> Position.MIDDLE_NOTE;
+            case BOTTOM_NOTE -> Position.BOTTOM_NOTE;
+        };
+    }
+
+
     /**
      * Generates each AutoMode by demand
      *
@@ -298,54 +335,13 @@ public class AutoModeManager {
     }
 
     private List<DynamicAutoPath> generateDynamicPathList(Color color, ShootPos start, DesiredCollect collectOne, ShootPos shootOne) {
-        //TODO generalize?
+        Position startPosition = toPosition(start);
+        Position collectPosition = toPosition(collectOne);
+        Position shootPosition = toPosition(shootOne);
 
-        // Start -> first collect
-        DynamicAutoPath startToCollect;
-        if (start == ShootPos.TOP_SPEAKER) {
-            startToCollect = switch (collectOne) {
-                case TOP_NOTE -> new TopSpeakerToNoteOnePath(color);
-                case MIDDLE_NOTE -> new TopSpeakerToNoteTwoPath(color);
-                case BOTTOM_NOTE -> new TopSpeakerToNoteThreePath(color);
-            };
-        } else if (start == ShootPos.MIDDLE_SPEAKER) {
-            startToCollect = switch (collectOne) {
-                case TOP_NOTE -> new MiddleSpeakerToNoteOnePath(color);
-                case MIDDLE_NOTE -> new MiddleSpeakerToNoteTwoPath(color);
-                case BOTTOM_NOTE -> new MiddleSpeakerToNoteThreePath(color);
-            };
-        } else {
-            startToCollect = switch (collectOne) {
-                case TOP_NOTE -> new BottomSpeakerToNoteOnePath(color);
-                case MIDDLE_NOTE -> new BottomSpeakerToNoteTwoPath(color);
-                case BOTTOM_NOTE -> new BottomSpeakerToNoteThreePath(color);
-            };
-        }
-
-        // Collect one -> Shoot one
-        DynamicAutoPath collectToShoot; //TODO make amp paths
-        if (collectOne == DesiredCollect.TOP_NOTE) {
-            collectToShoot = switch (shootOne) {
-                case TOP_SPEAKER -> new TopSpeakerToNoteOnePath(color).withInversedWaypoints();
-                case MIDDLE_SPEAKER -> new MiddleSpeakerToNoteOnePath(color).withInversedWaypoints();
-                case BOTTOM_SPEAKER -> new BottomSpeakerToNoteOnePath(color).withInversedWaypoints();
-                case AMP -> new AmpToNoteOnePath(color).withInversedWaypoints();
-            };
-        } else if (collectOne == DesiredCollect.MIDDLE_NOTE) {
-            collectToShoot = switch (shootOne) {
-                case TOP_SPEAKER -> new TopSpeakerToNoteTwoPath(color).withInversedWaypoints();
-                case MIDDLE_SPEAKER -> new MiddleSpeakerToNoteTwoPath(color).withInversedWaypoints();
-                case BOTTOM_SPEAKER -> new BottomSpeakerToNoteTwoPath(color).withInversedWaypoints();
-                case AMP -> new AmpToNoteTwoPath(color).withInversedWaypoints();
-            };
-        } else {
-            collectToShoot = switch (shootOne) {
-                case TOP_SPEAKER -> new TopSpeakerToNoteThreePath(color).withInversedWaypoints();
-                case MIDDLE_SPEAKER -> new MiddleSpeakerToNoteThreePath(color).withInversedWaypoints();
-                case BOTTOM_SPEAKER -> new BottomSpeakerToNoteThreePath(color).withInversedWaypoints();
-                case AMP -> new AmpToNoteThreePath(color).withInversedWaypoints();
-            };
-        }
+        DynamicAutoPath startToCollect = DynamicAutoUtil.getDynamicPath(startPosition, collectPosition, color);
+        System.out.println(collectPosition + " & " + shootPosition);
+        DynamicAutoPath collectToShoot = DynamicAutoUtil.getReversedDynamicPath(collectPosition, shootPosition, color);
 
         return List.of(startToCollect, collectToShoot);
     }

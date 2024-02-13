@@ -1,6 +1,7 @@
 package com.team1816.lib.auto.paths;
 
 import com.team1816.lib.auto.Color;
+import com.team1816.season.auto.AutoModeManager;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -8,11 +9,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class DynamicAutoPath extends AutoPath{
+import static com.team1816.season.auto.AutoModeManager.Position;
 
-    public DynamicAutoPath() {}
-    public DynamicAutoPath(Color color) {
+public abstract class DynamicAutoPath extends AutoPath {
+    public Position startPosition;
+    public Position endPosition;
+
+    public DynamicAutoPath(Position startPosition, Position endPosition) {
+        super();
+        this.startPosition = startPosition;
+        this.endPosition = endPosition;
+    }
+
+    public DynamicAutoPath(Color color, Position startPosition, Position endPosition) {
         super(color);
+        this.startPosition = startPosition;
+        this.endPosition = endPosition;
+
     }
 
     public List<Pose2d> waypoints;
@@ -72,4 +85,10 @@ public abstract class DynamicAutoPath extends AutoPath{
         return this;
     }
 
+    public DynamicAutoPath withColor(Color color) {
+        super.updateColor(color);
+        return this;
+    }
+
+    public abstract DynamicAutoPath getInstance();
 }

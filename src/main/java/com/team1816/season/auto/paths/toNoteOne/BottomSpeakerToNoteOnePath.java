@@ -2,6 +2,7 @@ package com.team1816.season.auto.paths.toNoteOne;
 
 import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
+import com.team1816.season.auto.AutoModeManager;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -9,8 +10,15 @@ import java.util.List;
 
 public class BottomSpeakerToNoteOnePath extends DynamicAutoPath {
 
-    public BottomSpeakerToNoteOnePath() {}
-    public BottomSpeakerToNoteOnePath(Color color) {super(color);}
+    private static AutoModeManager.Position startingPos = AutoModeManager.Position.BOTTOM_SPEAKER;
+    private static AutoModeManager.Position endingPos = AutoModeManager.Position.TOP_NOTE;
+
+    public BottomSpeakerToNoteOnePath(){
+        super(startingPos, endingPos);
+    }
+    public BottomSpeakerToNoteOnePath(Color color){
+        super(color, startingPos, endingPos);
+    }
 
 
     @Override
@@ -37,4 +45,9 @@ public class BottomSpeakerToNoteOnePath extends DynamicAutoPath {
     protected boolean usingApp() {
         return true;
     }
+
+    public DynamicAutoPath getInstance() {
+        return new BottomSpeakerToNoteOnePath();
+    }
+
 }
