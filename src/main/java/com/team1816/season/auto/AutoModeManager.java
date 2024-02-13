@@ -11,6 +11,7 @@ import com.team1816.lib.auto.modes.TuneDrivetrainMode;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.auto.modes.*;
+import com.team1816.season.auto.paths.StartToAmpPath;
 import com.team1816.season.auto.paths.toNoteOne.AmpToNoteOnePath;
 import com.team1816.season.auto.paths.toNoteOne.BottomSpeakerToNoteOnePath;
 import com.team1816.season.auto.paths.toNoteOne.MiddleSpeakerToNoteOnePath;
@@ -97,9 +98,10 @@ public class AutoModeManager {
          */
         SmartDashboard.putData("Dynamic Start", startPosChooser);
         // Doing manually because can't start @ amp
-        startPosChooser.setDefaultOption(ShootPos.TOP_SPEAKER.name(), ShootPos.TOP_SPEAKER);
-        startPosChooser.addOption(ShootPos.MIDDLE_SPEAKER.name(), ShootPos.MIDDLE_SPEAKER);
-        startPosChooser.addOption(ShootPos.BOTTOM_SPEAKER.name(), ShootPos.BOTTOM_SPEAKER);
+        for (ShootPos shootPos : ShootPos.values()) {
+            startPosChooser.addOption(shootPos.name(), shootPos);
+        }
+        startPosChooser.setDefaultOption(ShootPos.MIDDLE_SPEAKER.name(), ShootPos.MIDDLE_SPEAKER);
 
         SmartDashboard.putData("First collected note", firstCollectChooser);
         for (DesiredCollect noteToCollect : DesiredCollect.values()) {
@@ -284,6 +286,7 @@ public class AutoModeManager {
         MIDDLE_SPEAKER,
         BOTTOM_SPEAKER,
         AMP,
+        ARB_START,
 
         TOP_NOTE,
         MIDDLE_NOTE,
@@ -332,9 +335,14 @@ public class AutoModeManager {
     }
 
     private AutoMode generateDynamicAutoMode(DesiredAuto mode, Color color, ShootPos selectedStart, DesiredCollect selectedCollect, ShootPos selectedShoot) {
-        return new TwoScoreMode(
-                generateDynamicPathList(color, List.of(selectedStart, selectedShoot), List.of(selectedCollect))
-        );
+        List<DynamicAutoPath> dynamicPathList = generateDynamicPathList(color, List.of(selectedStart, selectedShoot), List.of(selectedCollect));
+
+        if (dynamicPathList.get(0).isAmpPath()) {
+            dynamicPathList.add(0, new StartToAmpPath());
+            return new TwoScoreFromAmpMode(dynamicPathList);
+        } else {
+            return new TwoScoreFromSpeakerMode(dynamicPathList);
+        }
     }
 
     private List<DynamicAutoPath> generateDynamicPathList(Color color, List<ShootPos> shootPositions, List<DesiredCollect> collectPositions) {

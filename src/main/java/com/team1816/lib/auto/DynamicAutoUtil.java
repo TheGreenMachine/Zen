@@ -1,5 +1,6 @@
 package com.team1816.lib.auto;
 
+import com.team1816.lib.auto.actions.TrajectoryAction;
 import com.team1816.lib.auto.paths.AutoPath;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.season.auto.paths.toNoteTwo.MiddleSpeakerToNoteTwoPath;
@@ -50,4 +51,14 @@ public class DynamicAutoUtil {
         return getDynamicPath(endPosition, startPosition, color).withInversedWaypoints();
 
     }
+
+    public static List<TrajectoryAction> encapsulateAutoPaths(List<DynamicAutoPath> paths) {
+        List<TrajectoryAction> trajectories = new ArrayList<TrajectoryAction>();
+
+        paths.forEach(path -> {
+            trajectories.add(new TrajectoryAction(path));
+        });
+        return trajectories;
+    }
+
 }
