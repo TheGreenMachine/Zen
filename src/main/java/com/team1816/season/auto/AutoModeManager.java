@@ -297,7 +297,8 @@ public class AutoModeManager {
         TEST,
         TWO_SCORE,
         THREE_SCORE,
-        SCORE_AND_EXIT
+        SCORE_AND_EXIT,
+        SCORE_AND_SCRAM
     }
 
     public enum ShootPos {
@@ -365,6 +366,8 @@ public class AutoModeManager {
                 return new TestMode();
             case DRIVE_STRAIGHT:
                 return new DriveStraightMode();
+            case SCORE_AND_SCRAM:
+                return new ScoreAndScramMode();
             default:
                 GreenLogger.log("Defaulting to drive straight mode");
                 return new DriveStraightMode();
@@ -401,19 +404,21 @@ public class AutoModeManager {
             start = toPosition(shootPositions.get(i));
             end = toPosition(collectPositions.get(i));
 
-            paths.add(DynamicAutoUtil.getDynamicPath(start, end, color));
+            paths.add(DynamicAutoUtil.getDynamicPath(start, end, color).orElse(new MiddleSpeakerToNoteTwoPath()));
 
             start = toPosition(collectPositions.get(i));
             end = toPosition(shootPositions.get(i+1));
 
-            paths.add(DynamicAutoUtil.getReversedDynamicPath(start, end, color));
+            paths.add(DynamicAutoUtil.getReversedDynamicPath(start, end, color).orElse(new MiddleSpeakerToNoteTwoPath().withInversedWaypoints()));
         }
 
         if (collectPositions.size() >= shootPositions.size()) { //should provide the ability to have an ending collect
             paths.add(DynamicAutoUtil.getDynamicPath(
                     toPosition(shootPositions.get(shootPositions.size()-1)),
                     toPosition(collectPositions.get(collectPositions.size()-1)),
-                    color));
+                    color)
+                    .orElse(new MiddleSpeakerToNoteTwoPath())
+            );
         }
 
         return paths;

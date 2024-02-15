@@ -335,10 +335,18 @@ public class Robot extends TimedRobot {
                     }
             );
             inputHandler.listenAction(
-                    "StopShooter",
+                    "stopShooter",
                     ActionState.PRESSED,
                     () -> {
                         shooter.stop();
+                    }
+            );
+            inputHandler.listenActionPressAndRelease(
+                    "collectorOuttake",
+                    (pressed) -> {
+                        if (!shooter.isBeamBreakTriggered()) {
+                            collector.setDesiredState(pressed ? Collector.COLLECTOR_STATE.OUTTAKE : Collector.COLLECTOR_STATE.INTAKE);
+                        }
                     }
             );
 
