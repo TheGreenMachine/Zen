@@ -18,7 +18,6 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.simulation.PhotonCameraSim;
-import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonPipelineResult;
 
@@ -69,6 +68,10 @@ public class Camera extends Subsystem{
 
     public PhotonPipelineResult getLatestResult() {
         return cam.getLatestResult();
+    }
+
+    public void setDriverMode(boolean driverMode){
+        cam.setDriverMode(driverMode);
     }
 
     /**
@@ -124,17 +127,20 @@ public class Camera extends Subsystem{
         if (RobotBase.isSimulation()) {
             visionSim.update(robotState.fieldToVehicle);
         }
-        // Correct pose estimate with vision measurements
-        var visionEst = getEstimatedGlobalPose();
-        visionEst.ifPresent(
-            est -> {
-                var estPose = est.estimatedPose.toPose2d();
-                // Change our trust in the measurement based on the tags we can see
-                var estStdDevs = getEstimationStdDevs(estPose);
 
-                robotState.swerveEstimator.addVisionMeasurement(
-                    est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
-            });
+        if(!cam.getDriverMode()) {
+            // Correct pose estimate with vision measurements
+            var visionEst = getEstimatedGlobalPose();
+            visionEst.ifPresent(
+                    est -> {
+                        var estPose = est.estimatedPose.toPose2d();
+                        // Change our trust in the measurement based on the tags we can see
+                        var estStdDevs = getEstimationStdDevs(estPose);
+
+                        robotState.swerveEstimator.addVisionMeasurement(
+                                est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+                    });
+        }
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.team1816.season;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.Injector;
 import com.team1816.lib.PlaylistManager;
-import com.team1816.lib.auto.Color;
 import com.team1816.lib.hardware.factory.RobotFactory;
 import com.team1816.lib.input_handler.*;
 import com.team1816.lib.input_handler.controlOptions.ActionState;
@@ -14,25 +13,18 @@ import com.team1816.lib.subsystems.drive.Drive;
 import com.team1816.lib.subsystems.vision.Camera;
 import com.team1816.lib.util.Util;
 import com.team1816.lib.util.logUtil.GreenLogger;
-import com.team1816.lib.util.team254.LatchedBoolean;
 import com.team1816.season.auto.AutoModeManager;
 import com.team1816.season.configuration.Constants;
-import com.team1816.season.configuration.DrivetrainTargets;
 import com.team1816.season.states.Orchestrator;
 import com.team1816.season.states.RobotState;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Objects;
 
 public class Robot extends TimedRobot {
 
@@ -65,7 +57,8 @@ public class Robot extends TimedRobot {
     private Drive drive;
 
     private LedManager ledManager;
-    private Camera camera;
+    private Camera arduCamera;
+    private Camera pyCamera;
 
 
     /**
@@ -154,7 +147,10 @@ public class Robot extends TimedRobot {
             // TODO: Set up any other subsystems here.
 
             ledManager = Injector.get(LedManager.class);
-            camera = Injector.get(Camera.class);
+            arduCamera = Injector.get(Camera.class);
+            arduCamera.setDriverMode(true);
+            pyCamera = Injector.get(Camera.class);
+            pyCamera.setDriverMode(true);
             robotState = Injector.get(RobotState.class);
             orchestrator = Injector.get(Orchestrator.class);
             infrastructure = Injector.get(Infrastructure.class);
@@ -191,7 +187,7 @@ public class Robot extends TimedRobot {
 
             drive = (Injector.get(Drive.Factory.class)).getInstance();
 
-            subsystemManager.setSubsystems(drive, ledManager, camera);
+            subsystemManager.setSubsystems(drive, ledManager, arduCamera, pyCamera);
 
             subsystemManager.registerEnabledLoops(enabledLoop);
             subsystemManager.registerDisabledLoops(disabledLoop);
