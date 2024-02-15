@@ -7,6 +7,8 @@ import com.team1816.lib.auto.modes.AutoMode;
 import com.team1816.season.auto.paths.StartToAmpPath;
 import com.team1816.season.auto.paths.toNoteOne.BottomSpeakerToNoteOnePath;
 import com.team1816.season.auto.paths.toNoteOne.TopSpeakerToNoteOnePath;
+import com.team1816.season.auto.paths.toNoteTwo.AmpToNoteTwoTopPath;
+import com.team1816.season.auto.paths.toNoteTwo.TopSpeakerToNoteTwoTopPath;
 
 import java.util.List;
 
@@ -15,7 +17,7 @@ public class TestMode extends AutoMode {
     public TestMode() {
         super(List.of(
                 new TrajectoryAction(
-                        new StartToAmpPath()
+                        new TopSpeakerToNoteTwoTopPath().withInversedWaypoints()
                 )
         ));
     }

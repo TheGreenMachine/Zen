@@ -20,10 +20,7 @@ import com.team1816.season.auto.paths.toNoteThree.AmpToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteThree.BottomSpeakerToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteThree.MiddleSpeakerToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteThree.TopSpeakerToNoteThreePath;
-import com.team1816.season.auto.paths.toNoteTwo.AmpToNoteTwoPath;
-import com.team1816.season.auto.paths.toNoteTwo.BottomSpeakerToNoteTwoPath;
-import com.team1816.season.auto.paths.toNoteTwo.MiddleSpeakerToNoteTwoPath;
-import com.team1816.season.auto.paths.toNoteTwo.TopSpeakerToNoteTwoPath;
+import com.team1816.season.auto.paths.toNoteTwo.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -137,10 +134,10 @@ public class AutoModeManager {
         secondShootChooser.setDefaultOption(ShootPos.TOP_SPEAKER.name(), ShootPos.TOP_SPEAKER);
 
         DynamicAutoUtil.registerPaths(List.of(
-                new TopSpeakerToNoteOnePath(), new TopSpeakerToNoteTwoPath(), new TopSpeakerToNoteThreePath(),
+                new TopSpeakerToNoteOnePath(), new TopSpeakerToNoteTwoPath(), new TopSpeakerToNoteThreePath(), new TopSpeakerToNoteTwoTopPath(),
                 new MiddleSpeakerToNoteOnePath(), new MiddleSpeakerToNoteTwoPath(), new MiddleSpeakerToNoteThreePath(),
                 new BottomSpeakerToNoteOnePath(), new BottomSpeakerToNoteTwoPath(), new BottomSpeakerToNoteThreePath(),
-                new AmpToNoteOnePath(), new AmpToNoteTwoPath(), new AmpToNoteThreePath()
+                new AmpToNoteOnePath(), new AmpToNoteTwoPath(), new AmpToNoteThreePath(), new AmpToNoteTwoTopPath()
         ));
 
         reset();
@@ -313,6 +310,7 @@ public class AutoModeManager {
     public enum DesiredCollect {
         TOP_NOTE,
         MIDDLE_NOTE,
+        MIDDLE_NOTE_TOP,
         BOTTOM_NOTE
     }
 
@@ -325,6 +323,7 @@ public class AutoModeManager {
 
         TOP_NOTE,
         MIDDLE_NOTE,
+        MIDDLE_NOTE_TOP,
         BOTTOM_NOTE
     }
 
@@ -341,6 +340,7 @@ public class AutoModeManager {
         return switch (shootPosition) {
             case TOP_NOTE -> Position.TOP_NOTE;
             case MIDDLE_NOTE -> Position.MIDDLE_NOTE;
+            case MIDDLE_NOTE_TOP -> Position.MIDDLE_NOTE_TOP;
             case BOTTOM_NOTE -> Position.BOTTOM_NOTE;
         };
     }
