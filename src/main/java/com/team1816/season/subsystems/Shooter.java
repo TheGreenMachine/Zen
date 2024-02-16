@@ -116,7 +116,7 @@ public class Shooter extends Subsystem {
             pivotCurrentDrawLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Pivot/pivotMotorCurrentDraw");
 
             desiredRollerVelocityLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Roller/desiredRollerVelocity");
-            desiredFeederVelocityLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Roller/desiredFeederVelocity");
+            desiredFeederVelocityLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Feeder/desiredFeederVelocity");
         }
     }
 
