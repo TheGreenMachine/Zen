@@ -57,8 +57,7 @@ public class Robot extends TimedRobot {
     private Drive drive;
 
     private LedManager ledManager;
-    private Camera arduCamera;
-    private Camera pyCamera;
+    private Camera camera;
 
 
     /**
@@ -147,10 +146,8 @@ public class Robot extends TimedRobot {
             // TODO: Set up any other subsystems here.
 
             ledManager = Injector.get(LedManager.class);
-            arduCamera = Injector.get(Camera.class);
-            arduCamera.setDriverMode(true);
-            pyCamera = Injector.get(Camera.class);
-            pyCamera.setDriverMode(true);
+            camera = Injector.get(Camera.class);
+            camera.setDriverMode(true);
             robotState = Injector.get(RobotState.class);
             orchestrator = Injector.get(Orchestrator.class);
             infrastructure = Injector.get(Infrastructure.class);
@@ -187,7 +184,7 @@ public class Robot extends TimedRobot {
 
             drive = (Injector.get(Drive.Factory.class)).getInstance();
 
-            subsystemManager.setSubsystems(drive, ledManager, arduCamera, pyCamera);
+            subsystemManager.setSubsystems(drive, ledManager, camera);
 
             subsystemManager.registerEnabledLoops(enabledLoop);
             subsystemManager.registerDisabledLoops(disabledLoop);
