@@ -41,31 +41,6 @@ public class BottomMiddleEjects extends AutoMode {
         );
     }
 
-    public BottomMiddleEjects(List<TrajectoryAction> trajectoryActions) {
-        super(
-            List.of(
-                new TrajectoryAction(
-                    new BottomSpeakerToFive()
-                ),
-                new TrajectoryAction(
-                    new FiveToBottomEject()
-                ),
-                new TrajectoryAction(
-                    new BottomEjectToFour()
-                ),
-                new TrajectoryAction(
-                    new FourToBottomEject()
-                ),
-                new TrajectoryAction(
-                    new BottomEjectToThree()
-                ),
-                new TrajectoryAction(
-                    new ThreeToBottomEject()
-                )
-            )
-        );
-    }
-
     @Override
     protected void routine() throws AutoModeEndedException {
         GreenLogger.log("Running Bottom Middle Ejects Mode");

@@ -15,7 +15,6 @@ public class ThreeToBottomEject extends AutoPath {
             new Pose2d(6.9, 1.53, Rotation2d.fromDegrees(40)),
             new Pose2d(5.81, 1.21, Rotation2d.fromDegrees(-5)),
             new Pose2d(4.63, 1.57, Rotation2d.fromDegrees(-20))
-
         );
     }
 
