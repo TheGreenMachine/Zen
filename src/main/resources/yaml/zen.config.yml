@@ -137,7 +137,7 @@ subsystems:
             rotationalDeadband: 0.1
             inputDeadband: 0.15 # Deadband of the normalized input
     camera:
-        implemented: false
+        implemented: true
         constants:
             useMultiTargetOdometry: 1
     collector:
