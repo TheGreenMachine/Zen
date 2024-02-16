@@ -15,7 +15,8 @@ import java.util.List;
 public class TestMode extends AutoMode {
 
     public TestMode() {
-        super(List.of(
+        super(
+                List.of(
                 new TrajectoryAction(
                         new TopSpeakerToNoteTwoTopPath().withInversedWaypoints()
                 )
