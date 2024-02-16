@@ -302,7 +302,9 @@ public class AutoModeManager {
         THREE_SCORE,
         SCORE_AND_EXIT,
 
-        BOTTOM_MIDDLE_EJECTS
+        BOTTOM_MIDDLE_EJECTS,
+
+        SCORE_AND_SCRAM
     }
 
     public enum ShootPos {
@@ -369,6 +371,8 @@ public class AutoModeManager {
                 return new DriveStraightMode();
             case BOTTOM_MIDDLE_EJECTS:
                 return new BottomMiddleEjects();
+            case SCORE_AND_SCRAM:
+                return new ScoreAndScramMode();
             default:
                 GreenLogger.log("Defaulting to drive straight mode");
                 return new DriveStraightMode();
