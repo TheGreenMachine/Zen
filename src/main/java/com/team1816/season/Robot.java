@@ -232,7 +232,7 @@ public class Robot extends TimedRobot {
             // zeroing ypr - (-90) pigeon is mounted with the "y" axis facing forward
             drive.resetPigeon(Rotation2d.fromDegrees(-90));
 
-            CameraServer.startAutomaticCapture();
+//            CameraServer.startAutomaticCapture();
 
 
             /** [Specific subsystem] not zeroed on boot up - letting ppl know */
