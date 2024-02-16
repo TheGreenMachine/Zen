@@ -114,10 +114,10 @@ public class PathUtil {
         /* Trajectory is generated */
         Trajectory trajectory = generateTrajectory(usingApp, waypoints);
         List<Pose2d> waypointsMeters = new ArrayList<>();
-//        if (usingApp) {
+        if (usingApp) {
             startX = 0;
             startY = 0;
-//        }
+        }
         /* Inch to meter conversions */
         for (Pose2d pose2d : waypoints) {
             waypointsMeters.add(
@@ -144,12 +144,6 @@ public class PathUtil {
                 iWaypointCheckpoint++;
             }
         }
-
-//        System.out.println("Length of waypoints: " + waypoints.size());
-//        System.out.println("Length of waypoint meters: " + waypointsMeters.size());
-//        System.out.println("Length of waypoint times: " + waypointTimes.size());
-//        System.out.println("Length of waypoint indexes: " + waypointIndexes.size());
-//        System.out.println("Length of trajectory states: " + trajectory.getStates().size());
 
         /* list of headings generated with equivalent length to the trajectory poses */
         List<Rotation2d> generatedHeadings = new ArrayList<>();
