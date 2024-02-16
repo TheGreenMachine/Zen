@@ -18,8 +18,8 @@ public class FiveToBottomEject extends AutoPath {
     @Override
     protected List<Rotation2d> getWaypointHeadings() {
         return List.of(
-            Rotation2d.fromDegrees(180),
-            Rotation2d.fromDegrees(180)
+            Rotation2d.fromDegrees(-10),
+            Rotation2d.fromDegrees(-20)
         );
     }
 

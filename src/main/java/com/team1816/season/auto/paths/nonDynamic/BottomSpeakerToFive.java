@@ -20,10 +20,10 @@ public class BottomSpeakerToFive extends AutoPath {
     @Override
     protected List<Rotation2d> getWaypointHeadings() {
         return List.of(
-            Rotation2d.fromDegrees(0),
-            Rotation2d.fromDegrees(0),
-            Rotation2d.fromDegrees(0),
-            Rotation2d.fromDegrees(0)
+            Rotation2d.fromDegrees(-60),
+            Rotation2d.fromDegrees(-35),
+            Rotation2d.fromDegrees(-20),
+            Rotation2d.fromDegrees(-10)
         );
     }
 
