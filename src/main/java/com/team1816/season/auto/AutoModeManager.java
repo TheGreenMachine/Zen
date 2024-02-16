@@ -298,6 +298,9 @@ public class AutoModeManager {
         TWO_SCORE,
         THREE_SCORE,
         SCORE_AND_EXIT,
+
+        BOTTOM_MIDDLE_EJECTS,
+
         SCORE_AND_SCRAM
     }
 
@@ -366,6 +369,8 @@ public class AutoModeManager {
                 return new TestMode();
             case DRIVE_STRAIGHT:
                 return new DriveStraightMode();
+            case BOTTOM_MIDDLE_EJECTS:
+                return new BottomMiddleEjects();
             case SCORE_AND_SCRAM:
                 return new ScoreAndScramMode();
             default:
