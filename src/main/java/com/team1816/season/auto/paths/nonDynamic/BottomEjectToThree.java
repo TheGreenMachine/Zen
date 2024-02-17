@@ -21,11 +21,11 @@ public class BottomEjectToThree extends AutoPath {
     @Override
     protected List<Rotation2d> getWaypointHeadings() {
         return List.of(
-            Rotation2d.fromDegrees(0),
-            Rotation2d.fromDegrees(0),
-            Rotation2d.fromDegrees(0),
-            Rotation2d.fromDegrees(0),
-            Rotation2d.fromDegrees(0)
+            Rotation2d.fromDegrees(-20),
+            Rotation2d.fromDegrees(-5),
+            Rotation2d.fromDegrees(40),
+            Rotation2d.fromDegrees(65),
+            Rotation2d.fromDegrees(70)
         );
     }
 

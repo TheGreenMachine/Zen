@@ -19,9 +19,9 @@ public class BottomEjectToFour extends AutoPath {
     @Override
     protected List<Rotation2d> getWaypointHeadings() {
         return List.of(
-            Rotation2d.fromDegrees(0),
-            Rotation2d.fromDegrees(0),
-            Rotation2d.fromDegrees(0)
+            Rotation2d.fromDegrees(-20),
+            Rotation2d.fromDegrees(20),
+            Rotation2d.fromDegrees(30)
         );
     }
 
