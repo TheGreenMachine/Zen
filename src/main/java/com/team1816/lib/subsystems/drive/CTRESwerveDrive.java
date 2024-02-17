@@ -463,6 +463,7 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
             GreenLogger.log(headingsList.get(headingsList.size() - 1) + " = max");
             return headingsList.get(headingsList.size() - 1);
         }
+
         double timeBetweenPoints =
                 (
                         trajectory.getStates().get(trajectoryIndex).timeSeconds -

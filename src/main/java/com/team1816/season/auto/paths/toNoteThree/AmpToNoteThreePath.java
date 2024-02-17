@@ -26,7 +26,7 @@ public class AmpToNoteThreePath extends DynamicAutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return updateWaypoints(List.of(
-                new Pose2d(1.82, 7.78, Rotation2d.fromDegrees(-67)),
+                new Pose2d(super.isReversed ? 1.84 : 1.86, 7.74, Rotation2d.fromDegrees(-90)),
                 new Pose2d(1.82, 6.03, Rotation2d.fromDegrees(-90)),
                 new Pose2d(2.57, 4.13, Rotation2d.fromDegrees(0))
         ));

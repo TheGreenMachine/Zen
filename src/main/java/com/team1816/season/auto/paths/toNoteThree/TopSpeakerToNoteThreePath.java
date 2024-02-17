@@ -33,7 +33,7 @@ public class TopSpeakerToNoteThreePath extends DynamicAutoPath {
     @Override
     protected List<Rotation2d> getWaypointHeadings() {
         return updateHeadings(List.of(
-                Rotation2d.fromDegrees(60),
+                Rotation2d.fromDegrees(super.isReversed ? 65 : 60),
                 Rotation2d.fromDegrees(super.isReversed ? 30 : 0),
                 Rotation2d.fromDegrees(0)
         ));

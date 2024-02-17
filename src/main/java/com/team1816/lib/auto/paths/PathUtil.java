@@ -30,16 +30,16 @@ public class PathUtil {
     );
 
     public static Trajectory generateTrajectoryWithError(List<Pose2d> waypoints) {
+
         ArrayList<Pose2d> waypointsAL = new ArrayList<>(waypoints);
 
         Pose2d firstWaypoint = waypointsAL.get(0);
         double dx = robotState.fieldToVehicle.getX() - firstWaypoint.getX();
         double dy = robotState.fieldToVehicle.getY() - firstWaypoint.getY();
 
-        System.out.println(dx);
-
-        double xToApply = Math.min(dx / 1000, allowablePoseError);
-        double yToApply = Math.min(dy / 1000, allowablePoseError);
+        //DO NOT TOUCH THIS CAN CAUSE OUT OF BOUNDS ERRORS
+        double xToApply = Math.min(Math.abs(dx / 1000), allowablePoseError);
+        double yToApply = Math.min(Math.abs(dy / 1000), allowablePoseError);
 
         waypointsAL.set(0, firstWaypoint.plus(
                 new Transform2d(xToApply, yToApply, Rotation2d.fromDegrees(0))

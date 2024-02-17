@@ -111,7 +111,7 @@ subsystems:
             openLoopRampRate: 0.1
             isSwerve: 1
             isCTRSwerve: 1
-            wheelDiameter: 3.75 #inches
+            wheelDiameter: 3.7 #inches
             kTrackScrubFactor: 1.0
             ## Velocity Constraints ##
             maxRotVel: 0.8 # Pi radians/sec
@@ -224,7 +224,7 @@ constants:
     zeroingButton: 9 # channel of DIO port
     enableMusic: 0
     ## Drivetrain ##
-    minAllowablePoseError: 0.1
+    minAllowablePoseError: 0.05
     maxAllowablePoseError: 5
     soundOnConfig: 0 #If this is false, It will still beep on robot bootup.
     ## Logging ##

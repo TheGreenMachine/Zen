@@ -59,7 +59,9 @@ public abstract class DynamicAutoPath extends AutoPath {
         return this.headings;
     }
 
+    @Override
     public Trajectory getAsTrajectory() {
+
         if (trajectory == null) {
             if (!reflected && !rotated) {
                 trajectory = PathUtil.generateTrajectoryWithError(getWaypoints());

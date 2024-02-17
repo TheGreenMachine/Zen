@@ -22,7 +22,7 @@ public class StartToAmpPath extends DynamicAutoPath {
     protected List<Pose2d> getWaypoints() {
         return List.of(
                 new Pose2d(1.47, 7.3, Rotation2d.fromDegrees(90)),
-                new Pose2d(1.82, 7.73, Rotation2d.fromDegrees(90))
+                new Pose2d(super.isReversed ? 1.84 : 1.86, 7.74, Rotation2d.fromDegrees(90))
         );
     }
 
