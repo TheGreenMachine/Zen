@@ -29,6 +29,6 @@ public class BottomSpeakerToFive extends AutoPath {
 
     @Override
     protected boolean usingApp() {
-        return false;
+        return true;
     }
 }

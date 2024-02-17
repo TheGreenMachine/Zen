@@ -114,10 +114,10 @@ public class PathUtil {
         /* Trajectory is generated */
         Trajectory trajectory = generateTrajectory(usingApp, waypoints);
         List<Pose2d> waypointsMeters = new ArrayList<>();
-        if (usingApp) {
+//        if (usingApp) {
             startX = 0;
             startY = 0;
-        }
+//        }
         /* Inch to meter conversions */
         for (Pose2d pose2d : waypoints) {
             waypointsMeters.add(

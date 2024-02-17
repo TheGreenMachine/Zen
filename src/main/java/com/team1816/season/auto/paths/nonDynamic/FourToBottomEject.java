@@ -27,6 +27,6 @@ public class FourToBottomEject extends AutoPath {
 
     @Override
     protected boolean usingApp() {
-        return false;
+        return true;
     }
 }
