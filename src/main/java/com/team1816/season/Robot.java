@@ -241,10 +241,10 @@ public class Robot extends TimedRobot {
                     "zeroPose",
                     ActionState.PRESSED,
                     () ->
-                            drive.zeroSensors(
+                            drive.resetHeading(
                                     robotState.allianceColor == Color.BLUE ?
-                                            Constants.kDefaultZeroingPose :
-                                            Constants.kFlippedZeroingPose
+                                            Rotation2d.fromDegrees(0) :
+                                            Rotation2d.fromDegrees(180)
                             )
             );
 
