@@ -31,6 +31,6 @@ public class BottomEjectToThree extends AutoPath {
 
     @Override
     protected boolean usingApp() {
-        return true;
+        return false;
     }
 }
