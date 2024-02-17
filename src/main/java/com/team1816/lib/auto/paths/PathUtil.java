@@ -37,12 +37,14 @@ public class PathUtil {
         double dx = robotState.fieldToVehicle.getX() - firstWaypoint.getX();
         double dy = robotState.fieldToVehicle.getY() - firstWaypoint.getY();
 
-        //DO NOT TOUCH THIS CAN CAUSE OUT OF BOUNDS ERRORS
-        double xToApply = Math.min(Math.abs(dx / 1000), allowablePoseError);
-        double yToApply = Math.min(Math.abs(dy / 1000), allowablePoseError);
+        boolean applyDx = Math.min(Math.abs(dx / 1000), allowablePoseError) != allowablePoseError;
+        boolean applyDy = Math.min(Math.abs(dy / 1000), allowablePoseError) != allowablePoseError;
 
         waypointsAL.set(0, firstWaypoint.plus(
-                new Transform2d(xToApply, yToApply, Rotation2d.fromDegrees(0))
+                new Transform2d(
+                        applyDx ? dx : 0,
+                        applyDy ? dy : 0,
+                        Rotation2d.fromDegrees(0))
         ));
 
         return generateTrajectory(true, waypointsAL);
