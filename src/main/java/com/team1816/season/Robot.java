@@ -174,6 +174,7 @@ public class Robot extends TimedRobot {
             factory = Injector.get(RobotFactory.class);
             ledManager = Injector.get(LedManager.class);
             camera = Injector.get(Camera.class);
+            camera.setDriverMode(true);
             robotState = Injector.get(RobotState.class);
             orchestrator = Injector.get(Orchestrator.class);
             infrastructure = Injector.get(Infrastructure.class);
@@ -232,7 +233,7 @@ public class Robot extends TimedRobot {
             // zeroing ypr - (-90) pigeon is mounted with the "y" axis facing forward
             drive.resetPigeon(Rotation2d.fromDegrees(-90));
 
-            CameraServer.startAutomaticCapture();
+//            CameraServer.startAutomaticCapture();
 
 
             /** [Specific subsystem] not zeroed on boot up - letting ppl know */
