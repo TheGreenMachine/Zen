@@ -10,40 +10,39 @@ import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.auto.actions.CollectAction;
 import com.team1816.season.auto.actions.EjectAction;
 import com.team1816.season.auto.actions.ShootSpeakerAction;
-import com.team1816.season.auto.paths.nonDynamic.Bottom.*;
+import com.team1816.season.auto.paths.nonDynamic.Top.*;
 import com.team1816.season.subsystems.Collector;
 
 import java.util.List;
 
-public class BottomMiddleEjects extends AutoMode {
-    public BottomMiddleEjects() {
-        super(
-            List.of(
-                new TrajectoryAction(
-                    new BottomSpeakerToFive()
-                ),
-                new TrajectoryAction(
-                    new FiveToBottomEject()
-                ),
-                new TrajectoryAction(
-                    new BottomEjectToFour()
-                ),
-                new TrajectoryAction(
-                    new FourToBottomEject()
-                ),
-                new TrajectoryAction(
-                    new BottomEjectToThree()
-                ),
-                new TrajectoryAction(
-                    new ThreeToBottomEject()
-                )
+public class TopMiddleEjects extends AutoMode {
+
+    public TopMiddleEjects() {
+        super(List.of(
+            new TrajectoryAction(
+                new TopSpeakerToOne()
+            ),
+            new TrajectoryAction(
+                new OneToTopEject()
+            ),
+            new TrajectoryAction(
+                new TopEjectToTwo()
+            ),
+            new TrajectoryAction(
+                new TwoToTopEject()
+            ),
+            new TrajectoryAction(
+                new TopEjectToThree()
+            ),
+            new TrajectoryAction(
+                new ThreeToTopEject()
             )
-        );
+        ));
     }
 
     @Override
     protected void routine() throws AutoModeEndedException {
-        GreenLogger.log("Running Bottom Middle Ejects Mode");
+        GreenLogger.log("Running Top Middle Ejects Mode");
         runAction(
             new SeriesAction(
                 new ShootSpeakerAction(),
@@ -66,6 +65,5 @@ public class BottomMiddleEjects extends AutoMode {
                 new EjectAction()
             )
         );
-
     }
 }
