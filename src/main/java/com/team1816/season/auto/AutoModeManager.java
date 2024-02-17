@@ -370,8 +370,8 @@ public class AutoModeManager {
 //                return new TuneDrivetrainMode();
 //            case LIVING_ROOM:
 //                return (new LivingRoomMode(color));
-//            case TEST:
-//                return new TestMode();
+            case TEST:
+                return new TestMode();
             case DRIVE_STRAIGHT:
                 return new DriveStraightMode();
 //            case BOTTOM_MIDDLE_EJECTS:

@@ -415,6 +415,8 @@ public class Robot extends TimedRobot {
 
             teleopStart = Timer.getFPGATimestamp();
             enabledLoop.start();
+
+            drive.zeroSensors();
         } catch (Throwable t) {
             faulted = true;
             throw t;

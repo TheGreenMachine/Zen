@@ -224,7 +224,7 @@ constants:
     zeroingButton: 9 # channel of DIO port
     enableMusic: 0
     ## Drivetrain ##
-    minAllowablePoseError: 0.05
+    minAllowablePoseError: 0.025
     maxAllowablePoseError: 5
     soundOnConfig: 0 #If this is false, It will still beep on robot bootup.
     ## Logging ##
