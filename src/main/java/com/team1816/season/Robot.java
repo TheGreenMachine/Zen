@@ -72,11 +72,6 @@ public class Robot extends TimedRobot {
     private LedManager ledManager;
     private Camera camera;
     private Shooter shooter;
-    private DigitalInput zeroingButton;
-    private Boolean zeroing = false;
-    private boolean lastButton;
-
-
 
     /**
      * Factory
@@ -184,8 +179,6 @@ public class Robot extends TimedRobot {
             shooter = Injector.get(Shooter.class);
             collector = Injector.get(Collector.class);
 
-            zeroingButton = new DigitalInput((int) factory.getConstant("zeroingButton", 9));
-
             /** Logging */
             if (Constants.kLoggingRobot) {
                 var logFile = new SimpleDateFormat("MMdd_HH-mm").format(new Date());
@@ -232,8 +225,6 @@ public class Robot extends TimedRobot {
             subsystemManager.zeroSensors();
             // zeroing ypr - (-90) pigeon is mounted with the "y" axis facing forward
             drive.resetPigeon(Rotation2d.fromDegrees(-90));
-
-//            CameraServer.startAutomaticCapture();
 
 
             /** [Specific subsystem] not zeroed on boot up - letting ppl know */
@@ -399,7 +390,8 @@ public class Robot extends TimedRobot {
 
         drive.zeroSensors(autoModeManager.getSelectedAuto().getInitialPose());
 
-        // TODO: Set up subsystem states
+        shooter.setDesiredState(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW);
+        collector.setDesiredState(Collector.COLLECTOR_STATE.STOP);
 
         drive.setControlState(Drive.ControlState.TRAJECTORY_FOLLOWING);
         autoModeManager.startAuto();
