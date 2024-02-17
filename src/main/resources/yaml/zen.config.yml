@@ -205,7 +205,7 @@ subsystems:
             feederAmpShootSpeed: 700
             feederIntakeSpeed: 500
             velocityErrorMargin: 0.1
-            pivotAmpShootPosition: 30
+            pivotAmpShootPosition: 33
             invertFollowerMotor: 1
 infrastructure:
     canBusName: highSpeed
