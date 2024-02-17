@@ -51,9 +51,9 @@ public abstract class AutoMode {
         robotState = Injector.get(RobotState.class);
 
         if (robotState.allianceColor == Color.BLUE) {
-            initialPose = new Pose2d(0, 0, Rotation2d.fromDegrees(180));
-        } else {
             initialPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+        } else {
+            initialPose = new Pose2d(0, 0, Rotation2d.fromDegrees(180));
         }
 
     }
@@ -72,9 +72,9 @@ public abstract class AutoMode {
 
         if (trajectoryActions.isEmpty()) {
             if (robotState.allianceColor == Color.BLUE) {
-                initialPose = new Pose2d(0, 0, Rotation2d.fromDegrees(180));
-            } else {
                 initialPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+            } else {
+                initialPose = new Pose2d(0, 0, Rotation2d.fromDegrees(180));
             }
         } else {
             if (trajectoryActions.get(0).getTrajectoryHeadings() != null && isSwerve) {

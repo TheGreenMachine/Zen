@@ -64,11 +64,11 @@ public abstract class DynamicAutoPath extends AutoPath {
 
         if (trajectory == null) {
             if (!reflected && !rotated) {
-                trajectory = PathUtil.generateTrajectoryWithError(getWaypoints());
+                trajectory = PathUtil.generateTrajectory(true, getWaypoints());
             } else if (reflected) {
-                trajectory = PathUtil.generateTrajectoryWithError(getReflectedWaypoints());
+                trajectory = PathUtil.generateTrajectory(true, getReflectedWaypoints());
             } else {
-                trajectory = PathUtil.generateTrajectoryWithError(getRotatedWaypoints());
+                trajectory = PathUtil.generateTrajectory(true, getRotatedWaypoints());
             }
         }
         return trajectory;

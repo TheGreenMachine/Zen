@@ -38,6 +38,8 @@ public abstract class AutoPath {
      */
     boolean rotated;
 
+    boolean usingCorrection = true;
+
     public AutoPath() {
     }
 
@@ -83,6 +85,10 @@ public abstract class AutoPath {
      */
     protected void setRotated(boolean rotated) {
         this.rotated = rotated;
+    }
+
+    public void setUsingCorrection(boolean usingCorrection) {
+        this.usingCorrection = usingCorrection;
     }
 
     /**

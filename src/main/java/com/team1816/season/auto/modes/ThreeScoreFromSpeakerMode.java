@@ -21,9 +21,9 @@ public class ThreeScoreFromSpeakerMode extends AutoMode {
     public ThreeScoreFromSpeakerMode(List<DynamicAutoPath> paths) {
         super(DynamicAutoUtil.encapsulateAutoPaths(paths));
         this.paths = new ArrayList<>(paths);
-        if (trajectoryActions.size() > 3) {
-            trajectoryActions.subList(4, trajectoryActions.size()).clear();
-        }
+//        if (trajectoryActions.size() > 3) {
+//            trajectoryActions.subList(4, trajectoryActions.size()).clear();
+//        }
     }
 
     @Override

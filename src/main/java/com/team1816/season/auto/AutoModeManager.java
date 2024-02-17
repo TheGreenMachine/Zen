@@ -422,6 +422,7 @@ public class AutoModeManager {
             paths.add(DynamicAutoUtil.getReversedDynamicPath(start, end, color).orElse(new MiddleSpeakerToNoteTwoPath().withInversedWaypoints()));
         }
 
+        paths.get(0).setUsingCorrection(true);
         if (collectPositions.size() >= shootPositions.size()) { //should provide the ability to have an ending collect
             paths.add(DynamicAutoUtil.getDynamicPath(
                     toPosition(shootPositions.get(shootPositions.size()-1)),

@@ -483,6 +483,9 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
                                 headingsList.get(trajectoryIndex),
                                 getTrajectoryTimestamp() / timeBetweenPoints
                         );
+
+        Pose2d desiredTrajectory = trajectory.getStates().get(trajectoryIndex).poseMeters;
+        GreenLogger.appendQuickLog("TrajectoryDesPose", desiredTrajectory.getX(), desiredTrajectory.getY(), desiredTrajectory.getRotation().getDegrees());
         return heading;
     }
 

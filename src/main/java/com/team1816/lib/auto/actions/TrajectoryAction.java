@@ -103,17 +103,25 @@ public class TrajectoryAction implements AutoAction {
             );
             thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
+            PIDController xController = new PIDController(10, 0, 0.3);
+            PIDController yController = new PIDController(10, 0, 0.5);
+
+            xController.setTolerance(0.01,0.01);
+            yController.setTolerance(0.01, 0.01);
+
             command =
                 new SwerveControllerCommand(
                     trajectory,
                     drive::getPose,
                     swerveKinematics,
-                    new PIDController(10, 0, 0.3), //Translational X Controller
-                    new PIDController(10, 0, 0.3), //Translational Y Controller
+                    xController, //Translational X Controller
+                    yController, //Translational Y Controller
                     thetaController,
                     ((EnhancedSwerveDrive) drive)::getTrajectoryHeadings,
                     ((EnhancedSwerveDrive) drive)::setModuleStates
                 );
+
+
         } else {
             GreenLogger.log(
                 " oh man oh god I'm neither swerve nor tank! " + drive.toString()
