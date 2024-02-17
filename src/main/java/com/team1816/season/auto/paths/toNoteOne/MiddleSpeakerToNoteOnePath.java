@@ -33,7 +33,7 @@ public class MiddleSpeakerToNoteOnePath extends DynamicAutoPath {
     protected List<Rotation2d> getWaypointHeadings() {
         return updateHeadings(List.of(
                 Rotation2d.fromDegrees(0),
-                Rotation2d.fromDegrees(0)
+                Rotation2d.fromDegrees(10)
         ));
     }
 
