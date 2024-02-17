@@ -120,7 +120,7 @@ subsystems:
             maxVelOpenLoop: 2.5 # meters/s
             maxVel12VMPS: 4.9
             maxVelPathFollowing: 3.6 # meters/s
-            maxAccel: 2 # meters/s^2
+            maxAccel: 1.5 # meters/s^2
             isDemoMode: 0
             ## Swerve Characterization ##
             driveGearRatio: 6.75 # L2
@@ -199,7 +199,7 @@ subsystems:
                 gravityType: cosine
         constants:
             noteSensorChannel: 0
-            rollerSpeakerShootSpeed: 60
+            rollerSpeakerShootSpeed: 65
             rollerAmpShootSpeed: 30
             feederSpeakerShootSpeed: 700
             feederAmpShootSpeed: 700

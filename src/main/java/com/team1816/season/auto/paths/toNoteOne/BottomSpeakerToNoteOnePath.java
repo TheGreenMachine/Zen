@@ -27,7 +27,7 @@ public class BottomSpeakerToNoteOnePath extends DynamicAutoPath {
                 new Pose2d(0.72, 4.30, Rotation2d.fromDegrees(-20)),
                 new Pose2d(1.70, 4.20, Rotation2d.fromDegrees(82)),
                 new Pose2d(1.58, 6.31, Rotation2d.fromDegrees(82)),
-                new Pose2d(2.57, 7.02, Rotation2d.fromDegrees(0))
+                new Pose2d(2.532, 7.07, Rotation2d.fromDegrees(0))
         ));
     }
 
