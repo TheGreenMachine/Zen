@@ -320,10 +320,14 @@ public class Robot extends TimedRobot {
                     "ampPivot",
                     ActionState.PRESSED,
                     () -> {
-                        if(shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.STOW)
+                        if(shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.STOW) {
                             shooter.setDesiredPivotState(Shooter.PIVOT_STATE.SHOOT_AMP);
-                        else
+                        }
+                        else {
                             shooter.setDesiredPivotState(Shooter.PIVOT_STATE.STOW);
+                        }
+
+                        GreenLogger.log("Changing pivot to: " + shooter.getDesiredPivotState());
                     }
             );
             inputHandler.listenAction(

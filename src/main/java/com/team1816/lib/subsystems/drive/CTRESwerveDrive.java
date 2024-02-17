@@ -358,6 +358,7 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
     }
 
     public void resetHeading(Rotation2d rotation) {
+        GreenLogger.log("Resetting Headings!");
         train.setOperatorPerspectiveForward(rotation);
     }
 
