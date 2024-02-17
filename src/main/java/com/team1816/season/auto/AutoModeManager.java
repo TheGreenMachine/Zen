@@ -90,8 +90,8 @@ public class AutoModeManager {
             autoModeChooser.addOption(desiredAuto.name(), desiredAuto);
         }
         autoModeChooser.setDefaultOption(
-            DesiredAuto.TEST.name(),
-            DesiredAuto.TEST
+            DesiredAuto.DRIVE_STRAIGHT.name(),
+            DesiredAuto.DRIVE_STRAIGHT
         );
 
         SmartDashboard.putData("Robot color", sideChooser); // appends chooser to shuffleboard
@@ -149,7 +149,7 @@ public class AutoModeManager {
     public void reset() {
         autoMode = new DriveStraightMode();
         autoModeThread = new Thread(autoMode::run);
-        desiredAuto = DesiredAuto.TEST;
+        desiredAuto = DesiredAuto.DRIVE_STRAIGHT;
         teamColor = Color.RED;
         robotState.allianceColor = teamColor;
 
@@ -366,12 +366,12 @@ public class AutoModeManager {
         switch (mode) {
             case DO_NOTHING:
                 return new DoNothingMode();
-            case TUNE_DRIVETRAIN: // commented for competition purposes
-                return new TuneDrivetrainMode();
+//            case TUNE_DRIVETRAIN: // commented for competition purposes
+//                return new TuneDrivetrainMode();
 //            case LIVING_ROOM:
 //                return (new LivingRoomMode(color));
-            case TEST:
-                return new TestMode();
+//            case TEST:
+//                return new TestMode();
             case DRIVE_STRAIGHT:
                 return new DriveStraightMode();
 //            case BOTTOM_MIDDLE_EJECTS:
