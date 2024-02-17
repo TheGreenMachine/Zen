@@ -30,17 +30,12 @@ public class ThreeScoreFromSpeakerMode extends AutoMode {
     protected void routine() throws AutoModeEndedException {
         runAction(
                 new SeriesAction(
+                        new CollectAction(Collector.COLLECTOR_STATE.INTAKE),
                         new ShootSpeakerAction(),
-                        new ParallelAction(
-                                new CollectAction(Collector.COLLECTOR_STATE.INTAKE),
-                                trajectoryActions.get(0)
-                        ),
+                        trajectoryActions.get(0),
                         trajectoryActions.get(1),
                         paths.get(1).isAmpPath() ? new ShootAmpAction() : new ShootSpeakerAction(),
-                        new ParallelAction(
-                                new CollectAction(Collector.COLLECTOR_STATE.INTAKE),
-                                trajectoryActions.get(2)
-                        ),
+                        trajectoryActions.get(2),
                         trajectoryActions.get(3),
                         paths.get(3).isAmpPath() ? new ShootAmpAction() : new ShootSpeakerAction(),
                         new ShootAction(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW)
