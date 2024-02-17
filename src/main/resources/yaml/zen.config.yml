@@ -151,7 +151,7 @@ subsystems:
                 kF: 0.0099
         constants:
             intakeSpeed:  -0.7
-            outtakeSpeed: 0.25
+            outtakeSpeed: 0.4
     shooter:
         implemented: true
         motors:

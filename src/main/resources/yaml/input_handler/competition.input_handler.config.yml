@@ -10,6 +10,7 @@ driver:
     buttonpad:
         b: brakeMode
         x: ampPivot
+        a: collectorOuttake
     axes:
         rightTrigger: turboMode
         leftTrigger: slowMode
@@ -28,5 +29,4 @@ operator:
         leftBumper: updatePoseWithCamera
     buttonpad:
         y: stopShooter
-        a: collectorOuttake
 demoMode: false
