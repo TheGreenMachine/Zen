@@ -3,6 +3,7 @@ package com.team1816.lib.auto.paths;
 import com.team1816.season.configuration.Constants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
@@ -10,6 +11,8 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.team1816.lib.subsystems.Subsystem.factory;
+import static com.team1816.lib.subsystems.Subsystem.robotState;
 import static com.team1816.lib.subsystems.drive.Drive.kPathFollowingMaxAccelMeters;
 import static com.team1816.lib.subsystems.drive.Drive.kPathFollowingMaxVelMeters;
 
@@ -20,6 +23,30 @@ public class PathUtil {
      */
     private static final double kMaxVelocity = kPathFollowingMaxVelMeters;
     private static final double kMaxAccel = kPathFollowingMaxAccelMeters;
+
+    public static final double allowablePoseError = factory.getConstant(
+            "minAllowablePoseError",
+            0.05
+    );
+
+    public static Trajectory generateTrajectoryWithError(List<Pose2d> waypoints) {
+        ArrayList<Pose2d> waypointsAL = new ArrayList<>(waypoints);
+
+        Pose2d firstWaypoint = waypointsAL.get(0);
+        double dx = robotState.fieldToVehicle.getX() - firstWaypoint.getX();
+        double dy = robotState.fieldToVehicle.getY() - firstWaypoint.getY();
+
+        System.out.println(dx);
+
+        double xToApply = Math.min(dx / 1000, allowablePoseError);
+        double yToApply = Math.min(dy / 1000, allowablePoseError);
+
+        waypointsAL.set(0, firstWaypoint.plus(
+                new Transform2d(xToApply, yToApply, Rotation2d.fromDegrees(0))
+        ));
+
+        return generateTrajectory(true, waypointsAL);
+    }
 
     /**
      * Generates a trajectory based on a list of waypoints based on WPIlib's TrajectoryGenerator

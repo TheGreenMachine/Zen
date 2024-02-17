@@ -4,6 +4,7 @@ import com.team1816.lib.auto.Color;
 import com.team1816.season.auto.AutoModeManager;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,6 +57,19 @@ public abstract class DynamicAutoPath extends AutoPath {
             this.headings = headings;
         }
         return this.headings;
+    }
+
+    public Trajectory getAsTrajectory() {
+        if (trajectory == null) {
+            if (!reflected && !rotated) {
+                trajectory = PathUtil.generateTrajectoryWithError(getWaypoints());
+            } else if (reflected) {
+                trajectory = PathUtil.generateTrajectoryWithError(getReflectedWaypoints());
+            } else {
+                trajectory = PathUtil.generateTrajectoryWithError(getRotatedWaypoints());
+            }
+        }
+        return trajectory;
     }
 
     public List<Pose2d> getInverseWaypoints() {

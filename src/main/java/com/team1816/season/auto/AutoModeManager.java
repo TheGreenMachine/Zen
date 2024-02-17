@@ -156,6 +156,9 @@ public class AutoModeManager {
         desiredStart = ShootPos.TOP_SPEAKER;
         desiredFirstCollect = DesiredCollect.TOP_NOTE;
         desiredFirstShoot = ShootPos.TOP_SPEAKER;
+
+        desiredSecondCollect = DesiredCollect.TOP_NOTE;
+        desiredSecondShoot = ShootPos.TOP_SPEAKER;
     }
 
     /**
@@ -223,6 +226,8 @@ public class AutoModeManager {
         desiredFirstCollect = selectedFirstCollect;
         desiredFirstShoot = selectedFirstShoot;
 
+        desiredSecondCollect = selectedSecondCollect;
+        desiredSecondShoot = selectedSecondShoot;
 
         //Legacy 2023 pathfinder code
 //                if (robotState.allianceColor == Color.BLUE) {
