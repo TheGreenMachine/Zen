@@ -357,6 +357,10 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
         updateRobotState();
     }
 
+    public void resetHeading(Rotation2d rotation) {
+        train.setOperatorPerspectiveForward(rotation);
+    }
+
     @Override
     public void updateRobotState() {
         if (RobotBase.isSimulation()) {

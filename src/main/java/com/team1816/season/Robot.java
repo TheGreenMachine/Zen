@@ -416,7 +416,11 @@ public class Robot extends TimedRobot {
             teleopStart = Timer.getFPGATimestamp();
             enabledLoop.start();
 
-            drive.zeroSensors();
+            drive.resetHeading(
+                    robotState.allianceColor == Color.BLUE ?
+                            Rotation2d.fromDegrees(0) :
+                            Rotation2d.fromDegrees(180)
+            );
         } catch (Throwable t) {
             faulted = true;
             throw t;

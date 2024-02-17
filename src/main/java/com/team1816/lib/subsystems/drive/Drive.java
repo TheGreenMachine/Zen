@@ -537,6 +537,8 @@ public abstract class Drive
      */
     public abstract void resetOdometry(Pose2d pose);
 
+    public void resetHeading(Rotation2d rotation) {}
+
     /**
      * Returns if the drivetrain is in demoMode (slower)
      *
