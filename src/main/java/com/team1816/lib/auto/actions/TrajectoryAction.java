@@ -98,16 +98,13 @@ public class TrajectoryAction implements AutoAction {
             var thetaController = new ProfiledPIDController(
                 10,
                 0,
-                0.5,
+                0,
                 kThetaControllerConstraints
             );
             thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
             PIDController xController = new PIDController(10, 0, 0.3);
-            PIDController yController = new PIDController(10, 0, 0.5);
-
-            xController.setTolerance(0.01,0.01);
-            yController.setTolerance(0.01, 0.01);
+            PIDController yController = new PIDController(10, 0, 0.3);
 
             command =
                 new SwerveControllerCommand(

@@ -24,16 +24,14 @@ public class MiddleSpeakerToNoteOnePath extends DynamicAutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return updateWaypoints(List.of(
-                new Pose2d(1.40, 5.55, Rotation2d.fromDegrees(68)),
-                new Pose2d(1.72, 6.61, Rotation2d.fromDegrees(61)),
-                new Pose2d(2.7, 7, Rotation2d.fromDegrees(0))
+                new Pose2d(1.4, 5.55, Rotation2d.fromDegrees(68)),
+                new Pose2d(2.71, 7, Rotation2d.fromDegrees(13))
         ));
     }
 
     @Override
     protected List<Rotation2d> getWaypointHeadings() {
         return updateHeadings(List.of(
-                Rotation2d.fromDegrees(0),
                 Rotation2d.fromDegrees(0),
                 Rotation2d.fromDegrees(0)
         ));

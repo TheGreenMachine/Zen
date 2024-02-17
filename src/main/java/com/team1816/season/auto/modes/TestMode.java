@@ -15,6 +15,7 @@ import com.team1816.season.auto.paths.toNoteThree.MiddleSpeakerToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteThree.TopSpeakerToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteTwo.AmpToNoteTwoPath;
 import com.team1816.season.auto.paths.toNoteTwo.AmpToNoteTwoTopPath;
+import com.team1816.season.auto.paths.toNoteTwo.MiddleSpeakerToNoteTwoPath;
 import com.team1816.season.auto.paths.toNoteTwo.TopSpeakerToNoteTwoTopPath;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class TestMode extends AutoMode {
         super(
                 List.of(
                 new TrajectoryAction(
-                        new MiddleSpeakerToNoteOnePath()
+                        new MiddleSpeakerToNoteTwoPath()
         )));
     }
     @Override
