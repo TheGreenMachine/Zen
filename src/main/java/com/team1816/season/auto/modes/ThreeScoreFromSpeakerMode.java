@@ -21,6 +21,7 @@ import java.util.List;
 public class ThreeScoreFromSpeakerMode extends AutoMode {
     ArrayList<DynamicAutoPath> paths;
     boolean scramAtEnd;
+    TrajectoryAction scramAction;
     public ThreeScoreFromSpeakerMode(List<DynamicAutoPath> paths, boolean scramAtEnd) {
         super(DynamicAutoUtil.encapsulateAutoPaths(paths));
         this.paths = new ArrayList<>(paths);
@@ -28,6 +29,10 @@ public class ThreeScoreFromSpeakerMode extends AutoMode {
 //            trajectoryActions.subList(4, trajectoryActions.size()).clear();
 //        }
         this.scramAtEnd = scramAtEnd;
+        if (scramAtEnd) {
+            scramAction = new TrajectoryAction(DynamicAutoUtil.getScram(paths.get(3)));
+            trajectoryActions.add(scramAction);
+        }
     }
 
     @Override
@@ -43,7 +48,7 @@ public class ThreeScoreFromSpeakerMode extends AutoMode {
                         trajectoryActions.get(3),
                         paths.get(3).isAmpPath() ? new ShootAmpAction() : new ShootSpeakerAction(),
                         new ShootAction(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW),
-                        scramAtEnd ? new TrajectoryAction(DynamicAutoUtil.getScram(paths.get(3))) : new WaitAction(0.1)
+                        scramAtEnd ? scramAction : new WaitAction(0.1)
                 ));
     }
 }

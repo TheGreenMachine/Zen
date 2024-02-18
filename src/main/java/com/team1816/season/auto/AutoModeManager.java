@@ -410,6 +410,7 @@ public class AutoModeManager {
     private AutoMode generateDynamicAutoMode(DesiredAuto mode, Color color, List<ShootPos> shootPositions, List<DesiredCollect> collectPositions) {
         List<DynamicAutoPath> dynamicPathList = generateDynamicPathList(color, shootPositions , collectPositions);
         boolean isScramming = desiredScram == ScramChoice.SCRAM;
+        System.out.println(isScramming);
         if (mode == DesiredAuto.TWO_SCORE) {
             if (dynamicPathList.get(0).isAmpPath()) {
                 dynamicPathList.add(0, new StartToAmpPath());

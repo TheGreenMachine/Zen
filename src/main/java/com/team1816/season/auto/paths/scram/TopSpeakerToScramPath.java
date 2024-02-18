@@ -10,8 +10,8 @@ public class TopSpeakerToScramPath extends AutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return List.of(
-                new Pose2d(0.62, 6.74, Rotation2d.fromDegrees(0)),
-                new Pose2d(4.79, 7.35, Rotation2d.fromDegrees(0))
+                new Pose2d(0.62, 6.8, Rotation2d.fromDegrees(0)),
+                new Pose2d(7.2, 7.35, Rotation2d.fromDegrees(0))
         );
     }
 

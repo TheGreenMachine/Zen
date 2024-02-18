@@ -21,6 +21,8 @@ import java.util.List;
 public class TwoScoreFromSpeakerMode extends AutoMode {
     ArrayList<DynamicAutoPath> paths;
     boolean scramAtEnd;
+    TrajectoryAction scramAction;
+
     public TwoScoreFromSpeakerMode(List<DynamicAutoPath> paths, boolean scramAtEnd) {
         super(DynamicAutoUtil.encapsulateAutoPaths(paths));
         this.paths = new ArrayList<>(paths);
@@ -28,6 +30,11 @@ public class TwoScoreFromSpeakerMode extends AutoMode {
             trajectoryActions.subList(2, trajectoryActions.size()).clear();
         }
         this.scramAtEnd = scramAtEnd;
+        if (scramAtEnd) {
+            scramAction = new TrajectoryAction(DynamicAutoUtil.getScram(paths.get(1)));
+            trajectoryActions.add(scramAction);
+        }
+
     }
 
     @Override
@@ -40,7 +47,7 @@ public class TwoScoreFromSpeakerMode extends AutoMode {
                 trajectoryActions.get(1),
                 paths.get(1).isAmpPath() ? new ShootAmpAction() : new ShootSpeakerAction(),
                 new ShootAction(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW),
-                scramAtEnd ? new TrajectoryAction(DynamicAutoUtil.getScram(paths.get(1))) : new WaitAction(0.1)
+                scramAtEnd ? scramAction : new WaitAction(0.1)
             )
         );
     }

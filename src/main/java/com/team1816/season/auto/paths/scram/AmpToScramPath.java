@@ -11,7 +11,7 @@ public class AmpToScramPath extends AutoPath {
     protected List<Pose2d> getWaypoints() {
         return List.of(
                 new Pose2d(1.86, 7.74, Rotation2d.fromDegrees(-9)),
-                new Pose2d(4.79, 7.35, Rotation2d.fromDegrees(0))
+                new Pose2d(7.2, 7.35, Rotation2d.fromDegrees(0))
         );
     }
 

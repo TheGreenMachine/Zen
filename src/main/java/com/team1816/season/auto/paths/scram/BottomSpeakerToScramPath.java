@@ -11,7 +11,7 @@ public class BottomSpeakerToScramPath extends AutoPath {
     protected List<Pose2d> getWaypoints() {
         return List.of(
                 new Pose2d(0.72, 4.30, Rotation2d.fromDegrees(-60)),
-                new Pose2d(2.62, 1.04, Rotation2d.fromDegrees(-60))
+                new Pose2d(7, 1.04, Rotation2d.fromDegrees(0))
         );
     }
 

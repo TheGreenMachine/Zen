@@ -11,7 +11,7 @@ public class MiddleSpeakerToScramPath extends AutoPath {
     protected List<Pose2d> getWaypoints() {
         return List.of(
                 new Pose2d(1.4, 5.55, Rotation2d.fromDegrees(-69)),
-                new Pose2d(2.98, 1.15, Rotation2d.fromDegrees(-60))
+                new Pose2d(7, 1.15, Rotation2d.fromDegrees(0))
         );
     }
 

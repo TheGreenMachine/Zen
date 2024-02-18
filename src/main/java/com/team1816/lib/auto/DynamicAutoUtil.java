@@ -73,11 +73,11 @@ public class DynamicAutoUtil {
     }
 
     public static AutoPath getScram(DynamicAutoPath path) {
-        return switch(path.endPosition) {
+        return switch(path.startPosition) {
             case TOP_SPEAKER -> new TopSpeakerToScramPath();
             case MIDDLE_SPEAKER -> new MiddleSpeakerToScramPath();
             case BOTTOM_SPEAKER -> new BottomSpeakerToScramPath();
-            case TOP_NOTE -> new AmpToScramPath();
+            case AMP -> new AmpToScramPath();
             default -> new DriveStraightPath(100); //please never let this be called
         };
     }
