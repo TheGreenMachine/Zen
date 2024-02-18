@@ -6,11 +6,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 import java.util.List;
 
-public class TopSpeakerToScramPath extends AutoPath {
+public class AmpToScramPath extends AutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return List.of(
-                new Pose2d(0.62, 6.74, Rotation2d.fromDegrees(0)),
+                new Pose2d(1.86, 7.74, Rotation2d.fromDegrees(-9)),
                 new Pose2d(4.79, 7.35, Rotation2d.fromDegrees(0))
         );
     }
@@ -18,8 +18,8 @@ public class TopSpeakerToScramPath extends AutoPath {
     @Override
     protected List<Rotation2d> getWaypointHeadings() {
         return List.of(
-                Rotation2d.fromDegrees(60),
-                Rotation2d.fromDegrees(0)
+                Rotation2d.fromDegrees(-90),
+                Rotation2d.fromDegrees(-90)
         );
     }
 
