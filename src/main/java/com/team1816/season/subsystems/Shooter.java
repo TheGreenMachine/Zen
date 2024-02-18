@@ -255,7 +255,11 @@ public class Shooter extends Subsystem {
                     desiredFeederVelocity = 0;
                 }
                 case SHOOT -> {
-                    desiredFeederVelocity = feederShootSpeed;
+                    if (desiredRollerState.inDesiredSpeedRange(actualRollerVelocity)) {
+                        desiredFeederVelocity = feederShootSpeed;
+                    } else {
+                        feederOutputsChanged = true; //Jank
+                    }
                 }
                 case TRANSFER -> {
                     if (!isBeamBreakTriggered()) {
