@@ -20,7 +20,7 @@ public class TestMode extends AutoMode {
         super(
                 List.of(
                 new TrajectoryAction(
-                        new MiddleSpeakerToScramPath()
+                        new BottomSpeakerToScramPath()
         )));
     }
     @Override

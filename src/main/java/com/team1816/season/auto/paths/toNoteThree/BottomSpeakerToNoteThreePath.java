@@ -26,7 +26,7 @@ public class BottomSpeakerToNoteThreePath extends DynamicAutoPath {
         return updateWaypoints(List.of(
                 new Pose2d(0.72, 4.30, Rotation2d.fromDegrees(-10)),
                 new Pose2d(2.2, 4.13, Rotation2d.fromDegrees(0)),
-                new Pose2d(2.57, 4.13, Rotation2d.fromDegrees(0))
+                new Pose2d(2.62, 4.13, Rotation2d.fromDegrees(0))
         ));
     }
 

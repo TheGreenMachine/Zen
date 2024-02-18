@@ -132,7 +132,7 @@ subsystems:
             rotationalDeadband: 0.1
             inputDeadband: 0.15 # Deadband of the normalized input
     camera:
-        implemented: true
+        implemented: false
         constants:
             useMultiTargetOdometry: 0
     collector:
@@ -199,7 +199,7 @@ subsystems:
                 gravityType: cosine
         constants:
             noteSensorChannel: 0
-            rollerSpeakerShootSpeed: 65
+            rollerSpeakerShootSpeed: 72
             rollerAmpShootSpeed: 30
             feederSpeakerShootSpeed: 700
             feederAmpShootSpeed: 700
