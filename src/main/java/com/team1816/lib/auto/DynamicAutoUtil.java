@@ -2,7 +2,12 @@ package com.team1816.lib.auto;
 
 import com.team1816.lib.auto.actions.TrajectoryAction;
 import com.team1816.lib.auto.paths.AutoPath;
+import com.team1816.lib.auto.paths.DriveStraightPath;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
+import com.team1816.season.auto.paths.scram.AmpToScramPath;
+import com.team1816.season.auto.paths.scram.BottomSpeakerToScramPath;
+import com.team1816.season.auto.paths.scram.MiddleSpeakerToScramPath;
+import com.team1816.season.auto.paths.scram.TopSpeakerToScramPath;
 import com.team1816.season.auto.paths.toNoteTwo.MiddleSpeakerToNoteTwoPath;
 import org.apache.commons.math3.util.Pair;
 
@@ -67,4 +72,13 @@ public class DynamicAutoUtil {
         return trajectories;
     }
 
+    public static AutoPath getScram(DynamicAutoPath path) {
+        return switch(path.endPosition) {
+            case TOP_SPEAKER -> new TopSpeakerToScramPath();
+            case MIDDLE_SPEAKER -> new MiddleSpeakerToScramPath();
+            case BOTTOM_SPEAKER -> new BottomSpeakerToScramPath();
+            case TOP_NOTE -> new AmpToScramPath();
+            default -> new DriveStraightPath(100); //please never let this be called
+        };
+    }
 }

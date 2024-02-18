@@ -87,6 +87,7 @@
       "/SmartDashboard/Mech 2D": "Mechanism2d",
       "/SmartDashboard/Playlist": "String Chooser",
       "/SmartDashboard/Robot color": "String Chooser",
+      "/SmartDashboard/Scram Or Not": "String Chooser",
       "/SmartDashboard/Second collected note": "String Chooser",
       "/SmartDashboard/Second shooting position": "String Chooser",
       "/SmartDashboard/SendableChooser[0]": "String Chooser",
@@ -186,6 +187,11 @@
         }
       },
       "/SmartDashboard/Robot color": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Scram Or Not": {
         "window": {
           "visible": true
         }

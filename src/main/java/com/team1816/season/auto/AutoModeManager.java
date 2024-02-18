@@ -7,7 +7,6 @@ import com.team1816.lib.auto.DynamicAutoUtil;
 import com.team1816.lib.auto.modes.AutoMode;
 import com.team1816.lib.auto.modes.DoNothingMode;
 import com.team1816.lib.auto.modes.DriveStraightMode;
-import com.team1816.lib.auto.modes.TuneDrivetrainMode;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.auto.modes.*;
@@ -58,7 +57,8 @@ public class AutoModeManager {
     private DesiredCollect desiredSecondCollect;
     private ShootPos desiredSecondShoot;
 
-
+    private final SendableChooser<ScramChoice> scramChooser;
+    private ScramChoice desiredScram;
 
     /**
      * Properties: Execution
@@ -83,6 +83,8 @@ public class AutoModeManager {
 
         secondCollectChooser = new SendableChooser<>();
         secondShootChooser = new SendableChooser<>();
+
+        scramChooser = new SendableChooser<>();
 
         SmartDashboard.putData("Auto mode", autoModeChooser); // appends chooser to shuffleboard
 
@@ -140,6 +142,12 @@ public class AutoModeManager {
                 new AmpToNoteOnePath(), new AmpToNoteTwoPath(), new AmpToNoteThreePath(), new AmpToNoteTwoTopPath()
         ));
 
+        SmartDashboard.putData("Scram Or Not", scramChooser);
+        for (ScramChoice scramOption : ScramChoice.values()) {
+            scramChooser.addOption(scramOption.name(), scramOption);
+        }
+        scramChooser.setDefaultOption(ScramChoice.NOT.name(), ScramChoice.NOT);
+
         reset();
     }
 
@@ -159,6 +167,8 @@ public class AutoModeManager {
 
         desiredSecondCollect = DesiredCollect.TOP_NOTE;
         desiredSecondShoot = ShootPos.TOP_SPEAKER;
+
+        desiredScram = ScramChoice.NOT;
     }
 
     /**
@@ -176,6 +186,7 @@ public class AutoModeManager {
         DesiredCollect selectedSecondCollect = secondCollectChooser.getSelected();
         ShootPos selectedSecondShoot = secondShootChooser.getSelected();
 
+        ScramChoice selectedScram = scramChooser.getSelected();
 
         Color selectedColor = Color.BLUE;
 
@@ -193,7 +204,8 @@ public class AutoModeManager {
                 || selectedFirstCollect != desiredFirstCollect
                 || selectedFirstShoot != desiredFirstShoot
                 || selectedSecondCollect != desiredSecondCollect
-                || selectedSecondShoot != desiredSecondShoot;
+                || selectedSecondShoot != desiredSecondShoot
+                || selectedScram != desiredScram;
 
         // if auto has been changed, update selected auto mode + thread
         if (autoChanged || colorChanged || dynamicAutoChanged) {
@@ -228,6 +240,8 @@ public class AutoModeManager {
 
         desiredSecondCollect = selectedSecondCollect;
         desiredSecondShoot = selectedSecondShoot;
+
+        desiredScram = selectedScram;
 
         //Legacy 2023 pathfinder code
 //                if (robotState.allianceColor == Color.BLUE) {
@@ -311,6 +325,11 @@ public class AutoModeManager {
         SCORE_AND_SCRAM
     }
 
+    public enum ScramChoice {
+        SCRAM,
+        NOT //dumb
+    }
+
     public enum ShootPos {
         TOP_SPEAKER,
         MIDDLE_SPEAKER,
@@ -390,19 +409,20 @@ public class AutoModeManager {
 
     private AutoMode generateDynamicAutoMode(DesiredAuto mode, Color color, List<ShootPos> shootPositions, List<DesiredCollect> collectPositions) {
         List<DynamicAutoPath> dynamicPathList = generateDynamicPathList(color, shootPositions , collectPositions);
+        boolean isScramming = desiredScram == ScramChoice.SCRAM;
         if (mode == DesiredAuto.TWO_SCORE) {
             if (dynamicPathList.get(0).isAmpPath()) {
                 dynamicPathList.add(0, new StartToAmpPath());
-                return new TwoScoreFromAmpMode(dynamicPathList);
+                return new TwoScoreFromAmpMode(dynamicPathList, isScramming);
             } else {
-                return new TwoScoreFromSpeakerMode(dynamicPathList);
+                return new TwoScoreFromSpeakerMode(dynamicPathList, isScramming);
             }
         } else if (mode == DesiredAuto.THREE_SCORE) {
             if (dynamicPathList.get(0).isAmpPath()) {
                 dynamicPathList.add(0, new StartToAmpPath());
-                return new ThreeScoreFromAmpMode(dynamicPathList);
+                return new ThreeScoreFromAmpMode(dynamicPathList, isScramming);
             } else {
-                return new ThreeScoreFromSpeakerMode(dynamicPathList);
+                return new ThreeScoreFromSpeakerMode(dynamicPathList, isScramming);
             }
         } else {
             return new ShootAndExitMode(dynamicPathList);
