@@ -104,7 +104,7 @@ public class TrajectoryAction implements AutoAction {
             thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
             PIDController xController = new PIDController(10, 0, 0.3);
-            PIDController yController = new PIDController(10, 0, 0.3);
+            PIDController yController = new PIDController(20, 0, 0.3);
 
             command =
                 new SwerveControllerCommand(

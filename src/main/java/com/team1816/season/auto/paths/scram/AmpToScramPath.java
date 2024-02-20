@@ -10,8 +10,10 @@ public class AmpToScramPath extends AutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return List.of(
-                new Pose2d(1.86, 7.74, Rotation2d.fromDegrees(-9)),
-                new Pose2d(7.2, 7.35, Rotation2d.fromDegrees(0))
+                new Pose2d(1.86, 7.74, Rotation2d.fromDegrees(-19)),
+                new Pose2d(3.6, 7.26, Rotation2d.fromDegrees(0)),
+                new Pose2d(5.43, 7.26, Rotation2d.fromDegrees(0)),
+                new Pose2d(7.87, 7.52, Rotation2d.fromDegrees(0))
         );
     }
 
@@ -19,7 +21,9 @@ public class AmpToScramPath extends AutoPath {
     protected List<Rotation2d> getWaypointHeadings() {
         return List.of(
                 Rotation2d.fromDegrees(-90),
-                Rotation2d.fromDegrees(-90)
+                Rotation2d.fromDegrees(-90),
+                Rotation2d.fromDegrees(0),
+                Rotation2d.fromDegrees(0)
         );
     }
 

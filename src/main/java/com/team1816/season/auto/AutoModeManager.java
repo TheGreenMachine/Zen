@@ -218,6 +218,11 @@ public class AutoModeManager {
                 GreenLogger.log("Robot color changed from: " + teamColor + ", to: " + selectedColor);
             }
 
+            if(selectedScram != desiredScram) {
+                GreenLogger.log("Scram changed from: " + desiredScram + ", to: " + selectedScram);
+                desiredScram = selectedScram; //In this conditional so that scram generation works properly
+            }
+
             if (selectedAuto == DesiredAuto.TWO_SCORE || selectedAuto == DesiredAuto.SCORE_AND_EXIT || selectedAuto == DesiredAuto.THREE_SCORE) {
                 autoMode = generateDynamicAutoMode(selectedAuto, selectedColor,
                         List.of(selectedStartPos, selectedFirstShoot, selectedSecondShoot),
@@ -227,6 +232,7 @@ public class AutoModeManager {
                 dynamicAutoChanged = false; //Stops unnecessary defaulting/zeroing
                 autoMode = generateAutoMode(selectedAuto, selectedColor);
             }
+
 
             autoModeThread = new Thread(autoMode::run);
         }
@@ -240,8 +246,6 @@ public class AutoModeManager {
 
         desiredSecondCollect = selectedSecondCollect;
         desiredSecondShoot = selectedSecondShoot;
-
-        desiredScram = selectedScram;
 
         //Legacy 2023 pathfinder code
 //                if (robotState.allianceColor == Color.BLUE) {
@@ -410,7 +414,6 @@ public class AutoModeManager {
     private AutoMode generateDynamicAutoMode(DesiredAuto mode, Color color, List<ShootPos> shootPositions, List<DesiredCollect> collectPositions) {
         List<DynamicAutoPath> dynamicPathList = generateDynamicPathList(color, shootPositions , collectPositions);
         boolean isScramming = desiredScram == ScramChoice.SCRAM;
-        System.out.println(isScramming);
         if (mode == DesiredAuto.TWO_SCORE) {
             if (dynamicPathList.get(0).isAmpPath()) {
                 dynamicPathList.add(0, new StartToAmpPath());
