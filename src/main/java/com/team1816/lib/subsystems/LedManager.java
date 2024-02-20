@@ -89,10 +89,11 @@ public class LedManager extends Subsystem {
         ledB = 0;
 
         if (RobotBase.isSimulation()) {
-            colorWidget = Constants.kSimWindow.add("LEDColor", false);
-            colorWidget.withPosition(0, 4);
-            colorWidget.withProperties(Map.of("colorWhenFalse", "white"));
-            colorWidgetEntry = colorWidget.getEntry();
+            //Legacy 2023 ledmanager code
+//            colorWidget = Constants.kSimWindow.add("LEDColor", false);
+//            colorWidget.withPosition(0, 4);
+//            colorWidget.withProperties(Map.of("colorWhenFalse", "white"));
+//            colorWidgetEntry = colorWidget.getEntry();
         }
     }
 
@@ -164,12 +165,12 @@ public class LedManager extends Subsystem {
     @Override
     public void readFromHardware() {
         if (RobotBase.isSimulation()) {
-            var color = ledManager.getLastColor();
-            if (!Objects.equals(color.toHexString(), lastColor.toHexString())) {
-                // Choose "true" color based on color of wheel
-                colorWidget.withProperties(Map.of("colorWhenTrue", color.toHexString()));
-                colorWidgetEntry.setBoolean(true);
-            }
+//            var color = ledManager.getLastColor();
+//            if (!Objects.equals(color.toHexString(), lastColor.toHexString())) {
+//                // Choose "true" color based on color of wheel
+//                colorWidget.withProperties(Map.of("colorWhenTrue", color.toHexString()));
+//                colorWidgetEntry.setBoolean(true);
+//            }
         }
     }
 
