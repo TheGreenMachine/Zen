@@ -248,6 +248,18 @@ public class Robot extends TimedRobot {
                             )
             );
 
+            inputHandler.listenAction(
+                    "hardZeroPose",
+                    ActionState.PRESSED,
+                    () ->
+                            drive.zeroSensors(
+                                    robotState.allianceColor == Color.BLUE ?
+                                            Constants.kDefaultZeroingPose :
+                                            Constants.kFlippedZeroingPose
+                            )
+            );
+
+
             inputHandler.listenActionPressAndRelease(
                     "brakeMode",
                     drive::setBraking

@@ -16,6 +16,7 @@ driver:
         leftTrigger: slowMode
     buttons:
         start: zeroPose
+        back: hardZeroPose
         leftBumper: shoot
     dpad:
         up: snapFromDriver
