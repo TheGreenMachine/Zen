@@ -279,6 +279,9 @@ public class Shooter extends Subsystem {
                 case SHOOT_AMP -> {
                     desiredPivotPosition = pivotAmpShootPosition;
                 }
+                case SHOOT_DISTANCE -> {
+                    desiredPivotPosition = 8.75; //Lil bit over because of possibility for overshoot
+                }
             }
             pivotMotor.set(GreenControlMode.MOTION_MAGIC_EXPO, desiredPivotPosition);
         }
@@ -374,6 +377,7 @@ public class Shooter extends Subsystem {
      */
     public enum PIVOT_STATE {
         STOW,
-        SHOOT_AMP
+        SHOOT_AMP,
+        SHOOT_DISTANCE
     }
 }

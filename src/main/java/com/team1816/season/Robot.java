@@ -343,6 +343,21 @@ public class Robot extends TimedRobot {
                     }
             );
             inputHandler.listenAction(
+                    "shootPivot",
+                    ActionState.PRESSED,
+                    () -> {
+                        if(shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.STOW) {
+                            shooter.setDesiredPivotState(Shooter.PIVOT_STATE.SHOOT_DISTANCE);
+                        }
+                        else {
+                            shooter.setDesiredPivotState(Shooter.PIVOT_STATE.STOW);
+                        }
+
+                        GreenLogger.log("Changing pivot to: " + shooter.getDesiredPivotState());
+                    }
+            );
+
+            inputHandler.listenAction(
                     "stopShooter",
                     ActionState.PRESSED,
                     () -> {
