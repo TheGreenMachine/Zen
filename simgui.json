@@ -147,8 +147,9 @@
         "Trajectory": {
           "arrows": false,
           "selectable": false,
-          "style": "Line",
-          "weight": 1.0
+          "style": "Track",
+          "weight": 0.8889999985694885,
+          "width": 0.8889999985694885
         },
         "bottom": 1476,
         "camera": {
