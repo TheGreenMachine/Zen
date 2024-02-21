@@ -115,6 +115,7 @@ subsystems:
             kTrackScrubFactor: 1.0
             ## Velocity Constraints ##
             maxRotVel: 0.8 # Pi radians/sec
+            maxRotVelClosedLoop: 2 # Pi radians/sec
             trackWidth: 22.75 # inches
             wheelbaseLength: 22.75 # inches
             maxVelOpenLoop: 2.5 # meters/s
@@ -227,6 +228,7 @@ constants:
     minAllowablePoseError: 0.025
     maxAllowablePoseError: 5
     soundOnConfig: 0 #If this is false, It will still beep on robot bootup.
+    rotationToleranceClosedLoop: 0.5
     ## Logging ##
     logRobot: 1 # 0 or 1
     logDrivetrain: 1 # 0 or 1

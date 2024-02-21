@@ -1,16 +1,11 @@
 package com.team1816.lib.subsystems.drive;
 
 import com.ctre.phoenix6.Orchestra;
-import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.configs.Pigeon2Configuration;
-import com.ctre.phoenix6.hardware.Pigeon2;
 import com.google.inject.Inject;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.PIDSlotConfiguration;
 import com.team1816.lib.hardware.components.gyro.IPigeon2;
 import com.team1816.lib.hardware.components.gyro.IPigeonIMU;
-import com.team1816.lib.hardware.components.gyro.Pigeon2Impl;
-import com.team1816.lib.hardware.factory.RobotFactory;
 import com.team1816.lib.loops.ILooper;
 import com.team1816.lib.loops.Loop;
 import com.team1816.lib.subsystems.LedManager;
@@ -171,12 +166,18 @@ public abstract class Drive
     public static final double kPThetaController = 4;
     public static final double kDThetaController = 0;
     public static final double kMaxAngularSpeed = factory.getConstant(NAME, "maxRotVel", 2); // rad/sec
+    public static final double kMaxAngularSpeedClosedLoop = factory.getConstant(NAME, "maxRotVelClosedLoop", 2); // rad/sec
     public static final double kMaxAngularAccelerationRadiansPerSecondSquared =
         2 * Math.PI;
 
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
-        kMaxAngularSpeed * Math.PI,
+        kMaxAngularSpeed * Math.PI, //TODO if this is too slow may need to consider using kMaxAngularSpeedClosedLoop
         kMaxAngularAccelerationRadiansPerSecondSquared
+    );
+
+    public static final TrapezoidProfile.Constraints kRotationActionControllerConstraints = new TrapezoidProfile.Constraints(
+            kMaxAngularSpeedClosedLoop * Math.PI,
+            kMaxAngularAccelerationRadiansPerSecondSquared
     );
     public double maxAllowablePoseError = factory.getConstant(
         "maxAllowablePoseError",

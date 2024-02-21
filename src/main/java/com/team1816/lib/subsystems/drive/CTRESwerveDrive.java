@@ -318,6 +318,8 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
             motorTemperatures.get(i).refresh();
         }
 
+        actualHeading = Rotation2d.fromDegrees(pigeon.getYawValue());
+
         updateRobotState();
     }
 
@@ -353,6 +355,7 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
 
     @Override
     public void resetOdometry(Pose2d pose) {
+        actualHeading = Rotation2d.fromDegrees(pigeon.getYawValue()); //For the RotateSwerveAction
         train.seedFieldRelative(pose);
         updateRobotState();
     }
@@ -536,6 +539,15 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
                 .getSubsystem(NAME)
                 .swerveModules.drivePID.getOrDefault("slot0", defaultPIDConfig)
                 : defaultPIDConfig;
+    }
+
+    /**
+     * Returns the associated kinematics of the drivetrain
+     *
+     * @return swerveKinematics
+     */
+    public SwerveDriveKinematics getKinematics() {
+        return swerveKinematics;
     }
 
     private enum SPEED_MODE {

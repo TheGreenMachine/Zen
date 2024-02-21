@@ -115,6 +115,8 @@ public class Constants {
     public static double kMaxProximityThresholdCentimeters = 25; // cm
     public static double preTargetDistance = 0.4; // m
 
+    public static double kClosedLoopRotationTolerance = factory.getConstant("rotationToleranceClosedLoop", 1);
+
     public static final boolean kSoundOnConfig = factory.getConstant("soundOnConfig", 1) > 0;
     public static final boolean kMusicEnabled = factory.getConstant("enableMusic", 0) > 0;
 
