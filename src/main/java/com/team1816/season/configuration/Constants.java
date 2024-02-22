@@ -169,8 +169,8 @@ public class Constants {
     /**
      * Pivot
      */
-    double motorRotationsPerDegree = 0.31843;
-    double motorRotationsPerRadians = 18.245;
+    public static final double motorRotationsPerDegree = 0.31843;
+    public static final double motorRotationsPerRadians = 18.245;
 
 
     /**

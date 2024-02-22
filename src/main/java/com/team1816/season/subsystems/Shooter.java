@@ -300,7 +300,7 @@ public class Shooter extends Subsystem {
                                 robotState.fieldToVehicle.getTranslation().getDistance(robotState.allianceColor == Color.BLUE ? Constants.blueSpeakerPosition.toTranslation2d() : Constants.redSpeakerPosition.toTranslation2d())
                                 - ArmAngleFinder.distance(Constants.axlePositionOffsetX, Constants.axlePositionOffsetY)
                         );
-                    desiredPivotPosition = possiblePivotPosition.isPresent() ? possiblePivotPosition.get() * 180 / Math.PI : 1.5; //TODO the 1.5 is the same as the STOW yaml
+                    desiredPivotPosition = possiblePivotPosition.isPresent() ? possiblePivotPosition.get() * Constants.motorRotationsPerRadians : 1.5; //TODO the 1.5 is the same as the STOW yaml
                 }
             }
             pivotMotor.set(GreenControlMode.MOTION_MAGIC_EXPO, desiredPivotPosition);
