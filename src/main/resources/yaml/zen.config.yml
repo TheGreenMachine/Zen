@@ -174,7 +174,7 @@ subsystems:
                 currentLimit: 20
                 motionMagic:
                     expoKV: 0.05
-                    expoKA: 0.06
+                    expoKA: 0.08
             pivotFollowMotor:
                 motorType: TalonFX
                 motorName: pivotFollowMotor

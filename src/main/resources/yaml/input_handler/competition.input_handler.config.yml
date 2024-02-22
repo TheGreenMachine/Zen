@@ -11,6 +11,7 @@ driver:
         b: brakeMode
         x: ampPivot
         a: collectorOuttake
+        y: shootPivot
     axes:
         rightTrigger: turboMode
         leftTrigger: slowMode

@@ -319,6 +319,8 @@ public class Robot extends TimedRobot {
                         if (pressed) {
                             if (shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.SHOOT_AMP) {
                                 shooter.setDesiredState(Shooter.ROLLER_STATE.SHOOT_AMP, Shooter.FEEDER_STATE.SHOOT);
+                            } else if (shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.SHOOT_DISTANCE) {
+                                shooter.setDesiredState(Shooter.ROLLER_STATE.SHOOT_DISTANCE, Shooter.FEEDER_STATE.SHOOT);
                             } else {
                                 shooter.setDesiredState(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT);
                             }
@@ -342,6 +344,21 @@ public class Robot extends TimedRobot {
                         GreenLogger.log("Changing pivot to: " + shooter.getDesiredPivotState());
                     }
             );
+            inputHandler.listenAction(
+                    "shootPivot",
+                    ActionState.PRESSED,
+                    () -> {
+                        if(shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.STOW) {
+                            shooter.setDesiredPivotState(Shooter.PIVOT_STATE.SHOOT_DISTANCE);
+                        }
+                        else {
+                            shooter.setDesiredPivotState(Shooter.PIVOT_STATE.STOW);
+                        }
+
+                        GreenLogger.log("Changing pivot to: " + shooter.getDesiredPivotState());
+                    }
+            );
+
             inputHandler.listenAction(
                     "stopShooter",
                     ActionState.PRESSED,
