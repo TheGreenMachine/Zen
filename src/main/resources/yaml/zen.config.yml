@@ -208,6 +208,23 @@ subsystems:
             velocityErrorMargin: 0.1
             pivotAmpShootPosition: 33
             invertFollowerMotor: 1
+    climber:
+        implemented: true
+        motors:
+            climbMotor:
+                motorType: TalonFX
+                motorName: climbMotor
+                id: 14
+                invertMotor: false
+        pidConfig:
+            slot0:
+                kP: 0
+                Ki: 0
+                kD: 0
+                kF: 0
+        constants:
+            slowClimbSpeed: 0.3
+            fastClimbSpeed: 0.8
 infrastructure:
     canBusName: highSpeed
     ## Power Distribution ##
