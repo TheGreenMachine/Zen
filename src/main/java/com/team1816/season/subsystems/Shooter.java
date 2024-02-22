@@ -243,6 +243,9 @@ public class Shooter extends Subsystem {
                 case SHOOT_AMP -> {
                     desiredRollerVelocity = rollerAmpShootSpeed;
                 }
+                case SHOOT_DISTANCE -> {
+                    desiredRollerVelocity = desiredRollerState.velocity;
+                }
             }
             rollerMotor.set(GreenControlMode.VELOCITY_CONTROL, desiredRollerVelocity);
             desiredRollerVelocityLogger.append(desiredRollerVelocity);
@@ -280,7 +283,7 @@ public class Shooter extends Subsystem {
                     desiredPivotPosition = pivotAmpShootPosition;
                 }
                 case SHOOT_DISTANCE -> {
-                    desiredPivotPosition = 8.75; //Lil bit over because of possibility for overshoot
+                    desiredPivotPosition = 8.65; //Lil bit over because of possibility for overshoot
                 }
             }
             pivotMotor.set(GreenControlMode.MOTION_MAGIC_EXPO, desiredPivotPosition);
@@ -350,7 +353,9 @@ public class Shooter extends Subsystem {
     public enum ROLLER_STATE {
         STOP(0),
         SHOOT_SPEAKER(rollerSpeakerShootSpeed),
+        SHOOT_DISTANCE(55),
         SHOOT_AMP(rollerAmpShootSpeed);
+
 
         final double velocity;
 
