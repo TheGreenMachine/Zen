@@ -189,7 +189,7 @@ public class ArmAngleFinder {
         return returnable;
     }
 
-    protected static double distance(double... values){
+    public static double distance(double... values){
         double currentDist = 0;
         for(double a : values)
             currentDist = Math.sqrt(Math.pow(currentDist,2)+Math.pow(a,2));

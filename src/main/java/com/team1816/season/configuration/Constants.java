@@ -196,4 +196,11 @@ public class Constants {
     //TODO find out this measurement
     public static final double targetY = 240;
     public static final double axleRadiansDisplacement = 0;
+
+    /**
+     * Some Field Specifications for AutoAim
+     */
+    //TODO find this
+    public static final Translation3d blueSpeakerPosition = new Translation3d(0,0,0);
+    public static final Translation3d redSpeakerPosition = new Translation3d(10,10,10);
 }

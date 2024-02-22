@@ -131,7 +131,7 @@ public class GhostMotor implements IGreenMotor {
             actualOutput[0] = desiredDemand[1] / maxVelRotationsPerSec;
             actualOutput[1] = desiredDemand[1];
             actualOutput[2] = lastPos + (actualOutput[1] * dtBetweenCallsSec);
-        } else if (controlMode == GreenControlMode.POSITION_CONTROL) {
+        } else if (controlMode == GreenControlMode.POSITION_CONTROL || controlMode == GreenControlMode.MOTION_MAGIC_EXPO) {
             double desaturatedVel = Math.signum(desiredDemand[2] - lastPos) * Math.min(maxVelRotationsPerSec, Math.abs(desiredDemand[2] - lastPos) / dtBetweenCallsSec);
 
             actualOutput[0] = desaturatedVel / maxVelRotationsPerSec;

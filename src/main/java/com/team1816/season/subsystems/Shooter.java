@@ -4,10 +4,13 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team1816.lib.Infrastructure;
+import com.team1816.lib.auto.Color;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
 import com.team1816.lib.hardware.components.motor.LazyTalonFX;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.subsystems.Subsystem;
+import com.team1816.season.auto.aimActions.ArmAngleFinder;
+import com.team1816.season.auto.aimActions.AutoAimUtil;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
@@ -15,6 +18,8 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import java.util.Optional;
 
 @Singleton
 public class Shooter extends Subsystem {
@@ -289,6 +294,14 @@ public class Shooter extends Subsystem {
                 case SHOOT_DISTANCE -> {
                     desiredPivotPosition = 8.675; //Lil bit over because of possibility for overshoot
                 }
+                case AUTO_AIM -> {
+                    Optional<Double> possiblePivotPosition =
+                        AutoAimUtil.getShooterAngle(
+                                robotState.fieldToVehicle.getTranslation().getDistance(robotState.allianceColor == Color.BLUE ? Constants.blueSpeakerPosition.toTranslation2d() : Constants.redSpeakerPosition.toTranslation2d())
+                                - ArmAngleFinder.distance(Constants.axlePositionOffsetX, Constants.axlePositionOffsetY)
+                        );
+                    desiredPivotPosition = possiblePivotPosition.isPresent() ? possiblePivotPosition.get() * 180 / Math.PI : 1.5; //TODO the 1.5 is the same as the STOW yaml
+                }
             }
             pivotMotor.set(GreenControlMode.MOTION_MAGIC_EXPO, desiredPivotPosition);
         }
@@ -387,6 +400,7 @@ public class Shooter extends Subsystem {
     public enum PIVOT_STATE {
         STOW,
         SHOOT_AMP,
-        SHOOT_DISTANCE
+        SHOOT_DISTANCE,
+        AUTO_AIM
     }
 }

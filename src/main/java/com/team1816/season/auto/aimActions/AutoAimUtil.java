@@ -27,8 +27,12 @@ public class AutoAimUtil {
         return getRobotRotation(target.getX(), target.getY());
     }
 
+    public static Optional<Double> getShooterAngle(double xyPlaneEuclideanDistanceToTarget){
+        return ArmAngleFinder.getBallisticAngleOfArm(xyPlaneEuclideanDistanceToTarget);
+    }
+
     public static Optional<Double> getShooterAngle(double targetX, double targetY){
-        return ArmAngleFinder.getBallisticAngleOfArm(ArmAngleFinder.distance(targetX- RobotAngleFinder.getTransformedAxleX(axleOffsetX, axleOffsetY, radiansDisplacement, targetX, targetY), targetY- RobotAngleFinder.getTransformedAxleY(axleOffsetX, axleOffsetY, radiansDisplacement, targetX, targetY)));
+        return ArmAngleFinder.getBallisticAngleOfArm(ArmAngleFinder.distance(targetX - RobotAngleFinder.getTransformedAxleX(axleOffsetX, axleOffsetY, radiansDisplacement, targetX, targetY), targetY - RobotAngleFinder.getTransformedAxleY(axleOffsetX, axleOffsetY, radiansDisplacement, targetX, targetY)));
     }
 
     public static Optional<Double> getShooterAngle(Translation2d target){
