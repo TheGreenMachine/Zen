@@ -10,6 +10,8 @@ import com.team1816.lib.auto.modes.DriveStraightMode;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.auto.modes.*;
+import com.team1816.season.auto.modes.eject.BottomMiddleEjects;
+import com.team1816.season.auto.modes.eject.TopMiddleEjects;
 import com.team1816.season.auto.paths.StartToAmpPath;
 import com.team1816.season.auto.paths.toNoteOne.AmpToNoteOnePath;
 import com.team1816.season.auto.paths.toNoteOne.BottomSpeakerToNoteOnePath;
