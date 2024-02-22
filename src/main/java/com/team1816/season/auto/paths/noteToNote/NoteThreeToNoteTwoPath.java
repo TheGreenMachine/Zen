@@ -25,8 +25,8 @@ public class NoteThreeToNoteTwoPath extends DynamicAutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return updateWaypoints(List.of(
-                new Pose2d(2.7, 7, Rotation2d.fromDegrees(0)),
-                new Pose2d(2.57, 4.13, Rotation2d.fromDegrees(0))
+                new Pose2d(2.57, 4.13, Rotation2d.fromDegrees(-140)),
+                new Pose2d(2.57, 5.58, Rotation2d.fromDegrees(-45))
         ));
     }
 
@@ -44,7 +44,7 @@ public class NoteThreeToNoteTwoPath extends DynamicAutoPath {
     }
 
     public DynamicAutoPath getInstance() {
-        return new NoteOneToNoteTwoPath();
+        return new NoteThreeToNoteTwoPath();
     }
 
 }

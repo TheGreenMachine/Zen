@@ -47,7 +47,6 @@ public class FourScoreFromDistanceMode extends AutoMode {
                         new CollectAction(Collector.COLLECTOR_STATE.INTAKE),
                         new ShootSpeakerAction(),
                         trajectoryActions.get(2), //middle to third note
-                        trajectoryActions.get(3), //third to middle
                         new ShootSpeakerAction()
                 )
         );

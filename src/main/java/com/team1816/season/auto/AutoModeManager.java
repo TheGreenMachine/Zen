@@ -464,7 +464,6 @@ public class AutoModeManager {
         }
 
         if (mode == DesiredAuto.RANGE_FOUR_SCORE) {
-            System.out.println(generateFourScorePaths(color, shootPositions.get(0), collectPositions.get(0) == DesiredCollect.TOP_NOTE));
             return new FourScoreFromDistanceMode(
                     generateFourScorePaths(color, shootPositions.get(0), collectPositions.get(0) == DesiredCollect.TOP_NOTE),
                     isScramming
@@ -545,8 +544,7 @@ public class AutoModeManager {
         return List.of(
                 DynamicAutoUtil.getDynamicPath(toPosition(startPosition), startAtTop ? Position.TOP_NOTE : Position.BOTTOM_NOTE, color).orElse(new MiddleSpeakerToNoteTwoPath()),
                 DynamicAutoUtil.getDynamicPath(startAtTop ? Position.TOP_NOTE : Position.BOTTOM_NOTE, Position.MIDDLE_NOTE, color).orElse(new MiddleSpeakerToNoteTwoPath()),
-                DynamicAutoUtil.getReversedDynamicPath(Position.MIDDLE_NOTE, startAtTop ? Position.BOTTOM_NOTE : Position.TOP_NOTE, color).orElse(new MiddleSpeakerToNoteTwoPath()),
-                DynamicAutoUtil.getDynamicPath(startAtTop ? Position.BOTTOM_NOTE : Position.TOP_NOTE, Position.MIDDLE_NOTE, color).orElse(new MiddleSpeakerToNoteTwoPath())
+                DynamicAutoUtil.getReversedDynamicPath(Position.MIDDLE_NOTE, startAtTop ? Position.BOTTOM_NOTE : Position.TOP_NOTE, color).orElse(new MiddleSpeakerToNoteTwoPath())
         );
     }
 
