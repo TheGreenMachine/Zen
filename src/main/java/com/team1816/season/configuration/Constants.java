@@ -178,9 +178,9 @@ public class Constants {
      */
     //TODO set to cm, (currently in inches)
     //Positive
-    public static final double lengthOfArm = 12;
+    public static final double lengthOfArm = 23;
     //0-180
-    public static final double angleBetweenArmAndShooterDegrees = 111.8;
+    public static final double angleBetweenArmAndShooterDegrees = 161.3;
     //Positive
     public static final double outputVelocityPerSecond = 100;
     //Negative
@@ -189,13 +189,10 @@ public class Constants {
     public static final double errorPerUnitDistance = 0.1;
     //the robot looks down the positive y axis, and the right side is the positive x axis while the left is the negative x axis
     public static final double axlePositionOffsetX = 0;
-    public static final double axlePositionOffsetY = 6;
-    public static final double axlePositionOffsetZ = 12;
+    public static final double axlePositionOffsetY = 10.25;
+    public static final double axlePositionOffsetZ = 24;
     public static final double heightOfTarget = 73.5;
-    public static final double targetX = 9;
-    //TODO find out this measurement
-    public static final double targetY = 240;
-    public static final double axleRadiansDisplacement = 0;
+    public static final double axleRadiansDisplacement = 180;
 
     /**
      * Some Field Specifications for AutoAim
