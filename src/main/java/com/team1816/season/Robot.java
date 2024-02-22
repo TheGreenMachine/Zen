@@ -319,6 +319,8 @@ public class Robot extends TimedRobot {
                         if (pressed) {
                             if (shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.SHOOT_AMP) {
                                 shooter.setDesiredState(Shooter.ROLLER_STATE.SHOOT_AMP, Shooter.FEEDER_STATE.SHOOT);
+                            } else if (shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.SHOOT_DISTANCE) {
+                                shooter.setDesiredState(Shooter.ROLLER_STATE.SHOOT_DISTANCE, Shooter.FEEDER_STATE.SHOOT);
                             } else {
                                 shooter.setDesiredState(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT);
                             }

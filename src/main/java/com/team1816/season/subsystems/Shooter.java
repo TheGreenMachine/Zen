@@ -194,7 +194,11 @@ public class Shooter extends Subsystem {
         pivotCurrentDraw = pivotMotor.getMotorOutputCurrent();
 
         if (robotState.actualRollerState != desiredRollerState) {
-            robotState.actualRollerState = desiredRollerState;
+            if (desiredRollerState != ROLLER_STATE.STOP && desiredRollerState.inDesiredSpeedRange(actualRollerVelocity)) {
+                robotState.actualRollerState = desiredRollerState;
+            } else if (desiredRollerState == ROLLER_STATE.STOP) {
+                robotState.actualRollerState = desiredRollerState;
+            }
         }
 
         if (robotState.actualFeederState != desiredFeederState) {
@@ -283,7 +287,7 @@ public class Shooter extends Subsystem {
                     desiredPivotPosition = pivotAmpShootPosition;
                 }
                 case SHOOT_DISTANCE -> {
-                    desiredPivotPosition = 8.65; //Lil bit over because of possibility for overshoot
+                    desiredPivotPosition = 8.675; //Lil bit over because of possibility for overshoot
                 }
             }
             pivotMotor.set(GreenControlMode.MOTION_MAGIC_EXPO, desiredPivotPosition);
@@ -353,7 +357,7 @@ public class Shooter extends Subsystem {
     public enum ROLLER_STATE {
         STOP(0),
         SHOOT_SPEAKER(rollerSpeakerShootSpeed),
-        SHOOT_DISTANCE(55),
+        SHOOT_DISTANCE(68),
         SHOOT_AMP(rollerAmpShootSpeed);
 
 
