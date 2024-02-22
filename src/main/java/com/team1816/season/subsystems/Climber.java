@@ -100,6 +100,9 @@ public class Climber extends Subsystem {
      *
      * @see Subsystem#writeToHardware()
      */
+
+//    TODO: Change the if statements here: it should be embedded ifs if there is an FMS system and ignore the timer
+//    TODO: (continued) if there isn't an FMS system.
     @Override
     public void writeToHardware() {
         if (outputsChanged) {
