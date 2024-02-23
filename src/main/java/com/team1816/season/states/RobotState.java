@@ -101,7 +101,11 @@ public class RobotState {
 
 
     public final Mechanism2d mechCanvas = new Mechanism2d(3, 3);
-    public final MechanismRoot2d root = mechCanvas.getRoot("ElevatorArm", 1.3, 0.38);
+    public final MechanismRoot2d root = mechCanvas.getRoot("root", 2.25, 0);
+
+    public final MechanismLigament2d pivotStand = root.append(new MechanismLigament2d("stand", 2.5, 90));
+    public final double pivotBaseAngle = 150;
+    public final MechanismLigament2d pivotArm = pivotStand.append(new MechanismLigament2d("pivot", 2, pivotBaseAngle));
 
     /**
      * Functional pathing states

@@ -85,6 +85,7 @@
       "/SmartDashboard/First collected note": "String Chooser",
       "/SmartDashboard/First shooting position": "String Chooser",
       "/SmartDashboard/Mech 2D": "Mechanism2d",
+      "/SmartDashboard/Mech2d": "Mechanism2d",
       "/SmartDashboard/Playlist": "String Chooser",
       "/SmartDashboard/Robot color": "String Chooser",
       "/SmartDashboard/Scram Or Not": "String Chooser",
@@ -184,6 +185,11 @@
         }
       },
       "/SmartDashboard/First shooting position": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Mech2d": {
         "window": {
           "visible": true
         }

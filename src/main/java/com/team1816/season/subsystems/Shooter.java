@@ -4,15 +4,21 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team1816.lib.Infrastructure;
+import com.team1816.lib.hardware.components.motor.GhostMotor;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
 import com.team1816.lib.hardware.components.motor.LazyTalonFX;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.subsystems.Subsystem;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -106,6 +112,14 @@ public class Shooter extends Subsystem {
 
         rollerMotor.selectPIDSlot(1);
         pivotMotor.selectPIDSlot(2);
+
+        robotState.pivotArm.setColor(new Color8Bit(Color.kDarkBlue));
+
+        if (RobotBase.isSimulation()) {
+            pivotMotor.setMotionProfileMaxVelocity(12 / 0.05);
+            pivotMotor.setMotionProfileMaxAcceleration(12 / 0.08);
+            ((GhostMotor) pivotMotor).setMaxVelRotationsPerSec(240);
+        }
 
         if (Constants.kLoggingRobot) {
             desStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Pivot/desiredPivotPosition");
@@ -216,6 +230,10 @@ public class Shooter extends Subsystem {
             robotState.isBeamBreakTriggered = isBeamBreakTriggered();
             feederOutputsChanged = true;
         }
+
+        double angleToApply = robotState.pivotBaseAngle - (pivotMotor.getSensorPosition(0) * 3);
+        robotState.pivotArm.setAngle(Rotation2d.fromDegrees(angleToApply));
+        SmartDashboard.putData("Mech2d", robotState.mechCanvas);
 
         if (Constants.kLoggingRobot) {
             ((DoubleLogEntry) desStatesLogger).append(desiredPivotPosition);

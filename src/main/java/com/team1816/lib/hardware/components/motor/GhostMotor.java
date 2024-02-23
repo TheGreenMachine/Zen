@@ -19,7 +19,7 @@ public class GhostMotor implements IGreenMotor {
     /**
      * Characterization
      */
-    private final double maxVelRotationsPerSec;
+    private double maxVelRotationsPerSec;
     private final int absInitOffset;
     private int fwdLimit;
     private int revLimit;
@@ -94,7 +94,7 @@ public class GhostMotor implements IGreenMotor {
             this.desiredDemand[0] = NaN;
             this.desiredDemand[1] = demand;
             this.desiredDemand[2] = NaN;
-        } else if (controlModeDemand == GreenControlMode.POSITION_CONTROL || controlModeDemand == GreenControlMode.MOTION_MAGIC) {
+        } else if (controlModeDemand == GreenControlMode.POSITION_CONTROL || controlModeDemand == GreenControlMode.MOTION_MAGIC || controlModeDemand == GreenControlMode.MOTION_MAGIC_EXPO) {
             this.desiredDemand[0] = NaN;
             this.desiredDemand[1] = NaN;
             this.desiredDemand[2] = demand;
@@ -114,6 +114,8 @@ public class GhostMotor implements IGreenMotor {
         // whether motor needs to calculate new numbers - this
         double timeNow = Timer.getFPGATimestamp();
         double dtBetweenCallsSec = (timeNow - lastUpdate);
+        double dtBetweenCallsMs = dtBetweenCallsSec * 1000;
+
 
         if (dtBetweenCallsSec < (Robot.robotDt / 1000) * 0.75) {
             lastUpdate = timeNow;
@@ -137,13 +139,13 @@ public class GhostMotor implements IGreenMotor {
             actualOutput[0] = desaturatedVel / maxVelRotationsPerSec;
             actualOutput[1] = desaturatedVel;
             actualOutput[2] = lastPos + (actualOutput[1] * dtBetweenCallsSec);
-        } else if (controlMode == GreenControlMode.MOTION_MAGIC) {
+        } else if (controlMode == GreenControlMode.MOTION_MAGIC || controlMode == GreenControlMode.MOTION_MAGIC_EXPO) {
             // not accounting for accel rn - just using motionMagicCruiseVel
             double accelAccountedVel = Math.min(motionMagicCruiseVel, Math.abs(actualOutput[1]) + (motionMagicAccel * dtBetweenCallsSec));
             double desaturatedVel = Math.signum(desiredDemand[2] - lastPos) * Math.min(accelAccountedVel, Math.abs(desiredDemand[2] - lastPos) / dtBetweenCallsSec);
             actualOutput[0] = desaturatedVel / maxVelRotationsPerSec;
             actualOutput[1] = desaturatedVel;
-            actualOutput[2] = lastPos + (actualOutput[1] / dtBetweenCallsSec);
+            actualOutput[2] = lastPos + (actualOutput[1] / dtBetweenCallsMs);
         }
 
         if (usingLimit) {
@@ -382,6 +384,10 @@ public class GhostMotor implements IGreenMotor {
     @Override
     public void setMotionProfileMaxVelocity(double maxVelocity) {
         motionMagicCruiseVel = maxVelocity;
+    }
+
+    public void setMaxVelRotationsPerSec(double maxVelRotationsPerSec) {
+        this.maxVelRotationsPerSec = maxVelRotationsPerSec;
     }
 
     @Override
