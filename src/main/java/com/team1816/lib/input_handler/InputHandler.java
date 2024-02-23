@@ -83,7 +83,7 @@ public class InputHandler {
 
         driver.joystick = new Joystick(DRIVER_PORT);
         operator.joystick = new Joystick(OPERATOR_PORT);
-        buttonBoard.joystick = new Joystick(BUTTON_BOARD_PORT); //TODO @Micheal fix the errors pretty please
+        buttonBoard.joystick = new Joystick(BUTTON_BOARD_PORT);
 
         driver.mappingInfo = bridge.getDriverControllerInfo();
         operator.mappingInfo = bridge.getOperatorControllerInfo();

@@ -21,13 +21,16 @@ import java.util.concurrent.Callable;
 import static com.team1816.season.auto.AutoModeManager.Position;
 
 /**
- * Holder class for the dynamic auto lookup table
+ * Holder class for the dynamic auto lookup table and utility for accessing it
  * @see DynamicAutoPath
  * @see Position
  */
 public class DynamicAutoUtil {
-    static Callable<DynamicAutoPath> defaultPathGetter = MiddleSpeakerToNoteTwoPath::new;
 
+    /**
+     * Puts all inputted paths into the lookup table
+     * @param paths The paths to register
+     */
     public static void registerPaths(List<DynamicAutoPath> paths) {
         paths.forEach(
                 path -> {
@@ -39,12 +42,18 @@ public class DynamicAutoUtil {
         );
     }
 
+    /**
+     * The lookup table which contains all the Dynamic Paths.
+     */
     private static HashMap<Pair<Position, Position>, Callable<DynamicAutoPath>> pathLookup = new HashMap<>() {};
 
-    public static void putToTable(Position startPosition, Position endPosition, Callable<DynamicAutoPath> pathGetter) {
-       pathLookup.putIfAbsent(new Pair<>(startPosition, endPosition), pathGetter);
-    }
-
+    /**
+     * Returns the dynamic path that matches the start and end position
+     * @param startPosition The position the path starts at
+     * @param endPosition The position the path ends at
+     * @param color The current alliance color
+     * @return The dynamic path
+     */
     public static Optional<DynamicAutoPath> getDynamicPath(Position startPosition, Position endPosition, Color color) {
         var callable = pathLookup.get(new Pair<>(startPosition, endPosition));
 
@@ -57,12 +66,24 @@ public class DynamicAutoUtil {
         }
     }
 
+    /**
+     * Returns the dynamic path that matches the end and start position, reversed.
+     * @param startPosition The position the reversed path starts at
+     * @param endPosition The position the reversed path ends at
+     * @param color The current alliance color
+     * @return The dynamic path
+     */
     public static Optional<DynamicAutoPath> getReversedDynamicPath(Position startPosition, Position endPosition, Color color) {
         var path = getDynamicPath(endPosition, startPosition, color);
 
         return path.map(DynamicAutoPath::withInversedWaypoints);
     }
 
+    /**
+     * Converts a list of dynamic paths into a List of Trajectory actions for use in Dynamic Auto Modes
+     * @param paths The list of paths
+     * @return The paths as trajectory actions
+     */
     public static List<TrajectoryAction> encapsulateAutoPaths(@Nonnull List<DynamicAutoPath> paths) {
         List<TrajectoryAction> trajectories = new ArrayList<>();
 
@@ -72,6 +93,11 @@ public class DynamicAutoUtil {
         return trajectories;
     }
 
+    /**
+     * Returns the Scram path that would go with the passed in path
+     * @param path The path from which the scram starts
+     * @return The proper scram path
+     */
     public static AutoPath getScram(DynamicAutoPath path) {
         return switch(path.startPosition) {
             case TOP_SPEAKER -> new TopSpeakerToScramPath();

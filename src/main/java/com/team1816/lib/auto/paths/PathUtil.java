@@ -24,32 +24,6 @@ public class PathUtil {
     private static final double kMaxVelocity = kPathFollowingMaxVelMeters;
     private static final double kMaxAccel = kPathFollowingMaxAccelMeters;
 
-    public static final double allowablePoseError = factory.getConstant(
-            "minAllowablePoseError",
-            0.05
-    );
-//
-//    public static Trajectory generateTrajectoryWithError(List<Pose2d> waypoints) {
-//
-//        ArrayList<Pose2d> waypointsAL = new ArrayList<>(waypoints);
-//
-//        Pose2d firstWaypoint = waypointsAL.get(0);
-//        double dx = robotState.fieldToVehicle.getX() - firstWaypoint.getX();
-//        double dy = robotState.fieldToVehicle.getY() - firstWaypoint.getY();
-//
-//        boolean applyDx = Math.min(Math.abs(dx / 1000), allowablePoseError) != allowablePoseError;
-//        boolean applyDy = Math.min(Math.abs(dy / 1000), allowablePoseError) != allowablePoseError;
-//
-//        waypointsAL.set(0, firstWaypoint.plus(
-//                new Transform2d(
-//                        applyDx ? dx / 1000 : 0,
-//                        applyDy ? dy / 1000 : 0,
-//                        Rotation2d.fromDegrees(0))
-//        ));
-//
-//        return generateTrajectory(true, waypointsAL);
-//    }
-
     /**
      * Generates a trajectory based on a list of waypoints based on WPIlib's TrajectoryGenerator
      *

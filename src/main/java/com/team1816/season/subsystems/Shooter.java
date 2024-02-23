@@ -68,6 +68,9 @@ public class Shooter extends Subsystem {
     private final double feederIntakeSpeed = factory.getConstant(NAME, "feederIntakeSpeed", 0.20);
 
     private final double pivotAmpShootPosition = factory.getConstant(NAME, "pivotAmpShootPosition", 1.0);
+    private final double pivotNeutralPosition = factory.getConstant(NAME, "pivotNeutralPosition", 1.0);
+    private final double pivotDistanceShootPosition = factory.getConstant(NAME, "pivotDistanceShootPosition", 1.0);
+
     private final boolean opposeLeaderDirection = ((int) factory.getConstant(NAME, "invertFollowerMotor", 0)) == 1;
 
 
@@ -281,13 +284,13 @@ public class Shooter extends Subsystem {
             pivotOutputsChanged = false;
             switch (desiredPivotState) {
                 case STOW -> {
-                    desiredPivotPosition = 1.5; //TODO yaml
+                    desiredPivotPosition = pivotNeutralPosition;
                 }
                 case SHOOT_AMP -> {
                     desiredPivotPosition = pivotAmpShootPosition;
                 }
                 case SHOOT_DISTANCE -> {
-                    desiredPivotPosition = 8.675; //Lil bit over because of possibility for overshoot
+                    desiredPivotPosition = pivotDistanceShootPosition; //Lil bit over because of possibility for overshoot
                 }
             }
             pivotMotor.set(GreenControlMode.MOTION_MAGIC_EXPO, desiredPivotPosition);

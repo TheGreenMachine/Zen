@@ -98,6 +98,8 @@ public abstract class Drive
     protected Trajectory trajectory;
     protected static double timestamp;
 
+    private DoubleArrayLogEntry trajectoryDesiredPoseLogger;
+
     /**
      * Simulator
      */
@@ -232,6 +234,7 @@ public abstract class Drive
         if (Constants.kLoggingDrivetrain) {
             drivetrainPoseLogger = new DoubleArrayLogEntry(DataLogManager.getLog(), "Drivetrain/Pose");
             drivetrainChassisSpeedsLogger = new DoubleArrayLogEntry(DataLogManager.getLog(), "Drivetrain/ChassisSpeeds");
+            trajectoryDesiredPoseLogger = new DoubleArrayLogEntry(DataLogManager.getLog(), "Drivetrain/DesiredTrajectoryPose");
         }
 
 
@@ -318,6 +321,7 @@ public abstract class Drive
         if (trajectoryStartTime == 0) trajectoryStartTime = timestamp;
         // update desired pose from trajectory
         desiredTrajectoryPose = trajectory.sample(timestamp - trajectoryStartTime).poseMeters;
+        trajectoryDesiredPoseLogger.append(new double[]{desiredTrajectoryPose.getX(), desiredTrajectoryPose.getY(), desiredTrajectoryPose.getRotation().getDegrees()});
         desiredTrajectoryHeading = desiredTrajectoryPose.getRotation();
     }
 
