@@ -145,6 +145,13 @@ public class Constants {
     public static final double autoBalanceDivider = factory.getConstant("drivetrain", "autoBalanceDivider", 30);
 
     /**
+     * Pivot
+     */
+    public static final double motorRotationsPerDegree = 0.31843;
+    public static final double degreesPerMotorRotations = 3.140407;
+    public static final double motorRotationsPerRadians = 18.245;
+
+    /**
      * Pathfinder characterization
      */
     // 2023 legacy, kept as example

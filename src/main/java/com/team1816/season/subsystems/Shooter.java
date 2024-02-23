@@ -79,6 +79,8 @@ public class Shooter extends Subsystem {
 
     private final boolean opposeLeaderDirection = ((int) factory.getConstant(NAME, "invertFollowerMotor", 0)) == 1;
 
+    private final double degreesPerMotorRotations = Constants.degreesPerMotorRotations;
+
 
     /**
      * Logging
@@ -231,7 +233,7 @@ public class Shooter extends Subsystem {
             feederOutputsChanged = true;
         }
 
-        double angleToApply = robotState.pivotBaseAngle - (pivotMotor.getSensorPosition(0) * 3);
+        double angleToApply = robotState.pivotBaseAngle - (pivotMotor.getSensorPosition(0) * degreesPerMotorRotations);
         robotState.pivotArm.setAngle(Rotation2d.fromDegrees(angleToApply));
         SmartDashboard.putData("Mech2d", robotState.mechCanvas);
 
