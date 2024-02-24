@@ -7,6 +7,7 @@ import com.team1816.lib.subsystems.drive.SwerveDrive;
 import com.team1816.lib.util.visionUtil.VisionPoint;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.configuration.FieldConfig;
+import com.team1816.season.subsystems.Climber;
 import com.team1816.season.subsystems.Shooter;
 import com.team1816.season.subsystems.Collector;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -96,6 +97,8 @@ public class RobotState {
     public boolean isShooting = false;
     public boolean isBeamBreakTriggered = false;
 
+    public Climber.CLIMBER_STATE actualClimberState = Climber.CLIMBER_STATE.STOP;
+
     public VisionPoint superlativeTarget = new VisionPoint();
     public List<VisionPoint> visibleTargets = new ArrayList<>();
 
@@ -172,6 +175,7 @@ public class RobotState {
         actualCollectorState = Collector.COLLECTOR_STATE.STOP;
         actualFeederState = Shooter.FEEDER_STATE.STOP;
         actualRollerState = Shooter.ROLLER_STATE.STOP;
+        actualClimberState = Climber.CLIMBER_STATE.STOP;
 
         isPoseUpdated = true;
         superlativeTarget = new VisionPoint();

@@ -22,6 +22,7 @@ import com.team1816.season.auto.AutoModeManager;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.Orchestrator;
 import com.team1816.season.states.RobotState;
+import com.team1816.season.subsystems.Climber;
 import com.team1816.season.subsystems.Shooter;
 import com.team1816.season.subsystems.Collector;
 import edu.wpi.first.cameraserver.CameraServer;
@@ -72,6 +73,7 @@ public class Robot extends TimedRobot {
     private LedManager ledManager;
     private Camera camera;
     private Shooter shooter;
+    private Climber climber;
 
     /**
      * Factory
@@ -178,6 +180,7 @@ public class Robot extends TimedRobot {
             playlistManager = Injector.get(PlaylistManager.class);
             shooter = Injector.get(Shooter.class);
             collector = Injector.get(Collector.class);
+            climber = Injector.get(Climber.class);
 
             /** Logging */
             if (Constants.kLoggingRobot) {
@@ -217,7 +220,7 @@ public class Robot extends TimedRobot {
 
             drive = (Injector.get(Drive.Factory.class)).getInstance();
 
-            subsystemManager.setSubsystems(drive, ledManager, camera, collector, shooter);
+            subsystemManager.setSubsystems(drive, ledManager, camera, collector, shooter, climber);
 
             subsystemManager.registerEnabledLoops(enabledLoop);
             subsystemManager.registerDisabledLoops(disabledLoop);
@@ -374,6 +377,18 @@ public class Robot extends TimedRobot {
                         }
                     }
             );
+            inputHandler.listenActionPressAndRelease(
+                    "climbSlow",
+                    (pressed) -> {
+                        climber.setDesiredState(pressed ? Climber.CLIMBER_STATE.CLIMB_SLOW : Climber.CLIMBER_STATE.STOP);
+                    }
+            );
+            inputHandler.listenActionPressAndRelease(
+                    "climbFast",
+                    (pressed) -> {
+                        climber.setDesiredState(pressed ? Climber.CLIMBER_STATE.CLIMB_FAST : Climber.CLIMBER_STATE.STOP);
+                    }
+            );
 
         } catch (Throwable t) {
             faulted = true;
@@ -425,6 +440,7 @@ public class Robot extends TimedRobot {
 
         shooter.setDesiredState(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW);
         collector.setDesiredState(Collector.COLLECTOR_STATE.STOP);
+        climber.setDesiredState(Climber.CLIMBER_STATE.STOP);
 
         drive.setControlState(Drive.ControlState.TRAJECTORY_FOLLOWING);
         autoModeManager.startAuto();

@@ -28,7 +28,8 @@ operator:
     controllerType: Xbox
     rumble: false
     buttons:
-        leftBumper: updatePoseWithCamera
+        leftBumper: climbSlow
+        rightBumper: climbFast
     buttonpad:
         y: stopShooter
 demoMode: false
