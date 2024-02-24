@@ -4,6 +4,7 @@ import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.DynamicAutoUtil;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.season.auto.AutoModeManager;
+import com.team1816.season.configuration.Constants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import org.apache.commons.math3.util.Pair;
@@ -27,9 +28,9 @@ public class AmpToNoteOnePath extends DynamicAutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return updateWaypoints(List.of(
-                new Pose2d(super.isReversed ? 1.84 : 1.86, 7.74, Rotation2d.fromDegrees(-67)),
+                new Pose2d(super.isReversed ? Constants.ampReversedPosition : Constants.ampPosition, Rotation2d.fromDegrees(-67)),
                 new Pose2d(2.06, 7.18, Rotation2d.fromDegrees(-46)),
-                new Pose2d(2.7, 7, Rotation2d.fromDegrees(0))
+                new Pose2d(Constants.noteOnePosition, Rotation2d.fromDegrees(0))
         ));
     }
 

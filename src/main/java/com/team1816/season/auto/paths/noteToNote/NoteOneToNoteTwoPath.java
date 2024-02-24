@@ -3,6 +3,7 @@ package com.team1816.season.auto.paths.noteToNote;
 import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.season.auto.AutoModeManager;
+import com.team1816.season.configuration.Constants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -24,8 +25,8 @@ public class NoteOneToNoteTwoPath extends DynamicAutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return updateWaypoints(List.of(
-                new Pose2d(2.7, 7, Rotation2d.fromDegrees(-140)),
-                new Pose2d(2.57, 5.58, Rotation2d.fromDegrees(-45))
+                new Pose2d(Constants.noteOnePosition, Rotation2d.fromDegrees(-140)),
+                new Pose2d(Constants.noteTwoPosition, Rotation2d.fromDegrees(-45))
         ));
     }
 

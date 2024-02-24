@@ -5,6 +5,7 @@ import com.team1816.lib.auto.paths.AutoPath;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.season.auto.AutoModeManager;
 import com.team1816.season.auto.paths.toNoteOne.TopSpeakerToNoteOnePath;
+import com.team1816.season.configuration.Constants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -24,9 +25,9 @@ public class TopSpeakerToNoteThreePath extends DynamicAutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return updateWaypoints(List.of(
-                new Pose2d(0.721, 6.762, Rotation2d.fromDegrees(-5)),
+                new Pose2d(Constants.topSpeakerPosition, Rotation2d.fromDegrees(-5)),
                 new Pose2d(1.95, 5.12, Rotation2d.fromDegrees(-75)),
-                new Pose2d(2.57, 4.13, Rotation2d.fromDegrees(0))
+                new Pose2d(Constants.noteThreePosition, Rotation2d.fromDegrees(0))
         ));
     }
 

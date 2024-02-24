@@ -3,8 +3,10 @@ package com.team1816.season.auto.paths.toNoteOne;
 import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.season.auto.AutoModeManager;
+import com.team1816.season.configuration.Constants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import org.yaml.snakeyaml.scanner.Constant;
 
 import java.util.List;
 
@@ -24,10 +26,10 @@ public class BottomSpeakerToNoteOnePath extends DynamicAutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return updateWaypoints(List.of(
-                new Pose2d(0.752, 4.364, Rotation2d.fromDegrees(-20)),
+                new Pose2d(Constants.bottomSpeakerPosition, Rotation2d.fromDegrees(-20)),
                 new Pose2d(1.70, 4.20, Rotation2d.fromDegrees(82)),
                 new Pose2d(1.58, 6.2, Rotation2d.fromDegrees(82)),
-                new Pose2d(2.7, 7, Rotation2d.fromDegrees(18))
+                new Pose2d(Constants.noteOnePosition, Rotation2d.fromDegrees(18))
         ));
     }
 
