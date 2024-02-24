@@ -16,10 +16,7 @@ import com.team1816.season.auto.paths.toNoteOne.AmpToNoteOnePath;
 import com.team1816.season.auto.paths.toNoteOne.MiddleSpeakerToNoteOnePath;
 import com.team1816.season.auto.paths.toNoteThree.AmpToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteThree.MiddleSpeakerToNoteThreePath;
-import com.team1816.season.auto.paths.toNoteTwo.AmpToNoteTwoPath;
-import com.team1816.season.auto.paths.toNoteTwo.AmpToNoteTwoTopPath;
-import com.team1816.season.auto.paths.toNoteTwo.MiddleSpeakerToNoteTwoPath;
-import com.team1816.season.auto.paths.toNoteTwo.TopSpeakerToNoteTwoTopPath;
+import com.team1816.season.auto.paths.toNoteTwo.*;
 import com.team1816.season.subsystems.Shooter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import org.checkerframework.common.subtyping.qual.Bottom;
@@ -32,14 +29,14 @@ public class TestMode extends AutoMode {
         super(
                 List.of(
                 new TrajectoryAction(
-                        new MiddleSpeakerToNoteTwoPath()
+                        new TopSpeakerToNoteTwoPath()
         )));
     }
     @Override
     protected void routine() throws AutoModeEndedException {
         runAction(
                 new SeriesAction(
-                        new ShootAction(Shooter.PIVOT_STATE.SHOOT_AMP)
+                        trajectoryActions.get(0)
                 )
         );
     }
