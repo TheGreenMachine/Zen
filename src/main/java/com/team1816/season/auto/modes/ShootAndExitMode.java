@@ -1,12 +1,14 @@
 package com.team1816.season.auto.modes;
 
 import com.team1816.lib.auto.AutoModeEndedException;
+import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.DynamicAutoUtil;
 import com.team1816.lib.auto.actions.ParallelAction;
 import com.team1816.lib.auto.actions.RotateSwerveAction;
 import com.team1816.lib.auto.actions.SeriesAction;
 import com.team1816.lib.auto.modes.AutoMode;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
+import com.team1816.season.auto.AutoModeManager;
 import com.team1816.season.auto.actions.*;
 import com.team1816.season.subsystems.Collector;
 import com.team1816.season.subsystems.Shooter;
@@ -37,9 +39,10 @@ public class ShootAndExitMode extends AutoMode {
                                 new ShootAction(Shooter.ROLLER_STATE.SHOOT_DISTANCE, Shooter.FEEDER_STATE.TRANSFER, Shooter.PIVOT_STATE.STOW),
                                 trajectoryActions.get(0)
                         ),
-                        new RotateSwerveAction(Rotation2d.fromDegrees(28.5)),
+                        new RotateSwerveAction(getNeededRotation(paths.get(0).endPosition)),
                         new ShootDistanceAction()
                 )
         );
     }
+
 }

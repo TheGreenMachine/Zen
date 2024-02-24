@@ -2,16 +2,10 @@ package com.team1816.season.auto.modes.distance;
 
 import com.team1816.lib.auto.AutoModeEndedException;
 import com.team1816.lib.auto.DynamicAutoUtil;
-import com.team1816.lib.auto.actions.ParallelAction;
-import com.team1816.lib.auto.actions.SeriesAction;
-import com.team1816.lib.auto.actions.TrajectoryAction;
-import com.team1816.lib.auto.actions.WaitAction;
+import com.team1816.lib.auto.actions.*;
 import com.team1816.lib.auto.modes.AutoMode;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
-import com.team1816.season.auto.actions.CollectAction;
-import com.team1816.season.auto.actions.ShootAction;
-import com.team1816.season.auto.actions.ShootAmpAction;
-import com.team1816.season.auto.actions.ShootSpeakerAction;
+import com.team1816.season.auto.actions.*;
 import com.team1816.season.subsystems.Collector;
 import com.team1816.season.subsystems.Shooter;
 
@@ -38,16 +32,20 @@ public class FourScoreFromDistanceMode extends AutoMode {
     protected void routine() throws AutoModeEndedException {
         runAction(
                 new SeriesAction(
-                        new ShootSpeakerAction(),
+                    paths.get(0).isAmpPath() ? new ShootAmpAction() : new ShootSpeakerAction(),
+                    new ParallelAction(
                         new CollectAction(Collector.COLLECTOR_STATE.INTAKE),
-                        trajectoryActions.get(0),//Trajectory from speaker to note 1
-                        new CollectAction(Collector.COLLECTOR_STATE.STOP),
-                        trajectoryActions.get(1),//Note 1 to middle
-                        new ShootSpeakerAction(), //Shoot TODO replace
-                        new CollectAction(Collector.COLLECTOR_STATE.INTAKE),
-                        new ShootSpeakerAction(),
-                        trajectoryActions.get(2), //middle to third note
-                        new ShootSpeakerAction()
+                        new ShootAction(Shooter.ROLLER_STATE.SHOOT_DISTANCE, Shooter.FEEDER_STATE.TRANSFER, Shooter.PIVOT_STATE.STOW),
+                        trajectoryActions.get(0)
+                    ),
+                    new RotateSwerveAction(getNeededRotation(paths.get(0).endPosition)),
+                    new ShootDistanceAction(),
+                    trajectoryActions.get(1),
+                    new RotateSwerveAction(getNeededRotation(paths.get(1).endPosition)),
+                    new ShootDistanceAction(),
+                    trajectoryActions.get(2),
+                    new RotateSwerveAction(getNeededRotation(paths.get(2).startPosition)),
+                    new ShootDistanceAction()
                 )
         );
     }

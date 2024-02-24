@@ -29,6 +29,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
@@ -36,10 +37,13 @@ import edu.wpi.first.util.datalog.StructArrayLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A Class that implements CTRE's SwerveDriveTrain class
@@ -116,6 +120,9 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
     private StructArrayLogEntry<SwerveModuleState> desiredModuleStructLogger;
     private StructArrayLogEntry<SwerveModuleState> actualModuleStructLogger;
 
+//    SimpleWidget[] moduleTempWidgets;
+//    GenericEntry[] moduleTempEntries;
+
 
     @Inject
     public CTRESwerveDrive(LedManager lm, Infrastructure inf, RobotState rs) {
@@ -164,6 +171,10 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
 
             motors[i * 2] = train.getModule(i).getDriveMotor();
             motors[i * 2 + 1] = train.getModule(i).getSteerMotor();
+
+//            moduleTempWidgets[i] = Constants.kCamWindow.add(toModuleName(i), true);
+//            moduleTempWidgets[i].withProperties(Map.of("colorWhenFalse", "RED", "colorWhenTrue", "GREEN"));
+//            moduleTempEntries[i] = moduleTempWidgets[i].getEntry();
         }
 
         swerveKinematics = new SwerveDriveKinematics(moduleLocations);
@@ -320,9 +331,13 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
             chassisSpeed = swerveKinematics.toChassisSpeeds(train.getState().ModuleStates);
         }
 
-        for (int i = 0; i < 4; i++) {
-            motorTemperatures.get(i).refresh();
-        }
+//        for (int i = 0; i < 4; i++) {
+//            motorTemperatures.get(i).refresh();
+//            if (motorTemperatures.get(i).getValueAsDouble() > 55) { //TODO YAML
+//
+//            }
+//        }
+
 
         updateRobotState();
     }

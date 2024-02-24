@@ -27,7 +27,7 @@ public class AmpToNoteTwoPath extends DynamicAutoPath {
         return updateWaypoints(List.of(
                 new Pose2d(super.isReversed ? 1.84 : 1.86, 7.74, Rotation2d.fromDegrees(-90)),
                 new Pose2d(1.82, 7.28, Rotation2d.fromDegrees(-90)),
-                new Pose2d(2.57, 5.58, Rotation2d.fromDegrees(0))
+                new Pose2d(2.75, 5.58, Rotation2d.fromDegrees(0))
         ));
     }
 

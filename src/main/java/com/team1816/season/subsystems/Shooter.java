@@ -9,6 +9,7 @@ import com.team1816.lib.hardware.components.motor.IGreenMotor;
 import com.team1816.lib.hardware.components.motor.LazyTalonFX;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.subsystems.Subsystem;
+import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -247,6 +248,8 @@ public class Shooter extends Subsystem {
             rollerCurrentDrawLogger.append(rollerCurrentDraw);
             feederCurrentDrawLogger.append(feederCurrentDraw);
             pivotCurrentDrawLogger.append(pivotCurrentDraw);
+
+            GreenLogger.appendQuickLog("beamBreakTriggered", isBeamBreakTriggered());
         }
     }
 

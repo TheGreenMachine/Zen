@@ -29,7 +29,7 @@ public class TestMode extends AutoMode {
         super(
                 List.of(
                 new TrajectoryAction(
-                        new TopSpeakerToNoteTwoPath()
+                        new BottomSpeakerToNoteTwoPath()
         )));
     }
     @Override

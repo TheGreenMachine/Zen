@@ -1,6 +1,7 @@
 package com.team1816.season.subsystems;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
@@ -11,6 +12,7 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 
+@Singleton
 public class Climber extends Subsystem {
 
     /**
@@ -26,8 +28,9 @@ public class Climber extends Subsystem {
     /**
      * Properties
      */
-    public final double slowClimbSpeed;
-    public final double fastClimbSpeed;
+    public final double slowClimbPower;
+    public final double fastClimbPower;
+    public final double reSpoolPower;
 
     /**
      * Logging
@@ -39,7 +42,7 @@ public class Climber extends Subsystem {
      */
     private Climber.CLIMBER_STATE desiredState = Climber.CLIMBER_STATE.STOP;
     private double actualClimberVelocity = 0;
-    private double desiredClimberVelocity = 0;
+    private double desiredClimberPower = 0;
     private double climberCurrentDraw = 0;
     private boolean outputsChanged = false;
 
@@ -54,8 +57,9 @@ public class Climber extends Subsystem {
         super(NAME, inf, rs);
         climbMotor = factory.getMotor(NAME, "climbMotor");
 
-        slowClimbSpeed = factory.getConstant(NAME, "slowClimbSpeed", 0.3);
-        fastClimbSpeed = factory.getConstant(NAME, "fastClimbSpeed", 0.8);
+        slowClimbPower = factory.getConstant(NAME, "slowClimbPower", 0.3);
+        fastClimbPower = factory.getConstant(NAME, "fastClimbPower", 0.8);
+        reSpoolPower = factory.getConstant(NAME, "reSpoolPower", -0.5);
 
         if (Constants.kLoggingRobot) {
             desStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Climber/desiredClimberVelocity");
@@ -90,7 +94,7 @@ public class Climber extends Subsystem {
 
         if (Constants.kLoggingRobot) {
             ((DoubleLogEntry) actStatesLogger).append(actualClimberVelocity);
-            ((DoubleLogEntry) desStatesLogger).append(desiredClimberVelocity);
+            ((DoubleLogEntry) desStatesLogger).append(desiredClimberPower);
             climberCurrentDrawLogger.append(climberCurrentDraw);
         }
     }
@@ -106,20 +110,25 @@ public class Climber extends Subsystem {
             outputsChanged = false;
             switch (desiredState) {
                 case STOP -> {
-                    desiredClimberVelocity = 0;
+                    desiredClimberPower = 0;
                 }
                 case CLIMB_SLOW -> {
                     if (!DriverStation.isFMSAttached() || DriverStation.getMatchTime() < 20) {
-                        desiredClimberVelocity = slowClimbSpeed;
+                        desiredClimberPower = slowClimbPower;
                     }
                 }
                 case CLIMB_FAST -> {
                     if (!DriverStation.isFMSAttached() || DriverStation.getMatchTime() < 20) {
-                        desiredClimberVelocity = fastClimbSpeed;
+                        desiredClimberPower = fastClimbPower;
+                    }
+                }
+                case RE_SPOOL -> {
+                    if (!DriverStation.isFMSAttached()) {
+                        desiredClimberPower = reSpoolPower;
                     }
                 }
             }
-            climbMotor.set(GreenControlMode.PERCENT_OUTPUT, desiredClimberVelocity);
+            climbMotor.set(GreenControlMode.PERCENT_OUTPUT, desiredClimberPower);
         }
     }
 
@@ -166,6 +175,7 @@ public class Climber extends Subsystem {
     public enum CLIMBER_STATE {
         STOP,
         CLIMB_SLOW,
-        CLIMB_FAST
+        CLIMB_FAST,
+        RE_SPOOL
     }
 }

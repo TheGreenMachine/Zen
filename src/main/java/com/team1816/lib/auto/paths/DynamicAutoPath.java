@@ -28,6 +28,7 @@ public abstract class DynamicAutoPath extends AutoPath {
     public Position startPosition;
     public Position endPosition;
 
+    public Color color = Color.BLUE;
 
     public DynamicAutoPath(Position startPosition, Position endPosition) {
         super();
@@ -37,6 +38,7 @@ public abstract class DynamicAutoPath extends AutoPath {
 
     public DynamicAutoPath(Color color, Position startPosition, Position endPosition) {
         super(color);
+        this.color = color;
         this.startPosition = startPosition;
         this.endPosition = endPosition;
     }

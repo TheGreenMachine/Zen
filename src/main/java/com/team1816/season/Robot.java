@@ -390,6 +390,15 @@ public class Robot extends TimedRobot {
                     }
             );
 
+            //Buttonboard commands
+            inputHandler.listenActionPressAndRelease(
+                    "reSpool",
+                    (pressed) -> {
+                        climber.setDesiredState(pressed ? Climber.CLIMBER_STATE.RE_SPOOL : Climber.CLIMBER_STATE.STOP);
+                    }
+            );
+
+
         } catch (Throwable t) {
             faulted = true;
             throw t;

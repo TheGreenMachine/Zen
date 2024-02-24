@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 
 import static com.team1816.season.auto.AutoModeManager.Position;
+import static com.team1816.season.auto.AutoModeManager.robotState;
 
 /**
  * Holder class for the dynamic auto lookup table and utility for accessing it
@@ -100,10 +101,10 @@ public class DynamicAutoUtil {
      */
     public static AutoPath getScram(DynamicAutoPath path) {
         return switch(path.startPosition) {
-            case TOP_SPEAKER -> new TopSpeakerToScramPath();
-            case MIDDLE_SPEAKER -> new MiddleSpeakerToScramPath();
-            case BOTTOM_SPEAKER -> new BottomSpeakerToScramPath();
-            case AMP -> new AmpToScramPath();
+            case TOP_SPEAKER -> new TopSpeakerToScramPath(robotState.allianceColor);
+            case MIDDLE_SPEAKER -> new MiddleSpeakerToScramPath(robotState.allianceColor);
+            case BOTTOM_SPEAKER -> new BottomSpeakerToScramPath(robotState.allianceColor);
+            case AMP -> new AmpToScramPath(robotState.allianceColor);
             default -> new DriveStraightPath(100); //please never let this be called
         };
     }

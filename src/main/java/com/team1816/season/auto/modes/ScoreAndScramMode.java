@@ -15,7 +15,7 @@ public class ScoreAndScramMode extends AutoMode {
         super(
                 List.of(
                         new TrajectoryAction(
-                                new BottomSpeakerToScramPath()
+                                new BottomSpeakerToScramPath(robotState.allianceColor)
                         )
                 )
         );

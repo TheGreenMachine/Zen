@@ -25,7 +25,7 @@ public class MiddleSpeakerToNoteOnePath extends DynamicAutoPath {
     protected List<Pose2d> getWaypoints() {
         return updateWaypoints(List.of(
                 new Pose2d(1.4, 5.55, Rotation2d.fromDegrees(68)),
-                new Pose2d(2.7, 7, Rotation2d.fromDegrees(28.5))
+                new Pose2d(2.73, 7, Rotation2d.fromDegrees(28.5))
         ));
     }
 

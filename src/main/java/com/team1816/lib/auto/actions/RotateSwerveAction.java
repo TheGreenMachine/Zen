@@ -35,12 +35,11 @@ public class RotateSwerveAction implements AutoAction {
                 kRotationActionControllerConstraints
         );
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
-        thetaController.setGoal(desiredHeading.getDegrees());
-        thetaController.setTolerance(tolerance);
     }
 
     @Override
     public void start() {
+        thetaController.reset(drive.getPose().getRotation().getRadians());
         double rotationalSpeed = thetaController.calculate(
                 drive.getPose().getRotation().getRadians(), desiredHeading.getRadians());
 

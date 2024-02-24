@@ -8,6 +8,7 @@ import com.team1816.lib.auto.actions.AutoAction;
 import com.team1816.lib.auto.actions.TrajectoryAction;
 import com.team1816.lib.subsystems.drive.EnhancedSwerveDrive;
 import com.team1816.lib.util.logUtil.GreenLogger;
+import com.team1816.season.auto.AutoModeManager;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -187,5 +188,15 @@ public abstract class AutoMode {
         }
         return initialPose;
     }
+
+    public static Rotation2d getNeededRotation(AutoModeManager.Position position) {
+        return Rotation2d.fromDegrees(
+                switch(position) {
+                    case TOP_NOTE -> robotState.allianceColor == Color.BLUE ? 28.5 : 151.5;
+                    case BOTTOM_NOTE -> robotState.allianceColor == Color.BLUE ? -28.5 : -151.5;
+                    default -> robotState.allianceColor == Color.BLUE ? 0 : 180;
+                });
+    }
+
 
 }
