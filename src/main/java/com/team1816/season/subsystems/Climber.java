@@ -109,12 +109,12 @@ public class Climber extends Subsystem {
                     desiredClimberVelocity = 0;
                 }
                 case CLIMB_SLOW -> {
-                    if (DriverStation.isFMSAttached() && DriverStation.getMatchTime() < 20){
+                    if (!DriverStation.isFMSAttached() || DriverStation.getMatchTime() < 20) {
                         desiredClimberVelocity = slowClimbSpeed;
                     }
                 }
                 case CLIMB_FAST -> {
-                    if (DriverStation.isFMSAttached() && DriverStation.getMatchTime() < 20){
+                    if (!DriverStation.isFMSAttached() || DriverStation.getMatchTime() < 20) {
                         desiredClimberVelocity = fastClimbSpeed;
                     }
                 }
