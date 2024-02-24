@@ -1,4 +1,4 @@
-package com.team1816.season.auto.modes;
+package com.team1816.season.auto.modes.eject;
 
 import com.team1816.lib.auto.AutoModeEndedException;
 import com.team1816.lib.auto.actions.ParallelAction;

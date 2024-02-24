@@ -28,6 +28,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
@@ -37,6 +38,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -46,6 +48,7 @@ import java.util.List;
 @Singleton
 public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
 
+    //TODO low priority but someone needs to implement demo mode
     /**
      * Components
      */
@@ -81,6 +84,8 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
 
     private static final double maxVel12MPS = factory.getConstant(NAME,"maxVel12VMPS", 5);
 
+    private static final double driveGearRatio = factory.getConstant(NAME, "driveGearRatio", 6.75);
+
     private double driveScalar;
     private static final double normalDriveScalar = kMaxVelOpenLoopMeters / maxVel12MPS;
     private static final double slowDriveScalar = normalDriveScalar * factory.getConstant(NAME, "slowModeScalar", 0.5);
@@ -110,6 +115,7 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
 
     private StructArrayLogEntry<SwerveModuleState> desiredModuleStructLogger;
     private StructArrayLogEntry<SwerveModuleState> actualModuleStructLogger;
+
 
     @Inject
     public CTRESwerveDrive(LedManager lm, Infrastructure inf, RobotState rs) {
@@ -318,8 +324,6 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
             motorTemperatures.get(i).refresh();
         }
 
-        actualHeading = Rotation2d.fromDegrees(pigeon.getYawValue());
-
         updateRobotState();
     }
 
@@ -355,7 +359,6 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
 
     @Override
     public void resetOdometry(Pose2d pose) {
-        actualHeading = Rotation2d.fromDegrees(pigeon.getYawValue()); //For the RotateSwerveAction
         train.seedFieldRelative(pose);
         updateRobotState();
     }
@@ -412,7 +415,7 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
             ));
             SwerveDriveKinematics.desaturateWheelSpeeds(
                     desiredModuleStates,
-                    kMaxVelOpenLoopMeters
+                    maxVel12MPS
             );
             var actualModuleStates = train.getState().ModuleStates;
 
@@ -487,8 +490,6 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
                                 getTrajectoryTimestamp() / timeBetweenPoints
                         );
 
-        Pose2d desiredTrajectory = trajectory.getStates().get(trajectoryIndex).poseMeters;
-        GreenLogger.appendQuickLog("TrajectoryDesPose", desiredTrajectory.getX(), desiredTrajectory.getY(), desiredTrajectory.getRotation().getDegrees());
         return heading;
     }
 
@@ -507,9 +508,10 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
         } else if (request instanceof ModuleRequest) {
             ChassisSpeeds moduleSpeeds = swerveKinematics.toChassisSpeeds(((ModuleRequest) request).moduleStates);
             return new double[] {
-                    moduleSpeeds.vxMetersPerSecond,
-                    moduleSpeeds.vyMetersPerSecond,
-                    moduleSpeeds.omegaRadiansPerSecond
+                    //This conversion is super scuffed but it's accurate enough
+                    (moduleSpeeds.vxMetersPerSecond) / driveGearRatio ,
+                    (moduleSpeeds.vyMetersPerSecond) / driveGearRatio,
+                    (moduleSpeeds.omegaRadiansPerSecond) / driveGearRatio
             };
         } else {
             return new double[3];
@@ -517,7 +519,7 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
     }
 
 
-    public String toModuleName(int moduleIndex) {
+    public static String toModuleName(int moduleIndex) {
         return switch (moduleIndex) {
             case 0 -> "frontLeft";
             case 1 -> "frontRight";

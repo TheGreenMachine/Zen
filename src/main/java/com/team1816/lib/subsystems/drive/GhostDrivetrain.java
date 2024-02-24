@@ -15,6 +15,8 @@ import jakarta.inject.Singleton;
  */
 @Singleton
 public class GhostDrivetrain extends Drive {
+
+    //TODO this class is a STOPGAP, find the root of this needing to exist after duluth
     
     /**
      * Instantiates the Drive with base subsystem parameters and accounts for DemoMode

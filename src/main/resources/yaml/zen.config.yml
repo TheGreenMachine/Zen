@@ -174,7 +174,7 @@ subsystems:
                 currentLimit: 20
                 motionMagic:
                     expoKV: 0.05
-                    expoKA: 0.06
+                    expoKA: 0.08
             pivotFollowMotor:
                 motorType: TalonFX
                 motorName: pivotFollowMotor
@@ -206,7 +206,9 @@ subsystems:
             feederAmpShootSpeed: 700
             feederIntakeSpeed: 500
             velocityErrorMargin: 0.1
+            pivotNeutralPosition: 1.5
             pivotAmpShootPosition: 33
+            pivotDistanceShootPosition: 8.625
             invertFollowerMotor: 1
     climber:
         implemented: true

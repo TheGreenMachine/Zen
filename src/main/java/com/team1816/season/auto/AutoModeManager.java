@@ -7,10 +7,18 @@ import com.team1816.lib.auto.DynamicAutoUtil;
 import com.team1816.lib.auto.modes.AutoMode;
 import com.team1816.lib.auto.modes.DoNothingMode;
 import com.team1816.lib.auto.modes.DriveStraightMode;
+import com.team1816.lib.auto.modes.TuneDrivetrainMode;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.auto.modes.*;
+import com.team1816.season.auto.modes.distance.FourScoreFromDistanceMode;
+import com.team1816.season.auto.modes.distance.ThreeScoreFromDistanceMode;
+import com.team1816.season.auto.modes.distance.TwoScoreFromDistanceMode;
+import com.team1816.season.auto.modes.eject.BottomMiddleEjects;
+import com.team1816.season.auto.modes.eject.TopMiddleEjects;
 import com.team1816.season.auto.paths.StartToAmpPath;
+import com.team1816.season.auto.paths.noteToNote.NoteOneToNoteTwoPath;
+import com.team1816.season.auto.paths.noteToNote.NoteThreeToNoteTwoPath;
 import com.team1816.season.auto.paths.toNoteOne.AmpToNoteOnePath;
 import com.team1816.season.auto.paths.toNoteOne.BottomSpeakerToNoteOnePath;
 import com.team1816.season.auto.paths.toNoteOne.MiddleSpeakerToNoteOnePath;
@@ -49,6 +57,7 @@ public class AutoModeManager {
     private final SendableChooser<ShootPos> startPosChooser;
     private final SendableChooser<DesiredCollect> firstCollectChooser;
     private final SendableChooser<DesiredCollect> secondCollectChooser;
+    private final SendableChooser<DesiredCollect> thirdCollectChooser;
     private final SendableChooser<ShootPos> firstShootChooser;
     private final SendableChooser<ShootPos> secondShootChooser;
     private ShootPos desiredStart;
@@ -56,6 +65,7 @@ public class AutoModeManager {
     private ShootPos desiredFirstShoot;
     private DesiredCollect desiredSecondCollect;
     private ShootPos desiredSecondShoot;
+    private DesiredCollect desiredThirdCollect;
 
     private final SendableChooser<ScramChoice> scramChooser;
     private ScramChoice desiredScram;
@@ -83,6 +93,8 @@ public class AutoModeManager {
 
         secondCollectChooser = new SendableChooser<>();
         secondShootChooser = new SendableChooser<>();
+
+        thirdCollectChooser = new SendableChooser<>();
 
         scramChooser = new SendableChooser<>();
 
@@ -135,11 +147,18 @@ public class AutoModeManager {
         }
         secondShootChooser.setDefaultOption(ShootPos.TOP_SPEAKER.name(), ShootPos.TOP_SPEAKER);
 
+        SmartDashboard.putData("Third collected note", thirdCollectChooser);
+        for (DesiredCollect noteToCollect : DesiredCollect.values()) {
+            thirdCollectChooser.addOption(noteToCollect.name(), noteToCollect);
+        }
+        thirdCollectChooser.setDefaultOption(DesiredCollect.TOP_NOTE.name(), DesiredCollect.TOP_NOTE);
+
         DynamicAutoUtil.registerPaths(List.of(
                 new TopSpeakerToNoteOnePath(), new TopSpeakerToNoteTwoPath(), new TopSpeakerToNoteThreePath(), new TopSpeakerToNoteTwoTopPath(),
                 new MiddleSpeakerToNoteOnePath(), new MiddleSpeakerToNoteTwoPath(), new MiddleSpeakerToNoteThreePath(),
                 new BottomSpeakerToNoteOnePath(), new BottomSpeakerToNoteTwoPath(), new BottomSpeakerToNoteThreePath(),
-                new AmpToNoteOnePath(), new AmpToNoteTwoPath(), new AmpToNoteThreePath(), new AmpToNoteTwoTopPath()
+                new AmpToNoteOnePath(), new AmpToNoteTwoPath(), new AmpToNoteThreePath(), new AmpToNoteTwoTopPath(),
+                new NoteOneToNoteTwoPath(), new NoteThreeToNoteTwoPath()
         ));
 
         SmartDashboard.putData("Scram Or Not", scramChooser);
@@ -168,6 +187,8 @@ public class AutoModeManager {
         desiredSecondCollect = DesiredCollect.TOP_NOTE;
         desiredSecondShoot = ShootPos.TOP_SPEAKER;
 
+        desiredThirdCollect = DesiredCollect.TOP_NOTE;
+
         desiredScram = ScramChoice.NOT;
     }
 
@@ -185,6 +206,8 @@ public class AutoModeManager {
 
         DesiredCollect selectedSecondCollect = secondCollectChooser.getSelected();
         ShootPos selectedSecondShoot = secondShootChooser.getSelected();
+
+        DesiredCollect selectedThirdCollect = thirdCollectChooser.getSelected();
 
         ScramChoice selectedScram = scramChooser.getSelected();
 
@@ -205,6 +228,7 @@ public class AutoModeManager {
                 || selectedFirstShoot != desiredFirstShoot
                 || selectedSecondCollect != desiredSecondCollect
                 || selectedSecondShoot != desiredSecondShoot
+                || selectedThirdCollect != desiredThirdCollect
                 || selectedScram != desiredScram;
 
         // if auto has been changed, update selected auto mode + thread
@@ -223,10 +247,16 @@ public class AutoModeManager {
                 desiredScram = selectedScram; //In this conditional so that scram generation works properly
             }
 
-            if (selectedAuto == DesiredAuto.TWO_SCORE || selectedAuto == DesiredAuto.SCORE_AND_EXIT || selectedAuto == DesiredAuto.THREE_SCORE) {
+            if (selectedAuto == DesiredAuto.TWO_SCORE
+                    || selectedAuto == DesiredAuto.SCORE_AND_EXIT
+                    || selectedAuto == DesiredAuto.THREE_SCORE
+                    || selectedAuto == DesiredAuto.RANGE_TWO_SCORE
+                    || selectedAuto == DesiredAuto.RANGE_THREE_SCORE
+                    || selectedAuto == DesiredAuto.RANGE_FOUR_SCORE
+            ) {
                 autoMode = generateDynamicAutoMode(selectedAuto, selectedColor,
                         List.of(selectedStartPos, selectedFirstShoot, selectedSecondShoot),
-                        List.of(selectedFirstCollect, selectedSecondCollect)
+                        List.of(selectedFirstCollect, selectedSecondCollect, selectedThirdCollect)
                 );
             } else {
                 dynamicAutoChanged = false; //Stops unnecessary defaulting/zeroing
@@ -246,6 +276,8 @@ public class AutoModeManager {
 
         desiredSecondCollect = selectedSecondCollect;
         desiredSecondShoot = selectedSecondShoot;
+
+        desiredThirdCollect = selectedThirdCollect;
 
         //Legacy 2023 pathfinder code
 //                if (robotState.allianceColor == Color.BLUE) {
@@ -322,6 +354,10 @@ public class AutoModeManager {
         THREE_SCORE,
         SCORE_AND_EXIT,
 
+        RANGE_TWO_SCORE,
+        RANGE_THREE_SCORE,
+        RANGE_FOUR_SCORE,
+
         BOTTOM_MIDDLE_EJECTS,
 
         TOP_MIDDLE_EJECTS,
@@ -391,8 +427,8 @@ public class AutoModeManager {
         switch (mode) {
             case DO_NOTHING:
                 return new DoNothingMode();
-//            case TUNE_DRIVETRAIN: // commented for competition purposes
-//                return new TuneDrivetrainMode();
+            case TUNE_DRIVETRAIN: // commented for competition purposes
+                return new TuneDrivetrainMode();
 //            case LIVING_ROOM:
 //                return (new LivingRoomMode(color));
             case TEST:
@@ -412,8 +448,32 @@ public class AutoModeManager {
     }
 
     private AutoMode generateDynamicAutoMode(DesiredAuto mode, Color color, List<ShootPos> shootPositions, List<DesiredCollect> collectPositions) {
-        List<DynamicAutoPath> dynamicPathList = generateDynamicPathList(color, shootPositions , collectPositions);
         boolean isScramming = desiredScram == ScramChoice.SCRAM;
+
+        if (mode == DesiredAuto.RANGE_TWO_SCORE) {
+            return new TwoScoreFromDistanceMode(
+                    generateDynamicPathListFromDistance(color, shootPositions.get(0), collectPositions),
+                    isScramming
+            );
+        }
+
+        if (mode == DesiredAuto.RANGE_THREE_SCORE) {
+            return new ThreeScoreFromDistanceMode(
+                    generateDynamicPathListFromDistance(color, shootPositions.get(0), collectPositions),
+                    isScramming
+            );
+        }
+
+        if (mode == DesiredAuto.RANGE_FOUR_SCORE) {
+            return new FourScoreFromDistanceMode(
+                    generateFourScorePaths(color, shootPositions.get(0), collectPositions.get(0) == DesiredCollect.TOP_NOTE),
+                    isScramming
+            );
+        }
+
+
+
+        List<DynamicAutoPath> dynamicPathList = generateDynamicPathList(color, shootPositions , collectPositions);
         if (mode == DesiredAuto.TWO_SCORE) {
             if (dynamicPathList.get(0).isAmpPath()) {
                 dynamicPathList.add(0, new StartToAmpPath());
@@ -462,4 +522,31 @@ public class AutoModeManager {
 
         return paths;
     }
+
+    private List<DynamicAutoPath> generateDynamicPathListFromDistance(Color color, ShootPos startPosition, List<DesiredCollect> collectPositions) {
+        ArrayList<DynamicAutoPath> paths = new ArrayList<>();
+
+        Position start = toPosition(startPosition);
+        Position end = toPosition(collectPositions.get(0));
+
+        paths.add(DynamicAutoUtil.getDynamicPath(start, end, color).orElse(new MiddleSpeakerToNoteTwoPath())); //Add start to collect 1
+
+        for (int i = 0; i < collectPositions.size() - 1; i++) {
+           start = toPosition(collectPositions.get(i));
+           end = toPosition(collectPositions.get(i + 1));
+
+           paths.add(DynamicAutoUtil.getDynamicPath(start,end,color).orElse(new MiddleSpeakerToNoteTwoPath()));
+        }
+
+        return paths;
+    }
+
+    private List<DynamicAutoPath> generateFourScorePaths(Color color, ShootPos startPosition, boolean startAtTop) {
+        return List.of(
+                DynamicAutoUtil.getDynamicPath(toPosition(startPosition), startAtTop ? Position.TOP_NOTE : Position.BOTTOM_NOTE, color).orElse(new MiddleSpeakerToNoteTwoPath()),
+                DynamicAutoUtil.getDynamicPath(startAtTop ? Position.TOP_NOTE : Position.BOTTOM_NOTE, Position.MIDDLE_NOTE, color).orElse(new MiddleSpeakerToNoteTwoPath()),
+                DynamicAutoUtil.getReversedDynamicPath(Position.MIDDLE_NOTE, startAtTop ? Position.BOTTOM_NOTE : Position.TOP_NOTE, color).orElse(new MiddleSpeakerToNoteTwoPath())
+        );
+    }
+
 }

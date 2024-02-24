@@ -4,15 +4,21 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team1816.lib.Infrastructure;
+import com.team1816.lib.hardware.components.motor.GhostMotor;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
 import com.team1816.lib.hardware.components.motor.LazyTalonFX;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.subsystems.Subsystem;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -68,6 +74,9 @@ public class Shooter extends Subsystem {
     private final double feederIntakeSpeed = factory.getConstant(NAME, "feederIntakeSpeed", 0.20);
 
     private final double pivotAmpShootPosition = factory.getConstant(NAME, "pivotAmpShootPosition", 1.0);
+    private final double pivotNeutralPosition = factory.getConstant(NAME, "pivotNeutralPosition", 1.0);
+    private final double pivotDistanceShootPosition = factory.getConstant(NAME, "pivotDistanceShootPosition", 1.0);
+
     private final boolean opposeLeaderDirection = ((int) factory.getConstant(NAME, "invertFollowerMotor", 0)) == 1;
 
 
@@ -103,6 +112,14 @@ public class Shooter extends Subsystem {
 
         rollerMotor.selectPIDSlot(1);
         pivotMotor.selectPIDSlot(2);
+
+        robotState.pivotArm.setColor(new Color8Bit(Color.kDarkBlue));
+
+        if (RobotBase.isSimulation()) {
+            pivotMotor.setMotionProfileMaxVelocity(12 / 0.05);
+            pivotMotor.setMotionProfileMaxAcceleration(12 / 0.08);
+            ((GhostMotor) pivotMotor).setMaxVelRotationsPerSec(240);
+        }
 
         if (Constants.kLoggingRobot) {
             desStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Pivot/desiredPivotPosition");
@@ -194,7 +211,11 @@ public class Shooter extends Subsystem {
         pivotCurrentDraw = pivotMotor.getMotorOutputCurrent();
 
         if (robotState.actualRollerState != desiredRollerState) {
-            robotState.actualRollerState = desiredRollerState;
+            if (desiredRollerState != ROLLER_STATE.STOP && desiredRollerState.inDesiredSpeedRange(actualRollerVelocity)) {
+                robotState.actualRollerState = desiredRollerState;
+            } else if (desiredRollerState == ROLLER_STATE.STOP) {
+                robotState.actualRollerState = desiredRollerState;
+            }
         }
 
         if (robotState.actualFeederState != desiredFeederState) {
@@ -209,6 +230,10 @@ public class Shooter extends Subsystem {
             robotState.isBeamBreakTriggered = isBeamBreakTriggered();
             feederOutputsChanged = true;
         }
+
+        double angleToApply = robotState.pivotBaseAngle - (pivotMotor.getSensorPosition(0) * 3);
+        robotState.pivotArm.setAngle(Rotation2d.fromDegrees(angleToApply));
+        SmartDashboard.putData("Mech2d", robotState.mechCanvas);
 
         if (Constants.kLoggingRobot) {
             ((DoubleLogEntry) desStatesLogger).append(desiredPivotPosition);
@@ -243,6 +268,9 @@ public class Shooter extends Subsystem {
                 case SHOOT_AMP -> {
                     desiredRollerVelocity = rollerAmpShootSpeed;
                 }
+                case SHOOT_DISTANCE -> {
+                    desiredRollerVelocity = desiredRollerState.velocity;
+                }
             }
             rollerMotor.set(GreenControlMode.VELOCITY_CONTROL, desiredRollerVelocity);
             desiredRollerVelocityLogger.append(desiredRollerVelocity);
@@ -274,10 +302,13 @@ public class Shooter extends Subsystem {
             pivotOutputsChanged = false;
             switch (desiredPivotState) {
                 case STOW -> {
-                    desiredPivotPosition = 1.5; //TODO yaml
+                    desiredPivotPosition = pivotNeutralPosition;
                 }
                 case SHOOT_AMP -> {
                     desiredPivotPosition = pivotAmpShootPosition;
+                }
+                case SHOOT_DISTANCE -> {
+                    desiredPivotPosition = pivotDistanceShootPosition; //Lil bit over because of possibility for overshoot
                 }
             }
             pivotMotor.set(GreenControlMode.MOTION_MAGIC_EXPO, desiredPivotPosition);
@@ -347,7 +378,9 @@ public class Shooter extends Subsystem {
     public enum ROLLER_STATE {
         STOP(0),
         SHOOT_SPEAKER(rollerSpeakerShootSpeed),
+        SHOOT_DISTANCE(68),
         SHOOT_AMP(rollerAmpShootSpeed);
+
 
         final double velocity;
 
@@ -374,6 +407,7 @@ public class Shooter extends Subsystem {
      */
     public enum PIVOT_STATE {
         STOW,
-        SHOOT_AMP
+        SHOOT_AMP,
+        SHOOT_DISTANCE
     }
 }

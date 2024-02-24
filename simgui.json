@@ -85,6 +85,7 @@
       "/SmartDashboard/First collected note": "String Chooser",
       "/SmartDashboard/First shooting position": "String Chooser",
       "/SmartDashboard/Mech 2D": "Mechanism2d",
+      "/SmartDashboard/Mech2d": "Mechanism2d",
       "/SmartDashboard/Playlist": "String Chooser",
       "/SmartDashboard/Robot color": "String Chooser",
       "/SmartDashboard/Scram Or Not": "String Chooser",
@@ -93,6 +94,7 @@
       "/SmartDashboard/SendableChooser[0]": "String Chooser",
       "/SmartDashboard/SendableChooser[2]": "String Chooser",
       "/SmartDashboard/Starting Position": "String Chooser",
+      "/SmartDashboard/Third collected note": "String Chooser",
       "/SmartDashboard/Turret Sim": "Mechanism2d",
       "/SmartDashboard/VisionSystemSim-SimVision/Sim Field": "Field2d",
       "/SmartDashboard/VisionSystemSim-photonvision/Sim Field": "Field2d"
@@ -187,6 +189,11 @@
           "visible": true
         }
       },
+      "/SmartDashboard/Mech2d": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Robot color": {
         "window": {
           "visible": true
@@ -203,6 +210,11 @@
         }
       },
       "/SmartDashboard/Second shooting position": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Third collected note": {
         "window": {
           "visible": true
         }
@@ -259,6 +271,9 @@
       "open": true
     },
     "Server": {
+      "Subscribers": {
+        "open": true
+      },
       "open": true
     },
     "visible": true

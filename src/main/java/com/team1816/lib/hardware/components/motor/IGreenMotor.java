@@ -6,9 +6,6 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.team1816.lib.hardware.components.motor.configurations.*;
 
 public interface IGreenMotor {
-    //TODO Annotate
-    //TODO sort child class methods
-
     //Some getter methods add an underscore after get to avoid conflicts in LazyMotor classes
 
     /** Static Motor Information */

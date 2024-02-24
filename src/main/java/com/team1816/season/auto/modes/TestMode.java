@@ -6,6 +6,8 @@ import com.team1816.lib.auto.actions.SeriesAction;
 import com.team1816.lib.auto.actions.TrajectoryAction;
 import com.team1816.lib.auto.actions.WaitAction;
 import com.team1816.lib.auto.modes.AutoMode;
+import com.team1816.season.auto.actions.ShootAction;
+import com.team1816.season.auto.actions.ShootAmpAction;
 import com.team1816.season.auto.paths.scram.AmpToScramPath;
 import com.team1816.season.auto.paths.scram.BottomSpeakerToScramPath;
 import com.team1816.season.auto.paths.scram.MiddleSpeakerToScramPath;
@@ -18,6 +20,7 @@ import com.team1816.season.auto.paths.toNoteTwo.AmpToNoteTwoPath;
 import com.team1816.season.auto.paths.toNoteTwo.AmpToNoteTwoTopPath;
 import com.team1816.season.auto.paths.toNoteTwo.MiddleSpeakerToNoteTwoPath;
 import com.team1816.season.auto.paths.toNoteTwo.TopSpeakerToNoteTwoTopPath;
+import com.team1816.season.subsystems.Shooter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import org.checkerframework.common.subtyping.qual.Bottom;
 
@@ -36,7 +39,7 @@ public class TestMode extends AutoMode {
     protected void routine() throws AutoModeEndedException {
         runAction(
                 new SeriesAction(
-                        trajectoryActions.get(0)
+                        new ShootAction(Shooter.PIVOT_STATE.SHOOT_AMP)
                 )
         );
     }

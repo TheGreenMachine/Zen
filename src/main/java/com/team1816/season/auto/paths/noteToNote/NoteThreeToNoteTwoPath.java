@@ -1,7 +1,6 @@
-package com.team1816.season.auto.paths.toNoteOne;
+package com.team1816.season.auto.paths.noteToNote;
 
 import com.team1816.lib.auto.Color;
-import com.team1816.lib.auto.paths.AutoPath;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.season.auto.AutoModeManager;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -9,23 +8,25 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 import java.util.List;
 
-public class MiddleSpeakerToNoteOnePath extends DynamicAutoPath {
+public class NoteThreeToNoteTwoPath extends DynamicAutoPath {
 
-    private static AutoModeManager.Position startingPos = AutoModeManager.Position.MIDDLE_SPEAKER;
-    private static AutoModeManager.Position endingPos = AutoModeManager.Position.TOP_NOTE;
+    private static AutoModeManager.Position startingPos = AutoModeManager.Position.BOTTOM_NOTE;
+    private static AutoModeManager.Position endingPos = AutoModeManager.Position.MIDDLE_NOTE;
 
-    public MiddleSpeakerToNoteOnePath(){
+    public NoteThreeToNoteTwoPath(){
         super(startingPos, endingPos);
     }
-    public MiddleSpeakerToNoteOnePath(Color color){
+
+    public NoteThreeToNoteTwoPath(Color color){
         super(color, startingPos, endingPos);
     }
+
 
     @Override
     protected List<Pose2d> getWaypoints() {
         return updateWaypoints(List.of(
-                new Pose2d(1.4, 5.55, Rotation2d.fromDegrees(68)),
-                new Pose2d(2.7, 7, Rotation2d.fromDegrees(28.5))
+                new Pose2d(2.57, 4.13, Rotation2d.fromDegrees(-140)),
+                new Pose2d(2.57, 5.58, Rotation2d.fromDegrees(-45))
         ));
     }
 
@@ -33,7 +34,7 @@ public class MiddleSpeakerToNoteOnePath extends DynamicAutoPath {
     protected List<Rotation2d> getWaypointHeadings() {
         return updateHeadings(List.of(
                 Rotation2d.fromDegrees(0),
-                Rotation2d.fromDegrees(10)
+                Rotation2d.fromDegrees(0)
         ));
     }
 
@@ -43,7 +44,7 @@ public class MiddleSpeakerToNoteOnePath extends DynamicAutoPath {
     }
 
     public DynamicAutoPath getInstance() {
-        return new MiddleSpeakerToNoteOnePath();
+        return new NoteThreeToNoteTwoPath();
     }
 
 }
