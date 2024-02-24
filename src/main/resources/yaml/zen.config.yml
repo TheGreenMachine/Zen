@@ -208,7 +208,7 @@ subsystems:
             velocityErrorMargin: 0.1
             pivotNeutralPosition: 1.5
             pivotAmpShootPosition: 33
-            pivotDistanceShootPosition: 8.625
+            pivotDistanceShootPosition: 8.7
             invertFollowerMotor: 1
 infrastructure:
     canBusName: highSpeed
