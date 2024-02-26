@@ -243,6 +243,7 @@ public class InputHandlerBridge {
                             case "up" -> buttonBoardInfo.buttons.put(value, Button.UP);
                             case "upRight" -> buttonBoardInfo.buttons.put(value, Button.UP_RIGHT);
                             case "left" -> buttonBoardInfo.buttons.put(value, Button.LEFT);
+                            case "center" -> buttonBoardInfo.buttons.put(value, Button.CENTER);
                             case "right" -> buttonBoardInfo.buttons.put(value, Button.RIGHT);
                             case "downLeft" -> buttonBoardInfo.buttons.put(value, Button.DOWN_LEFT);
                             case "down" -> buttonBoardInfo.buttons.put(value, Button.DOWN);

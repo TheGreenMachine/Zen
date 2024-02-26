@@ -32,5 +32,6 @@ operator:
         rightBumper: climbFast
     buttonpad:
         y: stopShooter
-        b: reSpool
+buttonboard:
+    center: reSpool
 demoMode: false
