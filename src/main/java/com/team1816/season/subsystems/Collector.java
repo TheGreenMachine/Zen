@@ -10,6 +10,7 @@ import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 @Singleton
 public class Collector extends Subsystem {
@@ -58,6 +59,8 @@ public class Collector extends Subsystem {
         intakeSpeed = factory.getConstant(NAME, "intakeSpeed", -0.5);
         outtakeSpeed = factory.getConstant(NAME, "outtakeSpeed", 0.25);
 
+        SmartDashboard.putBoolean("Collector", intakeMotor.getMotorTemperature() < 55);
+
         if (Constants.kLoggingRobot) {
             desStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Collector/desiredIntakeVelocity");
             actStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Collector/actualIntakeVelocity");
@@ -89,6 +92,9 @@ public class Collector extends Subsystem {
             robotState.actualCollectorState = desiredState;
         }
 
+        if (intakeMotor.getMotorTemperature() >= 55) {
+            SmartDashboard.putBoolean("Collector", false);
+        }
         if (Constants.kLoggingRobot) {
             ((DoubleLogEntry) actStatesLogger).append(actualIntakePower);
             ((DoubleLogEntry) desStatesLogger).append(desiredIntakePower);
