@@ -132,6 +132,7 @@ subsystems:
             driveDeadband: 0.1
             rotationalDeadband: 0.1
             inputDeadband: 0.15 # Deadband of the normalized input
+            snapDivisor: 30
     camera:
         implemented: false
         constants:

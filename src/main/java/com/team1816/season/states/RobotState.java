@@ -16,7 +16,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.*;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,16 +69,20 @@ public class RobotState {
      * Snapping Mode
      */
     public enum SnappingDirection {
-        FRONT(0),
-        BACK(180),
-        LEFT(90),
-        RIGHT(-90),
+        PICKUP(-57),
+        SCORE(0),
+        BOTTOM_SPEAKER(-30),
+        TOP_SPEAKER(30),
         NO_SNAP(-360); // Some magic value.
 
         public double value;
 
         SnappingDirection(double value) {
             this.value = value;
+        }
+
+        public double getValue(Color color) {
+            return color == Color.BLUE ? value : value * -1;
         }
     }
 
@@ -176,6 +179,8 @@ public class RobotState {
         actualFeederState = Shooter.FEEDER_STATE.STOP;
         actualRollerState = Shooter.ROLLER_STATE.STOP;
         actualClimberState = Climber.CLIMBER_STATE.STOP;
+
+        snapDirection = SnappingDirection.NO_SNAP;
 
         isPoseUpdated = true;
         superlativeTarget = new VisionPoint();

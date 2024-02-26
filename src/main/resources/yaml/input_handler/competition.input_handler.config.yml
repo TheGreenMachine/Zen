@@ -20,10 +20,10 @@ driver:
         back: hardZeroPose
         leftBumper: shoot
     dpad:
-        up: snapFromDriver
-        down: snapToDriver
-        left: snapLeft
-        right: snapRight
+        up: snapToPickup
+        down: snapToScore
+        left: snapToBottomSpeaker
+        right: snapToTopSpeaker
 operator:
     controllerType: Xbox
     rumble: false

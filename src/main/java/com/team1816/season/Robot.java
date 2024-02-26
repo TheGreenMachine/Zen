@@ -6,8 +6,6 @@ import com.team1816.lib.Infrastructure;
 import com.team1816.lib.Injector;
 import com.team1816.lib.PlaylistManager;
 import com.team1816.lib.auto.Color;
-import com.team1816.lib.auto.DynamicAutoUtil;
-import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.lib.hardware.factory.RobotFactory;
 import com.team1816.lib.input_handler.*;
 import com.team1816.lib.input_handler.controlOptions.ActionState;
@@ -25,19 +23,15 @@ import com.team1816.season.states.RobotState;
 import com.team1816.season.subsystems.Climber;
 import com.team1816.season.subsystems.Shooter;
 import com.team1816.season.subsystems.Collector;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.apache.commons.math3.util.Pair;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import static com.team1816.season.auto.AutoModeManager.Position;
 
 public class Robot extends TimedRobot {
 
@@ -252,7 +246,7 @@ public class Robot extends TimedRobot {
             );
 
             inputHandler.listenAction(
-                    "hardZeroPose",
+                    "hardZeroPose", //FIXME this sometimes does weird rotation in sim, idk about in real life
                     ActionState.PRESSED,
                     () ->
                             drive.zeroSensors(
@@ -280,30 +274,30 @@ public class Robot extends TimedRobot {
 
 
             inputHandler.listenActionPressAndRelease(
-                    "snapFromDriver",
+                    "snapToPickup",
                     (pressed) -> {
-                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.FRONT : RobotState.SnappingDirection.NO_SNAP;
+                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.PICKUP : RobotState.SnappingDirection.NO_SNAP;
                     }
             );
 
             inputHandler.listenActionPressAndRelease(
-                    "snapToDriver",
+                    "snapToScore",
                     (pressed) -> {
-                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.BACK : RobotState.SnappingDirection.NO_SNAP;
+                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.SCORE : RobotState.SnappingDirection.NO_SNAP;
                     }
             );
 
             inputHandler.listenActionPressAndRelease(
-                    "snapLeft",
+                    "snapToBottomSpeaker",
                     (pressed) -> {
-                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.LEFT : RobotState.SnappingDirection.NO_SNAP;
+                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.BOTTOM_SPEAKER : RobotState.SnappingDirection.NO_SNAP;
                     }
             );
 
             inputHandler.listenActionPressAndRelease(
-                    "snapRight",
+                    "snapToTopSpeaker",
                     (pressed) -> {
-                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.RIGHT : RobotState.SnappingDirection.NO_SNAP;
+                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.TOP_SPEAKER : RobotState.SnappingDirection.NO_SNAP;
                     }
             );
 

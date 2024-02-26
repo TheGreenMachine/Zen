@@ -105,6 +105,8 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
     private final double rotationalDeadband = factory.getConstant(NAME, "rotationalDeadband", 0.1) * Math.PI;
     private final double inputDeadband = factory.getConstant(NAME, "inputDeadband", 0.15);
 
+    private final double snapDivisor = factory.getConstant(NAME, "snapDivisor", 40d);
+
     /**
      * Logging
      */
@@ -236,13 +238,14 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
             inputScale = 0;
         }
 
+
         if (robotState.snapDirection != RobotState.SnappingDirection.NO_SNAP) {
             rotation =
                     MathUtil.inputModulus(
-                            (robotState.snapDirection.value - pigeon.getYawValue()),
+                            (robotState.snapDirection.getValue(robotState.allianceColor) - pigeon.getYawValue()),
                             robotState.allianceColor == Color.BLUE ? -180 : 180,
                             robotState.allianceColor == Color.BLUE ?  180 : -180
-                    ) / 40.0d;
+                    ) / snapDivisor;
         }
 
         if (isBraking) {
@@ -371,6 +374,7 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
     @Override
     public void resetOdometry(Pose2d pose) {
         train.seedFieldRelative(pose);
+        pigeon.set_Yaw(robotState.allianceColor == Color.BLUE ? 0 : 180);
         updateRobotState();
     }
 
