@@ -39,8 +39,8 @@ public class Collector extends Subsystem {
      * States
      */
     private COLLECTOR_STATE desiredState = COLLECTOR_STATE.STOP;
-    private double actualIntakeVelocity = 0;
-    private double desiredIntakeVelocity = 0;
+    private double actualIntakePower = 0;
+    private double desiredIntakePower = 0;
     private double intakeCurrentDraw = 0;
     private boolean outputsChanged = false;
 
@@ -82,7 +82,7 @@ public class Collector extends Subsystem {
      */
     @Override
     public void readFromHardware() {
-        actualIntakeVelocity = intakeMotor.getSensorVelocity(0);
+        actualIntakePower = intakeMotor.getMotorOutputPercent();
         intakeCurrentDraw = intakeMotor.getMotorOutputCurrent();
 
         if (robotState.actualCollectorState != desiredState) {
@@ -90,8 +90,8 @@ public class Collector extends Subsystem {
         }
 
         if (Constants.kLoggingRobot) {
-            ((DoubleLogEntry) actStatesLogger).append(actualIntakeVelocity);
-            ((DoubleLogEntry) desStatesLogger).append(desiredIntakeVelocity);
+            ((DoubleLogEntry) actStatesLogger).append(actualIntakePower);
+            ((DoubleLogEntry) desStatesLogger).append(desiredIntakePower);
             intakeCurrentDrawLogger.append(intakeCurrentDraw);
         }
     }
@@ -107,16 +107,16 @@ public class Collector extends Subsystem {
             outputsChanged = false;
             switch (desiredState) {
                 case STOP -> {
-                    desiredIntakeVelocity = 0;
+                    desiredIntakePower = 0;
                 }
                 case INTAKE -> {
-                    desiredIntakeVelocity = intakeSpeed;
+                    desiredIntakePower = intakeSpeed;
                 }
                 case OUTTAKE -> {
-                    desiredIntakeVelocity = outtakeSpeed;
+                    desiredIntakePower = outtakeSpeed;
                 }
             }
-            intakeMotor.set(GreenControlMode.PERCENT_OUTPUT, desiredIntakeVelocity);
+            intakeMotor.set(GreenControlMode.PERCENT_OUTPUT, desiredIntakePower);
         }
     }
 
@@ -156,7 +156,7 @@ public class Collector extends Subsystem {
      * @return intake velocity
      */
     public double getIntakeVelocity() {
-        return actualIntakeVelocity;
+        return actualIntakePower;
     }
 
     /**

@@ -120,8 +120,6 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
     private StructArrayLogEntry<SwerveModuleState> desiredModuleStructLogger;
     private StructArrayLogEntry<SwerveModuleState> actualModuleStructLogger;
 
-//    SimpleWidget[] moduleTempWidgets;
-//    GenericEntry[] moduleTempEntries;
 
 
     @Inject
@@ -172,9 +170,7 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
             motors[i * 2] = train.getModule(i).getDriveMotor();
             motors[i * 2 + 1] = train.getModule(i).getSteerMotor();
 
-//            moduleTempWidgets[i] = Constants.kCamWindow.add(toModuleName(i), true);
-//            moduleTempWidgets[i].withProperties(Map.of("colorWhenFalse", "RED", "colorWhenTrue", "GREEN"));
-//            moduleTempEntries[i] = moduleTempWidgets[i].getEntry();
+            SmartDashboard.putBoolean(toModuleName(i), true);
         }
 
         swerveKinematics = new SwerveDriveKinematics(moduleLocations);
@@ -331,12 +327,12 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
             chassisSpeed = swerveKinematics.toChassisSpeeds(train.getState().ModuleStates);
         }
 
-//        for (int i = 0; i < 4; i++) {
-//            motorTemperatures.get(i).refresh();
-//            if (motorTemperatures.get(i).getValueAsDouble() > 55) { //TODO YAML
-//
-//            }
-//        }
+        for (int i = 0; i < 4; i++) {
+            motorTemperatures.get(i).refresh();
+            if (motorTemperatures.get(i).getValueAsDouble() > 55) { //TODO YAML
+                SmartDashboard.putBoolean(toModuleName(i), false);
+            }
+        }
 
 
         updateRobotState();

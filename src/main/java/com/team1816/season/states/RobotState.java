@@ -257,6 +257,10 @@ public class RobotState {
      */
     public synchronized void outputToSmartDashboard() {
         field.setRobotPose(fieldToVehicle);
+
+        SmartDashboard.putData("Mech2d", mechCanvas);
+        SmartDashboard.putBoolean("BeamBreak", isBeamBreakTriggered);
+
         if (RobotBase.isSimulation()) {
             // TODO: Display any stats here
 

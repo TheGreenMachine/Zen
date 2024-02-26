@@ -13,6 +13,7 @@ import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -96,6 +97,8 @@ public class Shooter extends Subsystem {
     private DoubleLogEntry desiredRollerVelocityLogger;
     private DoubleLogEntry desiredFeederVelocityLogger;
 
+    private BooleanLogEntry beamBreakLogger;
+
 
     /**
      * Base constructor needed to instantiate a shooter
@@ -137,6 +140,8 @@ public class Shooter extends Subsystem {
 
             desiredRollerVelocityLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Roller/desiredRollerVelocity");
             desiredFeederVelocityLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Feeder/desiredFeederVelocity");
+
+            beamBreakLogger = new BooleanLogEntry(DataLogManager.getLog(), "Shooter/Feeder/beamBreakTriggered");
         }
     }
 
@@ -236,7 +241,6 @@ public class Shooter extends Subsystem {
 
         double angleToApply = robotState.pivotBaseAngle - (pivotMotor.getSensorPosition(0) * degreesPerMotorRotations);
         robotState.pivotArm.setAngle(Rotation2d.fromDegrees(angleToApply));
-        SmartDashboard.putData("Mech2d", robotState.mechCanvas);
 
         if (Constants.kLoggingRobot) {
             ((DoubleLogEntry) desStatesLogger).append(desiredPivotPosition);
@@ -249,7 +253,7 @@ public class Shooter extends Subsystem {
             feederCurrentDrawLogger.append(feederCurrentDraw);
             pivotCurrentDrawLogger.append(pivotCurrentDraw);
 
-            GreenLogger.appendQuickLog("beamBreakTriggered", isBeamBreakTriggered());
+            beamBreakLogger.append(isBeamBreakTriggered());
         }
     }
 
