@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.team1816.lib.Injector;
 import com.team1816.lib.PlaylistManager;
+import com.team1816.lib.input_handler.InputHandler;
 import com.team1816.lib.subsystems.LedManager;
 import com.team1816.lib.subsystems.drive.Drive;
 import com.team1816.lib.subsystems.vision.Camera;
@@ -42,10 +43,12 @@ public class Orchestrator {
     private static LedManager ledManager;
     private static Collector collector;
     private static Shooter shooter;
+    private static InputHandler inputHandler;
 
     /**
      * Properties
      */
+    private static boolean rumbleStopped;
 
     // Place threads here.
     // e.g. private Thread [ThreadName]Thread;
@@ -75,6 +78,7 @@ public class Orchestrator {
         ledManager = led;
         collector = Injector.get(Collector.class);
         shooter = Injector.get(Shooter.class);
+        inputHandler = Injector.get(InputHandler.class);
     }
 
     /**
@@ -212,6 +216,18 @@ public class Orchestrator {
                 collector.setDesiredState(Collector.COLLECTOR_STATE.OUTTAKE);
                 shooter.setDesiredFeederState(Shooter.FEEDER_STATE.STOP);
             }
+        }
+    }
+
+    //Just a wrapper to keep paradigm
+    public void setControllerRumble(InputHandler.ControllerRole controller, InputHandler.RumbleDirection rumbleDirection, double rumbleLevel) {
+        rumbleStopped = rumbleLevel == 0;
+        inputHandler.setRumble(controller, rumbleDirection, rumbleLevel);
+    }
+
+    public void stopRumble(InputHandler.ControllerRole controller) {
+        if (!rumbleStopped) {
+            setControllerRumble(controller, InputHandler.RumbleDirection.UNIFORM, 0);
         }
     }
 

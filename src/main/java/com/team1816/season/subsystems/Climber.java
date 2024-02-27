@@ -3,14 +3,20 @@ package com.team1816.season.subsystems;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.team1816.lib.Infrastructure;
+import com.team1816.lib.Injector;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
+import com.team1816.lib.input_handler.InputHandler;
 import com.team1816.lib.subsystems.Subsystem;
 import com.team1816.season.configuration.Constants;
+import com.team1816.season.states.Orchestrator;
 import com.team1816.season.states.RobotState;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+
+import javax.xml.crypto.Data;
 
 @Singleton
 public class Climber extends Subsystem {
@@ -20,30 +26,35 @@ public class Climber extends Subsystem {
      */
     private static final String NAME = "climber";
 
+
     /**
      * Components
      */
     private final IGreenMotor climbMotor;
-
+    private final Orchestrator orchestrator;
     /**
      * Properties
      */
     public final double slowClimbPower;
     public final double fastClimbPower;
     public final double reSpoolPower;
+    public final double climbPosition;
+    public final double climbThreshold;
 
     /**
      * Logging
      */
     private DoubleLogEntry climberCurrentDrawLogger;
+    private StringLogEntry controlModeLogger;
 
     /**
      * States
      */
     private Climber.CLIMBER_STATE desiredState = Climber.CLIMBER_STATE.STOP;
-    private double actualClimberVelocity = 0;
-    private double desiredClimberPower = 0;
+    private double actualClimberOutput = 0;
+    private double desiredClimberOutput = 0;
     private double climberCurrentDraw = 0;
+    private GreenControlMode desiredControlMode = GreenControlMode.PERCENT_OUTPUT;
     private boolean outputsChanged = false;
 
     /**
@@ -55,16 +66,21 @@ public class Climber extends Subsystem {
     @Inject
     public Climber(Infrastructure inf, RobotState rs) {
         super(NAME, inf, rs);
+        orchestrator = Injector.get(Orchestrator.class);
         climbMotor = factory.getMotor(NAME, "climbMotor");
 
         slowClimbPower = factory.getConstant(NAME, "slowClimbPower", 0.3);
         fastClimbPower = factory.getConstant(NAME, "fastClimbPower", 0.8);
         reSpoolPower = factory.getConstant(NAME, "reSpoolPower", -0.5);
+        climbPosition = factory.getConstant(NAME, "climbPosition", 20);
+        climbThreshold = factory.getConstant(NAME, "climbThreshold", 15);
+
 
         if (Constants.kLoggingRobot) {
             desStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Climber/desiredClimberVelocity");
             actStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Climber/actualClimberVelocity");
             climberCurrentDrawLogger = new DoubleLogEntry(DataLogManager.getLog(), "Climber/climberCurrentDraw");
+            controlModeLogger = new StringLogEntry(DataLogManager.getLog(), "Climber/controlMode");
         }
     }
 
@@ -85,17 +101,30 @@ public class Climber extends Subsystem {
      */
     @Override
     public void readFromHardware() {
-        actualClimberVelocity = climbMotor.getSensorVelocity(0);
+        actualClimberOutput = desiredControlMode == GreenControlMode.PERCENT_OUTPUT ? climbMotor.getMotorOutputPercent() : climbMotor.getSensorPosition(0);
         climberCurrentDraw = climbMotor.getMotorOutputCurrent();
 
         if (robotState.actualClimberState != desiredState) {
             robotState.actualClimberState = desiredState;
         }
 
+        if (desiredState == CLIMBER_STATE.PRECISE_TOP) {
+            if (actualClimberOutput >= climbThreshold) {
+                setDesiredState(CLIMBER_STATE.STOP);
+                orchestrator.setControllerRumble(InputHandler.ControllerRole.OPERATOR, InputHandler.RumbleDirection.UNIFORM, 0.75);
+            } else {
+                orchestrator.setControllerRumble(InputHandler.ControllerRole.OPERATOR, InputHandler.RumbleDirection.UNIFORM, 0.2);
+            }
+        } else {
+            orchestrator.stopRumble(InputHandler.ControllerRole.OPERATOR);
+        }
+
+
         if (Constants.kLoggingRobot) {
-            ((DoubleLogEntry) actStatesLogger).append(actualClimberVelocity);
-            ((DoubleLogEntry) desStatesLogger).append(desiredClimberPower);
+            ((DoubleLogEntry) actStatesLogger).append(actualClimberOutput);
+            ((DoubleLogEntry) desStatesLogger).append(desiredClimberOutput);
             climberCurrentDrawLogger.append(climberCurrentDraw);
+            controlModeLogger.append(desiredControlMode.name());
         }
     }
 
@@ -108,27 +137,31 @@ public class Climber extends Subsystem {
     public void writeToHardware() {
         if (outputsChanged) {
             outputsChanged = false;
+            desiredControlMode = desiredState == CLIMBER_STATE.PRECISE_TOP ? GreenControlMode.POSITION_CONTROL : GreenControlMode.PERCENT_OUTPUT;
             switch (desiredState) {
                 case STOP -> {
-                    desiredClimberPower = 0;
+                    desiredClimberOutput = 0;
                 }
                 case CLIMB_SLOW -> {
                     if (!DriverStation.isFMSAttached() || DriverStation.getMatchTime() < 20) {
-                        desiredClimberPower = slowClimbPower;
+                        desiredClimberOutput = slowClimbPower;
                     }
                 }
                 case CLIMB_FAST -> {
                     if (!DriverStation.isFMSAttached() || DriverStation.getMatchTime() < 20) {
-                        desiredClimberPower = fastClimbPower;
+                        desiredClimberOutput = fastClimbPower;
                     }
                 }
                 case RE_SPOOL -> {
                     if (!DriverStation.isFMSAttached()) {
-                        desiredClimberPower = reSpoolPower;
+                        desiredClimberOutput = reSpoolPower;
                     }
                 }
+                case PRECISE_TOP -> {
+                    desiredClimberOutput = climbPosition;
+                }
             }
-            climbMotor.set(GreenControlMode.PERCENT_OUTPUT, desiredClimberPower);
+            climbMotor.set(desiredControlMode, desiredClimberOutput);
         }
     }
 
@@ -166,7 +199,7 @@ public class Climber extends Subsystem {
      * @return climber velocity
      */
     public double getClimberVelocity() {
-        return actualClimberVelocity;
+        return actualClimberOutput;
     }
 
     /**
@@ -176,6 +209,8 @@ public class Climber extends Subsystem {
         STOP,
         CLIMB_SLOW,
         CLIMB_FAST,
-        RE_SPOOL
+        RE_SPOOL,
+
+        PRECISE_TOP
     }
 }

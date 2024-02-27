@@ -26,11 +26,12 @@ driver:
         right: snapToTopSpeaker
 operator:
     controllerType: Xbox
-    rumble: false
+    rumble: true
     buttons:
         leftBumper: climbSlow
         rightBumper: climbFast
     buttonpad:
+        a: climbPosition
         y: stopShooter
 buttonboard:
     center: reSpool

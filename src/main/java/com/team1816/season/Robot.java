@@ -384,6 +384,14 @@ public class Robot extends TimedRobot {
                     }
             );
 
+            inputHandler.listenAction(
+                    "climbPosition",
+                    ActionState.PRESSED,
+                    () -> {
+                        climber.setDesiredState(Climber.CLIMBER_STATE.PRECISE_TOP);
+                    }
+            );
+
             //Buttonboard commands
             inputHandler.listenActionPressAndRelease(
                     "reSpool",
