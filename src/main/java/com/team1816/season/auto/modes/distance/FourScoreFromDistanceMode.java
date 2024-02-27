@@ -32,20 +32,18 @@ public class FourScoreFromDistanceMode extends AutoMode {
     protected void routine() throws AutoModeEndedException {
         runAction(
                 new SeriesAction(
-                    paths.get(0).isAmpPath() ? new ShootAmpAction() : new ShootSpeakerAction(),
+                    paths.get(0).isArbStart() ? new ShootAndRotateDistanceAction(paths.get(0).endPosition) :
+                            paths.get(0).isAmpPath() ? new ShootAmpAction() : new ShootSpeakerAction(),
                     new ParallelAction(
                         new CollectAction(Collector.COLLECTOR_STATE.INTAKE),
                         new ShootAction(Shooter.ROLLER_STATE.SHOOT_DISTANCE, Shooter.FEEDER_STATE.TRANSFER, Shooter.PIVOT_STATE.STOW),
                         trajectoryActions.get(0)
                     ),
-                    new RotateSwerveAction(getNeededRotation(paths.get(0).endPosition)),
-                    new ShootDistanceAction(),
+                    new ShootAndRotateDistanceAction(paths.get(0).endPosition),
                     trajectoryActions.get(1),
-                    new RotateSwerveAction(getNeededRotation(paths.get(1).endPosition)),
-                    new ShootDistanceAction(),
+                    new ShootAndRotateDistanceAction(paths.get(1).endPosition),
                     trajectoryActions.get(2),
-                    new RotateSwerveAction(getNeededRotation(paths.get(2).startPosition)),
-                    new ShootDistanceAction()
+                    new ShootAndRotateDistanceAction(paths.get(2).startPosition)
                 )
         );
     }

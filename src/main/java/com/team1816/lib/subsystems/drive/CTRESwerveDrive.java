@@ -374,7 +374,6 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
     @Override
     public void resetOdometry(Pose2d pose) {
         train.seedFieldRelative(pose);
-        pigeon.set_Yaw(robotState.allianceColor == Color.BLUE ? 0 : 180);
         updateRobotState();
     }
 

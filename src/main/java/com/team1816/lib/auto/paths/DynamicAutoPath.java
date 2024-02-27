@@ -58,13 +58,21 @@ public abstract class DynamicAutoPath extends AutoPath {
 
     // 2024 season specific
     protected boolean isAmpPath = false;
+    protected boolean isArbStart = false;
 
     protected void setAmpPath(boolean isAmpPath) {
         this.isAmpPath = isAmpPath;
     }
+    protected void setArbStart(boolean isArbStart) {
+        this.isArbStart = isArbStart;
+    }
 
     public boolean isAmpPath() {
         return isAmpPath;
+    }
+
+    public boolean isArbStart() {
+        return isArbStart;
     }
 
     /**

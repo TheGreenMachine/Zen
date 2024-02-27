@@ -12,11 +12,11 @@ import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.auto.modes.*;
 import com.team1816.season.auto.modes.distance.FourScoreFromDistanceMode;
-import com.team1816.season.auto.modes.distance.ThreeScoreFromDistanceMode;
-import com.team1816.season.auto.modes.distance.TwoScoreFromDistanceMode;
 import com.team1816.season.auto.modes.eject.BottomMiddleEjects;
 import com.team1816.season.auto.modes.eject.TopMiddleEjects;
 import com.team1816.season.auto.paths.StartToAmpPath;
+import com.team1816.season.auto.paths.arbitrary.ArbitraryStartToNoteOnePath;
+import com.team1816.season.auto.paths.arbitrary.ArbitraryStartToNoteThreePath;
 import com.team1816.season.auto.paths.noteToNote.NoteOneToNoteTwoPath;
 import com.team1816.season.auto.paths.noteToNote.NoteThreeToNoteTwoPath;
 import com.team1816.season.auto.paths.toNoteOne.AmpToNoteOnePath;
@@ -158,7 +158,8 @@ public class AutoModeManager {
                 new MiddleSpeakerToNoteOnePath(), new MiddleSpeakerToNoteTwoPath(), new MiddleSpeakerToNoteThreePath(),
                 new BottomSpeakerToNoteOnePath(), new BottomSpeakerToNoteTwoPath(), new BottomSpeakerToNoteThreePath(),
                 new AmpToNoteOnePath(), new AmpToNoteTwoPath(), new AmpToNoteThreePath(), new AmpToNoteTwoTopPath(),
-                new NoteOneToNoteTwoPath(), new NoteThreeToNoteTwoPath()
+                new NoteOneToNoteTwoPath(), new NoteThreeToNoteTwoPath(),
+                new ArbitraryStartToNoteOnePath(), new ArbitraryStartToNoteThreePath()
         ));
 
         SmartDashboard.putData("Scram Or Not", scramChooser);
@@ -250,8 +251,6 @@ public class AutoModeManager {
             if (selectedAuto == DesiredAuto.TWO_SCORE
                     || selectedAuto == DesiredAuto.SCORE_AND_EXIT
                     || selectedAuto == DesiredAuto.THREE_SCORE
-                    || selectedAuto == DesiredAuto.RANGE_TWO_SCORE
-                    || selectedAuto == DesiredAuto.RANGE_THREE_SCORE
                     || selectedAuto == DesiredAuto.RANGE_FOUR_SCORE
             ) {
                 autoMode = generateDynamicAutoMode(selectedAuto, selectedColor,
@@ -353,9 +352,6 @@ public class AutoModeManager {
         TWO_SCORE,
         THREE_SCORE,
         SCORE_AND_EXIT,
-
-        RANGE_TWO_SCORE,
-        RANGE_THREE_SCORE,
         RANGE_FOUR_SCORE,
 
         BOTTOM_MIDDLE_EJECTS,
@@ -374,7 +370,8 @@ public class AutoModeManager {
         TOP_SPEAKER,
         MIDDLE_SPEAKER,
         BOTTOM_SPEAKER,
-        AMP
+        AMP,
+        ARB_START
     }
 
     public enum DesiredCollect {
@@ -389,6 +386,8 @@ public class AutoModeManager {
         MIDDLE_SPEAKER,
         BOTTOM_SPEAKER,
         AMP,
+        ARB_START_AMP,
+
         ARB_START,
 
         TOP_NOTE,
@@ -403,6 +402,7 @@ public class AutoModeManager {
             case TOP_SPEAKER -> Position.TOP_SPEAKER;
             case MIDDLE_SPEAKER -> Position.MIDDLE_SPEAKER;
             case BOTTOM_SPEAKER -> Position.BOTTOM_SPEAKER;
+            case ARB_START -> Position.ARB_START;
         };
     }
 
@@ -450,28 +450,12 @@ public class AutoModeManager {
     private AutoMode generateDynamicAutoMode(DesiredAuto mode, Color color, List<ShootPos> shootPositions, List<DesiredCollect> collectPositions) {
         boolean isScramming = desiredScram == ScramChoice.SCRAM;
 
-        if (mode == DesiredAuto.RANGE_TWO_SCORE) {
-            return new TwoScoreFromDistanceMode(
-                    generateDynamicPathListFromDistance(color, shootPositions.get(0), collectPositions),
-                    isScramming
-            );
-        }
-
-        if (mode == DesiredAuto.RANGE_THREE_SCORE) {
-            return new ThreeScoreFromDistanceMode(
-                    generateDynamicPathListFromDistance(color, shootPositions.get(0), collectPositions),
-                    isScramming
-            );
-        }
-
         if (mode == DesiredAuto.RANGE_FOUR_SCORE) {
             return new FourScoreFromDistanceMode(
                     generateFourScorePaths(color, shootPositions.get(0), collectPositions.get(0) == DesiredCollect.TOP_NOTE),
                     isScramming
             );
         }
-
-
 
         List<DynamicAutoPath> dynamicPathList = generateDynamicPathList(color, shootPositions , collectPositions);
         if (mode == DesiredAuto.TWO_SCORE) {

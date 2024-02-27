@@ -1,7 +1,6 @@
 package com.team1816.season.auto.paths;
 
 import com.team1816.lib.auto.Color;
-import com.team1816.lib.auto.paths.AutoPath;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.season.auto.AutoModeManager;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -12,11 +11,11 @@ import java.util.List;
 public class StartToAmpPath extends DynamicAutoPath {
 
     public StartToAmpPath() {
-        super(AutoModeManager.Position.ARB_START, AutoModeManager.Position.AMP);
+        super(AutoModeManager.Position.ARB_START_AMP, AutoModeManager.Position.AMP);
     }
 
     public StartToAmpPath(Color color) {
-        super(color, AutoModeManager.Position.ARB_START, AutoModeManager.Position.AMP);
+        super(color, AutoModeManager.Position.ARB_START_AMP, AutoModeManager.Position.AMP);
     }
     @Override
     protected List<Pose2d> getWaypoints() {
