@@ -19,6 +19,7 @@ driver:
         start: zeroPose
         back: hardZeroPose
         leftBumper: shoot
+        rightBumper: reSpool
     dpad:
         up: snapToPickup
         down: snapToScore

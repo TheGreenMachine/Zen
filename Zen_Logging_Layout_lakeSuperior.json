@@ -1,458 +1,679 @@
 {
-  "version": "3.0.1",
-  "layout": [
+  "hubs": [
     {
-      "type": 5,
-      "fields": [],
-      "listFields": [
-        [
-          {
-            "type": "Robot",
-            "key": "Drivetrain/Pose",
-            "sourceTypeIndex": 0,
-            "sourceType": 5
-          },
-          {
-            "type": "Trajectory",
-            "key": "NT:/SmartDashboard/Field/Trajectory",
-            "sourceTypeIndex": 0,
-            "sourceType": 5
-          }
-        ]
-      ],
-      "options": {
-        "game": "2024 Field",
-        "unitDistance": "meters",
-        "unitRotation": "degrees",
-        "origin": "right",
-        "size": 0.889,
-        "allianceBumpers": "auto",
-        "allianceOrigin": "blue",
-        "orientation": "blue left, red right"
-      },
-      "configHidden": false,
-      "title": "Odometry"
-    },
-    {
-      "type": 3,
-      "field": "messages",
-      "title": "Console"
-    },
-    {
-      "type": 6,
-      "fields": [],
-      "listFields": [
-        [],
-        [
-          {
-            "type": "Robot",
-            "key": "Drivetrain/Pose",
-            "sourceTypeIndex": 0,
-            "sourceType": 5
-          },
-          {
-            "type": "Trajectory",
-            "key": "NT:/SmartDashboard/Field/Trajectory",
-            "sourceTypeIndex": 0,
-            "sourceType": 5
-          }
-        ]
-      ],
-      "options": {
-        "field": "2024 Field",
-        "alliance": "blue",
-        "robot": "Zen",
-        "unitDistance": "meters",
-        "unitRotation": "degrees",
-        "cameraIndex": -1,
-        "fov": 50
-      },
-      "configHidden": false,
-      "title": "3D Odometry"
-    },
-    {
-      "type": 2,
-      "fields": [
-        "NT:/SmartDashboard/Git Hash"
-      ],
-      "title": "Git Hash"
-    },
-    {
-      "type": 9,
-      "fields": [
-        {
-          "key": "Drivetrain/Swerve/ActualStateStruct",
-          "sourceTypeIndex": 1,
-          "sourceType": "SwerveModuleState[]"
+      "x": -8,
+      "y": -8,
+      "width": 1936,
+      "height": 1096,
+      "state": {
+        "sidebar": {
+          "width": 300,
+          "expanded": [
+            "/Drivetrain/Swerve",
+            "/Drivetrain/Pose",
+            "/GreenLogs",
+            "/GreenLogs/TrajectoryDesPose",
+            "/Shooter/Roller",
+            "/NT",
+            "/NT/CameraPublisher/Arducam_OV9281_USB_Camera-processed",
+            "/NT/CameraPublisher/Arducam_OV9281_USB_Camera-processed/modes",
+            "/NT/CameraPublisher/Arducam_OV9281_USB_Camera-processed/streams",
+            "/NT/LiveWindow",
+            "/NT/Shuffleboard",
+            "/NT/Shuffleboard/.metadata",
+            "/NT/Shuffleboard/.recording",
+            "/NT/SmartDashboard",
+            "/NT/SmartDashboard/Mech2d",
+            "/NTConnection",
+            "/Drivetrain"
+          ]
         },
-        {
-          "key": "Drivetrain/Swerve/DesiredStateStruct",
-          "sourceTypeIndex": 1,
-          "sourceType": "SwerveModuleState[]"
-        },
-        {
-          "key": "Drivetrain/Pose/2",
-          "sourceTypeIndex": 0,
-          "sourceType": 2
+        "tabs": {
+          "selected": 17,
+          "tabs": [
+            {
+              "type": 0,
+              "path": "../docs/INDEX.md"
+            },
+            {
+              "type": 3,
+              "field": "messages",
+              "title": "Console"
+            },
+            {
+              "type": 5,
+              "uuid": "x4swhsks7s7q9zfa26tzirbnz15pdasx",
+              "fields": [],
+              "listFields": [
+                [
+                  {
+                    "type": "Robot",
+                    "key": "Drivetrain/Pose",
+                    "sourceTypeIndex": 0,
+                    "sourceType": 5
+                  }
+                ]
+              ],
+              "options": {
+                "game": "2024 Field",
+                "unitDistance": "meters",
+                "unitRotation": "degrees",
+                "origin": "right",
+                "size": 0.889,
+                "allianceBumpers": "auto",
+                "allianceOrigin": "blue",
+                "orientation": "blue left, red right"
+              },
+              "configHidden": false,
+              "visualizer": null,
+              "title": "Odometry"
+            },
+            {
+              "type": 6,
+              "uuid": "m3am0oevj1v6vgltwctpt5k54w8d28ft",
+              "fields": [],
+              "listFields": [
+                [],
+                [
+                  {
+                    "type": "Robot",
+                    "key": "Drivetrain/Pose",
+                    "sourceTypeIndex": 0,
+                    "sourceType": 5
+                  },
+                  {
+                    "type": "Trajectory",
+                    "key": "NT:/SmartDashboard/Field/Trajectory",
+                    "sourceTypeIndex": 0,
+                    "sourceType": 5
+                  }
+                ]
+              ],
+              "options": {
+                "field": "2024 Field",
+                "alliance": "blue",
+                "robot": "Zen",
+                "unitDistance": "meters",
+                "unitRotation": "degrees"
+              },
+              "configHidden": false,
+              "visualizer": {
+                "cameraIndex": -1,
+                "orbitFov": 50,
+                "cameraPosition": [
+                  -9.085676329178565,
+                  5.036645649119814,
+                  1.0950997936323528
+                ],
+                "cameraTarget": [
+                  0,
+                  0.5,
+                  0
+                ]
+              },
+              "title": "3D Field"
+            },
+            {
+              "type": 9,
+              "uuid": "k61fvho2dir2y1cgbmddy78a14q4rhnt",
+              "fields": [
+                {
+                  "key": "Drivetrain/Swerve/ActualStateStruct",
+                  "sourceTypeIndex": 1,
+                  "sourceType": "SwerveModuleState[]"
+                },
+                {
+                  "key": "Drivetrain/Swerve/DesiredStateStruct",
+                  "sourceTypeIndex": 1,
+                  "sourceType": "SwerveModuleState[]"
+                },
+                {
+                  "key": "Drivetrain/Pose/2",
+                  "sourceTypeIndex": 0,
+                  "sourceType": 2
+                }
+              ],
+              "listFields": [],
+              "options": {
+                "maxSpeed": 4.5,
+                "rotationUnits": "radians",
+                "arrangement": "0,1,2,3",
+                "sizeLeftRight": 0.65,
+                "sizeFrontBack": 0.65,
+                "forwardDirection": "up"
+              },
+              "configHidden": false,
+              "visualizer": null,
+              "title": "Swerve"
+            },
+            {
+              "type": 10,
+              "uuid": "kwx0q8kvvoms472kfl2ubr87zwozsxa7",
+              "fields": [
+                {
+                  "key": "NT:/SmartDashboard/Mech2d",
+                  "sourceTypeIndex": 0,
+                  "sourceType": "Mechanism2d"
+                },
+                null,
+                null
+              ],
+              "listFields": [],
+              "options": {},
+              "configHidden": false,
+              "visualizer": null,
+              "title": "Pivot Mech2d"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "Shooter/Pivot/actualPivotPosition",
+                      "color": "#2b66a2",
+                      "show": true
+                    },
+                    {
+                      "key": "Shooter/Pivot/desiredPivotPosition",
+                      "color": "#e5b31b",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": []
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "Shooter/Pivot/pivotMotorCurrentDraw",
+                      "color": "#af2437",
+                      "show": true
+                    }
+                  ]
+                }
+              },
+              "title": "Pivot"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "Shooter/Roller/actualRollerVelocity",
+                      "color": "#2b66a2",
+                      "show": true
+                    },
+                    {
+                      "key": "Shooter/Roller/desiredRollerVelocity",
+                      "color": "#e5b31b",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": []
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "Shooter/Roller/rollerMotorCurrentDraw",
+                      "color": "#af2437",
+                      "show": true
+                    }
+                  ]
+                }
+              },
+              "title": "Roller"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "Shooter/Feeder/actualFeederVelocity",
+                      "color": "#2b66a2",
+                      "show": true
+                    },
+                    {
+                      "key": "Shooter/Feeder/desiredFeederVelocity",
+                      "color": "#e5b31b",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": [
+                    {
+                      "key": "Shooter/Feeder/beamBreakTriggered",
+                      "color": "#af2437",
+                      "show": true
+                    }
+                  ]
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "Shooter/Feeder/feederMotorCurrentDraw",
+                      "color": "#80588e",
+                      "show": true
+                    }
+                  ]
+                }
+              },
+              "title": "Feeder"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "Collector/actualIntakePower",
+                      "color": "#2b66a2",
+                      "show": true
+                    },
+                    {
+                      "key": "Collector/desiredIntakePower",
+                      "color": "#e5b31b",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": []
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "Collector/intakeCurrentDraw",
+                      "color": "#af2437",
+                      "show": true
+                    }
+                  ]
+                }
+              },
+              "title": "Collector"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "Climber/actualClimberOutput",
+                      "color": "#2b66a2",
+                      "show": true
+                    },
+                    {
+                      "key": "Climber/desiredClimberOutput",
+                      "color": "#e5b31b",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": [
+                    {
+                      "key": "Climber/controlMode",
+                      "color": "#80588e",
+                      "show": true
+                    }
+                  ]
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "Climber/climberCurrentDraw",
+                      "color": "#af2437",
+                      "show": true
+                    }
+                  ]
+                }
+              },
+              "title": "Climber"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "Drivetrain/DesiredTrajectoryPose/0",
+                      "color": "#2b66a2",
+                      "show": true
+                    },
+                    {
+                      "key": "Drivetrain/DesiredTrajectoryPose/1",
+                      "color": "#e5b31b",
+                      "show": true
+                    },
+                    {
+                      "key": "Drivetrain/DesiredTrajectoryPose/2",
+                      "color": "#af2437",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": []
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "Drivetrain/Pose/0",
+                      "color": "#80588e",
+                      "show": true
+                    },
+                    {
+                      "key": "Drivetrain/Pose/1",
+                      "color": "#e48b32",
+                      "show": true
+                    },
+                    {
+                      "key": "Drivetrain/Pose/2",
+                      "color": "#aacaee",
+                      "show": true
+                    }
+                  ]
+                }
+              },
+              "title": "Auto Pose"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "Drivetrain/ChassisSpeeds/0",
+                      "color": "#2b66a2",
+                      "show": true
+                    },
+                    {
+                      "key": "Drivetrain/ChassisSpeeds/1",
+                      "color": "#e5b31b",
+                      "show": true
+                    },
+                    {
+                      "key": "Drivetrain/ChassisSpeeds/2",
+                      "color": "#af2437",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": [
+                    {
+                      "key": "Drivetrain/Swerve/ControlRequest",
+                      "color": "#c0b487",
+                      "show": true
+                    }
+                  ]
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "Drivetrain/Swerve/DesiredSpeeds/0",
+                      "color": "#80588e",
+                      "show": true
+                    },
+                    {
+                      "key": "Drivetrain/Swerve/DesiredSpeeds/1",
+                      "color": "#e48b32",
+                      "show": true
+                    },
+                    {
+                      "key": "Drivetrain/Swerve/DesiredSpeeds/2",
+                      "color": "#aacaee",
+                      "show": true
+                    }
+                  ]
+                }
+              },
+              "title": "ChassisSpeeds"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "Drivetrain/Swerve/Inputs/0",
+                      "color": "#2b66a2",
+                      "show": true
+                    },
+                    {
+                      "key": "Drivetrain/Swerve/Inputs/1",
+                      "color": "#e5b31b",
+                      "show": true
+                    },
+                    {
+                      "key": "Drivetrain/Swerve/Inputs/2",
+                      "color": "#af2437",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": []
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": []
+                }
+              },
+              "title": "Inputs"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "Drivetrain/Swerve/moduleTemps",
+                      "color": "#2b66a2",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": []
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": []
+                }
+              },
+              "title": "ModuleTemps"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "CAN/highSpeedUtilization",
+                      "color": "#2b66a2",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": []
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "CAN/lowSpeedUtilization",
+                      "color": "#e5b31b",
+                      "show": true
+                    }
+                  ]
+                }
+              },
+              "title": "CAN Utilization"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "Timings/Robot",
+                      "color": "#2b66a2",
+                      "show": true
+                    },
+                    {
+                      "key": "Timings/RobotState",
+                      "color": "#e5b31b",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": []
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": []
+                }
+              },
+              "title": "Looptimes"
+            },
+            {
+              "type": 2,
+              "fields": [
+                "NT:/SmartDashboard/Git Hash"
+              ],
+              "title": "Git hash"
+            }
+          ]
         }
-      ],
-      "listFields": [],
-      "options": {
-        "maxSpeed": 4.9,
-        "rotationUnits": "degrees",
-        "arrangement": "0,1,2,3",
-        "sizeLeftRight": 0.889,
-        "sizeFrontBack": 0.889,
-        "forwardDirection": "right"
-      },
-      "configHidden": false,
-      "title": "Swerve"
-    },
-    {
-      "type": 1,
-      "legends": {
-        "left": {
-          "lockedRange": null,
-          "unitConversion": {
-            "type": null,
-            "factor": 1
-          },
-          "fields": [
-            {
-              "key": "Drivetrain/ChassisSpeeds/0",
-              "color": "#2b66a2",
-              "show": true
-            },
-            {
-              "key": "Drivetrain/ChassisSpeeds/1",
-              "color": "#e5b31b",
-              "show": true
-            },
-            {
-              "key": "Drivetrain/ChassisSpeeds/2",
-              "color": "#af2437",
-              "show": true
-            }
-          ]
-        },
-        "discrete": {
-          "fields": [
-            {
-              "key": "Drivetrain/Swerve/ControlRequest",
-              "color": "#80588e",
-              "show": true
-            }
-          ]
-        },
-        "right": {
-          "lockedRange": null,
-          "unitConversion": {
-            "type": null,
-            "factor": 1
-          },
-          "fields": [
-            {
-              "key": "Drivetrain/Swerve/DesiredSpeeds/0",
-              "color": "#e48b32",
-              "show": true
-            },
-            {
-              "key": "Drivetrain/Swerve/DesiredSpeeds/1",
-              "color": "#aacaee",
-              "show": true
-            },
-            {
-              "key": "Drivetrain/Swerve/DesiredSpeeds/2",
-              "color": "#c0b487",
-              "show": true
-            }
-          ]
-        }
-      },
-      "title": "ChassisSpeeds"
-    },
-    {
-      "type": 1,
-      "legends": {
-        "left": {
-          "lockedRange": null,
-          "unitConversion": {
-            "type": null,
-            "factor": 1
-          },
-          "fields": [
-            {
-              "key": "CAN/highSpeedUtilization",
-              "color": "#2b66a2",
-              "show": true
-            },
-            {
-              "key": "CAN/lowSpeedUtilization",
-              "color": "#e5b31b",
-              "show": true
-            }
-          ]
-        },
-        "discrete": {
-          "fields": []
-        },
-        "right": {
-          "lockedRange": null,
-          "unitConversion": {
-            "type": null,
-            "factor": 1
-          },
-          "fields": []
-        }
-      },
-      "title": "CAN Utilization"
-    },
-    {
-      "type": 1,
-      "legends": {
-        "left": {
-          "lockedRange": null,
-          "unitConversion": {
-            "type": null,
-            "factor": 1
-          },
-          "fields": [
-            {
-              "key": "Collector/actualIntakeVelocity",
-              "color": "#2b66a2",
-              "show": true
-            },
-            {
-              "key": "Collector/desiredIntakeVelocity",
-              "color": "#e5b31b",
-              "show": true
-            }
-          ]
-        },
-        "discrete": {
-          "fields": []
-        },
-        "right": {
-          "lockedRange": null,
-          "unitConversion": {
-            "type": null,
-            "factor": 1
-          },
-          "fields": [
-            {
-              "key": "Collector/intakeCurrentDraw",
-              "color": "#af2437",
-              "show": true
-            }
-          ]
-        }
-      },
-      "title": "Collector"
-    },
-    {
-      "type": 1,
-      "legends": {
-        "left": {
-          "lockedRange": null,
-          "unitConversion": {
-            "type": null,
-            "factor": 1
-          },
-          "fields": [
-            {
-              "key": "Drivetrain/Swerve/Inputs/0",
-              "color": "#2b66a2",
-              "show": true
-            },
-            {
-              "key": "Drivetrain/Swerve/Inputs/1",
-              "color": "#e5b31b",
-              "show": true
-            },
-            {
-              "key": "Drivetrain/Swerve/Inputs/2",
-              "color": "#af2437",
-              "show": true
-            }
-          ]
-        },
-        "discrete": {
-          "fields": []
-        },
-        "right": {
-          "lockedRange": null,
-          "unitConversion": {
-            "type": null,
-            "factor": 1
-          },
-          "fields": [
-            {
-              "key": "Drivetrain/Swerve/DesiredSpeeds/0",
-              "color": "#80588e",
-              "show": true
-            },
-            {
-              "key": "Drivetrain/Swerve/DesiredSpeeds/1",
-              "color": "#e48b32",
-              "show": true
-            },
-            {
-              "key": "Drivetrain/Swerve/DesiredSpeeds/2",
-              "color": "#aacaee",
-              "show": true
-            }
-          ]
-        }
-      },
-      "title": "Inputs"
-    },
-    {
-      "type": 1,
-      "legends": {
-        "left": {
-          "lockedRange": null,
-          "unitConversion": {
-            "type": null,
-            "factor": 1
-          },
-          "fields": [
-            {
-              "key": "Shooter/Roller/actualRollerVelocity",
-              "color": "#2b66a2",
-              "show": true
-            },
-            {
-              "key": "Shooter/Roller/desiredRollerVelocity",
-              "color": "#e5b31b",
-              "show": true
-            }
-          ]
-        },
-        "discrete": {
-          "fields": []
-        },
-        "right": {
-          "lockedRange": null,
-          "unitConversion": {
-            "type": null,
-            "factor": 1
-          },
-          "fields": [
-            {
-              "key": "Shooter/Roller/rollerMotorCurrentDraw",
-              "color": "#af2437",
-              "show": true
-            }
-          ]
-        }
-      },
-      "title": "Roller"
-    },
-    {
-      "type": 1,
-      "legends": {
-        "left": {
-          "lockedRange": null,
-          "unitConversion": {
-            "type": null,
-            "factor": 1
-          },
-          "fields": [
-            {
-              "key": "Shooter/Feeder/actualFeederVelocity",
-              "color": "#2b66a2",
-              "show": true
-            },
-            {
-              "key": "Shooter/Feeder/desiredFeederVelocity",
-              "color": "#e5b31b",
-              "show": true
-            }
-          ]
-        },
-        "discrete": {
-          "fields": [
-            {
-              "key": "Shooter/Feeder/beamBreakTriggered",
-              "color": "#af2437",
-              "show": true
-            }
-          ]
-        },
-        "right": {
-          "lockedRange": null,
-          "unitConversion": {
-            "type": null,
-            "factor": 1
-          },
-          "fields": [
-            {
-              "key": "Shooter/Feeder/feederMotorCurrentDraw",
-              "color": "#80588e",
-              "show": true
-            }
-          ]
-        }
-      },
-      "title": "Feeder"
-    },
-    {
-      "type": 1,
-      "legends": {
-        "left": {
-          "lockedRange": null,
-          "unitConversion": {
-            "type": null,
-            "factor": 1
-          },
-          "fields": [
-            {
-              "key": "Shooter/Pivot/desiredPivotPosition",
-              "color": "#2b66a2",
-              "show": true
-            },
-            {
-              "key": "Shooter/Pivot/actualPivotPosition",
-              "color": "#e5b31b",
-              "show": true
-            }
-          ]
-        },
-        "discrete": {
-          "fields": []
-        },
-        "right": {
-          "lockedRange": null,
-          "unitConversion": {
-            "type": null,
-            "factor": 1
-          },
-          "fields": [
-            {
-              "key": "Shooter/Pivot/pivotMotorCurrentDraw",
-              "color": "#af2437",
-              "show": true
-            }
-          ]
-        }
-      },
-      "title": "Pivot"
-    },
-    {
-      "type": 10,
-      "fields": [
-        {
-          "key": "NT:/SmartDashboard/Mech2d",
-          "sourceTypeIndex": 0,
-          "sourceType": "Mechanism2d"
-        },
-        null,
-        null
-      ],
-      "listFields": [],
-      "options": {},
-      "configHidden": false,
-      "title": "Pivot Mechanism"
+      }
     }
-  ]
+  ],
+  "satellites": [],
+  "version": "3.2.0"
 }

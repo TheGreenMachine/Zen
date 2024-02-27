@@ -62,8 +62,8 @@ public class Collector extends Subsystem {
         SmartDashboard.putBoolean("Collector", intakeMotor.getMotorTemperature() < 55);
 
         if (Constants.kLoggingRobot) {
-            desStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Collector/desiredIntakeVelocity");
-            actStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Collector/actualIntakeVelocity");
+            desStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Collector/desiredIntakePower");
+            actStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Collector/actualIntakePower");
             intakeCurrentDrawLogger = new DoubleLogEntry(DataLogManager.getLog(), "Collector/intakeCurrentDraw");
         }
     }

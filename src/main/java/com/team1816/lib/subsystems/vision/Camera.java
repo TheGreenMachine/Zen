@@ -130,19 +130,19 @@ public class Camera extends Subsystem{
             visionSim.update(robotState.fieldToVehicle);
         }
 
-        if(!cam.getDriverMode()) {
-            // Correct pose estimate with vision measurements
-            var visionEst = getEstimatedGlobalPose();
-            visionEst.ifPresent(
-                    est -> {
-                        var estPose = est.estimatedPose.toPose2d();
-                        // Change our trust in the measurement based on the tags we can see
-                        var estStdDevs = getEstimationStdDevs(estPose);
-
-                        robotState.swerveEstimator.addVisionMeasurement(
-                                est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
-                    });
-        }
+//        if(!cam.getDriverMode()) {
+//            // Correct pose estimate with vision measurements
+//            var visionEst = getEstimatedGlobalPose();
+//            visionEst.ifPresent(
+//                    est -> {
+//                        var estPose = est.estimatedPose.toPose2d();
+//                        // Change our trust in the measurement based on the tags we can see
+//                        var estStdDevs = getEstimationStdDevs(estPose);
+//
+//                        robotState.swerveEstimator.addVisionMeasurement(
+//                                est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+//                    });
+//        }
     }
 
     @Override

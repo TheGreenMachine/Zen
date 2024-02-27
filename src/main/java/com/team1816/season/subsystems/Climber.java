@@ -77,8 +77,8 @@ public class Climber extends Subsystem {
 
 
         if (Constants.kLoggingRobot) {
-            desStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Climber/desiredClimberVelocity");
-            actStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Climber/actualClimberVelocity");
+            desStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Climber/desiredClimberOutput");
+            actStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Climber/actualClimberOutput");
             climberCurrentDrawLogger = new DoubleLogEntry(DataLogManager.getLog(), "Climber/climberCurrentDraw");
             controlModeLogger = new StringLogEntry(DataLogManager.getLog(), "Climber/controlMode");
         }

@@ -134,7 +134,7 @@ subsystems:
             inputDeadband: 0.15 # Deadband of the normalized input
             snapDivisor: 30
     camera:
-        implemented: false
+        implemented: true
         constants:
             useMultiTargetOdometry: 0
     collector:
@@ -219,12 +219,15 @@ subsystems:
                 motorName: climbMotor
                 id: 14
                 invertMotor: true
+        pidConfig:
+            slot0:
+                kP: 0.02
         constants:
             slowClimbPower: 0.3
             fastClimbPower: 0.6
             reSpoolPower: -0.5
-            climbPosition: 20 #TODO
-            climbThreshold: 15 #TODO
+            climbPosition: 194
+            climbThreshold: 187
 infrastructure:
     canBusName: highSpeed
     ## Power Distribution ##
