@@ -14,10 +14,12 @@ public class ArbitraryStartToNoteOnePath extends DynamicAutoPath {
 
     public ArbitraryStartToNoteOnePath() {
         super(startingPos, endingPos);
+        super.setArbStart(true);
     }
 
     public ArbitraryStartToNoteOnePath(Color color) {
         super(color, startingPos, endingPos);
+        super.setArbStart(true);
     }
 
     @Override

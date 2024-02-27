@@ -14,10 +14,12 @@ public class ArbitraryStartToNoteThreePath extends DynamicAutoPath {
 
     public ArbitraryStartToNoteThreePath() {
         super(startingPos, endingPos);
+        super.setArbStart(true);
     }
 
     public ArbitraryStartToNoteThreePath(Color color) {
         super(color, startingPos, endingPos);
+        super.setArbStart(true);
     }
 
     @Override
