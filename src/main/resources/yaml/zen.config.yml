@@ -219,6 +219,8 @@ subsystems:
                 motorName: climbMotor
                 id: 14
                 invertMotor: true
+                currentLimit: 30
+                enableCurrentLimit: true
         pidConfig:
             slot0:
                 kP: 0.02

@@ -21,6 +21,9 @@
         "currentLimitTriggerTime" : {
             "type" : "number"
         },
+        "enableCurrentLimit": {
+            "type" : "boolean"
+        },
         "invertMotor" : {
             "type": "boolean"
         },

@@ -275,7 +275,8 @@ public class MotorFactory {
 
         // Current limits
         motor.configCurrentLimit(
-                new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
+                new SupplyCurrentLimitConfiguration(
+                        motorConfiguration.enableCurrentLimit != null ?  motorConfiguration.enableCurrentLimit : ENABLE_CURRENT_LIMIT,
                         motorConfiguration.currentLimit != null ? motorConfiguration.currentLimit : 40, //Default 40
                         motorConfiguration.currentLimitThreshold != null ? motorConfiguration.currentLimitThreshold : 80, // Default 80
                         motorConfiguration.currentLimitTriggerTime != null ? motorConfiguration.currentLimitTriggerTime : 1 // Default 1

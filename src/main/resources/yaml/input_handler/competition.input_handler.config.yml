@@ -36,4 +36,5 @@ operator:
         y: stopShooter
 buttonboard:
     center: reSpool
+    left: zeroClimber
 demoMode: false
