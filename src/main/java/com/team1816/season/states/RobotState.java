@@ -4,6 +4,7 @@ import com.google.inject.Singleton;
 import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.PathFinder;
 import com.team1816.lib.subsystems.drive.SwerveDrive;
+import com.team1816.lib.util.Util;
 import com.team1816.lib.util.visionUtil.VisionPoint;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.configuration.FieldConfig;
@@ -265,6 +266,17 @@ public class RobotState {
 
         SmartDashboard.putData("Mech2d", mechCanvas);
         SmartDashboard.putBoolean("BeamBreak", isBeamBreakTriggered);
+
+        Pose3d pose3d = new Pose3d(new Translation3d(), new Rotation3d(0,0,0));
+
+        double rotation = -0.1;
+
+        pose3d = pose3d.transformBy(new Transform3d(
+                new Translation3d(Math.abs(rotation) / 2.5, 0, 0), //TODO someone should figure out the ratios of rotation to translation needed
+                new Rotation3d(0.0, -0.1, 0.0))
+        );
+
+        SmartDashboard.putNumberArray("component", Util.logPose3d(pose3d));
 
         if (RobotBase.isSimulation()) {
             // TODO: Display any stats here
