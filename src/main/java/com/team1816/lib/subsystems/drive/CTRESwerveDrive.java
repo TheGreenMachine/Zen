@@ -232,12 +232,11 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
 
     @Override
     public void setTeleopInputs(double throttle, double strafe, double rotation) {
-//        double inputScale = new Translation2d(throttle, strafe).getNorm();
-//
-//        if (inputScale < inputDeadband) {
-//            inputScale = 0;
-//        }
-
+        double inputNormed = new Translation2d(throttle, strafe).getNorm();
+        double deadbander = 1;
+        if (inputNormed < inputDeadband) {
+            deadbander = 0;
+        }
 
         if (robotState.snapDirection != RobotState.SnappingDirection.NO_SNAP) {
             rotation =
@@ -252,9 +251,9 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
             request = brakeRequest;
         } else {
             request = fieldCentricRequest
-                    .withVelocityX(throttle  * maxVel12MPS * driveScalar)
-                    .withVelocityY(strafe  * maxVel12MPS * driveScalar)
-                    .withRotationalRate(rotation * kMaxAngularSpeed * Math.PI * rotationScalar);
+                    .withVelocityX(throttle  * maxVel12MPS * driveScalar * deadbander)
+                    .withVelocityY(strafe  * maxVel12MPS * driveScalar * deadbander)
+                    .withRotationalRate(rotation * kMaxAngularSpeed * Math.PI * rotationScalar * deadbander);
         }
 
         if (Constants.kLoggingDrivetrain) {

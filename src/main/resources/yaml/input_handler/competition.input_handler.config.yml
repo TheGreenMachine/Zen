@@ -28,13 +28,12 @@ driver:
 operator:
     controllerType: Xbox
     rumble: true
-    buttons:
-        leftBumper: climbSlow
-        rightBumper: climbFast
     buttonpad:
-        a: climbPosition
         y: stopShooter
 buttonboard:
+    upLeft: climbSlow
+    upRight: climbFast
+    up: climbPosition
     center: reSpool
     left: zeroClimber
 demoMode: false
