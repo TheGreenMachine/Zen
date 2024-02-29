@@ -226,7 +226,7 @@ subsystems:
                 kP: 0.02
         constants:
             slowClimbPower: 0.3
-            fastClimbPower: 0.6
+            fastClimbPower: 0.8
             reSpoolPower: -0.5
             climbPosition: 194
             climbThreshold: 187
