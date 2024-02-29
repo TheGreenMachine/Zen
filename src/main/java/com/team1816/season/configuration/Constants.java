@@ -134,15 +134,16 @@ public class Constants {
     public static final double kBallEjectionDuration = factory.getConstant(
         "shooter",
         "ballEjectionDuration",
-        1d
+        1d,
+            false
     );
     public static final boolean kUseVision = factory.getSubsystem("camera").implemented;
 
     /**
      * Balancing characterization
      */
-    public static final double autoBalanceThresholdDegrees = factory.getConstant("drivetrain", "autoBalanceThreshold", 2);
-    public static final double autoBalanceDivider = factory.getConstant("drivetrain", "autoBalanceDivider", 30);
+    public static final double autoBalanceThresholdDegrees = factory.getConstant("drivetrain", "autoBalanceThreshold", 2, false);
+    public static final double autoBalanceDivider = factory.getConstant("drivetrain", "autoBalanceDivider", 30, false);
 
     /**
      * Pivot

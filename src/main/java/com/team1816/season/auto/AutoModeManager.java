@@ -100,6 +100,7 @@ public class AutoModeManager {
 
         SmartDashboard.putData("Auto mode", autoModeChooser); // appends chooser to shuffleboard
 
+        autoModeChooser.addOption("GETTYSBURG", DesiredAuto.RANGE_FOUR_SCORE);
         for (DesiredAuto desiredAuto : DesiredAuto.values()) {
             autoModeChooser.addOption(desiredAuto.name(), desiredAuto);
         }
