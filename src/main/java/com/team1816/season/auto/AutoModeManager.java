@@ -250,7 +250,7 @@ public class AutoModeManager {
             }
 
             if (selectedAuto == DesiredAuto.TWO_SCORE
-                    || selectedAuto == DesiredAuto.SCORE_AND_EXIT
+                    || selectedAuto == DesiredAuto.RANGE_TWO_SCORE
                     || selectedAuto == DesiredAuto.THREE_SCORE
                     || selectedAuto == DesiredAuto.RANGE_FOUR_SCORE
             ) {
@@ -349,18 +349,17 @@ public class AutoModeManager {
         DRIVE_STRAIGHT,
 
         // New Auto Modes : 2024
-        TEST,
         TWO_SCORE,
         THREE_SCORE,
-        SCORE_AND_EXIT,
         RANGE_FOUR_SCORE,
+        RANGE_TWO_SCORE,
+        SCORE_AND_SCRAM,
+
 
         BOTTOM_MIDDLE_EJECTS,
-
         TOP_MIDDLE_EJECTS,
-
-        SCORE_AND_SCRAM
-    }
+        TEST
+        }
 
     public enum ScramChoice {
         SCRAM,
