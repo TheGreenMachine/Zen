@@ -152,7 +152,7 @@ subsystems:
                 kD: 0.00001
                 kF: 0.0099
         constants:
-            intakeSpeed: -0.9
+            intakeSpeed: -0.95
             outtakeSpeed: 0.4
     shooter:
         implemented: true
@@ -209,7 +209,7 @@ subsystems:
             velocityErrorMargin: 0.1
             pivotNeutralPosition: 1.5
             pivotAmpShootPosition: 33
-            pivotDistanceShootPosition: 8.7
+            pivotDistanceShootPosition: 8.675
             invertFollowerMotor: 1
     climber:
         implemented: true
