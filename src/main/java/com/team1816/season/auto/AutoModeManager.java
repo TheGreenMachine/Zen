@@ -348,6 +348,9 @@ public class AutoModeManager {
         LIVING_ROOM,
         DRIVE_STRAIGHT,
 
+        // System check
+        SYSTEM_CHECK,
+
         // New Auto Modes : 2024
         TWO_SCORE,
         THREE_SCORE,
@@ -425,14 +428,12 @@ public class AutoModeManager {
      */
     private AutoMode generateAutoMode(DesiredAuto mode, Color color) {
         switch (mode) {
-            case DO_NOTHING:
-                return new DoNothingMode();
-            case TUNE_DRIVETRAIN: // commented for competition purposes
-                return new TuneDrivetrainMode();
+//            case DO_NOTHING:
+//                return new DoNothingMode();
+//            case TUNE_DRIVETRAIN: // commented for competition purposes
+//                return new TuneDrivetrainMode();
 //            case LIVING_ROOM:
 //                return (new LivingRoomMode(color));
-            case TEST:
-                return new TestMode();
             case DRIVE_STRAIGHT:
                 return new DriveStraightMode();
             case BOTTOM_MIDDLE_EJECTS:
@@ -441,6 +442,10 @@ public class AutoModeManager {
                 return new TopMiddleEjects();
             case SCORE_AND_SCRAM:
                 return new ScoreAndScramMode();
+            case TEST:
+                if (!DriverStation.isFMSAttached()) return new TestMode();
+            case SYSTEM_CHECK:
+                if (!DriverStation.isFMSAttached()) return new SystemCheckMode();
             default:
                 GreenLogger.log("Defaulting to drive straight mode");
                 return new DriveStraightMode();
