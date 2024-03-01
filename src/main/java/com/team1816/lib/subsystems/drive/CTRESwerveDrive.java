@@ -253,7 +253,7 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
             request = fieldCentricRequest
                     .withVelocityX(throttle  * maxVel12MPS * driveScalar * deadbander)
                     .withVelocityY(strafe  * maxVel12MPS * driveScalar * deadbander)
-                    .withRotationalRate(rotation * kMaxAngularSpeed * Math.PI * rotationScalar * deadbander);
+                    .withRotationalRate(rotation * kMaxAngularSpeed * Math.PI * rotationScalar);
         }
 
         if (Constants.kLoggingDrivetrain) {
