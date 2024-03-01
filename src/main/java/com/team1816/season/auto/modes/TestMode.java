@@ -17,6 +17,7 @@ import com.team1816.season.auto.paths.toNoteOne.AmpToNoteOnePath;
 import com.team1816.season.auto.paths.toNoteOne.MiddleSpeakerToNoteOnePath;
 import com.team1816.season.auto.paths.toNoteThree.AmpToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteThree.MiddleSpeakerToNoteThreePath;
+import com.team1816.season.auto.paths.toNoteThree.TopSpeakerToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteTwo.*;
 import com.team1816.season.subsystems.Shooter;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -30,7 +31,7 @@ public class TestMode extends AutoMode {
         super(
                 List.of(
                 new TrajectoryAction(
-                        new BottomSpeakerToNoteTwoPath()
+                        new TopSpeakerToNoteThreePath()
         )));
     }
     @Override
