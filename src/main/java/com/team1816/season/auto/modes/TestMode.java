@@ -1,6 +1,7 @@
 package com.team1816.season.auto.modes;
 
 import com.team1816.lib.auto.AutoModeEndedException;
+import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.actions.RotateSwerveAction;
 import com.team1816.lib.auto.actions.SeriesAction;
 import com.team1816.lib.auto.actions.TrajectoryAction;
@@ -31,7 +32,7 @@ public class TestMode extends AutoMode {
         super(
                 List.of(
                 new TrajectoryAction(
-                        new TopSpeakerToNoteThreePath()
+                        new MiddleSpeakerToScramPath(Color.BLUE)
         )));
     }
     @Override

@@ -5,6 +5,7 @@ import com.team1816.lib.auto.actions.SeriesAction;
 import com.team1816.lib.auto.actions.WaitAction;
 import com.team1816.lib.auto.modes.AutoMode;
 import com.team1816.season.auto.actions.CollectAction;
+import com.team1816.season.auto.actions.ShootAction;
 import com.team1816.season.auto.actions.ShootAmpAction;
 import com.team1816.season.auto.actions.WaitForCollectAction;
 import com.team1816.season.subsystems.Collector;
@@ -13,13 +14,7 @@ public class SystemCheckMode extends AutoMode {
     @Override
     protected void routine() throws AutoModeEndedException {
         runAction(
-                new SeriesAction(
-                        new CollectAction(Collector.COLLECTOR_STATE.INTAKE),
-                        new WaitForCollectAction(),
-                        new CollectAction(Collector.COLLECTOR_STATE.STOP),
-                        new WaitAction(0.5),
-                        new ShootAmpAction()
-                )
+                new ShootAmpAction()
         );
     }
 }
