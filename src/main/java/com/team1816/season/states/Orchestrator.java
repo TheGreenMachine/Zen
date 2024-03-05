@@ -207,6 +207,11 @@ public class Orchestrator {
         return PhotonUtils.estimateFieldToCamera(targetTransform, targetPos);
     }
 
+    public void updatePoseWithVision() {
+        //We'll want a toggle for wether or not this method is called every loop, and then a separate call to it for autoaim eventually
+        drive.updateOdometryWithVision(); //TODO @Ethan fill the parameters
+    }
+
     public void autoSetCollectorState(){
         if (!robotState.isShooting) {
             if (!robotState.isBeamBreakTriggered && robotState.actualPivotState == Shooter.PIVOT_STATE.STOW) {
