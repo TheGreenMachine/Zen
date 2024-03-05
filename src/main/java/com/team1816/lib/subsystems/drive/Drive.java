@@ -547,7 +547,9 @@ public abstract class Drive
 
     public void resetHeading(Rotation2d rotation) {}
 
-    public void updateOdometryWithVision(Pose2d estimatedPose2D, double timestamp, Matrix<N3, N1> stdDevs) {}
+    public void updateOdometryWithVision(Pose2d estimatedPose2D, double timestamp, Matrix<N3, N1> stdDevs) {
+
+    }
 
         /**
          * Returns if the drivetrain is in demoMode (slower)

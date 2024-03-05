@@ -636,6 +636,8 @@ public class Robot extends TimedRobot {
         robotState.field
                 .getObject("Trajectory")
                 .setTrajectory(autoModeManager.getSelectedAuto().getCurrentTrajectory());
+
+        orchestrator.updatePoseWithVisionData();
     }
 
     /**

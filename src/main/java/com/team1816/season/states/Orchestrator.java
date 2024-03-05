@@ -22,8 +22,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-import java.util.Objects;
-
 import static com.team1816.lib.subsystems.Subsystem.robotState;
 
 /**
@@ -207,9 +205,15 @@ public class Orchestrator {
         return PhotonUtils.estimateFieldToCamera(targetTransform, targetPos);
     }
 
-    public void updatePoseWithVision() {
+    /**
+     *Theoretically updates the robot pose, returns true if updated, returns false if the camera couldn't find anything
+     * @return
+     */
+    public void updatePoseWithVisionData() {
         //We'll want a toggle for wether or not this method is called every loop, and then a separate call to it for autoaim eventually
-        drive.updateOdometryWithVision(); //TODO @Ethan fill the parameters
+        //Kinda issue, idk what std dev we are supposed to use
+        if(robotState.currentCamFind)
+            drive.updateOdometryWithVision(robotState.currentVisionEstimatedPose.estimatedPose.toPose2d(), robotState.lastEstTimestamp, robotState.kMultiTagStdDevs); //TODO @Ethan fill the parameters
     }
 
     public void autoSetCollectorState(){

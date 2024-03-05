@@ -41,13 +41,6 @@ public class Camera extends Subsystem{
     private PhotonCameraSim cameraSim;
     private final PhotonPoseEstimator photonEstimator;
 
-    /**
-     * Something
-     */
-    private double lastEstTimestamp = 0;
-    public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
-    public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
-
     @Inject
     public Camera(Infrastructure inf, RobotState rs){
         super(NAME, inf, rs);
@@ -83,14 +76,22 @@ public class Camera extends Subsystem{
      * @return An {@link EstimatedRobotPose} with an estimated pose, estimate timestamp, and targets
      *     used for estimation.
      */
-    public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
+    public boolean updateEstimatedGlobalPose() {
         Optional<EstimatedRobotPose> visionEst = photonEstimator.update();
+        if(visionEst.isEmpty())
+            return false;
+
+        robotState.currentVisionEstimatedPose = visionEst.get();
         double latestTimestamp = cam.getLatestResult().getTimestampSeconds();
-        boolean newResult = Math.abs(latestTimestamp - lastEstTimestamp) > 1e-5;
+        boolean newResult = Math.abs(latestTimestamp - robotState.lastEstTimestamp) > 1e-5;
 
-        if (newResult) lastEstTimestamp = latestTimestamp;
+        if (newResult) robotState.lastEstTimestamp = latestTimestamp;
 
-        return visionEst;
+        return true;
+    }
+
+    public EstimatedRobotPose getEstimatedGlobalPose() {
+        return robotState.currentVisionEstimatedPose;
     }
 
     /**
@@ -101,7 +102,7 @@ public class Camera extends Subsystem{
      * @param estimatedPose The estimated pose to guess standard deviations for.
      */
     public Matrix<N3, N1> getEstimationStdDevs(Pose2d estimatedPose) {
-        var estStdDevs = kSingleTagStdDevs;
+        var estStdDevs = robotState.kSingleTagStdDevs;
         var targets = getLatestResult().getTargets();
         int numTags = 0;
         double avgDist = 0;
@@ -115,7 +116,7 @@ public class Camera extends Subsystem{
         if (numTags == 0) return estStdDevs;
         avgDist /= numTags;
         // Decrease std devs if multiple targets are visible
-        if (numTags > 1) estStdDevs = kMultiTagStdDevs;
+        if (numTags > 1) estStdDevs = robotState.kMultiTagStdDevs;
         // Increase std devs based on (average) distance
         if (numTags == 1 && avgDist > 4)
             estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
@@ -128,22 +129,8 @@ public class Camera extends Subsystem{
     public void readFromHardware() {
         if (RobotBase.isSimulation()) {
             visionSim.update(robotState.fieldToVehicle);
-        }
-
-        if(!cam.getDriverMode()) {
-            //TODO @Ethan instead of updating the pose directly, store the estimatedRobotPose and stdDevs into RobotState for use in Orchestrator
-
-            // Correct pose estimate with vision measurements
-            var visionEst = getEstimatedGlobalPose();
-            visionEst.ifPresent(
-                    est -> {
-                        var estPose = est.estimatedPose.toPose2d();
-                        // Change our trust in the measurement based on the tags we can see
-                        var estStdDevs = getEstimationStdDevs(estPose);
-
-                        robotState.swerveEstimator.addVisionMeasurement(
-                                est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
-                    });
+        } else {
+            robotState.currentCamFind = updateEstimatedGlobalPose();
         }
     }
 
