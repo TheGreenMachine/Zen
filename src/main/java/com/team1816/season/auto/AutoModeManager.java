@@ -100,6 +100,7 @@ public class AutoModeManager {
 
         SmartDashboard.putData("Auto mode", autoModeChooser); // appends chooser to shuffleboard
 
+        autoModeChooser.addOption("GETTYSBURG", DesiredAuto.RANGE_FOUR_SCORE);
         for (DesiredAuto desiredAuto : DesiredAuto.values()) {
             autoModeChooser.addOption(desiredAuto.name(), desiredAuto);
         }
@@ -249,7 +250,7 @@ public class AutoModeManager {
             }
 
             if (selectedAuto == DesiredAuto.TWO_SCORE
-                    || selectedAuto == DesiredAuto.SCORE_AND_EXIT
+                    || selectedAuto == DesiredAuto.RANGE_TWO_SCORE
                     || selectedAuto == DesiredAuto.THREE_SCORE
                     || selectedAuto == DesiredAuto.RANGE_FOUR_SCORE
             ) {
@@ -347,19 +348,21 @@ public class AutoModeManager {
         LIVING_ROOM,
         DRIVE_STRAIGHT,
 
+        // System check
+        SYSTEM_CHECK,
+
         // New Auto Modes : 2024
-        TEST,
         TWO_SCORE,
         THREE_SCORE,
-        SCORE_AND_EXIT,
         RANGE_FOUR_SCORE,
+        RANGE_TWO_SCORE,
+        SCORE_AND_SCRAM,
+
 
         BOTTOM_MIDDLE_EJECTS,
-
         TOP_MIDDLE_EJECTS,
-
-        SCORE_AND_SCRAM
-    }
+        TEST
+        }
 
     public enum ScramChoice {
         SCRAM,
@@ -425,14 +428,12 @@ public class AutoModeManager {
      */
     private AutoMode generateAutoMode(DesiredAuto mode, Color color) {
         switch (mode) {
-            case DO_NOTHING:
-                return new DoNothingMode();
-            case TUNE_DRIVETRAIN: // commented for competition purposes
-                return new TuneDrivetrainMode();
+//            case DO_NOTHING:
+//                return new DoNothingMode();
+//            case TUNE_DRIVETRAIN: // commented for competition purposes
+//                return new TuneDrivetrainMode();
 //            case LIVING_ROOM:
 //                return (new LivingRoomMode(color));
-            case TEST:
-                return new TestMode();
             case DRIVE_STRAIGHT:
                 return new DriveStraightMode();
             case BOTTOM_MIDDLE_EJECTS:
@@ -441,6 +442,10 @@ public class AutoModeManager {
                 return new TopMiddleEjects();
             case SCORE_AND_SCRAM:
                 return new ScoreAndScramMode();
+            case TEST:
+                if (!DriverStation.isFMSAttached()) return new TestMode();
+            case SYSTEM_CHECK:
+                if (!DriverStation.isFMSAttached()) return new SystemCheckMode();
             default:
                 GreenLogger.log("Defaulting to drive straight mode");
                 return new DriveStraightMode();

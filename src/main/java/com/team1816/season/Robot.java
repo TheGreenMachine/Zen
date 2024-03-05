@@ -400,6 +400,12 @@ public class Robot extends TimedRobot {
                     }
             );
 
+            inputHandler.listenAction(
+                    "zeroClimber",
+                    ActionState.PRESSED,
+                    climber::zeroSensors
+            );
+
 
         } catch (Throwable t) {
             faulted = true;

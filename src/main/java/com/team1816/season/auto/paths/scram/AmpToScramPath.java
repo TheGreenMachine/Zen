@@ -19,7 +19,7 @@ public class AmpToScramPath extends AutoPath {
                 new Pose2d(1.86, 7.74, Rotation2d.fromDegrees(-19)),
                 new Pose2d(3.6, 7.26, Rotation2d.fromDegrees(0)),
                 new Pose2d(5.43, 7.26, Rotation2d.fromDegrees(0)),
-                new Pose2d(7.87, 7.52, Rotation2d.fromDegrees(0))
+                new Pose2d(7.87, 7.47, Rotation2d.fromDegrees(0))
         );
     }
 

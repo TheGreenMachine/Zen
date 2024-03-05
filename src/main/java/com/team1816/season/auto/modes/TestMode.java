@@ -1,6 +1,7 @@
 package com.team1816.season.auto.modes;
 
 import com.team1816.lib.auto.AutoModeEndedException;
+import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.actions.RotateSwerveAction;
 import com.team1816.lib.auto.actions.SeriesAction;
 import com.team1816.lib.auto.actions.TrajectoryAction;
@@ -17,6 +18,7 @@ import com.team1816.season.auto.paths.toNoteOne.AmpToNoteOnePath;
 import com.team1816.season.auto.paths.toNoteOne.MiddleSpeakerToNoteOnePath;
 import com.team1816.season.auto.paths.toNoteThree.AmpToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteThree.MiddleSpeakerToNoteThreePath;
+import com.team1816.season.auto.paths.toNoteThree.TopSpeakerToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteTwo.*;
 import com.team1816.season.subsystems.Shooter;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -30,7 +32,7 @@ public class TestMode extends AutoMode {
         super(
                 List.of(
                 new TrajectoryAction(
-                        new ArbitraryStartToNoteOnePath()
+                        new MiddleSpeakerToScramPath(Color.BLUE)
         )));
     }
     @Override

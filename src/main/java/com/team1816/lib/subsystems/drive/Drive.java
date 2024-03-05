@@ -109,7 +109,7 @@ public abstract class Drive
     /**
      * Constants
      */
-    public static final double driveEncPPR = factory.getConstant(NAME, "encPPR", 14641); // Distance calibration
+    public static final double driveEncPPR = factory.getConstant(NAME, "encPPR", 14641, false); // Distance calibration
 
     // Chassis characterization
     public static final double kDriveWheelTrackWidthInches = factory.getConstant(

@@ -143,14 +143,10 @@ public class Climber extends Subsystem {
                     desiredClimberOutput = 0;
                 }
                 case CLIMB_SLOW -> {
-                    if (!DriverStation.isFMSAttached() || DriverStation.getMatchTime() < 20) {
                         desiredClimberOutput = slowClimbPower;
-                    }
                 }
                 case CLIMB_FAST -> {
-                    if (!DriverStation.isFMSAttached() || DriverStation.getMatchTime() < 20) {
                         desiredClimberOutput = fastClimbPower;
-                    }
                 }
                 case RE_SPOOL -> {
                     if (!DriverStation.isFMSAttached()) {
@@ -167,7 +163,7 @@ public class Climber extends Subsystem {
 
     @Override
     public void zeroSensors() {
-
+        climbMotor.setSensorPosition(0);
     }
 
     @Override
