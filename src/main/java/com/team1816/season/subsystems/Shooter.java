@@ -114,7 +114,7 @@ public class Shooter extends Subsystem {
         pivotMotor = factory.getMotor(NAME, "pivotMotor");
         pivotFollowMotor = factory.getFollowerMotor(NAME, "pivotFollowMotor", pivotMotor, opposeLeaderDirection);
 
-        noteSensor = new DigitalInput((int) factory.getConstant(NAME, "noteSensorChannel", 0));
+        noteSensor = new DigitalInput((int) factory.getConstant(NAME, "noteSensorChannel", 9));
 
         rollerMotor.selectPIDSlot(1);
         pivotMotor.selectPIDSlot(2);
