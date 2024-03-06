@@ -303,6 +303,9 @@ public class Shooter extends Subsystem {
                         desiredFeederVelocity = feederIntakeSpeed;
                     }
                 }
+                case MANUAL_TRANSFER -> {
+                    desiredFeederVelocity = feederIntakeSpeed;
+                }
             }
             feederMotor.set(GreenControlMode.VELOCITY_CONTROL, desiredFeederVelocity);
             desiredFeederVelocityLogger.append(desiredFeederVelocity);
@@ -351,7 +354,7 @@ public class Shooter extends Subsystem {
      * @return whether the beam break is triggered
      */
     public boolean isBeamBreakTriggered() {
-        return !noteSensor.get();
+        return noteSensor.get();
     }
 
     /**
@@ -408,7 +411,8 @@ public class Shooter extends Subsystem {
     public enum FEEDER_STATE {
         STOP,
         SHOOT,
-        TRANSFER
+        TRANSFER,
+        MANUAL_TRANSFER
     }
 
     /**

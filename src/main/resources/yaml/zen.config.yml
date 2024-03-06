@@ -200,7 +200,7 @@ subsystems:
                 kF: 0
                 gravityType: cosine
         constants:
-            noteSensorChannel: 0
+            noteSensorChannel: 9
             rollerSpeakerShootSpeed: 72
             rollerAmpShootSpeed: 30
             feederSpeakerShootSpeed: 700

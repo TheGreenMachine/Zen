@@ -406,6 +406,21 @@ public class Robot extends TimedRobot {
                     climber::zeroSensors
             );
 
+            //Not yet assigned
+            inputHandler.listenAction(
+                    "toggleOverride",
+                    ActionState.PRESSED,
+                    () -> {
+                        robotState.isBeamBreakOverridden = !robotState.isBeamBreakOverridden;
+                    }
+            );
+
+            inputHandler.listenActionPressAndRelease(
+                    "manualFeedingTransfer",
+                    (pressed) -> {
+                        shooter.setDesiredFeederState(pressed ? Shooter.FEEDER_STATE.MANUAL_TRANSFER : Shooter.FEEDER_STATE.STOP);
+                    }
+            );
 
         } catch (Throwable t) {
             faulted = true;

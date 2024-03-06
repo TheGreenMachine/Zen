@@ -22,6 +22,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import java.sql.Driver;
 import java.util.Objects;
 
 import static com.team1816.lib.subsystems.Subsystem.robotState;
@@ -208,7 +209,9 @@ public class Orchestrator {
     }
 
     public void autoSetCollectorState(){
-        if (!robotState.isShooting) {
+        if (robotState.isBeamBreakOverridden) {
+            collector.setDesiredState(Collector.COLLECTOR_STATE.INTAKE);
+        } else if (!robotState.isShooting) {
             if (!robotState.isBeamBreakTriggered && robotState.actualPivotState == Shooter.PIVOT_STATE.STOW) {
                 collector.setDesiredState(Collector.COLLECTOR_STATE.INTAKE);
                 shooter.setDesiredFeederState(Shooter.FEEDER_STATE.TRANSFER);
@@ -217,6 +220,9 @@ public class Orchestrator {
                 shooter.setDesiredFeederState(Shooter.FEEDER_STATE.STOP);
             }
         }
+
+        setControllerRumble(InputHandler.ControllerRole.DRIVER, InputHandler.RumbleDirection.UNIFORM,
+                robotState.isBeamBreakTriggered ? 0.3 : 0);
     }
 
     //Just a wrapper to keep paradigm
