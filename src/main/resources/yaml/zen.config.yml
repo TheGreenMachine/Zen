@@ -1,6 +1,6 @@
 subsystems:
     drivetrain:
-        implemented: true
+        implemented: false
         motors:
             FLDr:
                 motorType: TalonFX
@@ -184,10 +184,10 @@ subsystems:
                 invertMotor: true
         pidConfig:
             slot0:
-                kP: 0
+                kP: 0.03
                 Ki: 0
                 kD: 0
-                kF: 0.001 #TODO
+                kF: 0.0105
             slot1:
                 kP: 0.00025
                 Ki: 0
@@ -203,21 +203,21 @@ subsystems:
             noteSensorChannel: 0
             rollerSpeakerShootSpeed: 72
             rollerAmpShootSpeed: 30
-            feederSpeakerShootSpeed: 700 #TODO
-            feederAmpShootSpeed: 700 # TODO
-            feederIntakeSpeed: 500 # TODO
+            feederSpeakerShootSpeed: 30
+            feederAmpShootSpeed: 10
+            feederIntakeSpeed: 5
             velocityErrorMargin: 0.1
             pivotNeutralPosition: 1.5
             pivotAmpShootPosition: 33
             pivotDistanceShootPosition: 8.675
             invertFollowerMotor: 1
     climber:
-        implemented: true
+        implemented: false
         motors:
             climbMotor:
                 motorType: TalonFX
                 motorName: climbMotor
-                id: 14
+                id: -14
                 invertMotor: true
                 currentLimit: 30
                 enableCurrentLimit: true
