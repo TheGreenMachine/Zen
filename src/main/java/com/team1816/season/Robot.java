@@ -411,6 +411,7 @@ public class Robot extends TimedRobot {
                     "toggleOverride",
                     ActionState.PRESSED,
                     () -> {
+                        GreenLogger.log("Toggling beambreak override to " + !robotState.isBeamBreakOverridden);
                         robotState.isBeamBreakOverridden = !robotState.isBeamBreakOverridden;
                     }
             );

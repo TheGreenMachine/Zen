@@ -354,7 +354,7 @@ public class Shooter extends Subsystem {
      * @return whether the beam break is triggered
      */
     public boolean isBeamBreakTriggered() {
-        return noteSensor.get();
+        return !noteSensor.get();
     }
 
     /**
