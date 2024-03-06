@@ -162,11 +162,6 @@ subsystems:
                 motorName: rollerMotor
                 id: 11
                 invertMotor: false
-            feederMotor:
-                motorType: SparkMax
-                motorName: feederMotor
-                id: 9
-                invertMotor: true
             pivotMotor:
                 motorType: TalonFX
                 motorName: pivotMotor
@@ -182,12 +177,17 @@ subsystems:
                 id: 13
                 invertMotor: false # ?
                 currentLimit: 20
+            feederMotor:
+                motorType: TalonFX
+                motorName: feederMotor
+                id: 14
+                invertMotor: true
         pidConfig:
             slot0:
                 kP: 0
                 Ki: 0
                 kD: 0
-                kF: 0.001
+                kF: 0.001 #TODO
             slot1:
                 kP: 0.00025
                 Ki: 0
@@ -203,9 +203,9 @@ subsystems:
             noteSensorChannel: 0
             rollerSpeakerShootSpeed: 72
             rollerAmpShootSpeed: 30
-            feederSpeakerShootSpeed: 700
-            feederAmpShootSpeed: 700
-            feederIntakeSpeed: 500
+            feederSpeakerShootSpeed: 700 #TODO
+            feederAmpShootSpeed: 700 # TODO
+            feederIntakeSpeed: 500 # TODO
             velocityErrorMargin: 0.1
             pivotNeutralPosition: 1.5
             pivotAmpShootPosition: 33
