@@ -10,6 +10,7 @@ import com.team1816.lib.auto.modes.AutoMode;
 import com.team1816.season.auto.actions.ShootAction;
 import com.team1816.season.auto.actions.ShootAmpAction;
 import com.team1816.season.auto.paths.arbitrary.ArbitraryStartToNoteOnePath;
+import com.team1816.season.auto.paths.noteToNote.NoteThreeToNoteOneUnderStagePath;
 import com.team1816.season.auto.paths.scram.AmpToScramPath;
 import com.team1816.season.auto.paths.scram.BottomSpeakerToScramPath;
 import com.team1816.season.auto.paths.scram.MiddleSpeakerToScramPath;
@@ -32,7 +33,7 @@ public class TestMode extends AutoMode {
         super(
                 List.of(
                 new TrajectoryAction(
-                        new MiddleSpeakerToScramPath(Color.BLUE)
+                        new NoteThreeToNoteOneUnderStagePath(Color.BLUE)
         )));
     }
     @Override
