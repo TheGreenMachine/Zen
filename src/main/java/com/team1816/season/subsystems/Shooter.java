@@ -10,9 +10,11 @@ import com.team1816.lib.hardware.components.motor.LazyTalonFX;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.subsystems.Subsystem;
 import com.team1816.lib.util.logUtil.GreenLogger;
+import com.team1816.season.autoaim.AutoAimUtil;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -319,6 +321,12 @@ public class Shooter extends Subsystem {
                 case SHOOT_DISTANCE -> {
                     desiredPivotPosition = pivotDistanceShootPosition; //Lil bit over because of possibility for overshoot
                 }
+                case AUTO_AIM -> {
+                    desiredPivotPosition = AutoAimUtil.getShooterAngle(
+                            new Translation2d().getDistance(robotState.fieldToVehicle.getTranslation()))
+                            .orElse(0.0) * Constants.motorRotationsPerRadians;
+                }
+
             }
             pivotMotor.set(GreenControlMode.MOTION_MAGIC_EXPO, desiredPivotPosition);
         }
@@ -417,6 +425,7 @@ public class Shooter extends Subsystem {
     public enum PIVOT_STATE {
         STOW,
         SHOOT_AMP,
-        SHOOT_DISTANCE
+        SHOOT_DISTANCE,
+        AUTO_AIM
     }
 }

@@ -17,6 +17,7 @@ import com.team1816.lib.subsystems.vision.Camera;
 import com.team1816.lib.util.Util;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.auto.AutoModeManager;
+import com.team1816.season.autoaim.AutoAimUtil;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.Orchestrator;
 import com.team1816.season.states.RobotState;
@@ -24,6 +25,7 @@ import com.team1816.season.subsystems.Climber;
 import com.team1816.season.subsystems.Shooter;
 import com.team1816.season.subsystems.Collector;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -346,7 +348,7 @@ public class Robot extends TimedRobot {
                     ActionState.PRESSED,
                     () -> {
                         if(shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.STOW) {
-                            shooter.setDesiredPivotState(Shooter.PIVOT_STATE.SHOOT_DISTANCE);
+                            shooter.setDesiredPivotState(Shooter.PIVOT_STATE.AUTO_AIM);
                         }
                         else {
                             shooter.setDesiredPivotState(Shooter.PIVOT_STATE.STOW);
@@ -647,6 +649,7 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         try {
             manualControl();
+            System.out.println(new Translation2d().getDistance(robotState.fieldToVehicle.getTranslation().times(39.37)));
         } catch (Throwable t) {
             faulted = true;
             throw t;

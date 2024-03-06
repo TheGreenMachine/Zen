@@ -172,4 +172,29 @@ public class Constants {
     /**
      * Simulation
      */
+    public static final ShuffleboardTab kSimWindow = Shuffleboard.getTab("Simulation");
+
+    /**
+     * AutoAiming stuff
+     */
+    //TODO set to cm, (currently in inches)
+    //Positive
+    public static final double lengthOfArm = 0.3048;
+    //0-180
+    public static final double angleBetweenArmAndShooterDegrees = 111.8;
+    //Positive
+    public static final double outputVelocityPerSecond = 30;
+    //Negative
+    public static final double gravityPerSecond = -9.8;
+    //Nonzero
+    public static final double errorPerUnitDistance = 0.1;
+    //the robot looks down the positive y axis, and the right side is the positive x axis while the left is the negative x axis
+    public static final double axlePositionOffsetX = 0;
+    public static final double axlePositionOffsetY = 0.1524;
+    public static final double axlePositionOffsetZ = 0.3048;
+    public static final double heightOfTarget = 1.8669;
+    public static final double targetX = 9;
+    //TODO find out this measurement
+    public static final double targetY = 240;
+    public static final double axleRadiansDisplacement = 0;
 }
