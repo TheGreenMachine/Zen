@@ -101,7 +101,7 @@ subsystems:
                     kF: 0.00925
             azimuthPID:
                 slot0:
-                    kP: 7
+                    kP: 50
                     kI: 0
                     kD: 0
                     kF: 0

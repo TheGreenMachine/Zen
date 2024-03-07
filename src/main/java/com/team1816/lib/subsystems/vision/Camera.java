@@ -31,7 +31,7 @@ public class Camera extends Subsystem{
     private static final String CAM = "Arducam_OV9281_USB_Camera";
     public static final AprilTagFieldLayout kTagLayout =
             AprilTagFields.kDefaultField.loadAprilTagLayoutField();
-    private static final Transform3d robotToCam = new Transform3d();
+    private static final Transform3d robotToCam = Constants.kCameraMountingOffset3D;
 
     /**
      * Components
@@ -57,8 +57,6 @@ public class Camera extends Subsystem{
         }
         photonEstimator = new PhotonPoseEstimator(kTagLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cam, robotToCam);
         photonEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
-
-        cam.takeOutputSnapshot();
     }
 
     public PhotonPipelineResult getLatestResult() {

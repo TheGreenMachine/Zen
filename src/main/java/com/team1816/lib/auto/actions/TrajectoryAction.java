@@ -7,6 +7,7 @@ import com.team1816.lib.subsystems.drive.SwerveDrive;
 import com.team1816.lib.subsystems.drive.EnhancedSwerveDrive;
 import com.team1816.lib.subsystems.drive.TankDrive;
 import com.team1816.lib.util.logUtil.GreenLogger;
+import com.team1816.season.configuration.Constants;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.RamseteController;
@@ -96,15 +97,15 @@ public class TrajectoryAction implements AutoAction {
                 );
         } else if (drive instanceof EnhancedSwerveDrive) {
             var thetaController = new ProfiledPIDController(
-                10,
+                    Constants.kPRotational,
                 0,
                 0,
                 kThetaControllerConstraints
             );
             thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-            PIDController xController = new PIDController(10, 0, 0.3);
-            PIDController yController = new PIDController(20, 0, 0.3);
+            PIDController xController = new PIDController(Constants.kPTranslational, 0, 0);
+            PIDController yController = new PIDController(Constants.kPTranslational, 0, 0);
 
             command =
                 new SwerveControllerCommand(

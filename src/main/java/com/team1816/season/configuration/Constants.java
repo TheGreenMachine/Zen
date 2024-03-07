@@ -151,6 +151,12 @@ public class Constants {
     public static final double motorRotationsPerRadians = 18.245;
 
     /**
+     * Autonomous
+     */
+    public static final double kPTranslational = 10;
+    public static final double kPRotational = 20;
+
+    /**
      * Pathfinder characterization
      */
     // 2023 legacy, kept as example
