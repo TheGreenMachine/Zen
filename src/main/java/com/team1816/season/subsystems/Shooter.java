@@ -111,7 +111,7 @@ public class Shooter extends Subsystem {
         pivotMotor = factory.getMotor(NAME, "pivotMotor");
         pivotFollowMotor = factory.getFollowerMotor(NAME, "pivotFollowMotor", pivotMotor, opposeLeaderDirection);
 
-        noteSensor = new DigitalInput((int) factory.getConstant(NAME, "noteSensorChannel", 0));
+        noteSensor = new DigitalInput((int) factory.getConstant(NAME, "noteSensorChannel", 9));
 
         rollerMotor.selectPIDSlot(1);
         pivotMotor.selectPIDSlot(2);
@@ -300,6 +300,9 @@ public class Shooter extends Subsystem {
                         desiredFeederVelocity = feederIntakeSpeed;
                     }
                 }
+                case MANUAL_TRANSFER -> {
+                    desiredFeederVelocity = feederIntakeSpeed;
+                }
             }
             feederMotor.set(GreenControlMode.VELOCITY_CONTROL, desiredFeederVelocity);
             desiredFeederVelocityLogger.append(desiredFeederVelocity);
@@ -418,7 +421,8 @@ public class Shooter extends Subsystem {
     public enum FEEDER_STATE {
         STOP,
         SHOOT,
-        TRANSFER
+        TRANSFER,
+        MANUAL_TRANSFER
     }
 
     /**

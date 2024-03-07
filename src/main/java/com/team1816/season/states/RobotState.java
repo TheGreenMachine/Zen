@@ -104,6 +104,7 @@ public class RobotState {
     public Shooter.PIVOT_STATE actualPivotState = Shooter.PIVOT_STATE.STOW;
     public boolean isShooting = false;
     public boolean isBeamBreakTriggered = false;
+    public boolean isBeamBreakOverridden = false;
 
     public Climber.CLIMBER_STATE actualClimberState = Climber.CLIMBER_STATE.STOP;
 

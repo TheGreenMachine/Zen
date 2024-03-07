@@ -35,6 +35,8 @@ import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.team1816.lib.subsystems.Subsystem.robotState;
+
 public class Robot extends TimedRobot {
     //TODO remove this variable
     private boolean isLooping = false;
@@ -407,6 +409,22 @@ public class Robot extends TimedRobot {
                     climber::zeroSensors
             );
 
+            //Not yet assigned
+            inputHandler.listenAction(
+                    "toggleOverride",
+                    ActionState.PRESSED,
+                    () -> {
+                        GreenLogger.log("Toggling beambreak override to " + !robotState.isBeamBreakOverridden);
+                        robotState.isBeamBreakOverridden = !robotState.isBeamBreakOverridden;
+                    }
+            );
+
+            inputHandler.listenActionPressAndRelease(
+                    "manualFeedingTransfer",
+                    (pressed) -> {
+                        shooter.setDesiredFeederState(pressed ? Shooter.FEEDER_STATE.MANUAL_TRANSFER : Shooter.FEEDER_STATE.STOP);
+                    }
+            );
 
         } catch (Throwable t) {
             faulted = true;
@@ -555,6 +573,10 @@ public class Robot extends TimedRobot {
             playlistManager.outputToSmartDashboard(); // update shuffleboard selected song
 
             SmartDashboard.putString("Git Hash", Constants.kGitHash);
+
+            orchestrator.setControllerRumble(InputHandler.ControllerRole.DRIVER, InputHandler.RumbleDirection.UNIFORM,
+                    robotState.isBeamBreakTriggered && !robotState.isBeamBreakOverridden ? 0.7 : 0);
+
         } catch (Throwable t) {
             faulted = true;
             GreenLogger.log(t.getMessage());

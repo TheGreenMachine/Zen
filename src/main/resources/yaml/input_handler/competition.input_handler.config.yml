@@ -1,6 +1,6 @@
 driver:
     controllerType: Xbox
-    rumble: false
+    rumble: true
     joysticks:
         left:
             horizontal: strafe
@@ -36,4 +36,6 @@ buttonboard:
     up: climbPosition
     center: reSpool
     left: zeroClimber
+    downLeft: toggleOverride
+    down: manualFeedingTransfer
 demoMode: false

@@ -22,6 +22,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import java.util.Objects;
+
 import static com.team1816.lib.subsystems.Subsystem.robotState;
 
 /**
@@ -41,7 +43,7 @@ public class Orchestrator {
     private static LedManager ledManager;
     private static Collector collector;
     private static Shooter shooter;
-    private static InputHandler inputHandler;
+    private InputHandler inputHandler;
 
     /**
      * Properties
@@ -217,7 +219,9 @@ public class Orchestrator {
     }
 
     public void autoSetCollectorState(){
-        if (!robotState.isShooting) {
+        if (robotState.isBeamBreakOverridden) {
+            collector.setDesiredState(Collector.COLLECTOR_STATE.INTAKE);
+        } else if (!robotState.isShooting) {
             if (!robotState.isBeamBreakTriggered && robotState.actualPivotState == Shooter.PIVOT_STATE.STOW) {
                 collector.setDesiredState(Collector.COLLECTOR_STATE.INTAKE);
                 shooter.setDesiredFeederState(Shooter.FEEDER_STATE.TRANSFER);

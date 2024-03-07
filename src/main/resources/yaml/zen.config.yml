@@ -1,6 +1,6 @@
 subsystems:
     drivetrain:
-        implemented: true
+        implemented: false
         motors:
             FLDr:
                 motorType: TalonFX
@@ -138,7 +138,7 @@ subsystems:
         constants:
             useMultiTargetOdometry: 0
     collector:
-        implemented: true
+        implemented: false
         motors:
             intakeMotor:
                 motorType: TalonFX
@@ -162,32 +162,32 @@ subsystems:
                 motorName: rollerMotor
                 id: 11
                 invertMotor: false
-            feederMotor:
-                motorType: SparkMax
-                motorName: feederMotor
-                id: 9
-                invertMotor: true
             pivotMotor:
                 motorType: TalonFX
                 motorName: pivotMotor
-                id: 12
+                id: -12
                 invertMotor: false
                 currentLimit: 20
                 motionMagic:
-                    expoKV: 0.05
-                    expoKA: 0.08
+                    expoKV: 0.04
+                    expoKA: 0.07
             pivotFollowMotor:
                 motorType: TalonFX
                 motorName: pivotFollowMotor
-                id: 13
+                id: -13
                 invertMotor: false # ?
                 currentLimit: 20
+            feederMotor:
+                motorType: TalonFX
+                motorName: feederMotor
+                id: -16
+                invertMotor: true
         pidConfig:
             slot0:
-                kP: 0
+                kP: 0.03
                 Ki: 0
                 kD: 0
-                kF: 0.001
+                kF: 0.0105
             slot1:
                 kP: 0.00025
                 Ki: 0
@@ -203,21 +203,21 @@ subsystems:
             noteSensorChannel: 0
             rollerSpeakerShootSpeed: 72
             rollerAmpShootSpeed: 30
-            feederSpeakerShootSpeed: 700
-            feederAmpShootSpeed: 700
-            feederIntakeSpeed: 500
+            feederSpeakerShootSpeed: 30
+            feederAmpShootSpeed: 10
+            feederIntakeSpeed: 5
             velocityErrorMargin: 0.1
             pivotNeutralPosition: 1.5
             pivotAmpShootPosition: 33
             pivotDistanceShootPosition: 8.675
             invertFollowerMotor: 1
     climber:
-        implemented: true
+        implemented: false
         motors:
             climbMotor:
                 motorType: TalonFX
                 motorName: climbMotor
-                id: 14
+                id: -14
                 invertMotor: true
                 currentLimit: 30
                 enableCurrentLimit: true
