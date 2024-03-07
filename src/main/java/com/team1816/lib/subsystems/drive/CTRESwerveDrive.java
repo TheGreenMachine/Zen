@@ -160,7 +160,11 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
 
         request = fieldCentricRequest;
 
-        updateSpeedMode(SPEED_MODE.NORMAL);
+        if(isDemoMode()) {
+            updateSpeedMode(SPEED_MODE.SLOW);
+        } else {
+            updateSpeedMode(SPEED_MODE.NORMAL);
+        }
 
         // Kinematics characterization & storing motor references
         Translation2d[] moduleLocations = new Translation2d[4];
