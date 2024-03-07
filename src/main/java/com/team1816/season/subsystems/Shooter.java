@@ -2,6 +2,7 @@ package com.team1816.season.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.team1816.lib.Infrastructure;
+import com.team1816.lib.auto.paths.AutoPath;
 import com.team1816.lib.hardware.components.motor.GhostMotor;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
@@ -20,6 +21,8 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import java.util.Optional;
 
 @Singleton
 public class Shooter extends Subsystem {
@@ -321,10 +324,11 @@ public class Shooter extends Subsystem {
                 }
                 case AUTO_AIM -> {
                     pivotOutputsChanged = true;
-                    if(AutoAimUtil.getShooterAngle(new Translation2d(Constants.blueSpeakerX, Constants.speakerY).getDistance(robotState.fieldToVehicle.getTranslation())).isPresent()){
-                        desiredPivotPosition = AutoAimUtil.getShooterAngle(
-                                new Translation2d(Constants.blueSpeakerX, Constants.speakerY).getDistance(robotState.fieldToVehicle.getTranslation())
-                                    ).get()
+                    Optional<Double> shooterAngle = AutoAimUtil.getShooterAngle(2);
+                    //new Translation2d(Constants.blueSpeakerX, Constants.speakerY).getDistance(robotState.fieldToVehicle.getTranslation())
+                    if(shooterAngle.isPresent()){
+                        desiredPivotPosition =
+                                (Math.PI-shooterAngle.get())
                                 * Constants.motorRotationsPerRadians
                                 - pivotNeutralPosition;
                     } else {

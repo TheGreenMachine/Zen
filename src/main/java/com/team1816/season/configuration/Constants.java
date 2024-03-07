@@ -185,7 +185,7 @@ public class Constants {
     //Positive
     public static final double lengthOfArm = 0.3048;
     //0-180
-    public static final double angleBetweenArmAndShooterDegrees = 111.8;
+    public static final double angleBetweenArmAndShooterDegrees = 180 - 111.8;
     //Positive
     public static final double outputVelocityPerSecond = 30;
     //Negative
