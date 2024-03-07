@@ -349,7 +349,10 @@ public class Robot extends TimedRobot {
                     "shootPivot",
                     ActionState.PRESSED,
                     () -> {
-                        isLooping = !isLooping;
+                        if(shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.AUTO_AIM)
+                            shooter.setDesiredPivotState(Shooter.PIVOT_STATE.STOW);
+                        else
+                            shooter.setDesiredPivotState(Shooter.PIVOT_STATE.AUTO_AIM);
                         GreenLogger.log("Changing pivot to: " + shooter.getDesiredPivotState());
                     }
             );
@@ -664,10 +667,6 @@ public class Robot extends TimedRobot {
         );
 
         orchestrator.autoSetCollectorState();
-
-        if(isLooping) {
-            shooter.setDesiredPivotState(Shooter.PIVOT_STATE.AUTO_AIM);
-        }
     }
 
     /**

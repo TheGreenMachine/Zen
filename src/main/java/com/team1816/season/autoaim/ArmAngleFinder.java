@@ -6,6 +6,7 @@ import java.util.Optional;
 
 //Based on EvenMoreGravCalcs
 //https://www.desmos.com/3d/fc156ffe8f
+//TODO change all souts in this class to a log or somethn
 public class ArmAngleFinder {
     /**
      * Constants

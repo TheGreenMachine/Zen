@@ -317,10 +317,16 @@ public class Shooter extends Subsystem {
                     desiredPivotPosition = pivotDistanceShootPosition; //Lil bit over because of possibility for overshoot
                 }
                 case AUTO_AIM -> {
-                    desiredPivotPosition = (180 - AutoAimUtil.getShooterAngle(
-                            new Translation2d(Constants.blueSpeakerX, Constants.speakerY).getDistance(robotState.fieldToVehicle.getTranslation())).orElse(0.0)
-                            - 90.0)
-                            * Constants.motorRotationsPerRadians;
+                    pivotOutputsChanged = true;
+                    if(AutoAimUtil.getShooterAngle(new Translation2d(Constants.blueSpeakerX, Constants.speakerY).getDistance(robotState.fieldToVehicle.getTranslation())).isPresent()){
+                        desiredPivotPosition = AutoAimUtil.getShooterAngle(
+                                new Translation2d(Constants.blueSpeakerX, Constants.speakerY).getDistance(robotState.fieldToVehicle.getTranslation())
+                                    ).get()
+                                * Constants.motorRotationsPerRadians
+                                - pivotNeutralPosition;
+                    } else {
+                        desiredPivotPosition = pivotNeutralPosition;
+                    }
                 }
 
             }
