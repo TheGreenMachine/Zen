@@ -33,6 +33,8 @@ import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.team1816.lib.subsystems.Subsystem.robotState;
+
 public class Robot extends TimedRobot {
 
     /**
@@ -570,6 +572,10 @@ public class Robot extends TimedRobot {
             playlistManager.outputToSmartDashboard(); // update shuffleboard selected song
 
             SmartDashboard.putString("Git Hash", Constants.kGitHash);
+
+            orchestrator.setControllerRumble(InputHandler.ControllerRole.DRIVER, InputHandler.RumbleDirection.UNIFORM,
+                    robotState.isBeamBreakTriggered && !robotState.isBeamBreakOverridden ? 0.7 : 0);
+
         } catch (Throwable t) {
             faulted = true;
             GreenLogger.log(t.getMessage());

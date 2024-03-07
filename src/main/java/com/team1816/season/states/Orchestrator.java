@@ -44,7 +44,7 @@ public class Orchestrator {
     private static LedManager ledManager;
     private static Collector collector;
     private static Shooter shooter;
-    private static InputHandler inputHandler;
+    private InputHandler inputHandler;
 
     /**
      * Properties
@@ -220,9 +220,6 @@ public class Orchestrator {
                 shooter.setDesiredFeederState(Shooter.FEEDER_STATE.STOP);
             }
         }
-
-        setControllerRumble(InputHandler.ControllerRole.DRIVER, InputHandler.RumbleDirection.UNIFORM,
-                robotState.isBeamBreakTriggered ? 0.3 : 0);
     }
 
     //Just a wrapper to keep paradigm
