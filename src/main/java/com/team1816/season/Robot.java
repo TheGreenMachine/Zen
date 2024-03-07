@@ -36,6 +36,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Robot extends TimedRobot {
+    //TODO remove this variable
+    private boolean isLooping = false;
 
     /**
      * Looper
@@ -347,13 +349,7 @@ public class Robot extends TimedRobot {
                     "shootPivot",
                     ActionState.PRESSED,
                     () -> {
-                        if(shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.STOW) {
-                            shooter.setDesiredPivotState(Shooter.PIVOT_STATE.AUTO_AIM);
-                        }
-                        else {
-                            shooter.setDesiredPivotState(Shooter.PIVOT_STATE.STOW);
-                        }
-
+                        isLooping = !isLooping;
                         GreenLogger.log("Changing pivot to: " + shooter.getDesiredPivotState());
                     }
             );
@@ -649,7 +645,6 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         try {
             manualControl();
-            System.out.println(new Translation2d().getDistance(robotState.fieldToVehicle.getTranslation().times(39.37)));
         } catch (Throwable t) {
             faulted = true;
             throw t;
@@ -669,6 +664,10 @@ public class Robot extends TimedRobot {
         );
 
         orchestrator.autoSetCollectorState();
+
+        if(isLooping) {
+            shooter.setDesiredPivotState(Shooter.PIVOT_STATE.AUTO_AIM);
+        }
     }
 
     /**

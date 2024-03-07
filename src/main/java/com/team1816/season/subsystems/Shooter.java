@@ -1,15 +1,11 @@
 package com.team1816.season.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.components.motor.GhostMotor;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
-import com.team1816.lib.hardware.components.motor.LazyTalonFX;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.subsystems.Subsystem;
-import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.autoaim.AutoAimUtil;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
@@ -20,7 +16,6 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import jakarta.inject.Inject;
@@ -322,9 +317,10 @@ public class Shooter extends Subsystem {
                     desiredPivotPosition = pivotDistanceShootPosition; //Lil bit over because of possibility for overshoot
                 }
                 case AUTO_AIM -> {
-                    desiredPivotPosition = AutoAimUtil.getShooterAngle(
-                            new Translation2d().getDistance(robotState.fieldToVehicle.getTranslation()))
-                            .orElse(0.0) * Constants.motorRotationsPerRadians;
+                    desiredPivotPosition = (180 - AutoAimUtil.getShooterAngle(
+                            new Translation2d(Constants.blueSpeakerX, Constants.speakerY).getDistance(robotState.fieldToVehicle.getTranslation())).orElse(0.0)
+                            - 90.0)
+                            * Constants.motorRotationsPerRadians;
                 }
 
             }
