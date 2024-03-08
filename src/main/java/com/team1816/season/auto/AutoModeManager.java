@@ -11,6 +11,7 @@ import com.team1816.lib.auto.modes.TuneDrivetrainMode;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.auto.modes.*;
+import com.team1816.season.auto.modes.ThreeScoreUnderStageMode;
 import com.team1816.season.auto.modes.distance.FourScoreFromDistanceMode;
 import com.team1816.season.auto.modes.eject.BottomMiddleEjects;
 import com.team1816.season.auto.modes.eject.TopMiddleEjects;
@@ -357,6 +358,7 @@ public class AutoModeManager {
         RANGE_FOUR_SCORE,
         RANGE_TWO_SCORE,
         SCORE_AND_SCRAM,
+        THREE_SCORE_UNDER_STAGE,
 
 
         BOTTOM_MIDDLE_EJECTS,
@@ -442,6 +444,8 @@ public class AutoModeManager {
                 return new TopMiddleEjects();
             case SCORE_AND_SCRAM:
                 return new ScoreAndScramMode();
+            case THREE_SCORE_UNDER_STAGE:
+                return new ThreeScoreUnderStageMode();
             case TEST:
                 if (!DriverStation.isFMSAttached()) return new TestMode();
             case SYSTEM_CHECK:
