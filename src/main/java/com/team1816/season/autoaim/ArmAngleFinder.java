@@ -1,12 +1,12 @@
 package com.team1816.season.autoaim;
 
 import com.team1816.season.configuration.Constants;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
 
 import java.util.Optional;
 
 //Based on EvenMoreGravCalcs
 //https://www.desmos.com/3d/fc156ffe8f
-//TODO change all souts in this class to a log or somethn
 public class ArmAngleFinder {
     /**
      * Constants
@@ -90,7 +90,7 @@ public class ArmAngleFinder {
         Optional<Double> optionalArmAngle = getBallisticAngleOfArm(xyPlaneEuclideanDistanceToTarget);
 
         if (optionalArmAngle.isEmpty()){
-            System.out.println("Target not in range");
+//            System.out.println("Target not in range");
             return Optional.empty();
         }
 
@@ -136,7 +136,7 @@ public class ArmAngleFinder {
                         )*Math.pow(xyPlaneEuclideanDistanceToTarget,2)
                     -(Math.pow(outputVelocityPerSecond,2)/gravityPerSecond))
         ){
-            System.out.println("Target out of range");
+//            System.out.println("Target out of range");
             return Optional.empty();
         }
 
@@ -152,19 +152,19 @@ public class ArmAngleFinder {
             currentDivisor *= -10;
 
             if(currentDivisor == 0){
-                System.out.println("Something went wrong");
-                System.out.println("Loop count: "+runLoops);
-                System.out.println(armAngle);
+//                System.out.println("Something went wrong");
+//                System.out.println("Loop count: "+runLoops);
+//                System.out.println(armAngle);
                 return Optional.empty();
             }
         }
 
         if(xyPlaneEuclideanDistanceToTarget > (Math.pow(outputVelocityPerSecond,2)/gravityPerSecond)*Math.cos(armAngle)*Math.sin(armAngle)){
-            System.out.println("Target out of range message 2");
+//            System.out.println("Target out of range message 2");
             return Optional.empty();
         }
 
-        System.out.println("Loop count: "+runLoops);
+//        System.out.println("Loop count: "+runLoops);
 
         return Optional.of(armAngle);
     }

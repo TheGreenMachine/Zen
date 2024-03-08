@@ -324,8 +324,7 @@ public class Shooter extends Subsystem {
                 }
                 case AUTO_AIM -> {
                     pivotOutputsChanged = true;
-                    Optional<Double> shooterAngle = AutoAimUtil.getShooterAngle(2);
-                    //new Translation2d(Constants.blueSpeakerX, Constants.speakerY).getDistance(robotState.fieldToVehicle.getTranslation())
+                    Optional<Double> shooterAngle = AutoAimUtil.getShooterAngle(new Translation2d(robotState.allianceColor == com.team1816.lib.auto.Color.BLUE ? Constants.blueSpeakerX : 651.25 - Constants.blueSpeakerX, Constants.speakerY).getDistance(robotState.fieldToVehicle.getTranslation()));
                     if(shooterAngle.isPresent()){
                         desiredPivotPosition =
                                 (Math.PI-shooterAngle.get())
