@@ -14,11 +14,11 @@
         "canCoder": {
             "type": "string"
         },
-        "invertX": {
-            "type": "boolean"
+        "xCoord": {
+            "type": "number"
         },
-        "invertY": {
-            "type": "boolean"
+        "yCoord": {
+            "type": "number"
         }
     }
 }

@@ -274,9 +274,8 @@ public class RobotFactory {
 
         var canCoder = subsystem.canCoders.get(module.canCoder);
 
-        double moduleDistFromCenter = Units.inchesToMeters(getConstant("drivetrain", "wheelbaseLength", 22.75) / 2); //this makes me sad
-        double moduleXDist = moduleDistFromCenter * (module.invertX ? -1 : 1);
-        double moduleYDist = moduleDistFromCenter * (module.invertY ? -1 : 1);
+        double moduleXDist = Units.inchesToMeters(module.xCoord);
+        double moduleYDist = Units.inchesToMeters(module.yCoord);
 
         boolean usingPhoenixPro = getConstant("isProLicensed", 0) > 0;
 

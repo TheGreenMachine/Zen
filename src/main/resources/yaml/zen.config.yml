@@ -1,6 +1,6 @@
 subsystems:
     drivetrain:
-        implemented: false
+        implemented: true
         motors:
             FLDr:
                 motorType: TalonFX
@@ -53,8 +53,8 @@ subsystems:
                     drive: FLDr
                     azimuth: FLAz
                     canCoder: FLEnc
-                    invertX: false
-                    invertY: false
+                    xCoord: 11.375
+                    yCoord: 11.375
                     constants:
                         encoderOffset: 0.352783203125
                         couplingRatio: 3.589
@@ -64,8 +64,8 @@ subsystems:
                     drive: FRDr
                     azimuth: FRAz
                     canCoder: FREnc
-                    invertX: false
-                    invertY: true
+                    xCoord: 11.375
+                    yCoord: -11.375
                     constants:
                         encoderOffset: -0.262939453125
                         couplingRatio: 3.572
@@ -75,8 +75,8 @@ subsystems:
                     drive: RLDr
                     azimuth: RLAz
                     canCoder: RLEnc
-                    invertX: true
-                    invertY: false
+                    xCoord: -11.375
+                    yCoord: 11.375
                     constants:
                         encoderOffset: -0.44482421875
                         couplingRatio: 3.576
@@ -86,8 +86,8 @@ subsystems:
                     drive: RRDr
                     azimuth: RRAz
                     canCoder: RREnc
-                    invertX: true
-                    invertY: true
+                    xCoord: -11.375
+                    yCoord: -11.375
                     constants:
                         encoderOffset: -0.0087890625
                         couplingRatio: 3.579
