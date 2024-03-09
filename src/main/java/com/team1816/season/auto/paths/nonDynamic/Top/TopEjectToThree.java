@@ -11,20 +11,18 @@ public class TopEjectToThree extends AutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return List.of(
-            new Pose2d(Constants.topEjectPosition, Rotation2d.fromDegrees(20)),
-            new Pose2d(6.88, 7.14, Rotation2d.fromDegrees(-20)),
-            new Pose2d(7.76, 5.89, Rotation2d.fromDegrees(-75)),
-            new Pose2d(Constants.centerNoteThreePosition, Rotation2d.fromDegrees(-75))
+            new Pose2d(Constants.topEjectPosition, Rotation2d.fromDegrees(0)),
+            new Pose2d(6.79, 5.51, Rotation2d.fromDegrees(-80)),
+            new Pose2d(Constants.centerNoteThreePosition, Rotation2d.fromDegrees(0))
         );
     }
 
     @Override
     protected List<Rotation2d> getWaypointHeadings() {
         return List.of(
-            Rotation2d.fromDegrees(20),
-            Rotation2d.fromDegrees(-20),
-            Rotation2d.fromDegrees(-75),
-            Rotation2d.fromDegrees(-75)
+            Rotation2d.fromDegrees(0),
+            Rotation2d.fromDegrees(0),
+            Rotation2d.fromDegrees(0)
         );
     }
 

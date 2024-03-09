@@ -3,6 +3,7 @@ package com.team1816.season.auto.paths.noteToNote;
 import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.season.auto.AutoModeManager;
+import com.team1816.season.configuration.Constants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -24,11 +25,11 @@ public class NoteThreeToNoteOneUnderStagePath extends DynamicAutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return updateWaypoints(List.of(
-                new Pose2d(2.4, 4.13, Rotation2d.fromDegrees(-130)),
+                new Pose2d(Constants.noteThreePosition, Rotation2d.fromDegrees(-130)),
                 new Pose2d(3.45, 2.95, Rotation2d.fromDegrees(0)),
                 new Pose2d(4.47, 3.80, Rotation2d.fromDegrees(90)),
                 new Pose2d(3.05, 6.83, Rotation2d.fromDegrees(130)),
-                new Pose2d(2.7, 7, Rotation2d.fromDegrees(161))
+                new Pose2d(Constants.noteOnePosition, Rotation2d.fromDegrees(175))
         ));
     }
 
@@ -39,7 +40,7 @@ public class NoteThreeToNoteOneUnderStagePath extends DynamicAutoPath {
                 Rotation2d.fromDegrees(90),
                 Rotation2d.fromDegrees(90),
                 Rotation2d.fromDegrees(130),
-                Rotation2d.fromDegrees(130)
+                Rotation2d.fromDegrees(60)
         ));
     }
 

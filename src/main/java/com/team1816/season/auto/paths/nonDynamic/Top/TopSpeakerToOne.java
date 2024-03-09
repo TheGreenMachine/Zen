@@ -12,8 +12,8 @@ public class TopSpeakerToOne extends AutoPath {
     protected List<Pose2d> getWaypoints() {
         return List.of(
             new Pose2d(Constants.topSpeakerPosition, Rotation2d.fromDegrees(60)),
-            new Pose2d(2.23, 7.68, Rotation2d.fromDegrees(5)),
-            new Pose2d(3.85, 7.54, Rotation2d.fromDegrees(-5)),
+            new Pose2d(2.23, 7.69, Rotation2d.fromDegrees(0)),
+            new Pose2d(4.14, 7.69, Rotation2d.fromDegrees(0)),
             new Pose2d(Constants.centerNoteOnePosition, Rotation2d.fromDegrees(0))
         );
     }
@@ -22,8 +22,8 @@ public class TopSpeakerToOne extends AutoPath {
     protected List<Rotation2d> getWaypointHeadings() {
         return List.of(
             Rotation2d.fromDegrees(60),
-            Rotation2d.fromDegrees(5),
-            Rotation2d.fromDegrees(-5),
+            Rotation2d.fromDegrees(0),
+            Rotation2d.fromDegrees(0),
             Rotation2d.fromDegrees(0)
         );
     }

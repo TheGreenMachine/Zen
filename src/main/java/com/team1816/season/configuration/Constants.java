@@ -114,9 +114,9 @@ public class Constants {
     public static final Translation2d ampPosition = new Translation2d(1.86,7.74);
     public static final Translation2d ampReversedPosition = new Translation2d(1.84, 7.74);
     public static final Translation2d ampStartPosition = new Translation2d(1.47,7.3);
-    public static final Translation2d noteOnePosition = new Translation2d(2.4,7);
-    public static final Translation2d noteTwoPosition = new Translation2d(2.4,5.58);
-    public static final Translation2d noteThreePosition = new Translation2d(2.4,4.13);
+    public static final Translation2d noteOnePosition = new Translation2d(2.5,7);
+    public static final Translation2d noteTwoPosition = new Translation2d(2.5,5.58);
+    public static final Translation2d noteThreePosition = new Translation2d(2.5,4.13);
     public static final Translation2d centerNoteOnePosition = new Translation2d(7.76,7.48);
     public static final Translation2d centerNoteTwoPosition = new Translation2d(7.76,5.80);
     public static final Translation2d centerNoteThreePosition = new Translation2d(7.76,4.13);

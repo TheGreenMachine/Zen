@@ -12,7 +12,7 @@ public class OneToTopEject extends AutoPath {
     protected List<Pose2d> getWaypoints() {
         return List.of(
             new Pose2d(Constants.centerNoteOnePosition, Rotation2d.fromDegrees(180)),
-            new Pose2d(Constants.topEjectPosition, Rotation2d.fromDegrees(-160))
+            new Pose2d(Constants.topEjectPosition, Rotation2d.fromDegrees(-180))
         );
     }
 
@@ -20,7 +20,7 @@ public class OneToTopEject extends AutoPath {
     protected List<Rotation2d> getWaypointHeadings() {
         return List.of(
             Rotation2d.fromDegrees(0),
-            Rotation2d.fromDegrees(20)
+            Rotation2d.fromDegrees(0)
         );
     }
 
