@@ -106,6 +106,28 @@ public class Constants {
     public static final double chargeStationThresholdYMax = 4.6;
 
     /**
+     * Field positions
+     */
+    public static final Translation2d topSpeakerPosition = new Translation2d(0.721,6.762);
+    public static final Translation2d middleSpeakerPosition = new Translation2d(1.4,5.55);
+    public static final Translation2d bottomSpeakerPosition = new Translation2d(0.72,4.3);
+    public static final Translation2d ampPosition = new Translation2d(1.86,7.74);
+    public static final Translation2d ampReversedPosition = new Translation2d(1.84, 7.74);
+    public static final Translation2d ampStartPosition = new Translation2d(1.47,7.3);
+    public static final Translation2d noteOnePosition = new Translation2d(2.4,7);
+    public static final Translation2d noteTwoPosition = new Translation2d(2.4,5.58);
+    public static final Translation2d noteThreePosition = new Translation2d(2.4,4.13);
+    public static final Translation2d centerNoteOnePosition = new Translation2d(7.76,7.48);
+    public static final Translation2d centerNoteTwoPosition = new Translation2d(7.76,5.80);
+    public static final Translation2d centerNoteThreePosition = new Translation2d(7.76,4.13);
+    public static final Translation2d centerNoteFourPosition = new Translation2d(7.76,2.45);
+    public static final Translation2d centerNoteFivePosition = new Translation2d(7.76,0.78);
+    public static final Translation2d bottomEjectPosition = new Translation2d(4.63,1.57);
+    public static final Translation2d topEjectPosition = new Translation2d(5.22,6.93);
+    public static final Translation2d bottomScramPosition = new Translation2d(7.95,0.77);
+    public static final Translation2d topScramPosition = new Translation2d(7.87,7.52);
+
+    /**
      * Drivetrain characterization
      */
     public static final double gravitationalAccelerationConstant = 9.8d;

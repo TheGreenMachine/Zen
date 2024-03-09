@@ -1,6 +1,7 @@
 package com.team1816.season.auto.paths.nonDynamic.Bottom;
 
 import com.team1816.lib.auto.paths.AutoPath;
+import com.team1816.season.configuration.Constants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -10,22 +11,18 @@ public class ThreeToBottomEject extends AutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return List.of(
-            new Pose2d(8.02, 3.76, Rotation2d.fromDegrees(-110)),
-            new Pose2d(7.55, 2.59, Rotation2d.fromDegrees(-115)),
-            new Pose2d(6.9, 1.53, Rotation2d.fromDegrees(-140)),
-            new Pose2d(5.81, 1.21, Rotation2d.fromDegrees(175)),
-            new Pose2d(4.63, 1.57, Rotation2d.fromDegrees(160))
+            new Pose2d(Constants.centerNoteThreePosition, Rotation2d.fromDegrees(180)),
+            new Pose2d(7.00, 2.32, Rotation2d.fromDegrees(-120)),
+            new Pose2d(Constants.bottomEjectPosition, Rotation2d.fromDegrees(180))
         );
     }
 
     @Override
     protected List<Rotation2d> getWaypointHeadings() {
         return List.of(
-            Rotation2d.fromDegrees(70),
-            Rotation2d.fromDegrees(65),
-            Rotation2d.fromDegrees(40),
-            Rotation2d.fromDegrees(-5),
-            Rotation2d.fromDegrees(-20)
+            Rotation2d.fromDegrees(0),
+            Rotation2d.fromDegrees(0),
+            Rotation2d.fromDegrees(0)
         );
     }
 

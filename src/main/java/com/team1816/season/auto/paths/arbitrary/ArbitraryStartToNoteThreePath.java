@@ -3,6 +3,7 @@ package com.team1816.season.auto.paths.arbitrary;
 import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.season.auto.AutoModeManager;
+import com.team1816.season.configuration.Constants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -26,7 +27,7 @@ public class ArbitraryStartToNoteThreePath extends DynamicAutoPath {
     protected List<Pose2d> getWaypoints() {
         return updateWaypoints(List.of(
                 new Pose2d(1.5, 4.13, Rotation2d.fromDegrees(0)),
-                new Pose2d(2.57, 4.13, Rotation2d.fromDegrees(0))
+                new Pose2d(Constants.noteThreePosition, Rotation2d.fromDegrees(0))
         ));
     }
 

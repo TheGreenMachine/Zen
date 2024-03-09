@@ -1,6 +1,7 @@
 package com.team1816.season.auto.paths.nonDynamic.Top;
 
 import com.team1816.lib.auto.paths.AutoPath;
+import com.team1816.season.configuration.Constants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -10,10 +11,10 @@ public class ThreeToTopEject extends AutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return List.of(
-            new Pose2d(8.12, 4.59, Rotation2d.fromDegrees(105)),
+            new Pose2d(Constants.centerNoteThreePosition, Rotation2d.fromDegrees(105)),
             new Pose2d(7.76, 5.89, Rotation2d.fromDegrees(105)),
             new Pose2d(6.88, 7.14, Rotation2d.fromDegrees(160)),
-            new Pose2d(5.22, 6.93, Rotation2d.fromDegrees(-160))
+            new Pose2d(Constants.topEjectPosition, Rotation2d.fromDegrees(-160))
         );
     }
 
