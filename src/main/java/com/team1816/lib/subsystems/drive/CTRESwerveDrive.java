@@ -86,7 +86,7 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
     public static final int kBackLeft = 2;
     public static final int kBackRight = 3;
 
-    private static final double maxVel12MPS = factory.getConstant(NAME,"maxVel12VMPS", 5);
+    private static final double maxVel12MPS = factory.getConstant(NAME,"maxVel12VMPS", 5.2);
 
     private static final double driveGearRatio = factory.getConstant(NAME, "driveGearRatio", 6.75);
 

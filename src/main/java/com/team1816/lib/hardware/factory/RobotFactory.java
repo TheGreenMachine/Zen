@@ -279,7 +279,7 @@ public class RobotFactory {
 
         boolean usingPhoenixPro = getConstant("isProLicensed", 0) > 0;
 
-        double driveGearRatio = getConstant("drivetrain", "driveGearRatio", 6.75);
+        double driveGearRatio = getConstant("drivetrain", "driveGearRatio", 6.12);
 
         var moduleConfig = new SwerveModuleConstants()
                 // General Drivetrain
