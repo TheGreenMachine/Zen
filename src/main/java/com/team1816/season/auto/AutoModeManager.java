@@ -430,8 +430,8 @@ public class AutoModeManager {
         switch (mode) {
 //            case DO_NOTHING:
 //                return new DoNothingMode();
-//            case TUNE_DRIVETRAIN: // commented for competition purposes
-//                return new TuneDrivetrainMode();
+            case TUNE_DRIVETRAIN: // commented for competition purposes
+                return new TuneDrivetrainMode();
 //            case LIVING_ROOM:
 //                return (new LivingRoomMode(color));
             case DRIVE_STRAIGHT:
