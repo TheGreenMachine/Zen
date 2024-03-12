@@ -254,10 +254,11 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
         if (isBraking) {
             request = brakeRequest;
         } else {
-            request = fieldCentricRequest
-                    .withVelocityX(throttle  * maxVel12MPS * driveScalar * deadbander)
-                    .withVelocityY(strafe  * maxVel12MPS * driveScalar * deadbander)
-                    .withRotationalRate(rotation * kMaxAngularSpeed * Math.PI * rotationScalar);
+            request = new SwerveRequest.FieldCentric();
+//            request = fieldCentricRequest
+//                    .withVelocityX(throttle  * maxVel12MPS * driveScalar * deadbander)
+//                    .withVelocityY(strafe  * maxVel12MPS * driveScalar * deadbander)
+//                    .withRotationalRate(rotation * kMaxAngularSpeed * Math.PI * rotationScalar);
         }
 
         if (Constants.kLoggingDrivetrain) {
