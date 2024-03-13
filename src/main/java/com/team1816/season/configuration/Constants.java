@@ -2,10 +2,8 @@ package com.team1816.season.configuration;
 
 import com.google.inject.Singleton;
 import com.team1816.lib.Injector;
-import com.team1816.lib.auto.Polygon;
 import com.team1816.lib.auto.Symmetry;
 import com.team1816.lib.hardware.factory.RobotFactory;
-import com.team1816.season.Robot;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -178,4 +176,29 @@ public class Constants {
     /**
      * Simulation
      */
+    public static final ShuffleboardTab kSimWindow = Shuffleboard.getTab("Simulation");
+
+    /**
+     * AutoAiming stuff
+     */
+    //TODO set to meters, (currently in inches)
+    //Positive
+    public static final double lengthOfArm = 0.3048;
+    //0-180
+    public static final double angleBetweenArmAndShooterDegrees = 180 - 111.8;
+    //Positive
+    public static final double outputVelocityPerSecond = 30;
+    //Negative
+    public static final double gravityPerSecond = -9.80665;
+    //Nonzero
+    public static final double errorPerUnitDistance = 0.1;
+    //the robot looks down the positive y axis, and the right side is the positive x axis while the left is the negative x axis
+    public static final double axlePositionOffsetX = 0;
+    public static final double axlePositionOffsetY = 0.1524;
+    public static final double axlePositionOffsetZ = 0.3048;
+    public static final double heightOfTarget = 2.0431125;
+    public static final double blueSpeakerX = 0.2286;
+    //TODO find out this measurement
+    public static final double speakerY = 5.6597042;
+    public static final double axleRadiansDisplacement = 0;
 }

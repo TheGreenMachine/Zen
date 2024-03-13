@@ -165,7 +165,7 @@ subsystems:
             pivotMotor:
                 motorType: TalonFX
                 motorName: pivotMotor
-                id: -12
+                id: 12
                 invertMotor: false
                 currentLimit: 20
                 motionMagic:
@@ -174,7 +174,7 @@ subsystems:
             pivotFollowMotor:
                 motorType: TalonFX
                 motorName: pivotFollowMotor
-                id: -13
+                id: 13
                 invertMotor: false # ?
                 currentLimit: 20
             feederMotor:
@@ -196,7 +196,7 @@ subsystems:
             slot2:
                 kP: 0.6
                 ki: 0
-                kD: 0.03
+                kD: 0.02
                 kF: 0
                 gravityType: cosine
         constants:

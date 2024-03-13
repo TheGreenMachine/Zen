@@ -31,7 +31,7 @@ public class Camera extends Subsystem{
     private static final String CAM = "Arducam_OV9281_USB_Camera";
     public static final AprilTagFieldLayout kTagLayout =
             AprilTagFields.kDefaultField.loadAprilTagLayoutField();
-    private static final Transform3d robotToCam = new Transform3d();
+    private static final Transform3d robotToCam = Constants.kCameraMountingOffset3D;
 
     /**
      * Components
@@ -40,13 +40,6 @@ public class Camera extends Subsystem{
     private PhotonCamera cam;
     private PhotonCameraSim cameraSim;
     private final PhotonPoseEstimator photonEstimator;
-
-    /**
-     * Something
-     */
-    private double lastEstTimestamp = 0;
-    public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
-    public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
     @Inject
     public Camera(Infrastructure inf, RobotState rs){
@@ -64,8 +57,6 @@ public class Camera extends Subsystem{
         }
         photonEstimator = new PhotonPoseEstimator(kTagLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cam, robotToCam);
         photonEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
-
-        cam.takeOutputSnapshot();
     }
 
     public PhotonPipelineResult getLatestResult() {
@@ -83,14 +74,22 @@ public class Camera extends Subsystem{
      * @return An {@link EstimatedRobotPose} with an estimated pose, estimate timestamp, and targets
      *     used for estimation.
      */
-    public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
+    public boolean updateEstimatedGlobalPose() {
         Optional<EstimatedRobotPose> visionEst = photonEstimator.update();
+        if(visionEst.isEmpty())
+            return false;
+
+        robotState.currentVisionEstimatedPose = visionEst.get();
         double latestTimestamp = cam.getLatestResult().getTimestampSeconds();
-        boolean newResult = Math.abs(latestTimestamp - lastEstTimestamp) > 1e-5;
+        boolean newResult = Math.abs(latestTimestamp - robotState.lastEstTimestamp) > 1e-5;
 
-        if (newResult) lastEstTimestamp = latestTimestamp;
+        if (newResult) robotState.lastEstTimestamp = latestTimestamp;
 
-        return visionEst;
+        return true;
+    }
+
+    public EstimatedRobotPose getEstimatedGlobalPose() {
+        return robotState.currentVisionEstimatedPose;
     }
 
     /**
@@ -101,7 +100,7 @@ public class Camera extends Subsystem{
      * @param estimatedPose The estimated pose to guess standard deviations for.
      */
     public Matrix<N3, N1> getEstimationStdDevs(Pose2d estimatedPose) {
-        var estStdDevs = kSingleTagStdDevs;
+        var estStdDevs = robotState.kSingleTagStdDevs;
         var targets = getLatestResult().getTargets();
         int numTags = 0;
         double avgDist = 0;
@@ -115,7 +114,7 @@ public class Camera extends Subsystem{
         if (numTags == 0) return estStdDevs;
         avgDist /= numTags;
         // Decrease std devs if multiple targets are visible
-        if (numTags > 1) estStdDevs = kMultiTagStdDevs;
+        if (numTags > 1) estStdDevs = robotState.kMultiTagStdDevs;
         // Increase std devs based on (average) distance
         if (numTags == 1 && avgDist > 4)
             estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
@@ -128,21 +127,9 @@ public class Camera extends Subsystem{
     public void readFromHardware() {
         if (RobotBase.isSimulation()) {
             visionSim.update(robotState.fieldToVehicle);
+        } else {
+            robotState.currentCamFind = updateEstimatedGlobalPose();
         }
-
-//        if(!cam.getDriverMode()) {
-//            // Correct pose estimate with vision measurements
-//            var visionEst = getEstimatedGlobalPose();
-//            visionEst.ifPresent(
-//                    est -> {
-//                        var estPose = est.estimatedPose.toPose2d();
-//                        // Change our trust in the measurement based on the tags we can see
-//                        var estStdDevs = getEstimationStdDevs(estPose);
-//
-//                        robotState.swerveEstimator.addVisionMeasurement(
-//                                est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
-//                    });
-//        }
     }
 
     @Override
