@@ -3,6 +3,7 @@ package com.team1816.lib.subsystems.vision;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.subsystems.Subsystem;
 import com.team1816.season.configuration.Constants;
+import com.team1816.season.configuration.FieldConfig;
 import com.team1816.season.states.RobotState;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -127,9 +128,11 @@ public class Camera extends Subsystem{
     public void readFromHardware() {
         if (RobotBase.isSimulation()) {
             visionSim.update(robotState.fieldToVehicle);
-        } else {
-            robotState.currentCamFind = updateEstimatedGlobalPose();
         }
+        robotState.currentCamFind = updateEstimatedGlobalPose();
+
+        if (robotState.currentVisionEstimatedPose != null )
+          FieldConfig.field.getObject("vision").setPose(robotState.currentVisionEstimatedPose.estimatedPose.toPose2d());
     }
 
     @Override
