@@ -46,7 +46,7 @@ public class Camera extends Subsystem{
     public Camera(Infrastructure inf, RobotState rs){
         super(NAME, inf, rs);
         cam = new PhotonCamera(CAM);
-        cam.setDriverMode(true);
+        cam.setDriverMode(false);
 
         if (RobotBase.isSimulation()) {
             cameraSim = new PhotonCameraSim(cam);
@@ -131,8 +131,8 @@ public class Camera extends Subsystem{
         }
         robotState.currentCamFind = updateEstimatedGlobalPose();
 
-        if (robotState.currentVisionEstimatedPose != null )
-          FieldConfig.field.getObject("vision").setPose(robotState.currentVisionEstimatedPose.estimatedPose.toPose2d());
+//        if (robotState.currentVisionEstimatedPose != null )
+//          FieldConfig.field.getObject("vision").setPose(robotState.currentVisionEstimatedPose.estimatedPose.toPose2d());
     }
 
     @Override
