@@ -10,12 +10,17 @@ import com.team1816.season.configuration.FieldConfig;
 import com.team1816.season.subsystems.Climber;
 import com.team1816.season.subsystems.Shooter;
 import com.team1816.season.subsystems.Collector;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.*;
+import org.photonvision.EstimatedRobotPose;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,6 +138,15 @@ public class RobotState {
         resetPosition();
         FieldConfig.setupField(field);
     }
+
+    /**
+     * Vision Pose Stuff
+     */
+    public double lastEstTimestamp = 0;
+    public final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
+    public final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+    public EstimatedRobotPose currentVisionEstimatedPose;
+    public boolean currentCamFind;
 
     /**
      * Resets drivetrain and turret position to a specified pose of drivetrain and rotation of turret

@@ -213,6 +213,11 @@
         "window": {
           "visible": true
         }
+      },
+      "/SmartDashboard/Third collected note": {
+        "window": {
+          "visible": true
+        }
       }
     }
   },
@@ -262,15 +267,11 @@
     "special": true
   },
   "NetworkTables Info": {
-    "Connections": {
-      "open": true
-    },
     "Server": {
       "Subscribers": {
         "open": true
       }
-    },
-    "visible": true
+    }
   },
   "NetworkTables View": {
     "visible": false

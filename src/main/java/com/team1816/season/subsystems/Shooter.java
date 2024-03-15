@@ -5,25 +5,27 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team1816.lib.Infrastructure;
+import com.team1816.lib.auto.paths.AutoPath;
 import com.team1816.lib.hardware.components.motor.GhostMotor;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
-import com.team1816.lib.hardware.components.motor.LazyTalonFX;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.subsystems.Subsystem;
-import com.team1816.lib.util.logUtil.GreenLogger;
+import com.team1816.season.autoaim.AutoAimUtil;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import java.util.Optional;
 
 @Singleton
 public class Shooter extends Subsystem {
@@ -327,6 +329,19 @@ public class Shooter extends Subsystem {
                 case SHOOT_DISTANCE -> {
                     desiredPivotPosition = pivotDistanceShootPosition; //Lil bit over because of possibility for overshoot
                 }
+                case AUTO_AIM -> {
+                    pivotOutputsChanged = true;
+                    Optional<Double> shooterAngle = AutoAimUtil.getShooterAngle(new Translation2d(robotState.allianceColor == com.team1816.lib.auto.Color.BLUE ? Constants.blueSpeakerX : 651.25 - Constants.blueSpeakerX, Constants.speakerY).getDistance(robotState.fieldToVehicle.getTranslation()));
+                    if(shooterAngle.isPresent()){
+                        desiredPivotPosition =
+                                (Math.PI-shooterAngle.get())
+                                * Constants.motorRotationsPerRadians
+                                - pivotNeutralPosition;
+                    } else {
+                        desiredPivotPosition = pivotNeutralPosition;
+                    }
+                }
+
             }
             pivotMotor.set(GreenControlMode.MOTION_MAGIC_EXPO, desiredPivotPosition);
         }
@@ -426,6 +441,7 @@ public class Shooter extends Subsystem {
     public enum PIVOT_STATE {
         STOW,
         SHOOT_AMP,
-        SHOOT_DISTANCE
+        SHOOT_DISTANCE,
+        AUTO_AIM
     }
 }
