@@ -233,7 +233,7 @@ public class Shooter extends Subsystem {
             if (correctingAutoAim) {
                 if (!MathUtil.isNear(actualPivotDegrees, autoAimTargetDegrees, 1)) { //This tolerance needs to be calc'd in auto aim util
                     autoAimCorrectionRotations =
-                            ((autoAimTargetDegrees * Constants.motorRotationsPerDegree) - actualPivotPosition);
+                            (autoAimTargetDegrees - actualPivotDegrees) * Constants.motorRotationsPerDegree;
                 }
             }
             if(RobotBase.isReal()) {
