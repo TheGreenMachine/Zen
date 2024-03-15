@@ -337,12 +337,12 @@ public class RobotFactory {
         moduleConfig.drivePid = getPidSlotConfig(subsystemName, "slot0", PIDConfig.Drive);
         moduleConfig.azimuthEncoderHomeOffset = module.constants.get("encoderOffset");
 
-        var canCoder = getCanCoder(subsystemName, name);
+        var canCoder = getModuleCanCoder(subsystemName, name);
 
         return new SwerveModule(subsystemName, moduleConfig, canCoder);
     }
 
-    public CANcoder getCanCoder(String subsystemName, String name) {
+    public CANcoder getModuleCanCoder(String subsystemName, String name) {
         var subsystem = getSubsystem(subsystemName);
         var module = subsystem.swerveModules.modules.get(name);
         CANcoder canCoder = null;
@@ -361,6 +361,23 @@ public class RobotFactory {
         }
 
         // purposefully return null so that swerve modules default to quad encoders
+        return canCoder;
+    }
+
+    public CANcoder getCanCoder(String subsystemName, String canCoderName) {
+        var subsystem = getSubsystem(subsystemName);
+        CANcoder canCoder = null;
+
+        int id = subsystem.canCoders.get(canCoderName);
+        if (subsystem.canCoders.containsKey(canCoderName) && id >= 0) {
+            canCoder =
+                    MotorFactory.createCanCoder(
+                        id,
+                        config.infrastructure.canBusName,
+                            false //Keeping this one false because "inverting" in phoenix 6 seriously messes it up
+                    );
+        }
+
         return canCoder;
     }
 

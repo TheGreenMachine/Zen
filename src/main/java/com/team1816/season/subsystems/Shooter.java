@@ -2,6 +2,7 @@ package com.team1816.season.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.components.motor.GhostMotor;
@@ -40,6 +41,8 @@ public class Shooter extends Subsystem {
     private final IGreenMotor feederMotor;
     private final IGreenMotor pivotMotor;
     private final IGreenMotor pivotFollowMotor;
+
+    private final CANcoder pivotCancoder;
 
     private final DigitalInput noteSensor; // BeamBreak
 
@@ -113,6 +116,8 @@ public class Shooter extends Subsystem {
         feederMotor = factory.getMotor(NAME, "feederMotor");
         pivotMotor = factory.getMotor(NAME, "pivotMotor");
         pivotFollowMotor = factory.getFollowerMotor(NAME, "pivotFollowMotor", pivotMotor, opposeLeaderDirection);
+
+        pivotCancoder = factory.getCanCoder(NAME, "Pivot");
 
         noteSensor = new DigitalInput((int) factory.getConstant(NAME, "noteSensorChannel", 9));
 

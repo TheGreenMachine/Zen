@@ -199,6 +199,8 @@ subsystems:
                 kD: 0.03
                 kF: 0
                 gravityType: cosine
+        cancoders:
+            Pivot: 25
         constants:
             noteSensorChannel: 0
             rollerSpeakerShootSpeed: 72
