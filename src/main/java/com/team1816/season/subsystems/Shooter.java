@@ -1,11 +1,8 @@
 package com.team1816.season.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.team1816.lib.Infrastructure;
-import com.team1816.lib.auto.paths.AutoPath;
 import com.team1816.lib.hardware.components.motor.GhostMotor;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
@@ -13,6 +10,7 @@ import com.team1816.lib.subsystems.Subsystem;
 import com.team1816.season.autoaim.AutoAimUtil;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
@@ -59,6 +57,10 @@ public class Shooter extends Subsystem {
     private boolean feederOutputsChanged = false;
     private boolean pivotOutputsChanged = false;
 
+    private boolean correctingAutoAim = false;
+    private double autoAimTargetDegrees = 0;
+    private double autoAimCorrectionRotations = 0;
+
     private double actualRollerVelocity = 0;
     private double actualFeederVelocity = 0;
 
@@ -68,6 +70,7 @@ public class Shooter extends Subsystem {
 
     private double desiredPivotPosition = 0;
     private double actualPivotPosition = 0;
+    private double actualPivotDegrees = 0;
 
 
     /**
@@ -217,6 +220,7 @@ public class Shooter extends Subsystem {
     @Override
     public void readFromHardware() {
         actualPivotPosition = pivotMotor.getSensorPosition(0);
+        actualPivotDegrees = pivotCancoder.getPosition().getValueAsDouble() / Constants.cancoderRotationsPerDegree;
 
         actualRollerVelocity = rollerMotor.getSensorVelocity(0);
         actualFeederVelocity = feederMotor.getSensorVelocity(0);
@@ -224,6 +228,18 @@ public class Shooter extends Subsystem {
         rollerCurrentDraw = rollerMotor.getMotorOutputCurrent();
         feederCurrentDraw = feederMotor.getMotorOutputCurrent();
         pivotCurrentDraw = pivotMotor.getMotorOutputCurrent();
+
+        if (robotState.actualPivotState == PIVOT_STATE.AUTO_AIM) {
+            if (correctingAutoAim) {
+                if (!MathUtil.isNear(actualPivotDegrees, autoAimTargetDegrees, 1)) { //This tolerance needs to be calc'd in auto aim util
+                    autoAimCorrectionRotations =
+                            ((autoAimTargetDegrees * Constants.motorRotationsPerDegree) - actualPivotPosition);
+                }
+            }
+            if(RobotBase.isReal()) {
+                correctingAutoAim = pivotMotor.get_ClosedLoopOutput() <= 0.06; //Under 6%, TODO put into yaml later
+            }
+        }
 
         if (robotState.actualRollerState != desiredRollerState) {
             if (desiredRollerState != ROLLER_STATE.STOP && desiredRollerState.inDesiredSpeedRange(actualRollerVelocity)) {
@@ -337,11 +353,17 @@ public class Shooter extends Subsystem {
                                 (Math.PI-shooterAngle.get())
                                 * Constants.motorRotationsPerRadians
                                 - pivotNeutralPosition;
+                        autoAimTargetDegrees = desiredPivotPosition / Constants.motorRotationsPerDegree;
+
+                        if (correctingAutoAim) {
+                            desiredPivotPosition += autoAimCorrectionRotations;
+                        }
+
                     } else {
                         desiredPivotPosition = pivotNeutralPosition;
+                        correctingAutoAim = false;
                     }
                 }
-
             }
             pivotMotor.set(GreenControlMode.MOTION_MAGIC_EXPO, desiredPivotPosition);
         }
@@ -442,6 +464,6 @@ public class Shooter extends Subsystem {
         STOW,
         SHOOT_AMP,
         SHOOT_DISTANCE,
-        AUTO_AIM
+        AUTO_AIM,
     }
 }

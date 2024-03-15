@@ -69,6 +69,7 @@ public class GhostMotor implements IGreenMotor {
 
     }
 
+
     @Override
     public void configCurrentLimit(int current) {
 
@@ -273,6 +274,11 @@ public class GhostMotor implements IGreenMotor {
 
     @Override
     public double get_SupplyCurrent() {
+        return 0;
+    }
+
+    @Override
+    public double get_ClosedLoopOutput() {
         return 0;
     }
 

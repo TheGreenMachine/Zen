@@ -55,6 +55,11 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
     }
 
     @Override
+    public double get_ClosedLoopOutput() {
+        return 0;
+    }
+
+    @Override
     public void selectFeedbackSensor(FeedbackDeviceType deviceType) {
         selectFeedbackSensor(deviceType, 0);
     }

@@ -199,7 +199,7 @@ subsystems:
                 kD: 0.02
                 kF: 0
                 gravityType: cosine
-        cancoders:
+        canCoders:
             Pivot: 25
         constants:
             noteSensorChannel: 0

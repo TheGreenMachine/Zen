@@ -73,6 +73,11 @@ public class LazyVictorSPX extends VictorSPX implements IGreenMotor {
     }
 
     @Override
+    public double get_ClosedLoopOutput() {
+        return 0;
+    }
+
+    @Override
     public void set(GreenControlMode controlMode, double demand) {
         ControlMode mode = ConfigurationTranslator.toCTREControlMode(controlMode);
         if (demand != lastSet || mode != lastControlMode) {

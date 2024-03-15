@@ -54,6 +54,9 @@ public interface IGreenMotor {
 
     double get_SupplyCurrent();
 
+    // This one is only implemented for TalonFX
+    double get_ClosedLoopOutput();
+
     /**
      * Gets if a motor controller is inverted
      * @return If the controller is inverted

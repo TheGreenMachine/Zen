@@ -454,6 +454,10 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
         return ConfigurationTranslator.toGreenControlMode(super.getControlMode().getValue());
     }
 
+    public double get_ClosedLoopOutput() {
+        return super.getClosedLoopOutput().getValueAsDouble();
+    }
+
     @Override
     public void follow(IGreenMotor leader, boolean opposeLeaderDirection) {
         isFollower = true;
