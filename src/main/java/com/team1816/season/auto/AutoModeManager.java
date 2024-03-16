@@ -223,6 +223,7 @@ public class AutoModeManager {
         }
 
         boolean autoChanged = desiredAuto != selectedAuto;
+        boolean startPosChanged = desiredStart != selectedStartPos;
         boolean colorChanged = teamColor != selectedColor;
         boolean dynamicAutoChanged = //TODO make iterative
                 selectedStartPos != desiredStart
@@ -234,7 +235,7 @@ public class AutoModeManager {
                 || selectedScram != desiredScram;
 
         // if auto has been changed, update selected auto mode + thread
-        if (autoChanged || colorChanged || dynamicAutoChanged) {
+        if (autoChanged || colorChanged || startPosChanged || dynamicAutoChanged ) {
             if (autoChanged) {
                 GreenLogger.log(
                     "Auto changed from: " + desiredAuto + ", to: " + selectedAuto.name()
@@ -260,7 +261,12 @@ public class AutoModeManager {
                 );
             } else {
                 dynamicAutoChanged = false; //Stops unnecessary defaulting/zeroing
-                autoMode = generateAutoMode(selectedAuto, selectedColor);
+                if (selectedAuto == DesiredAuto.SCORE_AND_SIT || selectedAuto == DesiredAuto.DO_NOTHING) {
+                    autoMode = selectedAuto == DesiredAuto.SCORE_AND_SIT ? new ScoreAndSitMode(selectedStartPos) :
+                            new DoNothingMode(selectedStartPos);
+                } else {
+                    autoMode = generateAutoMode(selectedAuto, selectedColor);
+                }
             }
 
 
@@ -357,6 +363,7 @@ public class AutoModeManager {
         RANGE_FOUR_SCORE,
         RANGE_TWO_SCORE,
         SCORE_AND_SCRAM,
+        SCORE_AND_SIT,
 
 
         BOTTOM_MIDDLE_EJECTS,
@@ -428,8 +435,8 @@ public class AutoModeManager {
      */
     private AutoMode generateAutoMode(DesiredAuto mode, Color color) {
         switch (mode) {
-//            case DO_NOTHING:
-//                return new DoNothingMode();
+            case DO_NOTHING:
+                return new DoNothingMode();
             case TUNE_DRIVETRAIN: // commented for competition purposes
                 return new TuneDrivetrainMode();
 //            case LIVING_ROOM:

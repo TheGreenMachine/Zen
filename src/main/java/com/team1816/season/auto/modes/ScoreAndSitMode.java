@@ -1,19 +1,26 @@
-package com.team1816.lib.auto.modes;
+package com.team1816.season.auto.modes;
 
 import com.team1816.lib.auto.AutoModeEndedException;
-import com.team1816.lib.util.logUtil.GreenLogger;
+import com.team1816.lib.auto.Color;
+import com.team1816.lib.auto.DynamicAutoUtil;
+import com.team1816.lib.auto.actions.ParallelAction;
+import com.team1816.lib.auto.actions.RotateSwerveAction;
+import com.team1816.lib.auto.actions.SeriesAction;
+import com.team1816.lib.auto.modes.AutoMode;
+import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.season.auto.AutoModeManager;
+import com.team1816.season.auto.actions.*;
+import com.team1816.season.subsystems.Collector;
+import com.team1816.season.subsystems.Shooter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
-/**
- * Autonomous mode to do absolutely nothing
- */
-public class DoNothingMode extends AutoMode {
+import java.util.ArrayList;
+import java.util.List;
 
-    public DoNothingMode () {}
+public class ScoreAndSitMode extends AutoMode {
 
-    public DoNothingMode(AutoModeManager.ShootPos start) {
+    public ScoreAndSitMode(AutoModeManager.ShootPos start) {
         switch (start) {
             case TOP_SPEAKER -> {
                 initialPose = new Pose2d(0.721, 6.762, Rotation2d.fromDegrees(60));
@@ -30,14 +37,11 @@ public class DoNothingMode extends AutoMode {
         };
     }
 
-    /**
-     * Routine. Does nothing.
-     *
-     * @throws AutoModeEndedException
-     * @see AutoMode#routine()
-     */
     @Override
     protected void routine() throws AutoModeEndedException {
-        GreenLogger.log("doing nothing");
+        runAction(
+                new ShootSpeakerAction()
+        );
     }
+
 }
