@@ -1,5 +1,6 @@
 package com.team1816.season.subsystems;
 
+import com.ctre.phoenix.Util;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.team1816.lib.Infrastructure;
@@ -18,6 +19,7 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import jakarta.inject.Inject;
@@ -220,7 +222,7 @@ public class Shooter extends Subsystem {
     @Override
     public void readFromHardware() {
         actualPivotPosition = pivotMotor.getSensorPosition(0);
-        actualPivotDegrees = pivotCancoder.getPosition().getValueAsDouble() / Constants.cancoderRotationsPerDegree;
+        actualPivotDegrees = (pivotCancoder.getPosition().getValueAsDouble() / Constants.cancoderRotationsPerDegree);
 
         actualRollerVelocity = rollerMotor.getSensorVelocity(0);
         actualFeederVelocity = feederMotor.getSensorVelocity(0);
@@ -231,13 +233,15 @@ public class Shooter extends Subsystem {
 
         if (robotState.actualPivotState == PIVOT_STATE.AUTO_AIM) {
             if (correctingAutoAim) {
-                if (!MathUtil.isNear(actualPivotDegrees, autoAimTargetDegrees, 1)) { //This tolerance needs to be calc'd in auto aim util
+                if (!MathUtil.isNear(actualPivotDegrees, autoAimTargetDegrees, 2)) { //This tolerance needs to be calc'd in auto aim util
                     autoAimCorrectionRotations =
                             (autoAimTargetDegrees - actualPivotDegrees) * Constants.motorRotationsPerDegree;
+
+                    autoAimCorrectionRotations = MathUtil.inputModulus(autoAimCorrectionRotations, 0, 1);
                 }
             }
             if(RobotBase.isReal()) {
-                correctingAutoAim = pivotMotor.get_ClosedLoopOutput() <= 0.06; //Under 6%, TODO put into yaml later
+                correctingAutoAim = pivotMotor.get_ClosedLoopOutput() <= 0.085; //Under 6%, TODO put into yaml later
             }
         }
 
@@ -287,6 +291,13 @@ public class Shooter extends Subsystem {
      */
     @Override
     public void writeToHardware() {
+        SmartDashboard.putNumber("ActualDegrees", actualPivotDegrees);
+        SmartDashboard.putNumber("ReadRotations", actualPivotPosition);
+        SmartDashboard.putNumber("TargetDegrees", autoAimTargetDegrees);
+        SmartDashboard.putNumber("TargetPosition", desiredPivotPosition);
+        SmartDashboard.putNumber("correctionDegrees", autoAimCorrectionRotations / Constants.motorRotationsPerDegree);
+        SmartDashboard.putNumber("CorrectionRotations", autoAimCorrectionRotations);
+
         if (rollerOutputsChanged) {
             rollerOutputsChanged = false;
             double desiredRollerVelocity = 0;
@@ -353,7 +364,7 @@ public class Shooter extends Subsystem {
                                 (Math.PI-shooterAngle.get())
                                 * Constants.motorRotationsPerRadians
                                 - pivotNeutralPosition;
-                        autoAimTargetDegrees = desiredPivotPosition / Constants.motorRotationsPerDegree;
+                        autoAimTargetDegrees = -(desiredPivotPosition / Constants.motorRotationsPerDegree);
 
                         if (correctingAutoAim) {
                             desiredPivotPosition += autoAimCorrectionRotations;

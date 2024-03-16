@@ -150,7 +150,7 @@ public class Constants {
     public static final double degreesPerMotorRotations = 3.140407;
     public static final double motorRotationsPerRadians = 18.245;
 
-    public static final double cancoderRotationsPerDegree = 0.0001; //TODO GET THIS.
+    public static final double cancoderRotationsPerDegree = 0.23 / 90;
 
     /**
      * Autonomous

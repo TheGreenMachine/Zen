@@ -45,7 +45,7 @@ public class Camera extends Subsystem{
     public Camera(Infrastructure inf, RobotState rs){
         super(NAME, inf, rs);
         cam = new PhotonCamera(CAM);
-        cam.setDriverMode(true);
+        cam.setDriverMode(false);
 
         if (RobotBase.isSimulation()) {
             cameraSim = new PhotonCameraSim(cam);
