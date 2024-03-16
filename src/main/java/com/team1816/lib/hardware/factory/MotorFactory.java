@@ -192,7 +192,7 @@ public class MotorFactory {
         return followerSpark;
     }
 
-    public static CANcoder createCanCoder(int canCoderID, String canBus, boolean invertCanCoder) {
+    public static CANcoder createCanCoder(int canCoderID, String canBus, boolean invertCanCoder, double offset) {
         CANcoder canCoder = new CANcoder(canCoderID, canBus) ;
         if (factory.getConstant("resetFactoryDefaults", 0) > 0) {
             canCoder.getConfigurator().apply(new CANcoderConfiguration(), kTimeoutMs/1000.0);
@@ -202,7 +202,8 @@ public class MotorFactory {
         canCoder.getConfigurator().apply(
                 config.MagnetSensor
                         .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
-                        .withSensorDirection(invertCanCoder ? SensorDirectionValue.Clockwise_Positive : SensorDirectionValue.CounterClockwise_Positive),
+                        .withSensorDirection(invertCanCoder ? SensorDirectionValue.Clockwise_Positive : SensorDirectionValue.CounterClockwise_Positive)
+                        .withMagnetOffset(offset),
                 kTimeoutMsLONG/1000.0
         );
 

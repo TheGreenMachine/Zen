@@ -355,7 +355,8 @@ public class RobotFactory {
                     subsystem.canCoders.get(module.canCoder),
                     config.infrastructure.canBusName,
                     subsystem.canCoders.get(subsystem.invertCanCoder) != null &&
-                        subsystem.invertCanCoder.contains(module.canCoder)
+                        subsystem.invertCanCoder.contains(module.canCoder),
+                        0
                 );
         }
 
@@ -363,7 +364,7 @@ public class RobotFactory {
         return canCoder;
     }
 
-    public CANcoder getCanCoder(String subsystemName, String canCoderName) {
+    public CANcoder getCanCoder(String subsystemName, String canCoderName, double offset) {
         var subsystem = getSubsystem(subsystemName);
         CANcoder canCoder = null;
 
@@ -373,7 +374,8 @@ public class RobotFactory {
                     MotorFactory.createCanCoder(
                         id,
                         config.infrastructure.canBusName,
-                            false //Keeping this one false because "inverting" in phoenix 6 seriously messes it up
+                            false, //Keeping this one false because "inverting" in phoenix 6 seriously messes it up,
+                            offset
                     );
         }
 

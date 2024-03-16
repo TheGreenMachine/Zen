@@ -124,7 +124,7 @@ public class Shooter extends Subsystem {
         pivotMotor = factory.getMotor(NAME, "pivotMotor");
         pivotFollowMotor = factory.getFollowerMotor(NAME, "pivotFollowMotor", pivotMotor, opposeLeaderDirection);
 
-        pivotCancoder = factory.getCanCoder(NAME, "Pivot");
+        pivotCancoder = factory.getCanCoder(NAME, "Pivot", factory.getConstant(NAME, "canCoderOffset", -0.5));
 
         noteSensor = new DigitalInput((int) factory.getConstant(NAME, "noteSensorChannel", 9));
 
@@ -383,6 +383,7 @@ public class Shooter extends Subsystem {
     @Override
     public void zeroSensors() {
         pivotMotor.setSensorPosition(0, 50);
+        pivotCancoder.setPosition(0, 50);
     }
 
     public void setBraking(boolean braking) {
