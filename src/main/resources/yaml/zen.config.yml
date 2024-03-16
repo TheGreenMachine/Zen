@@ -6,22 +6,22 @@ subsystems:
                 motorType: TalonFX
                 motorName: FLDr
                 id: 1
-                invertMotor: true
+                invertMotor: false
             FRDr:
                 motorType: TalonFX
                 motorName: FRDr
                 id: 2
-                invertMotor: false
+                invertMotor: true
             RLDr:
                 motorType: TalonFX
                 motorName: BLDr
                 id: 3
-                invertMotor: false
+                invertMotor: true
             RRDr:
                 motorType: TalonFX
                 motorName: BRDr
                 id: 4
-                invertMotor: false
+                invertMotor: true
             FLAz:
                 motorType: TalonFX
                 motorName: FLAz
@@ -144,7 +144,7 @@ subsystems:
                 motorType: TalonFX
                 motorName: intakeMotor
                 id: 10
-                invertMotor: false
+                invertMotor: true
         pidConfig:
             slot0:
                 kP: 0.043

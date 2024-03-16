@@ -221,6 +221,10 @@ public class Shooter extends Subsystem {
      */
     @Override
     public void readFromHardware() {
+        SmartDashboard.putNumber("ActualDegrees", actualPivotDegrees);
+        SmartDashboard.putNumber("TargetDegrees", autoAimTargetDegrees);
+        SmartDashboard.putNumber("correctionDegrees", autoAimCorrectionRotations / Constants.motorRotationsPerDegree);
+
         actualPivotPosition = pivotMotor.getSensorPosition(0);
         actualPivotDegrees = (pivotCancoder.getPosition().getValueAsDouble() / Constants.cancoderRotationsPerDegree);
 
@@ -291,13 +295,6 @@ public class Shooter extends Subsystem {
      */
     @Override
     public void writeToHardware() {
-        SmartDashboard.putNumber("ActualDegrees", actualPivotDegrees);
-        SmartDashboard.putNumber("ReadRotations", actualPivotPosition);
-        SmartDashboard.putNumber("TargetDegrees", autoAimTargetDegrees);
-        SmartDashboard.putNumber("TargetPosition", desiredPivotPosition);
-        SmartDashboard.putNumber("correctionDegrees", autoAimCorrectionRotations / Constants.motorRotationsPerDegree);
-        SmartDashboard.putNumber("CorrectionRotations", autoAimCorrectionRotations);
-
         if (rollerOutputsChanged) {
             rollerOutputsChanged = false;
             double desiredRollerVelocity = 0;

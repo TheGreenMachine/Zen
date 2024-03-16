@@ -578,13 +578,13 @@ public class Robot extends TimedRobot {
             orchestrator.setControllerRumble(InputHandler.ControllerRole.DRIVER, InputHandler.RumbleDirection.UNIFORM,
                     robotState.isBeamBreakTriggered && !robotState.isBeamBreakOverridden ? 0.7 : 0);
 
-            if (robotState.currentCamFind) {
-                drive.updateOdometryWithVision(
-                        robotState.currentVisionEstimatedPose.estimatedPose.toPose2d(),
-                        robotState.currentVisionEstimatedPose.timestampSeconds,
-                        camera.getEstimationStdDevs(robotState.currentVisionEstimatedPose.estimatedPose.toPose2d())
-                );
-            }
+//            if (robotState.currentCamFind) {
+//                drive.updateOdometryWithVision(
+//                        robotState.currentVisionEstimatedPose.estimatedPose.toPose2d(),
+//                        robotState.currentVisionEstimatedPose.timestampSeconds,
+//                        camera.getEstimationStdDevs(robotState.currentVisionEstimatedPose.estimatedPose.toPose2d())
+//                );
+//            }
         } catch (Throwable t) {
             faulted = true;
             GreenLogger.log(t.getMessage());
