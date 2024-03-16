@@ -207,7 +207,7 @@ subsystems:
             rollerAmpShootSpeed: 30
             feederSpeakerShootSpeed: 32 #TODO This
             feederAmpShootSpeed: 10
-            feederIntakeSpeed: 5
+            feederIntakeSpeed: 10
             velocityErrorMargin: 0.1
             pivotNeutralPosition: 1.5
             pivotAmpShootPosition: 33

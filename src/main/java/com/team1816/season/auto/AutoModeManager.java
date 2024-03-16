@@ -262,8 +262,8 @@ public class AutoModeManager {
             } else {
                 dynamicAutoChanged = false; //Stops unnecessary defaulting/zeroing
                 if (selectedAuto == DesiredAuto.SCORE_AND_SIT || selectedAuto == DesiredAuto.DO_NOTHING) {
-                    autoMode = selectedAuto == DesiredAuto.SCORE_AND_SIT ? new ScoreAndSitMode(selectedStartPos) :
-                            new DoNothingMode(selectedStartPos);
+                    autoMode = selectedAuto == DesiredAuto.SCORE_AND_SIT ? new ScoreAndSitMode(selectedStartPos, selectedColor) :
+                            new DoNothingMode(selectedStartPos, selectedColor);
                 } else {
                     autoMode = generateAutoMode(selectedAuto, selectedColor);
                 }
