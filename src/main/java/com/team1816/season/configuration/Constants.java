@@ -81,16 +81,16 @@ public class Constants {
     public static final double kCameraHeightMeters = 0.601;
 
     public static final Pose2d kCameraMountingOffset = new Pose2d(
-            0.20,
-            0.19,
-            Constants.EmptyRotation2d
+            -0.369,
+            0,
+            Rotation2d.fromRadians(Math.PI)
     );
 
     public static final Transform3d kCameraMountingOffset3D = new Transform3d(
             -0.369,
             0,
             Constants.kCameraHeightMeters,
-            new Rotation3d(0,-0.52,Math.PI)
+            new Rotation3d(0,-0.79,Math.PI)
     );
 
     public static final Translation2d kTurretMountingOffset = new Translation2d(
