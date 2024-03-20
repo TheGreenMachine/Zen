@@ -19,6 +19,8 @@ public class DriveConversions {
 
     private static final double wheelRadiusMeters = Units.inchesToMeters(kDriveWheelDiameterInches / 2);
 
+    public static final double rotationsPerMeter = 6.12 / (2 * Math.PI * Units.inchesToMeters(1.905));
+
     public static double ticksToMeters(double ticks) {
         return ticks / drivePPR * kWheelCircumferenceMeters;
     }

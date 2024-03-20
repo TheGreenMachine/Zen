@@ -111,7 +111,7 @@ subsystems:
             openLoopRampRate: 0.1
             isSwerve: 1
             isCTRSwerve: 1
-            wheelDiameter: 3.757 #inches
+            wheelDiameter: 3.81 #inches
             kTrackScrubFactor: 1.0
             ## Velocity Constraints ##
             maxRotVel: 0.8 # Pi radians/sec

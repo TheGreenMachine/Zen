@@ -215,6 +215,12 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
             }
 
             GreenLogger.addPeriodicLog(new DoubleLogEntry(DataLogManager.getLog(),  "Drivetrain/SingleVelocity"), motors[0].getVelocity().asSupplier());
+            GreenLogger.addPeriodicLog(new DoubleLogEntry(DataLogManager.getLog(),  "Drivetrain/SingleVelocityRef"), () -> {
+                        var reference = motors[0].getClosedLoopReference().getValueAsDouble();
+                        return reference / (DriveConversions.rotationsPerMeter);
+                    }
+            );
+
         }
     }
 
