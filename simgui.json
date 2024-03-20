@@ -194,6 +194,11 @@
           "visible": true
         }
       },
+      "/SmartDashboard/Robot color": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Scram Or Not": {
         "window": {
           "visible": true

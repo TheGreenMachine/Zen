@@ -1,5 +1,6 @@
 package com.team1816.lib.auto.paths;
 
+import com.team1816.lib.auto.Color;
 import com.team1816.season.configuration.Constants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -22,7 +23,7 @@ public class DriveStraightPath extends AutoPath {
     }
 
     public DriveStraightPath() {
-        this(200);
+        this(300);
     }
 
     @Override

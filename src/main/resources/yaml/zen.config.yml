@@ -111,14 +111,14 @@ subsystems:
             openLoopRampRate: 0.1
             isSwerve: 1
             isCTRSwerve: 1
-            wheelDiameter: 3.62 #inches
+            wheelDiameter: 3.757 #inches
             kTrackScrubFactor: 1.0
             ## Velocity Constraints ##
             maxRotVel: 0.8 # Pi radians/sec
             maxRotVelClosedLoop: 2 # Pi radians/sec
             trackWidth: 22.75 # inches
             wheelbaseLength: 22.75 # inches
-            maxVelOpenLoop: 3.75 # meters/s
+            maxVelOpenLoop: 3.4 # meters/s
             maxVel12VMPS: 5.2
             maxVelPathFollowing: 3.1 # meters/s
             maxAccel: 1.5 # meters/s^2
@@ -127,8 +127,8 @@ subsystems:
             driveGearRatio: 6.12 # L2
             azimuthGearRatio: 12.8 # MK4
             ## Control Configurations ##
-            slowModeScalar: 0.5
-            turboModeScalar: 1.3
+            slowModeScalar: 0.4
+            turboModeScalar: 1.53
             driveDeadband: 0.1
             rotationalDeadband: 0.1
             inputDeadband: 0.15 # Deadband of the normalized input

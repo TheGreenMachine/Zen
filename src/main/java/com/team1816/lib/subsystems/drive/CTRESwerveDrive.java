@@ -213,6 +213,8 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
 
                 motorTemperatures.add(motors[i].getDeviceTemp());
             }
+
+            GreenLogger.addPeriodicLog(new DoubleLogEntry(DataLogManager.getLog(),  "Drivetrain/SingleVelocity"), motors[0].getVelocity().asSupplier());
         }
     }
 
@@ -458,6 +460,7 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
             if (actualModuleStates != null) {
                 actualModuleStructLogger.append(actualModuleStates);
             }
+
         }
     }
 

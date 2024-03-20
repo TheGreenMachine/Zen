@@ -87,14 +87,14 @@ public class GreenLogger {
      * @param logEntry  the WPI logger to be used for creating log
      * @param supplier the method that provides the current value
      */
-    public static void AddPeriodicLog(DataLogEntry logEntry, Supplier<?> supplier){
+    public static void addPeriodicLog(DataLogEntry logEntry, Supplier<?> supplier){
         if(!Constants.kLoggingRobot) return;
         periodicLogs.add(new PeriodicLog(logEntry,supplier) );
     }
     /**
      * Updates the values of registered periodic logs
      */
-    public static void UpdatePeriodicLogs(){
+    public static void updatePeriodicLogs(){
         for (PeriodicLog log : periodicLogs){
             log.UpdateLog();
         }

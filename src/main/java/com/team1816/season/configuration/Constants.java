@@ -201,6 +201,7 @@ public class Constants {
     public static final double axlePositionOffsetZ = 0.3048;
     public static final double heightOfTarget = 2.0431125;
     public static final double blueSpeakerX = 0.2286;
+    public static final double redSpeakerX = 16.27;
     //TODO find out this measurement
     public static final double speakerY = 5.6597042;
     public static final double axleRadiansDisplacement = 0;

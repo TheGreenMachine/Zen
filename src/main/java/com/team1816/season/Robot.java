@@ -132,7 +132,6 @@ public class Robot extends TimedRobot {
         }
     }
 
-
     /**
      * Returns the length of the last loop that the Robot was on
      *
@@ -578,6 +577,7 @@ public class Robot extends TimedRobot {
             orchestrator.setControllerRumble(InputHandler.ControllerRole.DRIVER, InputHandler.RumbleDirection.UNIFORM,
                     robotState.isBeamBreakTriggered && !robotState.isBeamBreakOverridden ? 0.7 : 0);
 
+
         } catch (Throwable t) {
             faulted = true;
             GreenLogger.log(t.getMessage());
@@ -660,6 +660,8 @@ public class Robot extends TimedRobot {
         robotState.field
                 .getObject("Trajectory")
                 .setTrajectory(autoModeManager.getSelectedAuto().getCurrentTrajectory());
+
+        GreenLogger.updatePeriodicLogs();
     }
 
     /**
@@ -669,7 +671,7 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         try {
             if (robotState.currentCamFind) {
-                orchestrator.updatePoseWithVisionData();
+//                orchestrator.updatePoseWithVisionData();
             }
 
             manualControl();
