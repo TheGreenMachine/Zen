@@ -1,7 +1,6 @@
 package com.team1816.lib.util.logUtil;
 
-import edu.wpi.first.util.datalog.DataLogEntry;
-import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.*;
 
 import java.util.function.Supplier;
 
@@ -18,6 +17,14 @@ public class PeriodicLog {
         var value = Supplier.get();
         if(DataLogEntry instanceof DoubleLogEntry) {
             ((DoubleLogEntry)DataLogEntry).append((double) value);
+        } else if(DataLogEntry instanceof DoubleArrayLogEntry) {
+            ((DoubleArrayLogEntry)DataLogEntry).append((double[]) value);
+        } else if(DataLogEntry instanceof BooleanLogEntry) {
+            ((BooleanLogEntry)DataLogEntry).append((boolean) value);
+        } else if(DataLogEntry instanceof BooleanArrayLogEntry) {
+            ((BooleanArrayLogEntry)DataLogEntry).append((boolean[]) value);
+        } else if (DataLogEntry instanceof StringLogEntry) {
+            ((StringLogEntry)DataLogEntry).append((String) value);
         }
     }
 

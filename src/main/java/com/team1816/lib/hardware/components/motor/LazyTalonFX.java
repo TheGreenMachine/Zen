@@ -271,12 +271,12 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
     }
 
     @Override
-    public double getSensorPosition(int closedLoopSlotID) {
+    public double getSensorPosition() {
         return super.getPosition().getValueAsDouble();
     }
 
     @Override
-    public double getSensorVelocity(int closedLoopSlotID) {
+    public double getSensorVelocity() {
         return super.getVelocity().getValueAsDouble();
     }
 

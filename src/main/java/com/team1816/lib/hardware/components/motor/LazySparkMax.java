@@ -200,12 +200,12 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
     }
 
     @Override
-    public double getSensorPosition(int closedLoopSlotID) {
+    public double getSensorPosition() {
         return encoder.getPosition();
     }
 
     @Override
-    public double getSensorVelocity(int closedLoopSlotID) {
+    public double getSensorVelocity() {
         return encoder.getVelocity();
     }
 

@@ -8,6 +8,7 @@ import com.team1816.lib.hardware.components.motor.GhostMotor;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.subsystems.Subsystem;
+import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.autoaim.AutoAimUtil;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
@@ -97,13 +98,6 @@ public class Shooter extends Subsystem {
     /**
      * Logging
      */
-    private DoubleLogEntry actualRollerVelocityLogger;
-    private DoubleLogEntry actualFeederVelocityLogger;
-
-    private DoubleLogEntry rollerCurrentDrawLogger;
-    private DoubleLogEntry feederCurrentDrawLogger;
-    private DoubleLogEntry pivotCurrentDrawLogger;
-
     private DoubleLogEntry desiredRollerVelocityLogger;
     private DoubleLogEntry desiredFeederVelocityLogger;
 
@@ -140,16 +134,14 @@ public class Shooter extends Subsystem {
         }
 
         if (Constants.kLoggingRobot) {
+            GreenLogger.addPeriodicLog(new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Pivot/actualPivotPosition"), pivotMotor::getSensorPosition);
+            GreenLogger.addPeriodicLog(new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Roller/actualRollerVelocity"), rollerMotor::getSensorVelocity);
+            GreenLogger.addPeriodicLog(new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Feeder/actualFeederVelocity"), feederMotor::getSensorVelocity);
+            GreenLogger.addPeriodicLog(new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Roller/rollerMotorCurrentDraw"), rollerMotor::getMotorOutputCurrent);
+            GreenLogger.addPeriodicLog(new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Feeder/feederMotorCurrentDraw"), feederMotor::getMotorOutputCurrent);
+            GreenLogger.addPeriodicLog(new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Pivot/pivotMotorCurrentDraw"), pivotMotor::getMotorOutputCurrent);
+
             desStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Pivot/desiredPivotPosition");
-            actStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Pivot/actualPivotPosition");
-
-            actualRollerVelocityLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Roller/actualRollerVelocity");
-            actualFeederVelocityLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Feeder/actualFeederVelocity");
-
-            rollerCurrentDrawLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Roller/rollerMotorCurrentDraw");
-            feederCurrentDrawLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Feeder/feederMotorCurrentDraw");
-            pivotCurrentDrawLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Pivot/pivotMotorCurrentDraw");
-
             desiredRollerVelocityLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Roller/desiredRollerVelocity");
             desiredFeederVelocityLogger = new DoubleLogEntry(DataLogManager.getLog(), "Shooter/Feeder/desiredFeederVelocity");
 
@@ -225,11 +217,11 @@ public class Shooter extends Subsystem {
         SmartDashboard.putNumber("TargetDegrees", autoAimTargetDegrees);
         SmartDashboard.putNumber("correctionDegrees", autoAimCorrectionRotations / Constants.motorRotationsPerDegree);
 
-        actualPivotPosition = pivotMotor.getSensorPosition(0);
+        actualPivotPosition = pivotMotor.getSensorPosition();
         actualPivotDegrees = (pivotCancoder.getPosition().getValueAsDouble() / Constants.cancoderRotationsPerDegree);
 
-        actualRollerVelocity = rollerMotor.getSensorVelocity(0);
-        actualFeederVelocity = feederMotor.getSensorVelocity(0);
+        actualRollerVelocity = rollerMotor.getSensorVelocity();
+        actualFeederVelocity = feederMotor.getSensorVelocity();
 
         rollerCurrentDraw = rollerMotor.getMotorOutputCurrent();
         feederCurrentDraw = feederMotor.getMotorOutputCurrent();
@@ -270,19 +262,11 @@ public class Shooter extends Subsystem {
             feederOutputsChanged = true;
         }
 
-        double angleToApply = robotState.pivotBaseAngle - (pivotMotor.getSensorPosition(0) * degreesPerMotorRotations);
+        double angleToApply = robotState.pivotBaseAngle - (pivotMotor.getSensorPosition() * degreesPerMotorRotations);
         robotState.pivotArm.setAngle(Rotation2d.fromDegrees(angleToApply));
 
         if (Constants.kLoggingRobot) {
             ((DoubleLogEntry) desStatesLogger).append(desiredPivotPosition);
-            ((DoubleLogEntry) actStatesLogger).append(actualPivotPosition);
-
-            actualRollerVelocityLogger.append(actualRollerVelocity);
-            actualFeederVelocityLogger.append(actualFeederVelocity);
-
-            rollerCurrentDrawLogger.append(rollerCurrentDraw);
-            feederCurrentDrawLogger.append(feederCurrentDraw);
-            pivotCurrentDrawLogger.append(pivotCurrentDraw);
 
             beamBreakLogger.append(isBeamBreakTriggered());
         }

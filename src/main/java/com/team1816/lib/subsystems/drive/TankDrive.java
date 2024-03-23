@@ -163,8 +163,8 @@ public class TankDrive extends Drive implements DifferentialDrivetrain {
     public synchronized void readFromHardware() {
         super.readFromHardware();
         // update current motor velocities and distance traveled
-        leftActualVelocity = leftMain.getSensorVelocity(0);
-        rightActualVelocity = rightMain.getSensorVelocity(0);
+        leftActualVelocity = leftMain.getSensorVelocity();
+        rightActualVelocity = rightMain.getSensorVelocity();
         leftActualDistance += ticksToMeters(leftActualVelocity * tickRatioPerLoop);
         rightActualDistance += ticksToMeters(rightActualVelocity * tickRatioPerLoop);
 
@@ -492,7 +492,7 @@ public class TankDrive extends Drive implements DifferentialDrivetrain {
      */
     @Override
     public double getLeftVelocityTicksActual() {
-        return leftMain.getSensorVelocity(0);
+        return leftMain.getSensorVelocity();
     }
 
     /**
@@ -504,7 +504,7 @@ public class TankDrive extends Drive implements DifferentialDrivetrain {
      */
     @Override
     public double getRightVelocityTicksActual() {
-        return rightMain.getSensorVelocity(0);
+        return rightMain.getSensorVelocity();
     }
 
     /**

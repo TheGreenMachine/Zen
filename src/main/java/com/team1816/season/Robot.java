@@ -426,6 +426,8 @@ public class Robot extends TimedRobot {
                     }
             );
 
+            SmartDashboard.putString("Git Hash", Constants.kGitHash);
+
         } catch (Throwable t) {
             faulted = true;
             throw t;
@@ -572,12 +574,12 @@ public class Robot extends TimedRobot {
             autoModeManager.outputToSmartDashboard(); // update shuffleboard selected auto mode
             playlistManager.outputToSmartDashboard(); // update shuffleboard selected song
 
-            SmartDashboard.putString("Git Hash", Constants.kGitHash);
-
             orchestrator.setControllerRumble(InputHandler.ControllerRole.DRIVER, InputHandler.RumbleDirection.UNIFORM,
                     robotState.isBeamBreakTriggered && !robotState.isBeamBreakOverridden ? 0.7 : 0);
 
-
+            if (DriverStation.isEnabled()) {
+                GreenLogger.updatePeriodicLogs();
+            }
         } catch (Throwable t) {
             faulted = true;
             GreenLogger.log(t.getMessage());
@@ -660,8 +662,6 @@ public class Robot extends TimedRobot {
         robotState.field
                 .getObject("Trajectory")
                 .setTrajectory(autoModeManager.getSelectedAuto().getCurrentTrajectory());
-
-        GreenLogger.updatePeriodicLogs();
     }
 
     /**

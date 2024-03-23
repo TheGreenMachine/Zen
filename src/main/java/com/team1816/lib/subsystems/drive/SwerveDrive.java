@@ -110,7 +110,6 @@ public class SwerveDrive extends Drive implements EnhancedSwerveDrive, PidProvid
     /**
      * Logging
      */
-    private DoubleLogEntry temperatureLogger;
 
     /**
      * Instantiates a swerve drivetrain from base subsystem parameters
@@ -150,7 +149,7 @@ public class SwerveDrive extends Drive implements EnhancedSwerveDrive, PidProvid
         if (Constants.kLoggingDrivetrain) {
             desStatesLogger = new DoubleArrayLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/DesStates");
             actStatesLogger = new DoubleArrayLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/ActStates");
-            temperatureLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Temperature");
+            GreenLogger.addPeriodicLog(new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Temperature"), swerveModules[0]::getMotorTemp);
             gyroPitchLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Pitch");
             gyroRollLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Roll");
         }
@@ -372,7 +371,6 @@ public class SwerveDrive extends Drive implements EnhancedSwerveDrive, PidProvid
         robotState.vehicleToFloorProximityCentimeters = infrastructure.getMaximumProximity();
 
         if (Constants.kLoggingDrivetrain) {
-            temperatureLogger.append(motorTemperatures[0]);
             drivetrainPoseLogger.append(new double[]{robotState.fieldToVehicle.getX(), robotState.fieldToVehicle.getY(), robotState.fieldToVehicle.getRotation().getDegrees()});
             drivetrainChassisSpeedsLogger.append(new double[]{robotState.deltaVehicle.vxMetersPerSecond, robotState.deltaVehicle.vyMetersPerSecond, robotState.deltaVehicle.omegaRadiansPerSecond});
             gyroPitchLogger.append(pigeon.getPitchValue());

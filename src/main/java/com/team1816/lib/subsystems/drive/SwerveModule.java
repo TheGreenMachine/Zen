@@ -161,10 +161,10 @@ public class SwerveModule implements ISwerveModule {
      */
     public void update() {
         driveActualMPS =
-                DriveConversions.rotationsToMeters(driveMotor.getSensorVelocity(0));
+                DriveConversions.rotationsToMeters(driveMotor.getSensorVelocity());
         azimuthActualDeg =
                 DriveConversions.convertRotationsToDegrees(
-                        azimuthMotor.getSensorPosition(0) -
+                        azimuthMotor.getSensorPosition() -
                                 mModuleConfig.
                                         azimuthEncoderHomeOffset
                 );
@@ -336,7 +336,7 @@ public class SwerveModule implements ISwerveModule {
         Timer.delay(1);
         if (
                 Math.abs(
-                        driveMotor.getSensorVelocity(0) - 0.2 * actualmaxVelTicks100ms
+                        driveMotor.getSensorVelocity() - 0.2 * actualmaxVelTicks100ms
                 ) >
                         actualmaxVelTicks100ms /
                                 50
@@ -347,7 +347,7 @@ public class SwerveModule implements ISwerveModule {
         Timer.delay(1);
         if (
                 Math.abs(
-                        driveMotor.getSensorVelocity(0) + 0.2 * actualmaxVelTicks100ms
+                        driveMotor.getSensorVelocity() + 0.2 * actualmaxVelTicks100ms
                 ) >
                         actualmaxVelTicks100ms /
                                 50
@@ -363,7 +363,7 @@ public class SwerveModule implements ISwerveModule {
             azimuthMotor.set(GreenControlMode.POSITION_CONTROL, setPoint);
             Timer.delay(1);
             if (
-                    Math.abs(azimuthMotor.getSensorPosition(0) - setPoint) >
+                    Math.abs(azimuthMotor.getSensorPosition() - setPoint) >
                             allowableError
             ) {
                 checkAzimuth = false;

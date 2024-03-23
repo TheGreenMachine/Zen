@@ -113,7 +113,6 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
     /**
      * Logging
      */
-    private DoubleLogEntry temperatureLogger;
     private DoubleArrayLogEntry inputLogger; //X, Y, Rotation - raw -1 to 1 from setTeleopInputs
     private StringLogEntry controlRequestLogger;
 
@@ -186,11 +185,8 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
 
         // Logging
         if (Constants.kLoggingRobot) {
-            temperatureLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/moduleTemps");
-            desStatesLogger = new DoubleArrayLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/DesiredSpeeds");
+
             inputLogger = new DoubleArrayLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Inputs");
-            gyroPitchLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Pitch");
-            gyroRollLogger = new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Roll");
             controlRequestLogger = new StringLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/ControlRequest");
 
             desiredModuleStructLogger = StructArrayLogEntry.create(DataLogManager.getLog(), "Drivetrain/Swerve/DesiredStateStruct", SwerveModuleState.struct);
@@ -214,13 +210,8 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
                 motorTemperatures.add(motors[i].getDeviceTemp());
             }
 
-            GreenLogger.addPeriodicLog(new DoubleLogEntry(DataLogManager.getLog(),  "Drivetrain/SingleVelocity"), motors[0].getVelocity().asSupplier());
-            GreenLogger.addPeriodicLog(new DoubleLogEntry(DataLogManager.getLog(),  "Drivetrain/SingleVelocityRef"), () -> {
-                        var reference = motors[0].getClosedLoopReference().getValueAsDouble();
-                        return reference / (DriveConversions.rotationsPerMeter);
-                    }
-            );
-
+            GreenLogger.addPeriodicLog(new DoubleArrayLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/DesiredSpeeds"), this::getDesiredSpeeds);
+            GreenLogger.addPeriodicLog(new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/moduleTemps"), motorTemperatures.get(0).asSupplier());
         }
     }
 
@@ -231,6 +222,8 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
     @Override
     public void createPigeon() {
         super.pigeon = new Pigeon2Wrapper(train.getPigeon2());
+        GreenLogger.addPeriodicLog(new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Pitch"), pigeon::getPitchValue);
+        GreenLogger.addPeriodicLog(new DoubleLogEntry(DataLogManager.getLog(), "Drivetrain/Swerve/Roll"), pigeon::getRollValue);
     }
 
     @Override
@@ -431,12 +424,9 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
         if (Constants.kLoggingDrivetrain) {
             double[] desiredSpeeds = getDesiredSpeeds();
 
-            ((DoubleArrayLogEntry) desStatesLogger).append(desiredSpeeds);
-            temperatureLogger.append(motorTemperatures.get(0).getValueAsDouble());
             drivetrainPoseLogger.append(new double[]{robotState.fieldToVehicle.getX(), robotState.fieldToVehicle.getY(), robotState.fieldToVehicle.getRotation().getDegrees()});
             drivetrainChassisSpeedsLogger.append(new double[]{robotState.deltaVehicle.vxMetersPerSecond, robotState.deltaVehicle.vyMetersPerSecond, robotState.deltaVehicle.omegaRadiansPerSecond});
-            gyroPitchLogger.append(pigeon.getPitchValue());
-            gyroRollLogger.append(pigeon.getRollValue());
+
             controlRequestLogger.append(request.getClass().getSimpleName());
 
             var desiredModuleStates = swerveKinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(

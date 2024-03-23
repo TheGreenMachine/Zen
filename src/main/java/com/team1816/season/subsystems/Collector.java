@@ -6,6 +6,7 @@ import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.subsystems.Subsystem;
+import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
@@ -62,9 +63,10 @@ public class Collector extends Subsystem {
         SmartDashboard.putBoolean("Collector", intakeMotor.getMotorTemperature() < 55);
 
         if (Constants.kLoggingRobot) {
+
             desStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Collector/desiredIntakePower");
-            actStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Collector/actualIntakePower");
-            intakeCurrentDrawLogger = new DoubleLogEntry(DataLogManager.getLog(), "Collector/intakeCurrentDraw");
+            GreenLogger.addPeriodicLog(new DoubleLogEntry(DataLogManager.getLog(), "Collector/actualIntakePower"), intakeMotor::getMotorOutputPercent);
+            GreenLogger.addPeriodicLog(new DoubleLogEntry(DataLogManager.getLog(), "Collector/intakeCurrentDraw"), intakeMotor::getMotorOutputCurrent);
         }
     }
 
@@ -96,9 +98,7 @@ public class Collector extends Subsystem {
             SmartDashboard.putBoolean("Collector", false);
         }
         if (Constants.kLoggingRobot) {
-            ((DoubleLogEntry) actStatesLogger).append(actualIntakePower);
             ((DoubleLogEntry) desStatesLogger).append(desiredIntakePower);
-            intakeCurrentDrawLogger.append(intakeCurrentDraw);
         }
     }
 

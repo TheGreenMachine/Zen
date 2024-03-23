@@ -288,13 +288,13 @@ public class GhostMotor implements IGreenMotor {
     }
 
     @Override
-    public double getSensorPosition(int closedLoopSlotID) {
+    public double getSensorPosition() {
         updateActValues();
         return actualOutput[2];
     }
 
     @Override
-    public double getSensorVelocity(int closedLoopSlotID) {
+    public double getSensorVelocity() {
         updateActValues();
         return actualOutput[1];
     }

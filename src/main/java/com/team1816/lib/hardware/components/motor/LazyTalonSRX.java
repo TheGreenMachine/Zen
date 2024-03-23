@@ -182,13 +182,13 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
     }
 
     @Override
-    public double getSensorPosition(int closedLoopSlotID) {
-        return super.getSelectedSensorPosition(closedLoopSlotID);
+    public double getSensorPosition() {
+        return super.getSelectedSensorPosition(0);
     }
 
     @Override
-    public double getSensorVelocity(int closedLoopSlotID) {
-        return super.getSelectedSensorVelocity(closedLoopSlotID);
+    public double getSensorVelocity() {
+        return super.getSelectedSensorVelocity(0);
     }
 
     @Override

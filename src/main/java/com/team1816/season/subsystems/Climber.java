@@ -8,6 +8,7 @@ import com.team1816.lib.hardware.components.motor.IGreenMotor;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.input_handler.InputHandler;
 import com.team1816.lib.subsystems.Subsystem;
+import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.Orchestrator;
 import com.team1816.season.states.RobotState;
@@ -79,8 +80,8 @@ public class Climber extends Subsystem {
         if (Constants.kLoggingRobot) {
             desStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Climber/desiredClimberOutput");
             actStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Climber/actualClimberOutput");
-            climberCurrentDrawLogger = new DoubleLogEntry(DataLogManager.getLog(), "Climber/climberCurrentDraw");
             controlModeLogger = new StringLogEntry(DataLogManager.getLog(), "Climber/controlMode");
+            GreenLogger.addPeriodicLog(new DoubleLogEntry(DataLogManager.getLog(), "Climber/climberCurrentDraw"), climbMotor::getMotorOutputCurrent);
         }
     }
 
@@ -101,7 +102,7 @@ public class Climber extends Subsystem {
      */
     @Override
     public void readFromHardware() {
-        actualClimberOutput = desiredControlMode == GreenControlMode.PERCENT_OUTPUT ? climbMotor.getMotorOutputPercent() : climbMotor.getSensorPosition(0);
+        actualClimberOutput = desiredControlMode == GreenControlMode.PERCENT_OUTPUT ? climbMotor.getMotorOutputPercent() : climbMotor.getSensorPosition();
         climberCurrentDraw = climbMotor.getMotorOutputCurrent();
 
         if (robotState.actualClimberState != desiredState) {
@@ -120,7 +121,7 @@ public class Climber extends Subsystem {
         }
 
 
-        if (Constants.kLoggingRobot) {
+        if (Constants.kLoggingRobot && isImplemented()) {
             ((DoubleLogEntry) actStatesLogger).append(actualClimberOutput);
             ((DoubleLogEntry) desStatesLogger).append(desiredClimberOutput);
             climberCurrentDrawLogger.append(climberCurrentDraw);

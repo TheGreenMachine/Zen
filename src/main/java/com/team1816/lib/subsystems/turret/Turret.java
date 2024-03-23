@@ -134,7 +134,7 @@ public class Turret extends Subsystem implements PidProvider {
 
         if (Constants.kLoggingRobot) {
             desStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Turret/DesiredPosition");
-            actStatesLogger = new DoubleLogEntry(DataLogManager.getLog(), "Turret/ActualPosition");
+            GreenLogger.addPeriodicLog(new DoubleLogEntry(DataLogManager.getLog(), "Turret/ActualPosition"), this::getActualPosTicks);
         }
     }
 
@@ -298,7 +298,7 @@ public class Turret extends Subsystem implements PidProvider {
     public double getActualPosTicks() {
         return (
             (
-                turretMotor.getSensorPosition(kPrimaryCloseLoop) -
+                turretMotor.getSensorPosition() -
                     kAbsTicksSouthOffset
             )
         );
@@ -342,7 +342,7 @@ public class Turret extends Subsystem implements PidProvider {
             (followingPos >= kFwdWrapAroundPos || followingPos <= kRevWrapAroundPos);
         outputToSmartDashboard();
 
-        double sensorVel = turretMotor.getSensorVelocity(0) / 10d;
+        double sensorVel = turretMotor.getSensorVelocity() / 10d;
         turretRotationalAcceleration =
             Units.degreesToRadians(
                 convertTurretTicksToDegrees(sensorVel - turretVelocity) /
@@ -375,7 +375,6 @@ public class Turret extends Subsystem implements PidProvider {
 
         if (Constants.kLoggingRobot) {
             ((DoubleLogEntry) desStatesLogger).append(followingPos);
-            ((DoubleLogEntry) actStatesLogger).append(getActualPosTicks());
         }
     }
 

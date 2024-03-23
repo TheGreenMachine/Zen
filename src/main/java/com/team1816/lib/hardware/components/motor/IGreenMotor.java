@@ -93,17 +93,15 @@ public interface IGreenMotor {
 
     /**
      * Gets the position recorded by the selected feedback sensor
-     * @param closedLoopSlotID Primary or auxiliary PID
      * @return The sensor position (in ticks)
      */
-    double getSensorPosition(int closedLoopSlotID);
+    double getSensorPosition();
 
     /**
      * Gets the velocity recorded by the selected feedback sensor
-     * @param closedLoopSlotID Primary or auxiliary PID
      * @return The motor velocity (in sensor units/100ms)
      */
-    double getSensorVelocity(int closedLoopSlotID);
+    double getSensorVelocity();
 
     /**
      * Gets the difference between the target and actual closed-loop sensor value
@@ -143,14 +141,12 @@ public interface IGreenMotor {
     /**
      * Sets the position currently read by the encoder as the value passed in
      * @param sensorPosition The position to be passed in
-     * @param closedLoopSlotID Primary or Auxiliary PID
      */
     void setSensorPosition(double sensorPosition);
 
     /**
      * Sets the position currently read by the encoder as the value passed in
      * @param sensorPosition The position to be passed in
-     * @param closedLoopSlotID Primary or Auxiliary PID
      * @param timeoutMs The CAN timeout time (in ms)
      */
     void setSensorPosition(double sensorPosition, int timeoutMs);
