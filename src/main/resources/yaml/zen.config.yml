@@ -203,9 +203,9 @@ subsystems:
             Pivot: 25
         constants:
             noteSensorChannel: 0
-            rollerSpeakerShootSpeed: 76 #TODO this
+            rollerSpeakerShootSpeed: 71 #TODO this
             rollerAmpShootSpeed: 30
-            feederSpeakerShootSpeed: 32 #TODO This
+            feederSpeakerShootSpeed: 30 #TODO This
             feederAmpShootSpeed: 10
             feederIntakeSpeed: 10
             velocityErrorMargin: 0.1

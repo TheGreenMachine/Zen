@@ -24,9 +24,9 @@ public class TopSpeakerToNoteTwoPath extends DynamicAutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return updateWaypoints(List.of(
-                new Pose2d(0.742, 6.709, Rotation2d.fromDegrees(30)),
-                new Pose2d(1.9, 6.39, Rotation2d.fromDegrees(-60)),
-                new Pose2d(2.75, 5.58, Rotation2d.fromDegrees(0))
+                new Pose2d(isReversed ? 0.67 : 0.74, isReversed ? 6.74 : 6.7, Rotation2d.fromDegrees(30)),
+                new Pose2d(1.78, 6.5, Rotation2d.fromDegrees(-39)),
+                new Pose2d(2.92, 5.53, Rotation2d.fromDegrees(-32))
         ));
     }
 
@@ -34,8 +34,8 @@ public class TopSpeakerToNoteTwoPath extends DynamicAutoPath {
     protected List<Rotation2d> getWaypointHeadings() {
         return updateHeadings(List.of(
                 Rotation2d.fromDegrees(60),
-                Rotation2d.fromDegrees(super.isReversed ? 50 : 0),
-                Rotation2d.fromDegrees(0)
+                Rotation2d.fromDegrees(super.isReversed ? 50 : -20),
+                Rotation2d.fromDegrees(-45)
         ));
     }
 
