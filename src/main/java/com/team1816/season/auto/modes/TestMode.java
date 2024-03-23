@@ -33,7 +33,7 @@ public class TestMode extends AutoMode {
         super(
                 List.of(
                 new TrajectoryAction(
-                        new NoteThreeToNoteOneUnderStagePath(Color.BLUE)
+                        new AmpToNoteTwoTopPath(Color.BLUE)
         )));
     }
     @Override
