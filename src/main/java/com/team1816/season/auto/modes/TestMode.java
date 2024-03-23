@@ -17,7 +17,9 @@ import com.team1816.season.auto.paths.scram.MiddleSpeakerToScramPath;
 import com.team1816.season.auto.paths.scram.TopSpeakerToScramPath;
 import com.team1816.season.auto.paths.toNoteOne.AmpToNoteOnePath;
 import com.team1816.season.auto.paths.toNoteOne.MiddleSpeakerToNoteOnePath;
+import com.team1816.season.auto.paths.toNoteOne.TopSpeakerToNoteOnePath;
 import com.team1816.season.auto.paths.toNoteThree.AmpToNoteThreePath;
+import com.team1816.season.auto.paths.toNoteThree.BottomSpeakerToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteThree.MiddleSpeakerToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteThree.TopSpeakerToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteTwo.*;
@@ -33,7 +35,7 @@ public class TestMode extends AutoMode {
         super(
                 List.of(
                 new TrajectoryAction(
-                        new AmpToNoteTwoTopPath(Color.BLUE)
+                        new TopSpeakerToNoteOnePath(Color.BLUE)
         )));
     }
     @Override
