@@ -132,15 +132,12 @@ public class Camera extends Subsystem{
         }
         robotState.currentCamFind = updateEstimatedGlobalPose();
 
-        var curPose = robotState.currentVisionEstimatedPose.estimatedPose.toPose2d();
 
-        if (robotState.currentVisionEstimatedPose != null )
-          FieldConfig.field.getObject("vision").setPose(robotState.currentVisionEstimatedPose.estimatedPose.toPose2d());
+        if (robotState.currentVisionEstimatedPose != null ) {
+            FieldConfig.field.getObject("vision").setPose(robotState.currentVisionEstimatedPose.estimatedPose.toPose2d());
+        }
 
 
-        SmartDashboard.putNumber("visionposeX",curPose.getX());
-        SmartDashboard.putNumber("visionposeY",curPose.getY());
-        SmartDashboard.putNumber("visionposeR",curPose.getRotation().getDegrees());
 
     }
 
