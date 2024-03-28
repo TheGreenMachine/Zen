@@ -149,6 +149,12 @@ public class RobotState {
     public boolean currentCamFind;
 
     /**
+     * Autoaim Stuff
+     */
+    public double speedAdjustment = 0;
+    public double speedAdjustmentPercent = 2;
+
+    /**
      * Resets drivetrain and turret position to a specified pose of drivetrain and rotation of turret
      *
      * @param initial_field_to_vehicle

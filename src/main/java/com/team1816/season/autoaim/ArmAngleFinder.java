@@ -1,6 +1,8 @@
 package com.team1816.season.autoaim;
 
+import com.team1816.lib.Injector;
 import com.team1816.season.configuration.Constants;
+import com.team1816.season.states.RobotState;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 
 import java.util.Optional;
@@ -8,6 +10,8 @@ import java.util.Optional;
 //Based on EvenMoreGravCalcs
 //https://www.desmos.com/3d/fc156ffe8f
 public class ArmAngleFinder {
+
+    static RobotState robotState = Injector.get(RobotState.class);
     /**
      * Constants
      */
@@ -17,7 +21,7 @@ public class ArmAngleFinder {
     private static final double angleBetweenArmAndShooterDegrees = Constants.angleBetweenArmAndShooterDegrees;
     private static final double angleBetweenArmAndShooterRadians = (Math.PI/180)*angleBetweenArmAndShooterDegrees;
     //Positive
-    private static final double outputVelocityPerSecond = Constants.outputVelocityPerSecond;
+    private static double outputVelocityPerSecond = Constants.outputVelocityPerSecond + robotState.speedAdjustment;
     //Negative
     private static final double gravityPerSecond = Constants.gravityPerSecond;
     //Nonzero

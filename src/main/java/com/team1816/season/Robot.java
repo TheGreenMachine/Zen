@@ -282,28 +282,37 @@ public class Robot extends TimedRobot {
             inputHandler.listenActionPressAndRelease(
                     "snapToPickup",
                     (pressed) -> {
-                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.PICKUP : RobotState.SnappingDirection.NO_SNAP;
+//                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.PICKUP : RobotState.SnappingDirection.NO_SNAP;
+                        robotState.speedAdjustmentPercent -= robotState.speedAdjustmentPercent > 1.1 ? 0.1 : 0;
+                        System.out.println("Adjustment Ratio: "+robotState.speedAdjustmentPercent);
                     }
             );
 
             inputHandler.listenActionPressAndRelease(
                     "snapToScore",
                     (pressed) -> {
-                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.SCORE : RobotState.SnappingDirection.NO_SNAP;
+//                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.SCORE : RobotState.SnappingDirection.NO_SNAP;
+                        robotState.speedAdjustmentPercent += robotState.speedAdjustmentPercent > 1.1 ? 0.1 : 0;
+                        System.out.println("Adjustment Ratio: "+robotState.speedAdjustmentPercent);
                     }
             );
 
             inputHandler.listenActionPressAndRelease(
                     "snapToBottomSpeaker",
                     (pressed) -> {
-                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.BOTTOM_SPEAKER : RobotState.SnappingDirection.NO_SNAP;
+//                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.BOTTOM_SPEAKER : RobotState.SnappingDirection.NO_SNAP;
+                        robotState.speedAdjustment /= robotState.speedAdjustmentPercent;
+                        System.out.println("Speed Adjustment: "+robotState.speedAdjustment);
+                        System.out.println("Current Recorded Speed: "+(Constants.outputVelocityPerSecond + robotState.speedAdjustment));
                     }
             );
 
             inputHandler.listenActionPressAndRelease(
                     "snapToTopSpeaker",
                     (pressed) -> {
-                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.TOP_SPEAKER : RobotState.SnappingDirection.NO_SNAP;
+//                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.TOP_SPEAKER : RobotState.SnappingDirection.NO_SNAP;
+                        robotState.speedAdjustment *= robotState.speedAdjustmentPercent;
+                        System.out.println("Current Recorded Speed: "+(Constants.outputVelocityPerSecond + robotState.speedAdjustment));
                     }
             );
 
