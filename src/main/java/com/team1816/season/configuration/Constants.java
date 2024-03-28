@@ -197,7 +197,7 @@ public class Constants {
     public static final double errorPerUnitDistance = 0.1;
     //the robot looks down the positive y axis, and the right side is the positive x axis while the left is the negative x axis
     public static final double axlePositionOffsetX = 0;
-    public static final double axlePositionOffsetY = 0.1524;
+    public static final double axlePositionOffsetY = Units.inchesToMeters(12);
     public static final double axlePositionOffsetZ = Units.inchesToMeters(24.5);
     public static final double heightOfTarget = 2.0431125;
     public static final double blueSpeakerX = 0.265;
