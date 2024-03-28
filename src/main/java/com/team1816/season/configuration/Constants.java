@@ -186,9 +186,9 @@ public class Constants {
      */
     //TODO set to meters, (currently in inches)
     //Positive
-    public static final double lengthOfArm = Units.inchesToMeters(8);
+    public static final double lengthOfArm = Units.inchesToMeters(7.94);
     //0-180
-    public static final double angleBetweenArmAndShooterDegrees = 180 - 111.8;
+    public static final double angleBetweenArmAndShooterDegrees = 180 - 116.52;
     //Positive
     public static final double outputVelocityPerSecond = 15;
     //Negative
@@ -200,9 +200,12 @@ public class Constants {
     public static final double axlePositionOffsetY = 0.1524;
     public static final double axlePositionOffsetZ = Units.inchesToMeters(24.5);
     public static final double heightOfTarget = 2.0431125;
-    public static final double blueSpeakerX = 0.2286;
-    public static final double redSpeakerX = 16.27;
+    public static final double blueSpeakerX = 0.265;
+    //0.2286
+    public static final double redSpeakerX = 16.295;
+    //16.27
     //TODO find out this measurement
-    public static final double speakerY = 5.6597042;
+    public static final double speakerY = 5.511;
+    //5.6597042
     public static final double axleRadiansDisplacement = 0;
 }

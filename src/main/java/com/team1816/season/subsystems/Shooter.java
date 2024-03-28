@@ -357,7 +357,7 @@ public class Shooter extends Subsystem {
                     }
                 }
             }
-            System.out.println(desiredPivotPosition);
+            //System.out.println(desiredPivotPosition);
             pivotMotor.set(GreenControlMode.MOTION_MAGIC_EXPO, MathUtil.clamp(desiredPivotPosition, 1.5, 35));
         }
     }
