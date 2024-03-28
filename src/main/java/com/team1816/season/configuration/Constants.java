@@ -90,7 +90,7 @@ public class Constants {
             -0.369,
             0,
             Constants.kCameraHeightMeters,
-            new Rotation3d(0,-0.79,Math.PI)
+            new Rotation3d(Math.PI,-0.44,Math.PI)
     );
 
     public static final Translation2d kTurretMountingOffset = new Translation2d(

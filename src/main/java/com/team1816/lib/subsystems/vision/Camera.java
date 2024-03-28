@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jakarta.inject.Inject;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -131,8 +132,16 @@ public class Camera extends Subsystem{
         }
         robotState.currentCamFind = updateEstimatedGlobalPose();
 
-//        if (robotState.currentVisionEstimatedPose != null )
-//          FieldConfig.field.getObject("vision").setPose(robotState.currentVisionEstimatedPose.estimatedPose.toPose2d());
+        var curPose = robotState.currentVisionEstimatedPose.estimatedPose.toPose2d();
+
+        if (robotState.currentVisionEstimatedPose != null )
+          FieldConfig.field.getObject("vision").setPose(robotState.currentVisionEstimatedPose.estimatedPose.toPose2d());
+
+
+        SmartDashboard.putNumber("visionposeX",curPose.getX());
+        SmartDashboard.putNumber("visionposeY",curPose.getY());
+        SmartDashboard.putNumber("visionposeR",curPose.getRotation().getDegrees());
+
     }
 
     @Override

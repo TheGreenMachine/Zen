@@ -671,7 +671,7 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         try {
             if (robotState.currentCamFind) {
-//                orchestrator.updatePoseWithVisionData();
+                orchestrator.updatePoseWithVisionData();
             }
 
             manualControl();

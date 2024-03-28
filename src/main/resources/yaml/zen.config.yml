@@ -101,7 +101,7 @@ subsystems:
                     kF: 0.00925
             azimuthPID:
                 slot0:
-                    kP: 50
+                    kP: 75
                     kI: 0
                     kD: 0
                     kF: 0
@@ -144,7 +144,7 @@ subsystems:
                 motorType: TalonFX
                 motorName: intakeMotor
                 id: 10
-                invertMotor: true
+                invertMotor: false
         pidConfig:
             slot0:
                 kP: 0.043
@@ -152,8 +152,8 @@ subsystems:
                 kD: 0.00001
                 kF: 0.0099
         constants:
-            intakeSpeed: -0.95
-            outtakeSpeed: 0.4
+            intakeSpeed: -0.75
+            outtakeSpeed: 0.3
     shooter:
         implemented: true
         motors:
