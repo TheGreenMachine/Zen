@@ -186,11 +186,11 @@ public class Constants {
      */
     //TODO set to meters, (currently in inches)
     //Positive
-    public static final double lengthOfArm = 0.3048;
+    public static final double lengthOfArm = Units.inchesToMeters(8);
     //0-180
     public static final double angleBetweenArmAndShooterDegrees = 180 - 111.8;
     //Positive
-    public static final double outputVelocityPerSecond = 30;
+    public static final double outputVelocityPerSecond = 15;
     //Negative
     public static final double gravityPerSecond = -9.80665;
     //Nonzero
@@ -198,7 +198,7 @@ public class Constants {
     //the robot looks down the positive y axis, and the right side is the positive x axis while the left is the negative x axis
     public static final double axlePositionOffsetX = 0;
     public static final double axlePositionOffsetY = 0.1524;
-    public static final double axlePositionOffsetZ = 0.3048;
+    public static final double axlePositionOffsetZ = Units.inchesToMeters(24.5);
     public static final double heightOfTarget = 2.0431125;
     public static final double blueSpeakerX = 0.2286;
     public static final double redSpeakerX = 16.27;

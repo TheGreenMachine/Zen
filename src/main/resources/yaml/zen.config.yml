@@ -138,7 +138,7 @@ subsystems:
         constants:
             useMultiTargetOdometry: 0
     collector:
-        implemented: true
+        implemented: false
         motors:
             intakeMotor:
                 motorType: TalonFX
