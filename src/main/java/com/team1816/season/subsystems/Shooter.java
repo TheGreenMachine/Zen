@@ -362,6 +362,10 @@ public class Shooter extends Subsystem {
         }
     }
 
+    public double getActualPivotPosition () {
+        return pivotMotor.getSensorPosition(0);
+    }
+
     @Override
     public void zeroSensors() {
         pivotMotor.setSensorPosition(0, 50);
