@@ -190,7 +190,7 @@ public class Constants {
     //0-180
     public static final double angleBetweenArmAndShooterDegrees = 180 - 116.52;
     //Positive
-    public static final double outputVelocityPerSecond = 15;
+    public static final double outputVelocityPerSecond = 11;
     //Negative
     public static final double gravityPerSecond = -9.80665;
     //Nonzero
@@ -199,7 +199,8 @@ public class Constants {
     public static final double axlePositionOffsetX = 0;
     public static final double axlePositionOffsetY = Units.inchesToMeters(12);
     public static final double axlePositionOffsetZ = Units.inchesToMeters(24.5);
-    public static final double heightOfTarget = 2.0431125;
+    public static final double heightOfTarget = Units.inchesToMeters(81);
+    //2.0431125
     public static final double blueSpeakerX = 0.265;
     //0.2286
     public static final double redSpeakerX = 16.295;

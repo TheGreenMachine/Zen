@@ -279,39 +279,42 @@ public class Robot extends TimedRobot {
             );
 
 
-            inputHandler.listenActionPressAndRelease(
-                    "snapToPickup",
-                    (pressed) -> {
-//                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.PICKUP : RobotState.SnappingDirection.NO_SNAP;
-                        robotState.speedAdjustmentPercent -= robotState.speedAdjustmentPercent > 1.1 ? 0.1 : 0;
-                        System.out.println("Adjustment Ratio: "+robotState.speedAdjustmentPercent);
-                    }
-            );
+//            inputHandler.listenActionPressAndRelease(
+//                    "snapToPickup",
+//                    (pressed) -> {
+////                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.PICKUP : RobotState.SnappingDirection.NO_SNAP;
+//                        robotState.speedAdjustmentPercent -= robotState.speedAdjustmentPercent > 1.1 ? 0.1 : 0;
+//                        System.out.println("Adjustment Ratio: "+robotState.speedAdjustmentPercent);
+//                    }
+//            );
+//
+//            inputHandler.listenAction(
+//                    "snapToScore",
+//                    ActionState.PRESSED,
+//                    () -> {
+////                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.SCORE : RobotState.SnappingDirection.NO_SNAP;
+//                        robotState.speedAdjustmentPercent += robotState.speedAdjustmentPercent > 1.1 ? 0.1 : 0;
+//                        System.out.println("Adjustment Ratio: "+robotState.speedAdjustmentPercent);
+//                    }
+//            );
 
-            inputHandler.listenActionPressAndRelease(
+            inputHandler.listenAction(
                     "snapToScore",
-                    (pressed) -> {
-//                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.SCORE : RobotState.SnappingDirection.NO_SNAP;
-                        robotState.speedAdjustmentPercent += robotState.speedAdjustmentPercent > 1.1 ? 0.1 : 0;
-                        System.out.println("Adjustment Ratio: "+robotState.speedAdjustmentPercent);
-                    }
-            );
-
-            inputHandler.listenActionPressAndRelease(
-                    "snapToBottomSpeaker",
-                    (pressed) -> {
+                    ActionState.PRESSED,
+                    () -> {
 //                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.BOTTOM_SPEAKER : RobotState.SnappingDirection.NO_SNAP;
-                        robotState.speedAdjustment /= robotState.speedAdjustmentPercent;
+                        robotState.speedAdjustment += 0.25;
                         System.out.println("Speed Adjustment: "+robotState.speedAdjustment);
                         System.out.println("Current Recorded Speed: "+(Constants.outputVelocityPerSecond + robotState.speedAdjustment));
                     }
             );
 
             inputHandler.listenActionPressAndRelease(
-                    "snapToTopSpeaker",
+                    "snapToPickup",
                     (pressed) -> {
 //                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.TOP_SPEAKER : RobotState.SnappingDirection.NO_SNAP;
-                        robotState.speedAdjustment *= robotState.speedAdjustmentPercent;
+                        robotState.speedAdjustment -= 0.25;
+                        System.out.println("Speed Adjustment: "+robotState.speedAdjustment);
                         System.out.println("Current Recorded Speed: "+(Constants.outputVelocityPerSecond + robotState.speedAdjustment));
                     }
             );
@@ -484,6 +487,7 @@ public class Robot extends TimedRobot {
         ledManager.indicateStatus(LedManager.RobotStatus.AUTONOMOUS);
 
         drive.zeroSensors(autoModeManager.getSelectedAuto().getInitialPose());
+        shooter.zeroMotor();
 
         shooter.setDesiredState(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW);
         collector.setDesiredState(Collector.COLLECTOR_STATE.STOP);
@@ -517,6 +521,8 @@ public class Robot extends TimedRobot {
                             Rotation2d.fromDegrees(0) :
                             Rotation2d.fromDegrees(180)
             );
+
+            shooter.zeroMotor();
         } catch (Throwable t) {
             faulted = true;
             throw t;
@@ -567,6 +573,10 @@ public class Robot extends TimedRobot {
             Robot.looperDt = getLastSubsystemLoop();
             Robot.robotDt = getLastRobotLoop();
             loopStart = Timer.getFPGATimestamp();
+
+//            if (robotState.currentCamFind) {
+//                orchestrator.updatePoseWithVisionData();
+//            }
 
             if (Constants.kLoggingRobot) {
                 looperLogger.append(looperDt);
@@ -679,9 +689,6 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         try {
-            if (robotState.currentCamFind) {
-                orchestrator.updatePoseWithVisionData();
-            }
 
             manualControl();
         } catch (Throwable t) {

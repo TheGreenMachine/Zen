@@ -138,7 +138,7 @@ subsystems:
         constants:
             useMultiTargetOdometry: 0
     collector:
-        implemented: false
+        implemented: true
         motors:
             intakeMotor:
                 motorType: TalonFX
@@ -208,7 +208,7 @@ subsystems:
             feederSpeakerShootSpeed: 30 #TODO This
             feederAmpShootSpeed: 10
             feederIntakeSpeed: 10
-            velocityErrorMargin: 0.1
+            velocityErrorMargin: 0.05
             pivotNeutralPosition: 1.5
             pivotAmpShootPosition: 33
             pivotDistanceShootPosition: 8.675
