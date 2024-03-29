@@ -368,10 +368,6 @@ public class Shooter extends Subsystem {
         pivotCancoder.setPosition(0, 50);
     }
 
-    public void zeroMotor() {
-        pivotMotor.setSensorPosition(0, 50);
-    }
-
     public void setBraking(boolean braking) {
         pivotMotor.setNeutralMode(braking ? NeutralMode.Brake : NeutralMode.Coast);
     }
@@ -430,7 +426,9 @@ public class Shooter extends Subsystem {
     public enum ROLLER_STATE {
         STOP(0),
         SHOOT_SPEAKER(rollerSpeakerShootSpeed),
-        SHOOT_DISTANCE(75 + 10 * (new Translation2d(robotState.allianceColor == com.team1816.lib.auto.Color.BLUE ? Constants.blueSpeakerX : Constants.redSpeakerX, Constants.speakerY).getDistance(robotState.fieldToVehicle.getTranslation())) > 3 ? 1 : new Translation2d(robotState.allianceColor == com.team1816.lib.auto.Color.BLUE ? Constants.blueSpeakerX : Constants.redSpeakerX, Constants.speakerY).getDistance(robotState.fieldToVehicle.getTranslation()) / 3),
+        SHOOT_DISTANCE(80),
+        //That line caused a crash
+//        SHOOT_DISTANCE(75 + 10 * (new Translation2d(robotState.allianceColor == com.team1816.lib.auto.Color.BLUE ? Constants.blueSpeakerX : Constants.redSpeakerX, Constants.speakerY).getDistance(robotState.fieldToVehicle.getTranslation())) > 3 ? 1 : new Translation2d(robotState.allianceColor == com.team1816.lib.auto.Color.BLUE ? Constants.blueSpeakerX : Constants.redSpeakerX, Constants.speakerY).getDistance(robotState.fieldToVehicle.getTranslation()) / 3),
         SHOOT_AMP(rollerAmpShootSpeed);
 
 

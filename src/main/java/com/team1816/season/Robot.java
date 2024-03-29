@@ -487,7 +487,7 @@ public class Robot extends TimedRobot {
         ledManager.indicateStatus(LedManager.RobotStatus.AUTONOMOUS);
 
         drive.zeroSensors(autoModeManager.getSelectedAuto().getInitialPose());
-        shooter.zeroMotor();
+//        shooter.zeroMotor();
 
         shooter.setDesiredState(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW);
         collector.setDesiredState(Collector.COLLECTOR_STATE.STOP);
@@ -522,7 +522,7 @@ public class Robot extends TimedRobot {
                             Rotation2d.fromDegrees(180)
             );
 
-            shooter.zeroMotor();
+//            shooter.zeroMotor();
         } catch (Throwable t) {
             faulted = true;
             throw t;
