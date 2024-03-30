@@ -190,7 +190,7 @@ public class Constants {
     //0-180
     public static final double angleBetweenArmAndShooterDegrees = 180 - 116.52;
     //Positive
-    public static final double outputVelocityPerSecond = 11;
+    public static final double outputVelocityPerSecond = 10.35;
     //Negative
     public static final double gravityPerSecond = -9.80665;
     //Nonzero
@@ -206,7 +206,7 @@ public class Constants {
     public static final double redSpeakerX = 16.295;
     //16.27
     //TODO find out this measurement
-    public static final double speakerY = 5.511;
+    public static final double speakerY = 5.544;
     //5.6597042
     public static final double axleRadiansDisplacement = 0;
 }
