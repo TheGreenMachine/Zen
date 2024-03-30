@@ -237,7 +237,7 @@ public class Shooter extends Subsystem {
                 }
             }
             if(RobotBase.isReal()) {
-                correctingAutoAim = pivotMotor.get_ClosedLoopOutput() <= 0.085; //Under 6%, TODO put into yaml later
+                correctingAutoAim = pivotMotor.get_ClosedLoopOutput() <= 0.085 && !pivotCancoder.getFault_BadMagnet().getValue(); //Under 6%, TODO put into yaml later
             }
         }
 
