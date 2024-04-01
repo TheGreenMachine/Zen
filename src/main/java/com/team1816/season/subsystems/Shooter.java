@@ -80,6 +80,8 @@ public class Shooter extends Subsystem {
      * Constants
      */
     private static final double velocityErrorMargin = factory.getConstant(NAME, "velocityErrorMargin", 0.1);
+    private static final double velocityErrorMarginAutoAim = factory.getConstant(NAME, "velocityErrorMargin", 0.02);
+    private static final double autoAimDegreeTolerance = factory.getConstant(NAME, "autoAimDegreeTolerance", 2);
     private static final double rollerSpeakerShootSpeed = factory.getConstant(NAME, "rollerSpeakerShootSpeed", 0.70);
     private static final double rollerAmpShootSpeed = factory.getConstant(NAME, "rollerAmpShootSpeed", 0.40);
 
@@ -229,7 +231,7 @@ public class Shooter extends Subsystem {
 
         if (robotState.actualPivotState == PIVOT_STATE.AUTO_AIM) {
             if (correctingAutoAim) {
-                if (!MathUtil.isNear(actualPivotDegrees, autoAimTargetDegrees, 3)) { //This tolerance needs to be calc'd in auto aim util
+                if (!MathUtil.isNear(actualPivotDegrees, autoAimTargetDegrees, autoAimDegreeTolerance)) { //This tolerance needs to be calc'd in auto aim util
                     autoAimCorrectionRotations =
                             (autoAimTargetDegrees - actualPivotDegrees) * Constants.motorRotationsPerDegree;
 
@@ -426,9 +428,7 @@ public class Shooter extends Subsystem {
     public enum ROLLER_STATE {
         STOP(0),
         SHOOT_SPEAKER(rollerSpeakerShootSpeed),
-        SHOOT_DISTANCE(75),
-        //That line caused a crash
-//        SHOOT_DISTANCE(75 + 10 * (new Translation2d(robotState.allianceColor == com.team1816.lib.auto.Color.BLUE ? Constants.blueSpeakerX : Constants.redSpeakerX, Constants.speakerY).getDistance(robotState.fieldToVehicle.getTranslation())) > 3 ? 1 : new Translation2d(robotState.allianceColor == com.team1816.lib.auto.Color.BLUE ? Constants.blueSpeakerX : Constants.redSpeakerX, Constants.speakerY).getDistance(robotState.fieldToVehicle.getTranslation()) / 3),
+        SHOOT_DISTANCE(80),
         SHOOT_AMP(rollerAmpShootSpeed);
 
 
@@ -439,7 +439,10 @@ public class Shooter extends Subsystem {
         }
 
         public boolean inDesiredSpeedRange (double actualVelocity) {
-            return actualVelocity < (1+velocityErrorMargin) * velocity && actualVelocity > (1-velocityErrorMargin) * velocity;
+            if(this == SHOOT_DISTANCE)
+                return actualVelocity < (1+velocityErrorMarginAutoAim) * velocity && actualVelocity > (1-velocityErrorMarginAutoAim) * velocity;
+            else
+                return actualVelocity < (1+velocityErrorMargin) * velocity && actualVelocity > (1-velocityErrorMargin) * velocity;
         }
     }
 
