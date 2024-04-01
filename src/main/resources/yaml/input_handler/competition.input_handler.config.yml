@@ -23,8 +23,8 @@ driver:
     dpad:
         up: plusCalcSpeed
         down: minusCalcSpeed
-        left: minusCalcAngle
         right: plusCalcAngle
+        left: minusCalcAngle
 operator:
     controllerType: Xbox
     rumble: true
