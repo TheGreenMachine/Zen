@@ -93,6 +93,8 @@ public class RobotState {
 
     public SnappingDirection snapDirection = SnappingDirection.NO_SNAP;
 
+    public boolean rotatingClosedLoop = false;
+
     /**
      * Orchestrator states
      */

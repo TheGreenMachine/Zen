@@ -16,6 +16,7 @@ import com.team1816.lib.util.team254.DriveSignal;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -194,6 +195,11 @@ public abstract class Drive
     );
 
     /**
+     * Closed loop rotation
+     */
+    protected ProfiledPIDController thetaController;
+
+    /**
      * Logging
      */
     protected DoubleArrayLogEntry drivetrainPoseLogger;
@@ -216,6 +222,13 @@ public abstract class Drive
         super(NAME, inf, rs);
         ledManager = lm;
         orchestra = new Orchestra();
+        thetaController = new ProfiledPIDController(
+                20,
+                0,
+                0,
+                kRotationActionControllerConstraints
+        );
+        thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         if (isDemoMode) {
             demoModeChooser = new SendableChooser<>();
@@ -681,6 +694,16 @@ public abstract class Drive
      * Adds each motor to the orchestra object
      */
     public abstract void configureOrchestra();
+
+    public void setRotatingClosedLoop(boolean rotating) {
+        robotState.rotatingClosedLoop = rotating;
+
+        if (rotating) {
+            thetaController.reset(robotState.fieldToVehicle.getRotation().getRadians());
+        }
+    }
+
+    public void rotationPeriodic() {}
 
     /**
      * Enum for the ControlState

@@ -20,6 +20,7 @@ import com.team1816.lib.util.driveUtil.DriveConversions;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.lib.util.team254.DriveSignal;
 import com.team1816.season.Robot;
+import com.team1816.season.autoaim.AutoAimUtil;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
 import edu.wpi.first.math.MathUtil;
@@ -573,6 +574,19 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
      */
     public SwerveDriveKinematics getKinematics() {
         return swerveKinematics;
+    }
+
+    @Override
+    public void rotationPeriodic() {
+        if (thetaController.atGoal()) {
+            setRotatingClosedLoop(false);
+        } else {
+            Translation2d distanceToTarget = new Translation2d(robotState.allianceColor == com.team1816.lib.auto.Color.BLUE ? Constants.blueSpeakerX : Constants.redSpeakerX, Constants.speakerY).minus(robotState.fieldToVehicle.getTranslation());
+
+            double rotationalSpeed = thetaController.calculate(robotState.fieldToVehicle.getRotation().getRadians(), AutoAimUtil.getRobotRotation(distanceToTarget) + Math.PI);
+
+            setModuleStates(swerveKinematics.toSwerveModuleStates(new ChassisSpeeds(0, 0, rotationalSpeed)));
+        }
     }
 
     private enum SPEED_MODE {

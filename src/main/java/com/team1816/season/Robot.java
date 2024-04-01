@@ -438,6 +438,11 @@ public class Robot extends TimedRobot {
                     }
             );
 
+            inputHandler.listenActionPressAndRelease(
+                    "rotateToPoint",
+                    drive::setRotatingClosedLoop
+            );
+
             SmartDashboard.putString("Git Hash", Constants.kGitHash);
 
         } catch (Throwable t) {
@@ -703,11 +708,15 @@ public class Robot extends TimedRobot {
     public void manualControl() {
         inputHandler.update();
 
-        drive.setTeleopInputs(
+        if (robotState.rotatingClosedLoop) {
+            drive.rotationPeriodic();
+        } else {
+            drive.setTeleopInputs(
                     -inputHandler.getActionAsDouble("throttle"),
                     -inputHandler.getActionAsDouble("strafe"),
-                     -inputHandler.getActionAsDouble("rotation")
-        );
+                    -inputHandler.getActionAsDouble("rotation")
+            );
+        }
 
         orchestrator.autoSetCollectorState();
     }
