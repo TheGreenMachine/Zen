@@ -18,10 +18,19 @@ public class ArmAngleFinder {
     //Positive
     private static final double lengthOfArm = Constants.lengthOfArm;
     //0-180
-    private static final double angleBetweenArmAndShooterDegrees = Constants.angleBetweenArmAndShooterDegrees;
-    private static final double angleBetweenArmAndShooterRadians = (Math.PI/180)*angleBetweenArmAndShooterDegrees;
+    private static double angleBetweenArmAndShooterDegrees = Constants.angleBetweenArmAndShooterDegrees + robotState.angleAdjustment;
+    public static void setAngleBetweenArmAndShooterDegrees(double increment){
+        robotState.angleAdjustment += increment;
+        angleBetweenArmAndShooterDegrees = Constants.angleBetweenArmAndShooterDegrees + robotState.angleAdjustment;
+        angleBetweenArmAndShooterRadians = (Math.PI/180)*angleBetweenArmAndShooterDegrees;
+    }
+    private static double angleBetweenArmAndShooterRadians = (Math.PI/180)*angleBetweenArmAndShooterDegrees;
     //Positive
     private static double outputVelocityPerSecond = Constants.outputVelocityPerSecond + robotState.speedAdjustment;
+    public static void setOutputVelocityPerSecond(double increment){
+        robotState.speedAdjustment += increment;
+        outputVelocityPerSecond = Constants.outputVelocityPerSecond + robotState.speedAdjustment;
+    }
     //Negative
     private static final double gravityPerSecond = Constants.gravityPerSecond;
     //Nonzero

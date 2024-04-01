@@ -17,6 +17,7 @@ import com.team1816.lib.subsystems.vision.Camera;
 import com.team1816.lib.util.Util;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.auto.AutoModeManager;
+import com.team1816.season.autoaim.ArmAngleFinder;
 import com.team1816.season.autoaim.AutoAimUtil;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.Orchestrator;
@@ -280,42 +281,39 @@ public class Robot extends TimedRobot {
                     drive::setSlowMode
             );
 
-
-//            inputHandler.listenActionPressAndRelease(
-//                    "snapToPickup",
-//                    (pressed) -> {
-////                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.PICKUP : RobotState.SnappingDirection.NO_SNAP;
-//                        robotState.speedAdjustmentPercent -= robotState.speedAdjustmentPercent > 1.1 ? 0.1 : 0;
-//                        System.out.println("Adjustment Ratio: "+robotState.speedAdjustmentPercent);
-//                    }
-//            );
-//
-//            inputHandler.listenAction(
-//                    "snapToScore",
-//                    ActionState.PRESSED,
-//                    () -> {
-////                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.SCORE : RobotState.SnappingDirection.NO_SNAP;
-//                        robotState.speedAdjustmentPercent += robotState.speedAdjustmentPercent > 1.1 ? 0.1 : 0;
-//                        System.out.println("Adjustment Ratio: "+robotState.speedAdjustmentPercent);
-//                    }
-//            );
-
             inputHandler.listenAction(
-                    "snapToScore",
+                    "plusCalcAngle",
                     ActionState.PRESSED,
                     () -> {
-//                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.BOTTOM_SPEAKER : RobotState.SnappingDirection.NO_SNAP;
-                        robotState.speedAdjustment += 0.25;
+                        ArmAngleFinder.setAngleBetweenArmAndShooterDegrees(1);
+                        System.out.println("Speed Adjustment: "+robotState.angleAdjustment);
+                        System.out.println("Current Recorded Speed: "+(Constants.angleBetweenArmAndShooterDegrees + robotState.angleAdjustment));
+                    }
+            );
+
+            inputHandler.listenActionPressAndRelease(
+                    "minusCalcAngle",
+                    (pressed) -> {
+                        ArmAngleFinder.setAngleBetweenArmAndShooterDegrees(-1);
+                        System.out.println("Speed Adjustment: "+robotState.angleAdjustment);
+                        System.out.println("Current Recorded Speed: "+(Constants.angleBetweenArmAndShooterDegrees + robotState.angleAdjustment));
+                    }
+            );
+
+            inputHandler.listenAction(
+                    "plusCalcSpeed",
+                    ActionState.PRESSED,
+                    () -> {
+                        ArmAngleFinder.setOutputVelocityPerSecond(0.25);
                         System.out.println("Speed Adjustment: "+robotState.speedAdjustment);
                         System.out.println("Current Recorded Speed: "+(Constants.outputVelocityPerSecond + robotState.speedAdjustment));
                     }
             );
 
             inputHandler.listenActionPressAndRelease(
-                    "snapToPickup",
+                    "minusCalcSpeed",
                     (pressed) -> {
-//                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.TOP_SPEAKER : RobotState.SnappingDirection.NO_SNAP;
-                        robotState.speedAdjustment -= 0.25;
+                        ArmAngleFinder.setOutputVelocityPerSecond(-0.25);
                         System.out.println("Speed Adjustment: "+robotState.speedAdjustment);
                         System.out.println("Current Recorded Speed: "+(Constants.outputVelocityPerSecond + robotState.speedAdjustment));
                     }
