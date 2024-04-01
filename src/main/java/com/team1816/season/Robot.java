@@ -212,7 +212,9 @@ public class Robot extends TimedRobot {
                 // start logging
                 DataLogManager.start(logFileDir, "", Constants.kLooperDt);
                 if (RobotBase.isReal()) {
-                    Util.cleanLogFiles();
+                    if (!DriverStation.isFMSAttached()) {
+                        Util.cleanLogFiles();
+                    }
                     SignalLogger.start();
                 }
                 DriverStation.startDataLog(DataLogManager.getLog(), false);
