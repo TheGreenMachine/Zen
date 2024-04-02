@@ -286,17 +286,18 @@ public class Robot extends TimedRobot {
                     ActionState.PRESSED,
                     () -> {
                         ArmAngleFinder.setAngleBetweenArmAndShooterDegrees(1);
-                        System.out.println("Speed Adjustment: "+robotState.angleAdjustment);
-                        System.out.println("Current Recorded Speed: "+(Constants.angleBetweenArmAndShooterDegrees + robotState.angleAdjustment));
+                        System.out.println("Angle Adjustment: "+robotState.angleAdjustment);
+                        System.out.println("Current Recorded Angle: "+(Constants.angleBetweenArmAndShooterDegrees + robotState.angleAdjustment));
                     }
             );
 
-            inputHandler.listenActionPressAndRelease(
+            inputHandler.listenAction(
                     "minusCalcAngle",
-                    (pressed) -> {
+                    ActionState.PRESSED,
+                    () -> {
                         ArmAngleFinder.setAngleBetweenArmAndShooterDegrees(-1);
-                        System.out.println("Speed Adjustment: "+robotState.angleAdjustment);
-                        System.out.println("Current Recorded Speed: "+(Constants.angleBetweenArmAndShooterDegrees + robotState.angleAdjustment));
+                        System.out.println("Angle Adjustment: "+robotState.angleAdjustment);
+                        System.out.println("Current Recorded Angle: "+(Constants.angleBetweenArmAndShooterDegrees + robotState.angleAdjustment));
                     }
             );
 
@@ -304,16 +305,17 @@ public class Robot extends TimedRobot {
                     "plusCalcSpeed",
                     ActionState.PRESSED,
                     () -> {
-                        ArmAngleFinder.setOutputVelocityPerSecond(0.25);
+                        ArmAngleFinder.setOutputVelocityPerSecond(0.1);
                         System.out.println("Speed Adjustment: "+robotState.speedAdjustment);
                         System.out.println("Current Recorded Speed: "+(Constants.outputVelocityPerSecond + robotState.speedAdjustment));
                     }
             );
 
-            inputHandler.listenActionPressAndRelease(
+            inputHandler.listenAction(
                     "minusCalcSpeed",
-                    (pressed) -> {
-                        ArmAngleFinder.setOutputVelocityPerSecond(-0.25);
+                    ActionState.PRESSED,
+                    () -> {
+                        ArmAngleFinder.setOutputVelocityPerSecond(-0.1);
                         System.out.println("Speed Adjustment: "+robotState.speedAdjustment);
                         System.out.println("Current Recorded Speed: "+(Constants.outputVelocityPerSecond + robotState.speedAdjustment));
                     }

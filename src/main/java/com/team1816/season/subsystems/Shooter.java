@@ -2,10 +2,13 @@ package com.team1816.season.subsystems;
 
 import com.ctre.phoenix.Util;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.components.motor.GhostMotor;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
+import com.team1816.lib.hardware.components.motor.LazyTalonFX;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.subsystems.Subsystem;
 import com.team1816.lib.util.logUtil.GreenLogger;
@@ -126,6 +129,11 @@ public class Shooter extends Subsystem {
 
         rollerMotor.selectPIDSlot(1);
         pivotMotor.selectPIDSlot(2);
+
+        TalonFXConfiguration configs = new TalonFXConfiguration();
+        ((LazyTalonFX) rollerMotor).getConfigurator().refresh(configs);
+        ((LazyTalonFX) rollerMotor).getConfigurator().apply(configs.withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(175).withStatorCurrentLimitEnable(true)));
+
 
         robotState.pivotArm.setColor(new Color8Bit(Color.kDarkBlue));
 
@@ -428,7 +436,7 @@ public class Shooter extends Subsystem {
     public enum ROLLER_STATE {
         STOP(0),
         SHOOT_SPEAKER(rollerSpeakerShootSpeed),
-        SHOOT_DISTANCE(75),
+        SHOOT_DISTANCE(90),
         SHOOT_AMP(rollerAmpShootSpeed);
 
 
