@@ -428,7 +428,7 @@ public class Shooter extends Subsystem {
     public enum ROLLER_STATE {
         STOP(0),
         SHOOT_SPEAKER(rollerSpeakerShootSpeed),
-        SHOOT_DISTANCE(80),
+        SHOOT_DISTANCE(75),
         SHOOT_AMP(rollerAmpShootSpeed);
 
 
@@ -439,7 +439,7 @@ public class Shooter extends Subsystem {
         }
 
         public boolean inDesiredSpeedRange (double actualVelocity) {
-            if(this == SHOOT_DISTANCE)
+            if (this == SHOOT_DISTANCE)
                 return actualVelocity < (1+velocityErrorMarginAutoAim) * velocity && actualVelocity > (1-velocityErrorMarginAutoAim) * velocity;
             else
                 return actualVelocity < (1+velocityErrorMargin) * velocity && actualVelocity > (1-velocityErrorMargin) * velocity;

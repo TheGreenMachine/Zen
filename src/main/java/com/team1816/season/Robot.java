@@ -334,7 +334,7 @@ public class Robot extends TimedRobot {
                         if (pressed) {
                             if (shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.SHOOT_AMP) {
                                 shooter.setDesiredState(Shooter.ROLLER_STATE.SHOOT_AMP, Shooter.FEEDER_STATE.SHOOT);
-                            } else if (shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.SHOOT_DISTANCE) {
+                            } else if (shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.AUTO_AIM) {
                                 shooter.setDesiredState(Shooter.ROLLER_STATE.SHOOT_DISTANCE, Shooter.FEEDER_STATE.SHOOT);
                             } else {
                                 shooter.setDesiredState(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT);
@@ -579,9 +579,9 @@ public class Robot extends TimedRobot {
             Robot.robotDt = getLastRobotLoop();
             loopStart = Timer.getFPGATimestamp();
 
-            if (robotState.currentCamFind && robotState.actualPivotState != Shooter.PIVOT_STATE.AUTO_AIM) {
-                orchestrator.updatePoseWithVisionData();
-            }
+//            if (robotState.currentCamFind && robotState.actualPivotState != Shooter.PIVOT_STATE.AUTO_AIM) {
+//                orchestrator.updatePoseWithVisionData();
+//            }
 
             if (Constants.kLoggingRobot) {
                 looperLogger.append(looperDt);
