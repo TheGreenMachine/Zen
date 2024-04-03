@@ -285,9 +285,9 @@ public class Robot extends TimedRobot {
                     "plusCalcAngle",
                     ActionState.PRESSED,
                     () -> {
-                        ArmAngleFinder.setAngleBetweenArmAndShooterDegrees(1);
-                        System.out.println("Angle Adjustment: "+robotState.angleAdjustment);
-                        System.out.println("Current Recorded Angle: "+(Constants.angleBetweenArmAndShooterDegrees + robotState.angleAdjustment));
+                        ArmAngleFinder.setOutputVelocityPerSecond(0.1);
+                        System.out.println("Speed Adjustment: "+robotState.speedAdjustment);
+                        System.out.println("Current Recorded Speed: "+(Constants.outputVelocityPerSecond + robotState.speedAdjustment));
                     }
             );
 
@@ -295,9 +295,9 @@ public class Robot extends TimedRobot {
                     "minusCalcAngle",
                     ActionState.PRESSED,
                     () -> {
-                        ArmAngleFinder.setAngleBetweenArmAndShooterDegrees(-1);
-                        System.out.println("Angle Adjustment: "+robotState.angleAdjustment);
-                        System.out.println("Current Recorded Angle: "+(Constants.angleBetweenArmAndShooterDegrees + robotState.angleAdjustment));
+                        ArmAngleFinder.setOutputVelocityPerSecond(-0.01);
+                        System.out.println("Speed Adjustment: "+robotState.speedAdjustment);
+                        System.out.println("Current Recorded Speed: "+(Constants.outputVelocityPerSecond + robotState.speedAdjustment));
                     }
             );
 

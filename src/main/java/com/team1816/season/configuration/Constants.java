@@ -190,8 +190,8 @@ public class Constants {
     //0-180
     public static final double angleBetweenArmAndShooterDegrees = 180-116.52;
     //Positive
-    public static final double outputVelocityPerSecond = 9.1;
-    //9.1
+    public static final double outputVelocityPerSecond = 13;
+    //10.2 maybe if it don't work right away
     //Negative
     public static final double gravityPerSecond = -9.80665;
     //Nonzero

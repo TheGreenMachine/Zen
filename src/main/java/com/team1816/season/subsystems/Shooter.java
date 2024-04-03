@@ -12,6 +12,7 @@ import com.team1816.lib.hardware.components.motor.LazyTalonFX;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.subsystems.Subsystem;
 import com.team1816.lib.util.logUtil.GreenLogger;
+import com.team1816.season.Robot;
 import com.team1816.season.autoaim.AutoAimUtil;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
@@ -130,9 +131,11 @@ public class Shooter extends Subsystem {
         rollerMotor.selectPIDSlot(1);
         pivotMotor.selectPIDSlot(2);
 
-        TalonFXConfiguration configs = new TalonFXConfiguration();
-        ((LazyTalonFX) rollerMotor).getConfigurator().refresh(configs);
-        ((LazyTalonFX) rollerMotor).getConfigurator().apply(configs.withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(175).withStatorCurrentLimitEnable(true)));
+        if(Robot.isReal()) {
+            TalonFXConfiguration configs = new TalonFXConfiguration();
+            ((LazyTalonFX) rollerMotor).getConfigurator().refresh(configs);
+            ((LazyTalonFX) rollerMotor).getConfigurator().apply(configs.withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(100).withStatorCurrentLimitEnable(true)));
+        }
 
 
         robotState.pivotArm.setColor(new Color8Bit(Color.kDarkBlue));
@@ -247,7 +250,7 @@ public class Shooter extends Subsystem {
                 }
             }
             if(RobotBase.isReal()) {
-                correctingAutoAim = pivotMotor.get_ClosedLoopOutput() <= 0.085 && !pivotCancoder.getFault_BadMagnet().getValue(); //Under 6%, TODO put into yaml later
+                correctingAutoAim = pivotMotor.get_ClosedLoopOutput() <= 0.02 + robotState.pivotLoopIncrement && !pivotCancoder.getFault_BadMagnet().getValue(); //Under 6%, TODO put into yaml later
             }
         }
 

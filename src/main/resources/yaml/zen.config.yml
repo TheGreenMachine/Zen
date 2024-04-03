@@ -209,8 +209,8 @@ subsystems:
             feederAmpShootSpeed: 10
             feederIntakeSpeed: 10
             velocityErrorMargin: 0.1
-            velocityErrorMarginAutoAim: 0.02
-            autoAimDegreeTolerance: 2.4
+            velocityErrorMarginAutoAim: 0.003
+            autoAimDegreeTolerance: .1
             pivotNeutralPosition: 1.5
             pivotAmpShootPosition: 33
             pivotDistanceShootPosition: 8.675
