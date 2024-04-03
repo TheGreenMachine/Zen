@@ -26,7 +26,7 @@ public class ArmAngleFinder {
     }
     private static double angleBetweenArmAndShooterRadians = (Math.PI/180)*angleBetweenArmAndShooterDegrees;
     //Positive
-    private static double outputVelocityPerSecond = Constants.outputVelocityPerSecond + robotState.speedAdjustment;
+    private static double outputVelocityPerSecond = Constants.outputVelocityPerSecond;
     public static void setOutputVelocityPerSecond(double increment){
         robotState.speedAdjustment += increment;
         outputVelocityPerSecond = Constants.outputVelocityPerSecond + robotState.speedAdjustment;
