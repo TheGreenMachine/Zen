@@ -22,18 +22,6 @@
         "constants": {
             "$ref": "double.map.schema.json"
         },
-        "talons": {
-            "$ref": "int.map.schema.json"
-        },
-        "falcons": {
-            "$ref": "int.map.schema.json"
-        },
-        "victors": {
-            "$ref": "int.map.schema.json"
-        },
-        "sparkmaxes": {
-            "$ref": "int.map.schema.json"
-        },
         "canCoders": {
             "$ref": "int.map.schema.json"
         },
