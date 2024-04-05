@@ -590,8 +590,9 @@ public class Robot extends TimedRobot {
             autoModeManager.outputToSmartDashboard(); // update shuffleboard selected auto mode
             playlistManager.outputToSmartDashboard(); // update shuffleboard selected song
 
+            double activeRumble = robotState.readyToShoot ? 0.9 : 0.7;
             orchestrator.setControllerRumble(InputHandler.ControllerRole.DRIVER, InputHandler.RumbleDirection.UNIFORM,
-                    robotState.isBeamBreakTriggered && !robotState.isBeamBreakOverridden ? 0.7 : 0);
+                    robotState.isBeamBreakTriggered && !robotState.isBeamBreakOverridden ? activeRumble : 0);
 
             if (DriverStation.isEnabled()) {
                 GreenLogger.updatePeriodicLogs();

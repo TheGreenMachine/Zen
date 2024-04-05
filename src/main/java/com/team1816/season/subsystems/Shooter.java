@@ -80,6 +80,7 @@ public class Shooter extends Subsystem {
     private double actualPivotDegrees = 0;
 
 
+
     /**
      * Constants
      */
@@ -242,9 +243,15 @@ public class Shooter extends Subsystem {
                             (autoAimTargetDegrees - actualPivotDegrees) * Constants.motorRotationsPerDegree;
 
                     autoAimCorrectionRotations = MathUtil.inputModulus(autoAimCorrectionRotations, 0, 1);
+
+                    robotState.readyToShoot = autoAimCorrectionRotations < 0.01;
+                } else {
+                    robotState.readyToShoot = true;
                 }
+            } else {
+                robotState.readyToShoot = false;
             }
-            if(RobotBase.isReal()) {
+            if (RobotBase.isReal()) {
                 correctingAutoAim = pivotMotor.get_ClosedLoopOutput() <= 0.02 + robotState.pivotLoopIncrement && !pivotCancoder.getFault_BadMagnet().getValue(); //Under 6%, TODO put into yaml later
             }
         }

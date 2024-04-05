@@ -156,7 +156,9 @@ public class RobotState {
     public double speedAdjustment = 0;
     public double angleAdjustment = 0;
     public double speedAdjustmentPercent = 2;
-    public double pivotLoopIncrement;
+    public double pivotLoopIncrement = 0;
+
+    public boolean readyToShoot = false;
 
     /**
      * Resets drivetrain and turret position to a specified pose of drivetrain and rotation of turret
