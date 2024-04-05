@@ -403,7 +403,9 @@ public class AutoModeManager {
         TOP_NOTE,
         MIDDLE_NOTE,
         MIDDLE_NOTE_TOP,
-        BOTTOM_NOTE
+        BOTTOM_NOTE,
+
+        MIDDLE_ONE
     }
 
     public static Position toPosition(ShootPos shootPosition) {
