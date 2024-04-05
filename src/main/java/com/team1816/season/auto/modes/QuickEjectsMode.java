@@ -39,10 +39,13 @@ public class QuickEjectsMode extends AutoMode {
                                 new TopSpeakerToNoteOnePath(robotState.allianceColor)
                         ),
                         new TrajectoryAction(
-                                new NoteOneToMiddleOnePath(robotState.allianceColor)
+                                new TopSpeakerToNoteOnePath(robotState.allianceColor).withInversedWaypoints()
                         ),
                         new TrajectoryAction(
-                                new NoteOneToMiddleOnePath(robotState.allianceColor).withInversedWaypoints()
+                                new TopSpeakerToScramPath(robotState.allianceColor)
+                        ),
+                        new TrajectoryAction(
+                                new TopSpeakerToScramPath(robotState.allianceColor).withInversedWaypoints()
                         )
                 ));
     }
@@ -53,10 +56,11 @@ public class QuickEjectsMode extends AutoMode {
                         new ShootSpeakerAction(),
                         new CollectAction(Collector.COLLECTOR_STATE.INTAKE),
                         trajectoryActions.get(0),
-                        new RotateSwerveAction(Rotation2d.fromDegrees(robotState.allianceColor == Color.BLUE ? -30 : 210)),
-                        new ShootAmpAction(),
                         trajectoryActions.get(1),
-                        trajectoryActions.get(2)
+                        new ShootSpeakerAction(),
+                        trajectoryActions.get(2),
+                        trajectoryActions.get(3),
+                        new ShootSpeakerAction()
                 )
         );
     }

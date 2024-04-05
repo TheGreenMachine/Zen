@@ -136,7 +136,7 @@ public class Constants {
         1d,
             false
     );
-    public static final boolean kUseVision = factory.getConstant("usingVision", 0) > 1;
+    public static final boolean kUseVision = factory.getConstant("usingVision", 0) > 0;
 
     /**
      * Balancing characterization

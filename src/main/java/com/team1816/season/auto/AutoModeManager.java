@@ -365,6 +365,9 @@ public class AutoModeManager {
         SCORE_AND_SCRAM,
         SCORE_AND_SIT,
 
+        QUICK_EJECT,
+
+
 
         BOTTOM_MIDDLE_EJECTS,
         TOP_MIDDLE_EJECTS,
@@ -451,6 +454,8 @@ public class AutoModeManager {
                 return new TopMiddleEjects();
             case SCORE_AND_SCRAM:
                 return new ScoreAndScramMode();
+            case QUICK_EJECT:
+                return new QuickEjectsMode();
             case TEST:
                 if (!DriverStation.isFMSAttached()) return new TestMode();
             case SYSTEM_CHECK:
