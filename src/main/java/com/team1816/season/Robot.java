@@ -569,8 +569,10 @@ public class Robot extends TimedRobot {
             Robot.robotDt = getLastRobotLoop();
             loopStart = Timer.getFPGATimestamp();
 
-            if (robotState.currentCamFind && robotState.actualPivotState != Shooter.PIVOT_STATE.AUTO_AIM) {
-                orchestrator.updatePoseWithVisionData();
+            if (Constants.kUseVision) {
+                if (robotState.currentCamFind && robotState.actualPivotState != Shooter.PIVOT_STATE.AUTO_AIM) {
+                    orchestrator.updatePoseWithVisionData();
+                }
             }
 
             if (Constants.kLoggingRobot) {
