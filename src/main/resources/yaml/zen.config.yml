@@ -118,7 +118,7 @@ subsystems:
             maxRotVelClosedLoop: 2 # Pi radians/sec
             trackWidth: 22.75 # inches
             wheelbaseLength: 22.75 # inches
-            maxVelOpenLoop: 3.4 # meters/s
+            maxVelOpenLoop: 3 # meters/s
             maxVel12VMPS: 5.2
             maxVelPathFollowing: 3.1 # meters/s
             maxAccel: 1.5 # meters/s^2
@@ -128,7 +128,7 @@ subsystems:
             azimuthGearRatio: 12.8 # MK4
             ## Control Configurations ##
             slowModeScalar: 0.4
-            turboModeScalar: 1.53
+            turboModeScalar: 1.73
             driveDeadband: 0.1
             rotationalDeadband: 0.1
             inputDeadband: 0.15 # Deadband of the normalized input
