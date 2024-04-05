@@ -57,6 +57,7 @@ public class TestMode extends AutoMode {
                         new ShootAmpAction(),
                         trajectoryActions.get(1),
                         trajectoryActions.get(2),
+                        new ShootAmpAction(),
                         new RotateSwerveAction(Rotation2d.fromDegrees(robotState.allianceColor == Color.BLUE ? -30 : 210))
                         )
         );

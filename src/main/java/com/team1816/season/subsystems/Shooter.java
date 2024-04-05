@@ -88,6 +88,8 @@ public class Shooter extends Subsystem {
     private static final double velocityErrorMarginAutoAim = factory.getConstant(NAME, "velocityErrorMargin", 0.02);
     private static final double autoAimDegreeTolerance = factory.getConstant(NAME, "autoAimDegreeTolerance", 2);
     private static final double rollerSpeakerShootSpeed = factory.getConstant(NAME, "rollerSpeakerShootSpeed", 0.70);
+    private static final double rollerEjectShootSpeed = factory.getConstant(NAME, "rollerEjectShootSpeed", 0.3);
+
     private static final double rollerAmpShootSpeed = factory.getConstant(NAME, "rollerAmpShootSpeed", 0.40);
 
     private final double feederShootSpeed = factory.getConstant(NAME, "feederSpeakerShootSpeed", 0.70);
@@ -304,6 +306,9 @@ public class Shooter extends Subsystem {
                 case SHOOT_SPEAKER -> {
                     desiredRollerVelocity = rollerSpeakerShootSpeed;
                 }
+                case EJECT -> {
+                    desiredRollerVelocity = rollerEjectShootSpeed;
+                }
                 case SHOOT_AMP -> {
                     desiredRollerVelocity = rollerAmpShootSpeed;
                 }
@@ -445,6 +450,8 @@ public class Shooter extends Subsystem {
     public enum ROLLER_STATE {
         STOP(0),
         SHOOT_SPEAKER(rollerSpeakerShootSpeed),
+
+        EJECT(rollerEjectShootSpeed),
         SHOOT_DISTANCE(90),
         SHOOT_AMP(rollerAmpShootSpeed);
 
