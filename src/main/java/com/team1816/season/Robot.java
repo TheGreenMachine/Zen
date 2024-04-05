@@ -281,43 +281,31 @@ public class Robot extends TimedRobot {
                     drive::setSlowMode
             );
 
-            inputHandler.listenAction(
-                    "plusCalcAngle",
-                    ActionState.PRESSED,
-                    () -> {
-                        ArmAngleFinder.setOutputVelocityPerSecond(0.1);
-                        System.out.println("Speed Adjustment: "+robotState.speedAdjustment);
-                        System.out.println("Current Recorded Speed: "+(Constants.outputVelocityPerSecond + robotState.speedAdjustment));
+            inputHandler.listenActionPressAndRelease(
+                    "snapToPickup",
+                    (pressed) -> {
+                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.PICKUP : RobotState.SnappingDirection.NO_SNAP;
                     }
             );
 
-            inputHandler.listenAction(
-                    "minusCalcAngle",
-                    ActionState.PRESSED,
-                    () -> {
-                        ArmAngleFinder.setOutputVelocityPerSecond(-0.01);
-                        System.out.println("Speed Adjustment: "+robotState.speedAdjustment);
-                        System.out.println("Current Recorded Speed: "+(Constants.outputVelocityPerSecond + robotState.speedAdjustment));
+            inputHandler.listenActionPressAndRelease(
+                    "snapToScore",
+                    (pressed) -> {
+                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.SCORE : RobotState.SnappingDirection.NO_SNAP;
                     }
             );
 
-            inputHandler.listenAction(
-                    "plusCalcSpeed",
-                    ActionState.PRESSED,
-                    () -> {
-                        ArmAngleFinder.setOutputVelocityPerSecond(0.1);
-                        System.out.println("Speed Adjustment: "+robotState.speedAdjustment);
-                        System.out.println("Current Recorded Speed: "+(Constants.outputVelocityPerSecond + robotState.speedAdjustment));
+            inputHandler.listenActionPressAndRelease(
+                    "snapToBottomSpeaker",
+                    (pressed) -> {
+                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.BOTTOM_SPEAKER : RobotState.SnappingDirection.NO_SNAP;
                     }
             );
 
-            inputHandler.listenAction(
-                    "minusCalcSpeed",
-                    ActionState.PRESSED,
-                    () -> {
-                        ArmAngleFinder.setOutputVelocityPerSecond(-0.1);
-                        System.out.println("Speed Adjustment: "+robotState.speedAdjustment);
-                        System.out.println("Current Recorded Speed: "+(Constants.outputVelocityPerSecond + robotState.speedAdjustment));
+            inputHandler.listenActionPressAndRelease(
+                    "snapToTopSpeaker",
+                    (pressed) -> {
+                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.TOP_SPEAKER : RobotState.SnappingDirection.NO_SNAP;
                     }
             );
 
@@ -581,9 +569,9 @@ public class Robot extends TimedRobot {
             Robot.robotDt = getLastRobotLoop();
             loopStart = Timer.getFPGATimestamp();
 
-//            if (robotState.currentCamFind && robotState.actualPivotState != Shooter.PIVOT_STATE.AUTO_AIM) {
-//                orchestrator.updatePoseWithVisionData();
-//            }
+            if (robotState.currentCamFind && robotState.actualPivotState != Shooter.PIVOT_STATE.AUTO_AIM) {
+                orchestrator.updatePoseWithVisionData();
+            }
 
             if (Constants.kLoggingRobot) {
                 looperLogger.append(looperDt);
