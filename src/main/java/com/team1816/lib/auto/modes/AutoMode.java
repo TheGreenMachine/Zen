@@ -13,6 +13,7 @@ import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -196,6 +197,7 @@ public abstract class AutoMode {
                     case BOTTOM_NOTE -> robotState.allianceColor == Color.BLUE ? -28.5 : -151.5;
                     default -> robotState.allianceColor == Color.BLUE ? 0 : 180;
                 });
+        //return robotState.fieldToVehicle.getTranslation().minus(new Translation2d(robotState.allianceColor == Color.BLUE ? Constants.blueSpeakerX : Constants.redSpeakerX, Constants.speakerY)).getAngle();
     }
 
 

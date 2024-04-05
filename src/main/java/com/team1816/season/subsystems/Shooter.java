@@ -2,13 +2,17 @@ package com.team1816.season.subsystems;
 
 import com.ctre.phoenix.Util;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.components.motor.GhostMotor;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
+import com.team1816.lib.hardware.components.motor.LazyTalonFX;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.subsystems.Subsystem;
 import com.team1816.lib.util.logUtil.GreenLogger;
+import com.team1816.season.Robot;
 import com.team1816.season.autoaim.AutoAimUtil;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
@@ -80,6 +84,8 @@ public class Shooter extends Subsystem {
      * Constants
      */
     private static final double velocityErrorMargin = factory.getConstant(NAME, "velocityErrorMargin", 0.1);
+    private static final double velocityErrorMarginAutoAim = factory.getConstant(NAME, "velocityErrorMargin", 0.02);
+    private static final double autoAimDegreeTolerance = factory.getConstant(NAME, "autoAimDegreeTolerance", 2);
     private static final double rollerSpeakerShootSpeed = factory.getConstant(NAME, "rollerSpeakerShootSpeed", 0.70);
     private static final double rollerAmpShootSpeed = factory.getConstant(NAME, "rollerAmpShootSpeed", 0.40);
 
@@ -124,6 +130,13 @@ public class Shooter extends Subsystem {
 
         rollerMotor.selectPIDSlot(1);
         pivotMotor.selectPIDSlot(2);
+
+        if(Robot.isReal()) {
+            TalonFXConfiguration configs = new TalonFXConfiguration();
+            ((LazyTalonFX) rollerMotor).getConfigurator().refresh(configs);
+            ((LazyTalonFX) rollerMotor).getConfigurator().apply(configs.withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(100).withStatorCurrentLimitEnable(true)));
+        }
+
 
         robotState.pivotArm.setColor(new Color8Bit(Color.kDarkBlue));
 
@@ -229,7 +242,7 @@ public class Shooter extends Subsystem {
 
         if (robotState.actualPivotState == PIVOT_STATE.AUTO_AIM) {
             if (correctingAutoAim) {
-                if (!MathUtil.isNear(actualPivotDegrees, autoAimTargetDegrees, 3)) { //This tolerance needs to be calc'd in auto aim util
+                if (!MathUtil.isNear(autoAimTargetDegrees, actualPivotDegrees, autoAimDegreeTolerance)) { //This tolerance needs to be calc'd in auto aim util
                     autoAimCorrectionRotations =
                             (autoAimTargetDegrees - actualPivotDegrees) * Constants.motorRotationsPerDegree;
 
@@ -237,7 +250,7 @@ public class Shooter extends Subsystem {
                 }
             }
             if(RobotBase.isReal()) {
-                correctingAutoAim = pivotMotor.get_ClosedLoopOutput() <= 0.085 && !pivotCancoder.getFault_BadMagnet().getValue(); //Under 6%, TODO put into yaml later
+                correctingAutoAim = pivotMotor.get_ClosedLoopOutput() <= 0.02 + robotState.pivotLoopIncrement && !pivotCancoder.getFault_BadMagnet().getValue(); //Under 6%, TODO put into yaml later
             }
         }
 
@@ -430,9 +443,7 @@ public class Shooter extends Subsystem {
     public enum ROLLER_STATE {
         STOP(0),
         SHOOT_SPEAKER(rollerSpeakerShootSpeed),
-        SHOOT_DISTANCE(75),
-        //That line caused a crash
-//        SHOOT_DISTANCE(75 + 10 * (new Translation2d(robotState.allianceColor == com.team1816.lib.auto.Color.BLUE ? Constants.blueSpeakerX : Constants.redSpeakerX, Constants.speakerY).getDistance(robotState.fieldToVehicle.getTranslation())) > 3 ? 1 : new Translation2d(robotState.allianceColor == com.team1816.lib.auto.Color.BLUE ? Constants.blueSpeakerX : Constants.redSpeakerX, Constants.speakerY).getDistance(robotState.fieldToVehicle.getTranslation()) / 3),
+        SHOOT_DISTANCE(90),
         SHOOT_AMP(rollerAmpShootSpeed);
 
 
@@ -443,7 +454,10 @@ public class Shooter extends Subsystem {
         }
 
         public boolean inDesiredSpeedRange (double actualVelocity) {
-            return actualVelocity < (1+velocityErrorMargin) * velocity && actualVelocity > (1-velocityErrorMargin) * velocity;
+            if (this == SHOOT_DISTANCE)
+                return actualVelocity < (1+velocityErrorMarginAutoAim) * velocity && actualVelocity > (1-velocityErrorMarginAutoAim) * velocity;
+            else
+                return actualVelocity < (1+velocityErrorMargin) * velocity && actualVelocity > (1-velocityErrorMargin) * velocity;
         }
     }
 

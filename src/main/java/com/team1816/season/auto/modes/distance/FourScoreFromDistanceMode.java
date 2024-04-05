@@ -41,9 +41,9 @@ public class FourScoreFromDistanceMode extends AutoMode {
                     ),
                     new ShootAndRotateDistanceAction(paths.get(0).endPosition),
                     trajectoryActions.get(1),
-                    new ShootAndRotateDistanceAction(paths.get(1).endPosition),
-                    trajectoryActions.get(2),
-                    new ShootAndRotateDistanceAction(paths.get(2).startPosition)
+                    new ShootAndRotateDistanceAction(paths.get(1).endPosition)
+//                    trajectoryActions.get(2),
+//                    new ShootAndRotateDistanceAction(paths.get(2).startPosition)
                 )
         );
     }
