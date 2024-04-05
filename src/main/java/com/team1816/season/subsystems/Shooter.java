@@ -131,12 +131,7 @@ public class Shooter extends Subsystem {
         rollerMotor.selectPIDSlot(1);
         pivotMotor.selectPIDSlot(2);
 
-        if(Robot.isReal()) {
-            TalonFXConfiguration configs = new TalonFXConfiguration();
-            ((LazyTalonFX) rollerMotor).getConfigurator().refresh(configs);
-            ((LazyTalonFX) rollerMotor).getConfigurator().apply(configs.withCurrentLimits(new CurrentLimitsConfigs().withStatorCurrentLimit(100).withStatorCurrentLimitEnable(true)));
-        }
-
+        rollerMotor.configStatorCurrentLimit(100, true);
 
         robotState.pivotArm.setColor(new Color8Bit(Color.kDarkBlue));
 
@@ -376,7 +371,7 @@ public class Shooter extends Subsystem {
     }
 
     public double getActualPivotPosition () {
-        return pivotMotor.getSensorPosition(0);
+        return pivotMotor.getSensorPosition();
     }
 
     @Override

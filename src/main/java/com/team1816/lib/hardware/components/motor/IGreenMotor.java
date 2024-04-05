@@ -173,6 +173,8 @@ public interface IGreenMotor {
      */
     void configCurrentLimit(int current);
 
+    void configStatorCurrentLimit(double current, boolean enable);
+
     // Limit Switches
 
     /**

@@ -76,6 +76,11 @@ public class GhostMotor implements IGreenMotor {
     }
 
     @Override
+    public void configStatorCurrentLimit(double current, boolean enable) {
+
+    }
+
+    @Override
     public double getMotorOutputCurrent() {
         return 0;
     }
