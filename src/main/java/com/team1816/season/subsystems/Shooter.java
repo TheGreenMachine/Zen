@@ -134,7 +134,7 @@ public class Shooter extends Subsystem {
         rollerMotor.selectPIDSlot(1);
         pivotMotor.selectPIDSlot(2);
 
-        rollerMotor.configStatorCurrentLimit(100, true);
+        rollerMotor.configStatorCurrentLimit(100, false);
 
         robotState.pivotArm.setColor(new Color8Bit(Color.kDarkBlue));
 
@@ -158,6 +158,10 @@ public class Shooter extends Subsystem {
 
             beamBreakLogger = new BooleanLogEntry(DataLogManager.getLog(), "Shooter/Feeder/beamBreakTriggered");
         }
+    }
+
+    public void enableStatorCurrentLimit() {
+        ((LazyTalonFX) rollerMotor).enableStatorCurrentLimit(true);
     }
 
     /**

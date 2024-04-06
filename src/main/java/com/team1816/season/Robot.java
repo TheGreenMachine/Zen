@@ -495,6 +495,7 @@ public class Robot extends TimedRobot {
         enabledLoop.start();
     }
 
+
     /**
      * Actions to perform when the robot has entered the teleoperated period
      */
@@ -510,6 +511,8 @@ public class Robot extends TimedRobot {
 
             teleopStart = Timer.getFPGATimestamp();
             enabledLoop.start();
+
+            shooter.enableStatorCurrentLimit();
 
             drive.resetHeading(
                     robotState.allianceColor == Color.BLUE ?

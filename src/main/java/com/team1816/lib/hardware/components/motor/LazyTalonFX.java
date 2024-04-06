@@ -102,6 +102,12 @@ public class LazyTalonFX extends TalonFX implements IGreenMotor {
         configurator.apply(configs, kLongCANTimeoutSeconds);
     }
 
+    public void enableStatorCurrentLimit(boolean enable) {
+        configs.CurrentLimits
+                .withStatorCurrentLimitEnable(enable);
+        configurator.apply(configs);
+    }
+
     @Override
     public double getMotorOutputCurrent() {
         return super.getStatorCurrent().getValueAsDouble();
