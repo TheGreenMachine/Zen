@@ -569,11 +569,6 @@ public class Robot extends TimedRobot {
             Robot.robotDt = getLastRobotLoop();
             loopStart = Timer.getFPGATimestamp();
 
-            if (Constants.kUseVision) {
-                if (robotState.currentCamFind && robotState.actualPivotState != Shooter.PIVOT_STATE.AUTO_AIM) {
-                    orchestrator.updatePoseWithVisionData();
-                }
-            }
 
             if (Constants.kLoggingRobot) {
                 looperLogger.append(looperDt);
@@ -687,6 +682,12 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         try {
+
+            if (Constants.kUseVision) {
+                if (robotState.currentCamFind && robotState.actualPivotState != Shooter.PIVOT_STATE.AUTO_AIM) {
+                    orchestrator.updatePoseWithVisionData();
+                }
+            }
 
             manualControl();
         } catch (Throwable t) {
