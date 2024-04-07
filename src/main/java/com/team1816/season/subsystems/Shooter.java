@@ -161,7 +161,9 @@ public class Shooter extends Subsystem {
     }
 
     public void enableStatorCurrentLimit() {
-        ((LazyTalonFX) rollerMotor).enableStatorCurrentLimit(true);
+        if(RobotBase.isReal()) {
+            ((LazyTalonFX) rollerMotor).enableStatorCurrentLimit(true);
+        }
     }
 
     /**
