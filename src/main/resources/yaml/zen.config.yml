@@ -56,7 +56,7 @@ subsystems:
                     xCoord: 7.125
                     yCoord: 11.375
                     constants:
-                        encoderOffset: 0.498291015625
+                        encoderOffset: -0.34228515625
                         couplingRatio: 3.576
                         freeSpin12VRPS: 101
                         invertSensorPhase: 1
@@ -110,7 +110,7 @@ subsystems:
             ## Positional Configurations ##
             openLoopRampRate: 0.1
             isSwerve: 1
-            isCTRSwerve: 1
+            isCTRSwerve: 1 #TODO IF ALL ELSE FAILS
             wheelDiameter: 3.81 #inches
             kTrackScrubFactor: 1.0
             ## Velocity Constraints ##

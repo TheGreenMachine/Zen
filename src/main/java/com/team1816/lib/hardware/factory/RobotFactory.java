@@ -300,7 +300,7 @@ public class RobotFactory {
                 .withDriveMotorClosedLoopOutput(com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType.Voltage)
                 .withDriveMotorGains(getSwervePIDConfigs(subsystemName, PIDConfig.Drive))
                 .withDriveMotorId(driveMotor.id)
-                .withSlipCurrent(150)
+                .withSlipCurrent(120)
                 .withDriveMotorGearRatio(driveGearRatio)
                 .withDriveMotorInverted(driveMotor.invertMotor)
                 // Azimuth Motor
