@@ -195,9 +195,9 @@ public class Robot extends TimedRobot {
                     logFileDir = "/media/sda1/";
                 }
 
-                // Characterize SignalLogger
-                SignalLogger.setPath(logFileDir);
-                SignalLogger.enableAutoLogging(DriverStation.isFMSAttached());
+//                // Characterize SignalLogger
+//                SignalLogger.setPath(logFileDir);
+//                SignalLogger.enableAutoLogging(DriverStation.isFMSAttached());
 
                 if (RobotBase.isSimulation()) {
                     if (OS_NAME.contains("win")) {
@@ -206,7 +206,7 @@ public class Robot extends TimedRobot {
                         logFileDir = System.getProperty("user.dir") + "/";
                     }
                     if (!OS_NAME.contains("mac")) { //Can't open .hoot on mac so won't clog logs up in sim
-                        SignalLogger.start();
+//                        SignalLogger.start();
                     }
                 }
 
@@ -216,7 +216,7 @@ public class Robot extends TimedRobot {
                     if (!DriverStation.isFMSAttached()) {
                         Util.cleanLogFiles();
                     }
-                    SignalLogger.start();
+//                    SignalLogger.start();
                 }
                 DriverStation.startDataLog(DataLogManager.getLog(), false);
             }
