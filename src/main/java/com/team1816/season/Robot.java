@@ -512,8 +512,6 @@ public class Robot extends TimedRobot {
             teleopStart = Timer.getFPGATimestamp();
             enabledLoop.start();
 
-            shooter.enableStatorCurrentLimit();
-
             drive.resetHeading(
                     robotState.allianceColor == Color.BLUE ?
                             Rotation2d.fromDegrees(0) :

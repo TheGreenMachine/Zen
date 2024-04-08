@@ -134,8 +134,6 @@ public class Shooter extends Subsystem {
         rollerMotor.selectPIDSlot(1);
         pivotMotor.selectPIDSlot(2);
 
-        rollerMotor.configStatorCurrentLimit(100, false);
-
         robotState.pivotArm.setColor(new Color8Bit(Color.kDarkBlue));
 
         if (RobotBase.isSimulation()) {
