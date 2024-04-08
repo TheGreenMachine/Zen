@@ -56,7 +56,7 @@ subsystems:
                     xCoord: 7.125
                     yCoord: 11.375
                     constants:
-                        encoderOffset: -0.392578125
+                        encoderOffset: -0.34228515625
                         couplingRatio: 3.576
                         freeSpin12VRPS: 101
                         invertSensorPhase: 1
@@ -110,7 +110,7 @@ subsystems:
             ## Positional Configurations ##
             openLoopRampRate: 0.1
             isSwerve: 1
-            isCTRSwerve: 1
+            isCTRSwerve: 1 #TODO IF ALL ELSE FAILS
             wheelDiameter: 3.81 #inches
             kTrackScrubFactor: 1.0
             ## Velocity Constraints ##
@@ -118,7 +118,7 @@ subsystems:
             maxRotVelClosedLoop: 2 # Pi radians/sec
             trackWidth: 22.75 # inches
             wheelbaseLength: 22.75 # inches
-            maxVelOpenLoop: 3.4 # meters/s
+            maxVelOpenLoop: 3 # meters/s
             maxVel12VMPS: 5.2
             maxVelPathFollowing: 3.1 # meters/s
             maxAccel: 1.5 # meters/s^2
@@ -128,7 +128,7 @@ subsystems:
             azimuthGearRatio: 12.8 # MK4
             ## Control Configurations ##
             slowModeScalar: 0.4
-            turboModeScalar: 1.53
+            turboModeScalar: 1.73
             driveDeadband: 0.1
             rotationalDeadband: 0.1
             inputDeadband: 0.15 # Deadband of the normalized input
@@ -209,6 +209,8 @@ subsystems:
             feederAmpShootSpeed: 10
             feederIntakeSpeed: 10
             velocityErrorMargin: 0.1
+            velocityErrorMarginAutoAim: 0.003
+            autoAimDegreeTolerance: .1
             pivotNeutralPosition: 1.5
             pivotAmpShootPosition: 33
             pivotDistanceShootPosition: 8.675
@@ -259,6 +261,7 @@ constants:
     logDrivetrain: 1 # 0 or 1
     configStatusFrames: 0 # 0 or 1
     ## General ##
+    usingVision: 1
     teleopFieldCentric: 1 # 0 or 1
     kLooperDt: .025 # seconds
     isProLicensed: 0

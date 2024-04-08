@@ -17,6 +17,7 @@ import com.team1816.lib.subsystems.vision.Camera;
 import com.team1816.lib.util.Util;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.auto.AutoModeManager;
+import com.team1816.season.autoaim.ArmAngleFinder;
 import com.team1816.season.autoaim.AutoAimUtil;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.Orchestrator;
@@ -194,9 +195,9 @@ public class Robot extends TimedRobot {
                     logFileDir = "/media/sda1/";
                 }
 
-                // Characterize SignalLogger
-                SignalLogger.setPath(logFileDir);
-                SignalLogger.enableAutoLogging(DriverStation.isFMSAttached());
+//                // Characterize SignalLogger
+//                SignalLogger.setPath(logFileDir);
+//                SignalLogger.enableAutoLogging(DriverStation.isFMSAttached());
 
                 if (RobotBase.isSimulation()) {
                     if (OS_NAME.contains("win")) {
@@ -205,7 +206,7 @@ public class Robot extends TimedRobot {
                         logFileDir = System.getProperty("user.dir") + "/";
                     }
                     if (!OS_NAME.contains("mac")) { //Can't open .hoot on mac so won't clog logs up in sim
-                        SignalLogger.start();
+//                        SignalLogger.start();
                     }
                 }
 
@@ -215,7 +216,7 @@ public class Robot extends TimedRobot {
                     if (!DriverStation.isFMSAttached()) {
                         Util.cleanLogFiles();
                     }
-                    SignalLogger.start();
+//                    SignalLogger.start();
                 }
                 DriverStation.startDataLog(DataLogManager.getLog(), false);
             }
@@ -280,44 +281,31 @@ public class Robot extends TimedRobot {
                     drive::setSlowMode
             );
 
-
-//            inputHandler.listenActionPressAndRelease(
-//                    "snapToPickup",
-//                    (pressed) -> {
-////                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.PICKUP : RobotState.SnappingDirection.NO_SNAP;
-//                        robotState.speedAdjustmentPercent -= robotState.speedAdjustmentPercent > 1.1 ? 0.1 : 0;
-//                        System.out.println("Adjustment Ratio: "+robotState.speedAdjustmentPercent);
-//                    }
-//            );
-//
-//            inputHandler.listenAction(
-//                    "snapToScore",
-//                    ActionState.PRESSED,
-//                    () -> {
-////                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.SCORE : RobotState.SnappingDirection.NO_SNAP;
-//                        robotState.speedAdjustmentPercent += robotState.speedAdjustmentPercent > 1.1 ? 0.1 : 0;
-//                        System.out.println("Adjustment Ratio: "+robotState.speedAdjustmentPercent);
-//                    }
-//            );
-
-            inputHandler.listenAction(
-                    "snapToScore",
-                    ActionState.PRESSED,
-                    () -> {
-//                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.BOTTOM_SPEAKER : RobotState.SnappingDirection.NO_SNAP;
-                        robotState.speedAdjustment += 0.25;
-                        System.out.println("Speed Adjustment: "+robotState.speedAdjustment);
-                        System.out.println("Current Recorded Speed: "+(Constants.outputVelocityPerSecond + robotState.speedAdjustment));
+            inputHandler.listenActionPressAndRelease(
+                    "snapToPickup",
+                    (pressed) -> {
+                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.PICKUP : RobotState.SnappingDirection.NO_SNAP;
                     }
             );
 
             inputHandler.listenActionPressAndRelease(
-                    "snapToPickup",
+                    "snapToScore",
                     (pressed) -> {
-//                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.TOP_SPEAKER : RobotState.SnappingDirection.NO_SNAP;
-                        robotState.speedAdjustment -= 0.25;
-                        System.out.println("Speed Adjustment: "+robotState.speedAdjustment);
-                        System.out.println("Current Recorded Speed: "+(Constants.outputVelocityPerSecond + robotState.speedAdjustment));
+                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.SCORE : RobotState.SnappingDirection.NO_SNAP;
+                    }
+            );
+
+            inputHandler.listenActionPressAndRelease(
+                    "snapToBottomSpeaker",
+                    (pressed) -> {
+                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.BOTTOM_SPEAKER : RobotState.SnappingDirection.NO_SNAP;
+                    }
+            );
+
+            inputHandler.listenActionPressAndRelease(
+                    "snapToTopSpeaker",
+                    (pressed) -> {
+                        robotState.snapDirection = pressed ? RobotState.SnappingDirection.TOP_SPEAKER : RobotState.SnappingDirection.NO_SNAP;
                     }
             );
 
@@ -336,7 +324,7 @@ public class Robot extends TimedRobot {
                         if (pressed) {
                             if (shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.SHOOT_AMP) {
                                 shooter.setDesiredState(Shooter.ROLLER_STATE.SHOOT_AMP, Shooter.FEEDER_STATE.SHOOT);
-                            } else if (shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.SHOOT_DISTANCE) {
+                            } else if (shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.AUTO_AIM) {
                                 shooter.setDesiredState(Shooter.ROLLER_STATE.SHOOT_DISTANCE, Shooter.FEEDER_STATE.SHOOT);
                             } else {
                                 shooter.setDesiredState(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT);
@@ -507,6 +495,7 @@ public class Robot extends TimedRobot {
         enabledLoop.start();
     }
 
+
     /**
      * Actions to perform when the robot has entered the teleoperated period
      */
@@ -581,9 +570,6 @@ public class Robot extends TimedRobot {
             Robot.robotDt = getLastRobotLoop();
             loopStart = Timer.getFPGATimestamp();
 
-            if (robotState.currentCamFind && robotState.actualPivotState != Shooter.PIVOT_STATE.AUTO_AIM) {
-                orchestrator.updatePoseWithVisionData();
-            }
 
             if (Constants.kLoggingRobot) {
                 looperLogger.append(looperDt);
@@ -600,8 +586,9 @@ public class Robot extends TimedRobot {
             autoModeManager.outputToSmartDashboard(); // update shuffleboard selected auto mode
             playlistManager.outputToSmartDashboard(); // update shuffleboard selected song
 
+            double activeRumble = robotState.readyToShoot ? 0.9 : 0.7;
             orchestrator.setControllerRumble(InputHandler.ControllerRole.DRIVER, InputHandler.RumbleDirection.UNIFORM,
-                    robotState.isBeamBreakTriggered && !robotState.isBeamBreakOverridden ? 0.7 : 0);
+                    robotState.isBeamBreakTriggered && !robotState.isBeamBreakOverridden ? activeRumble : 0);
 
             if (DriverStation.isEnabled()) {
                 GreenLogger.updatePeriodicLogs();
@@ -696,6 +683,12 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         try {
+
+            if (Constants.kUseVision) {
+                if (robotState.currentCamFind && robotState.actualPivotState != Shooter.PIVOT_STATE.AUTO_AIM) {
+                    orchestrator.updatePoseWithVisionData();
+                }
+            }
 
             manualControl();
         } catch (Throwable t) {

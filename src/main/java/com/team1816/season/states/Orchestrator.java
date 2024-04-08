@@ -227,7 +227,7 @@ public class Orchestrator {
         if (robotState.isBeamBreakOverridden) {
             collector.setDesiredState(Collector.COLLECTOR_STATE.INTAKE);
         } else if (!robotState.isShooting) {
-            if (!robotState.isBeamBreakTriggered && robotState.actualPivotState == Shooter.PIVOT_STATE.STOW) {
+            if (!robotState.isBeamBreakTriggered && shooter.getActualPivotPosition() < 3) {
                 collector.setDesiredState(Collector.COLLECTOR_STATE.INTAKE);
                 shooter.setDesiredFeederState(Shooter.FEEDER_STATE.TRANSFER);
             } else {

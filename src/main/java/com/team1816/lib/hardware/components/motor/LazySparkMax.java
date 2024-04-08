@@ -74,6 +74,11 @@ public class LazySparkMax extends CANSparkMax implements IGreenMotor {
     }
 
     @Override
+    public void configStatorCurrentLimit(double current, boolean enable) {
+        super.setSecondaryCurrentLimit(current);
+    }
+
+    @Override
     public void set(GreenControlMode controlMode, double demand) {
         currentControlMode = controlMode;
         if (demand != lastSet || currentControlMode != lastControlMode) {

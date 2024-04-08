@@ -63,6 +63,11 @@ public class LazyVictorSPX extends VictorSPX implements IGreenMotor {
     }
 
     @Override
+    public void configStatorCurrentLimit(double current, boolean enable) {
+
+    }
+
+    @Override
     public double getMotorOutputCurrent() {
         return super.getOutputCurrent(); // Deprecated & victors are so old that they don't have getSupplyCurrent() or getStatorCurrent() smile
     }

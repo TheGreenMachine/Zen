@@ -86,6 +86,11 @@ public class LazyTalonSRX extends TalonSRX implements IGreenMotor {
     }
 
     @Override
+    public void configStatorCurrentLimit(double current, boolean enable) {
+        
+    }
+
+    @Override
     public void set(GreenControlMode controlMode, double demand) {
         ControlMode mode = ConfigurationTranslator.toCTREControlMode(controlMode);
         if (demand != lastSet || mode != lastControlMode) {

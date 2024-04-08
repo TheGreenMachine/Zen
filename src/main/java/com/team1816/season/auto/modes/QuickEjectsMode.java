@@ -29,9 +29,9 @@ import org.checkerframework.common.subtyping.qual.Bottom;
 
 import java.util.List;
 
-public class TestMode extends AutoMode {
+public class QuickEjectsMode extends AutoMode {
 
-    public TestMode() {
+    public QuickEjectsMode() {
         super(
                 List.of(
 
@@ -39,10 +39,13 @@ public class TestMode extends AutoMode {
                                 new TopSpeakerToNoteOnePath(robotState.allianceColor)
                         ),
                         new TrajectoryAction(
-                                new NoteOneToMiddleOnePath(robotState.allianceColor)
+                                new TopSpeakerToNoteOnePath(robotState.allianceColor).withInversedWaypoints()
                         ),
                         new TrajectoryAction(
-                                new NoteOneToMiddleOnePath(robotState.allianceColor).withInversedWaypoints()
+                                new TopSpeakerToScramPath(robotState.allianceColor)
+                        ),
+                        new TrajectoryAction(
+                                new TopSpeakerToScramPath(robotState.allianceColor).withInversedWaypoints()
                         )
                 ));
     }
@@ -53,13 +56,12 @@ public class TestMode extends AutoMode {
                         new ShootSpeakerAction(),
                         new CollectAction(Collector.COLLECTOR_STATE.INTAKE),
                         trajectoryActions.get(0),
-                        new RotateSwerveAction(Rotation2d.fromDegrees(robotState.allianceColor == Color.BLUE ? -30 : 210)),
-                        new ShootAmpAction(),
                         trajectoryActions.get(1),
+                        new ShootSpeakerAction(),
                         trajectoryActions.get(2),
-                        new ShootAmpAction(),
-                        new RotateSwerveAction(Rotation2d.fromDegrees(robotState.allianceColor == Color.BLUE ? -30 : 210))
-                        )
+                        trajectoryActions.get(3),
+                        new ShootSpeakerAction()
+                )
         );
     }
 }
