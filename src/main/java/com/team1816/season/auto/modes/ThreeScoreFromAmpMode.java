@@ -12,6 +12,7 @@ import com.team1816.season.auto.actions.CollectAction;
 import com.team1816.season.auto.actions.ShootAction;
 import com.team1816.season.auto.actions.ShootAmpAction;
 import com.team1816.season.auto.actions.ShootSpeakerAction;
+import com.team1816.season.configuration.Constants;
 import com.team1816.season.subsystems.Collector;
 import com.team1816.season.subsystems.Shooter;
 
@@ -44,13 +45,17 @@ public class ThreeScoreFromAmpMode extends AutoMode {
                         new CollectAction(Collector.COLLECTOR_STATE.INTAKE),
                         trajectoryActions.get(0),
                         new ShootAmpAction(),
+                        new WaitAction(Constants.kAutoWaitTimeBetweenFirstShotLabel),
                         trajectoryActions.get(1),
                         trajectoryActions.get(2),
                         paths.get(2).isAmpPath() ? new ShootAmpAction() : new ShootSpeakerAction(),
+                        new WaitAction(Constants.kAutoWaitTimeBetweenSecondShotLabel),
                         trajectoryActions.get(3),
                         trajectoryActions.get(4),
                         paths.get(4).isAmpPath() ? new ShootAmpAction() : new ShootSpeakerAction(),
+                        new WaitAction(Constants.kAutoWaitTimeBetweenThirdShotLabel),
                         new ShootAction(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW),
+                        new WaitAction(Constants.kAutoWatTimeBeforeScramLabel),
                         scramAtEnd ? scramAction : new WaitAction(0.1)
                 ));
     }

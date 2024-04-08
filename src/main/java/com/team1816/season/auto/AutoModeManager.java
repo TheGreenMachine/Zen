@@ -28,6 +28,7 @@ import com.team1816.season.auto.paths.toNoteThree.BottomSpeakerToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteThree.MiddleSpeakerToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteThree.TopSpeakerToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteTwo.*;
+import com.team1816.season.configuration.Constants;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -166,6 +167,11 @@ public class AutoModeManager {
             scramChooser.addOption(scramOption.name(), scramOption);
         }
         scramChooser.setDefaultOption(ScramChoice.NOT.name(), ScramChoice.NOT);
+
+        SmartDashboard.putNumber(Constants.kAutoWaitTimeBetweenFirstShotLabel, 0.0);
+        SmartDashboard.putNumber(Constants.kAutoWaitTimeBetweenSecondShotLabel, 0.0);
+        SmartDashboard.putNumber(Constants.kAutoWaitTimeBetweenThirdShotLabel, 0.0);
+        SmartDashboard.putNumber(Constants.kAutoWatTimeBeforeScramLabel, 0.0);
 
         reset();
     }

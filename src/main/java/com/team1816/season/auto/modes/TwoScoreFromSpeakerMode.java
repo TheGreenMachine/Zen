@@ -12,6 +12,7 @@ import com.team1816.season.auto.actions.CollectAction;
 import com.team1816.season.auto.actions.ShootAction;
 import com.team1816.season.auto.actions.ShootAmpAction;
 import com.team1816.season.auto.actions.ShootSpeakerAction;
+import com.team1816.season.configuration.Constants;
 import com.team1816.season.subsystems.Collector;
 import com.team1816.season.subsystems.Shooter;
 
@@ -42,11 +43,14 @@ public class TwoScoreFromSpeakerMode extends AutoMode {
         runAction(
             new SeriesAction(
                 new ShootSpeakerAction(),
+                new WaitAction(Constants.kAutoWaitTimeBetweenFirstShotLabel),
                 new CollectAction(Collector.COLLECTOR_STATE.INTAKE),
                 trajectoryActions.get(0),
                 trajectoryActions.get(1),
                 paths.get(1).isAmpPath() ? new ShootAmpAction() : new ShootSpeakerAction(),
+                new WaitAction(Constants.kAutoWaitTimeBetweenSecondShotLabel),
                 new ShootAction(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW),
+                new WaitAction(Constants.kAutoWatTimeBeforeScramLabel),
                 scramAtEnd ? scramAction : new WaitAction(0.1)
             )
         );
