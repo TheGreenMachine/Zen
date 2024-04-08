@@ -17,6 +17,7 @@ import com.team1816.season.auto.modes.eject.TopMiddleEjects;
 import com.team1816.season.auto.paths.StartToAmpPath;
 import com.team1816.season.auto.paths.arbitrary.ArbitraryStartToNoteOnePath;
 import com.team1816.season.auto.paths.arbitrary.ArbitraryStartToNoteThreePath;
+import com.team1816.season.auto.paths.nonDynamic.Bottom.ScorchedEarthAmpToSourcePath;
 import com.team1816.season.auto.paths.noteToNote.NoteOneToNoteTwoPath;
 import com.team1816.season.auto.paths.noteToNote.NoteThreeToNoteTwoPath;
 import com.team1816.season.auto.paths.toNoteOne.AmpToNoteOnePath;
@@ -367,6 +368,9 @@ public class AutoModeManager {
 
         QUICK_EJECT,
 
+        //Scorched Earth
+        SCEA_AMPTOSOURCE,
+
 
 
         BOTTOM_MIDDLE_EJECTS,
@@ -456,6 +460,8 @@ public class AutoModeManager {
                 return new ScoreAndScramMode();
             case QUICK_EJECT:
                 return new QuickEjectsMode();
+            case SCEA_AMPTOSOURCE:
+                return new ScorchedEarthBotToTopMode();
             case TEST:
                 if (!DriverStation.isFMSAttached()) return new TestMode();
             case SYSTEM_CHECK:
