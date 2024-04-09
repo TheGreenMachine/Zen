@@ -22,7 +22,7 @@ public class Numeric extends Number
     }
 
     private double getValue() {
-        return SmartDashboard.getNumber(smartDashboardReference, defaultValue);
+        return SmartDashboard.getNumber(smartDashboardReference, defaultValue); //TODO maybe add an FMS connectivity check.
     }
 
     @Override
