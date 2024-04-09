@@ -370,6 +370,7 @@ public class AutoModeManager {
 
         //Scorched Earth
         SCEA_AMPTOSOURCE,
+        SCEA_SOURCETOAMP,
 
 
 
@@ -462,6 +463,8 @@ public class AutoModeManager {
                 return new QuickEjectsMode();
             case SCEA_AMPTOSOURCE:
                 return new ScorchedEarthBotToTopMode();
+            case SCEA_SOURCETOAMP:
+                return new ScorchedEarthTopToBotMode();
             case TEST:
                 if (!DriverStation.isFMSAttached()) return new TestMode();
             case SYSTEM_CHECK:

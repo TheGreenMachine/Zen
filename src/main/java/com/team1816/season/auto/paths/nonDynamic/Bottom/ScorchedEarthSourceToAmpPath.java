@@ -14,21 +14,21 @@ public class ScorchedEarthSourceToAmpPath extends AutoPath {
 
     @Override
     protected List<Pose2d> getWaypoints() {
-        List.of(
+        return List.of(
                 new Pose2d(1.34, 7.26, Rotation2d.fromDegrees(0)),
-                new Pose2d(8.55, 7.5, Rotation2d.fromDegrees(0)),
-                new Pose2d(8.56, 7.5, Rotation2d.fromDegrees(-90)),
-                new Pose2d(8.55, 0.55, Rotation2d.fromDegrees(-90))
+                new Pose2d(8.59, 7.5, Rotation2d.fromDegrees(20)),
+                new Pose2d(8.60, 7.5, Rotation2d.fromDegrees(-90)),
+                new Pose2d(8.60, 0.75, Rotation2d.fromDegrees(-90))
         );
     }
 
     @Override
     protected List<Rotation2d> getWaypointHeadings() {
         return List.of(
-                Rotation2d.fromDegrees(0),
-                Rotation2d.fromDegrees(35),
-                Rotation2d.fromDegrees(35),
-                Rotation2d.fromDegrees(35)
+                Rotation2d.fromDegrees(90),
+                Rotation2d.fromDegrees(35+90),
+                Rotation2d.fromDegrees(35+90),
+                Rotation2d.fromDegrees(35+90)
         );
     }
 
