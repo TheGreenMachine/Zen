@@ -17,8 +17,6 @@ import com.team1816.season.auto.modes.eject.TopMiddleEjects;
 import com.team1816.season.auto.paths.StartToAmpPath;
 import com.team1816.season.auto.paths.arbitrary.ArbitraryStartToNoteOnePath;
 import com.team1816.season.auto.paths.arbitrary.ArbitraryStartToNoteThreePath;
-import com.team1816.season.auto.paths.nonDynamic.Bottom.ScorchedEarthAmpToSourcePath;
-import com.team1816.season.auto.paths.nonDynamic.Bottom.ScorchedEarthSourceToAmp2Path;
 import com.team1816.season.auto.paths.noteToNote.NoteOneToNoteTwoPath;
 import com.team1816.season.auto.paths.noteToNote.NoteThreeToNoteTwoPath;
 import com.team1816.season.auto.paths.toNoteOne.AmpToNoteOnePath;
@@ -371,8 +369,10 @@ public class AutoModeManager {
 
         //Scorched Earth
         SCEA_AMPTOSOURCE,
+        SCEA_AMPTOSOURCE2,
         SCEA_SOURCETOAMP,
         SCEA_SOURCETOAMP2,
+        SCEA_SOURCETOAMP3,
 
 
 
@@ -465,10 +465,14 @@ public class AutoModeManager {
                 return new QuickEjectsMode();
             case SCEA_AMPTOSOURCE:
                 return new ScorchedEarthTopToBotMode();
+            case SCEA_AMPTOSOURCE2:
+                return new ScorchedEarthTopToBot2Mode();
             case SCEA_SOURCETOAMP:
                 return new ScorchedEarthBotToTopMode();
             case SCEA_SOURCETOAMP2:
                 return new ScorchedEarthBotToTop2Mode();
+            case SCEA_SOURCETOAMP3:
+                return new ScorchedEarthBotToTop3Mode();
             case TEST:
                 if (!DriverStation.isFMSAttached()) return new TestMode();
             case SYSTEM_CHECK:
