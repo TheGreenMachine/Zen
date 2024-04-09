@@ -334,7 +334,7 @@ public class Robot extends TimedRobot {
                             }
                         }
                         else {
-                            shooter.setDesiredState(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW);
+                            shooter.setDesiredState(Shooter.ROLLER_STATE.IDLE, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW);
                         }
                     }
             );
@@ -487,7 +487,7 @@ public class Robot extends TimedRobot {
         drive.zeroSensors(autoModeManager.getSelectedAuto().getInitialPose());
 //        shooter.zeroMotor();
 
-        shooter.setDesiredState(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW);
+        shooter.setDesiredState(Shooter.ROLLER_STATE.IDLE, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW);
         collector.setDesiredState(Collector.COLLECTOR_STATE.STOP);
         climber.setDesiredState(Climber.CLIMBER_STATE.STOP);
 

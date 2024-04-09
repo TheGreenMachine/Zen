@@ -50,7 +50,7 @@ public class ThreeScoreFromAmpMode extends AutoMode {
                         trajectoryActions.get(3),
                         trajectoryActions.get(4),
                         paths.get(4).isAmpPath() ? new ShootAmpAction() : new ShootSpeakerAction(),
-                        new ShootAction(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW),
+                        new ShootAction(Shooter.ROLLER_STATE.IDLE, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW),
                         scramAtEnd ? scramAction : new WaitAction(0.1)
                 ));
     }
