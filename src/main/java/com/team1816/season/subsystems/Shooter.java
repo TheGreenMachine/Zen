@@ -308,7 +308,7 @@ public class Shooter extends Subsystem {
                     desiredRollerVelocity = 0;
                 }
                 case SHOOT_SPEAKER -> {
-                    desiredRollerVelocity = rollerSpeakerShootSpeed;
+                    desiredRollerVelocity = SmartDashboard.getNumber("TestShuttleShot",rollerSpeakerShootSpeed);
                 }
                 case EJECT -> {
                     desiredRollerVelocity = rollerEjectShootSpeed;
@@ -339,7 +339,7 @@ public class Shooter extends Subsystem {
                 }
                 case TRANSFER -> {
                     if (!isBeamBreakTriggered()) {
-                        desiredFeederVelocity = feederIntakeSpeed;
+                        desiredFeederVelocity = SmartDashboard.getNumber("FeederShootSpeed",feederIntakeSpeed);
                     }
                 }
                 case MANUAL_TRANSFER -> {

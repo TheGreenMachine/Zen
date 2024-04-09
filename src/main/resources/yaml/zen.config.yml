@@ -206,9 +206,9 @@ subsystems:
             rollerSpeakerShootSpeed: 71 #TODO this
             rollerAmpShootSpeed: 30
             feederSpeakerShootSpeed: 30 #TODO This
-            feederAmpShootSpeed: 10
-            feederIntakeSpeed: 10
-            velocityErrorMargin: 0.1
+            feederAmpShootSpeed: 11
+            feederIntakeSpeed: 11
+            velocityErrorMargin: 0.05
             velocityErrorMarginAutoAim: 0.003
             autoAimDegreeTolerance: .1
             pivotNeutralPosition: 1.5
