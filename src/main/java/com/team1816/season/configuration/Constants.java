@@ -4,6 +4,8 @@ import com.google.inject.Singleton;
 import com.team1816.lib.Injector;
 import com.team1816.lib.auto.Symmetry;
 import com.team1816.lib.hardware.factory.RobotFactory;
+import com.team1816.lib.variableInputs.Numeric;
+import com.team1816.lib.variableInputs.VariableInput;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -50,14 +52,14 @@ public class Constants {
     public static final int kLongCANTimeoutMs = 100; // utility: constructors
 
     /**
-     * Wait Action Text View Labels
+     * Wait Action Numerics
      *
      * (Dynamic Autos)
      */
-    public static final String kAutoWaitTimeBetweenFirstShotLabel = "Time To Wait Between First Shot";
-    public static final String kAutoWaitTimeBetweenSecondShotLabel = "Time To Wait Between Second Shot";
-    public static final String kAutoWaitTimeBetweenThirdShotLabel = "Time To Wait Between Third Shot";
-    public static final String kAutoWatTimeBeforeScramLabel = "Time To Wait Before Scramming";
+    public static final Numeric kAutoTimeBetweenFirstShot = VariableInput.number("Time To Wait Between First Shot", 0.0);
+    public static final Numeric kAutoTimeBetweenSecondShot = VariableInput.number("Time To Wait Between Second Shot", 0.0);
+    public static final Numeric kAutoTimeBetweenThirdShot = VariableInput.number("Time To Wait Between Third Shot", 0.0);
+    public static final Numeric kAutoTimeBeforeScram = VariableInput.number("Time To Wait Before Scramming", 0.0);
 
 
     /**

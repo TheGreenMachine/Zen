@@ -43,17 +43,17 @@ public class ThreeScoreFromSpeakerMode extends AutoMode {
                 new SeriesAction(
                         new CollectAction(Collector.COLLECTOR_STATE.INTAKE),
                         new ShootSpeakerAction(),
-                        new WaitAction(Constants.kAutoWaitTimeBetweenFirstShotLabel),
+                        new WaitAction(Constants.kAutoTimeBetweenFirstShot),
                         trajectoryActions.get(0),
                         trajectoryActions.get(1),
                         paths.get(1).isAmpPath() ? new ShootAmpAction() : new ShootSpeakerAction(),
-                        new WaitAction(Constants.kAutoWaitTimeBetweenSecondShotLabel),
+                        new WaitAction(Constants.kAutoTimeBetweenSecondShot),
                         trajectoryActions.get(2),
                         trajectoryActions.get(3),
                         paths.get(3).isAmpPath() ? new ShootAmpAction() : new ShootSpeakerAction(),
-                        new WaitAction(Constants.kAutoWaitTimeBetweenThirdShotLabel),
+                        new WaitAction(Constants.kAutoTimeBetweenThirdShot),
                         new ShootAction(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW),
-                        new WaitAction(Constants.kAutoWatTimeBeforeScramLabel),
+                        new WaitAction(Constants.kAutoTimeBeforeScram),
                         scramAtEnd ? scramAction : new WaitAction(0.1)
                 ));
     }

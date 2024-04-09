@@ -45,17 +45,17 @@ public class ThreeScoreFromAmpMode extends AutoMode {
                         new CollectAction(Collector.COLLECTOR_STATE.INTAKE),
                         trajectoryActions.get(0),
                         new ShootAmpAction(),
-                        new WaitAction(Constants.kAutoWaitTimeBetweenFirstShotLabel),
+                        new WaitAction(Constants.kAutoTimeBetweenFirstShot),
                         trajectoryActions.get(1),
                         trajectoryActions.get(2),
                         paths.get(2).isAmpPath() ? new ShootAmpAction() : new ShootSpeakerAction(),
-                        new WaitAction(Constants.kAutoWaitTimeBetweenSecondShotLabel),
+                        new WaitAction(Constants.kAutoTimeBetweenSecondShot),
                         trajectoryActions.get(3),
                         trajectoryActions.get(4),
                         paths.get(4).isAmpPath() ? new ShootAmpAction() : new ShootSpeakerAction(),
-                        new WaitAction(Constants.kAutoWaitTimeBetweenThirdShotLabel),
+                        new WaitAction(Constants.kAutoTimeBetweenThirdShot),
                         new ShootAction(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW),
-                        new WaitAction(Constants.kAutoWatTimeBeforeScramLabel),
+                        new WaitAction(Constants.kAutoTimeBeforeScram),
                         scramAtEnd ? scramAction : new WaitAction(0.1)
                 ));
     }
