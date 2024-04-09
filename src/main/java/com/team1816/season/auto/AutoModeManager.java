@@ -374,6 +374,8 @@ public class AutoModeManager {
         SCEA_SOURCETOAMP2,
         SCEA_SOURCETOAMP3,
 
+        SCEA_SKIP_BOTTOM,
+
 
         //Weird Stuff
         MID_FOUR_NOTE,
@@ -479,6 +481,8 @@ public class AutoModeManager {
                 return new ScorchedEarthBotToTop2Mode();
             case SCEA_SOURCETOAMP3:
                 return new ScorchedEarthBotToTop3Mode();
+            case SCEA_SKIP_BOTTOM:
+                return new ScorchedEarthBottomSkipOne();
             case MID_FOUR_NOTE:
                 return new MidFourNoteTakeMode();
             case MID_FOUR_NOTE_SUBWOOFER:
