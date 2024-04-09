@@ -436,6 +436,25 @@ public class Robot extends TimedRobot {
                     drive::setRotatingClosedLoop
             );
 
+            inputHandler.listenActionPressAndRelease(
+                    "SpeakerRev",
+                    (pressed) -> {
+                        if (!robotState.isShooting) {
+                           shooter.setDesiredRollerState(pressed ? Shooter.ROLLER_STATE.SHOOT_SPEAKER : Shooter.ROLLER_STATE.IDLE);
+                        }
+                    }
+            );
+
+            inputHandler.listenActionPressAndRelease(
+                    "ShuttleRev",
+                    (pressed) -> {
+                        if (!robotState.isShooting) {
+                            //REPLACE WITH SHUTTLE TODO TODO TODO
+                            shooter.setDesiredRollerState(pressed ? Shooter.ROLLER_STATE.SHOOT_SPEAKER : Shooter.ROLLER_STATE.IDLE);
+                        }
+                    }
+            );
+
             SmartDashboard.putString("Git Hash", Constants.kGitHash);
 
         } catch (Throwable t) {

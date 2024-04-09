@@ -313,6 +313,7 @@ public class Shooter extends Subsystem {
                     desiredRollerVelocity = rollerIdleSpeed;
                 }
                 case SHOOT_SPEAKER -> {
+                    // Ternary, is shuttling, need to get shuttle speed
                     desiredRollerVelocity = SmartDashboard.getNumber("TestShuttleShot",rollerSpeakerShootSpeed);
                 }
                 case EJECT -> {
