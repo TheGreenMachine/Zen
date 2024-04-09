@@ -10,6 +10,8 @@ import com.team1816.lib.auto.modes.DriveStraightMode;
 import com.team1816.lib.auto.modes.TuneDrivetrainMode;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.lib.util.logUtil.GreenLogger;
+import com.team1816.lib.variableInputs.Numeric;
+import com.team1816.lib.variableInputs.VariableInput;
 import com.team1816.season.auto.modes.*;
 import com.team1816.season.auto.modes.distance.FourScoreFromDistanceMode;
 import com.team1816.season.auto.modes.eject.BottomMiddleEjects;
@@ -169,11 +171,6 @@ public class AutoModeManager {
             scramChooser.addOption(scramOption.name(), scramOption);
         }
         scramChooser.setDefaultOption(ScramChoice.NOT.name(), ScramChoice.NOT);
-
-        SmartDashboard.putNumber(Constants.kAutoWaitTimeBetweenFirstShotLabel, 0.0);
-        SmartDashboard.putNumber(Constants.kAutoWaitTimeBetweenSecondShotLabel, 0.0);
-        SmartDashboard.putNumber(Constants.kAutoWaitTimeBetweenThirdShotLabel, 0.0);
-        SmartDashboard.putNumber(Constants.kAutoWatTimeBeforeScramLabel, 0.0);
 
         reset();
     }

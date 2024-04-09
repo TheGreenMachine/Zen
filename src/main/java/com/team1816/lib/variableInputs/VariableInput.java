@@ -6,6 +6,7 @@ public interface VariableInput {
         return new Numeric(smartDashboardReference, defaultValue);
     }
 
+    // NOTE: Not for use in the smartdashboard.
     static Numeric number(double value) {
         return new Numeric(null, value);
     }

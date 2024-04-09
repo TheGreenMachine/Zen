@@ -1,5 +1,6 @@
 package com.team1816.lib.auto.actions;
 
+import com.team1816.lib.variableInputs.Numeric;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -19,7 +20,8 @@ public class WaitAction implements AutoAction {
      */
     private double mStartTime;
 
-    private final String smartDashboardTextViewLabel;
+    private final String mSmartDashboardTextViewLabel;
+    private final Numeric mSmartDashboardNumeric;
 
     /**
      * Instantiates a WaitAction with a time to stop
@@ -28,7 +30,8 @@ public class WaitAction implements AutoAction {
      */
     public WaitAction(double timeToWait) {
         mTimeToWait = timeToWait;
-        this.smartDashboardTextViewLabel = null;
+        mSmartDashboardTextViewLabel = null;
+        mSmartDashboardNumeric = null;
     }
 
     /**
@@ -40,7 +43,21 @@ public class WaitAction implements AutoAction {
      * @param smartDashboardTextViewLabel
      */
     public WaitAction(String smartDashboardTextViewLabel) {
-        this.smartDashboardTextViewLabel = smartDashboardTextViewLabel;
+        mSmartDashboardTextViewLabel = smartDashboardTextViewLabel;
+        mSmartDashboardNumeric = null;
+    }
+
+    /**
+     * Instantiates a WaitAction with a numeric input system.
+     *
+     * This constructor allows the action to pull updated numeric data
+     * from the smartdashboard.
+     *
+     * @param smartDashboardNumeric
+     */
+    public WaitAction(Numeric smartDashboardNumeric) {
+        mSmartDashboardNumeric = smartDashboardNumeric;
+        mSmartDashboardTextViewLabel = null;
     }
 
     /**
@@ -50,8 +67,12 @@ public class WaitAction implements AutoAction {
      */
     @Override
     public void start() {
-        if (smartDashboardTextViewLabel != null) {
-            mTimeToWait = SmartDashboard.getNumber(smartDashboardTextViewLabel, 0.0);
+        if (mSmartDashboardTextViewLabel != null) {
+            mTimeToWait = SmartDashboard.getNumber(mSmartDashboardTextViewLabel, 0.0);
+        }
+
+        if (mSmartDashboardNumeric != null) {
+            mTimeToWait = mSmartDashboardNumeric.toNumber();
         }
 
         mStartTime = Timer.getFPGATimestamp();
