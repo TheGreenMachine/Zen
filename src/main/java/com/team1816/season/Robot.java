@@ -177,8 +177,6 @@ public class Robot extends TimedRobot {
             collector = Injector.get(Collector.class);
             climber = Injector.get(Climber.class);
 
-            testNumber = VariableInput.number("test", Double.NaN);
-
             /** Logging */
             if (Constants.kLoggingRobot) {
                 var logFile = new SimpleDateFormat("MMdd_HH-mm").format(new Date());
