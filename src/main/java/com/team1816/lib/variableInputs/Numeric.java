@@ -61,7 +61,7 @@ public class Numeric extends Number
 
     @Override
     public double toNumber() {
-        return 0;
+        return getValue();
     }
 
     @Override

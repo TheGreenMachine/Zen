@@ -103,8 +103,6 @@ public class Robot extends TimedRobot {
      */
     private boolean faulted;
 
-    VariableInput testNumber;
-
 
     /**
      * Instantiates the Robot by injecting all systems and creating the enabled and disabled loopers
@@ -583,8 +581,6 @@ public class Robot extends TimedRobot {
             robotState.outputToSmartDashboard(); // update robot state on field for Field2D widget
             autoModeManager.outputToSmartDashboard(); // update shuffleboard selected auto mode
             playlistManager.outputToSmartDashboard(); // update shuffleboard selected song
-
-            SmartDashboard.putNumber("TestResult", Double.NaN);
 
             double activeRumble = robotState.readyToShoot ? 0.9 : 0.7;
             orchestrator.setControllerRumble(InputHandler.ControllerRole.DRIVER, InputHandler.RumbleDirection.UNIFORM,
