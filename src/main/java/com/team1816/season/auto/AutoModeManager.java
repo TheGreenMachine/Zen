@@ -377,6 +377,8 @@ public class AutoModeManager {
 
         //Weird Stuff
         MID_FOUR_NOTE,
+        MID_FOUR_NOTE_SUBWOOFER,
+        TOP_THREE_NOTE_SUBWOOFER,
 
 
 
@@ -479,6 +481,10 @@ public class AutoModeManager {
                 return new ScorchedEarthBotToTop3Mode();
             case MID_FOUR_NOTE:
                 return new MidFourNoteTakeMode();
+            case MID_FOUR_NOTE_SUBWOOFER:
+                return new MidFourNoteTakeSubwooferMode();
+            case TOP_THREE_NOTE_SUBWOOFER:
+                return new TopThreeNoteTakeMode();
             case TEST:
                 if (!DriverStation.isFMSAttached()) return new TestMode();
             case SYSTEM_CHECK:
