@@ -49,7 +49,7 @@ public class Shooter extends Subsystem {
     private final IGreenMotor pivotMotor;
     private final IGreenMotor pivotFollowMotor;
 
-    private final CANcoder pivotCancoder;
+//    private final CANcoder pivotCancoder;
 
     private final DigitalInput noteSensor; // BeamBreak
 
@@ -127,7 +127,7 @@ public class Shooter extends Subsystem {
         pivotMotor = factory.getMotor(NAME, "pivotMotor");
         pivotFollowMotor = factory.getFollowerMotor(NAME, "pivotFollowMotor", pivotMotor, opposeLeaderDirection);
 
-        pivotCancoder = factory.getCanCoder(NAME, "Pivot", factory.getConstant(NAME, "canCoderOffset", -0.5));
+//        pivotCancoder = factory.getCanCoder(NAME, "Pivot", factory.getConstant(NAME, "canCoderOffset", -0.5));
 
         noteSensor = new DigitalInput((int) factory.getConstant(NAME, "noteSensorChannel", 9));
 
@@ -233,7 +233,7 @@ public class Shooter extends Subsystem {
         SmartDashboard.putNumber("correctionDegrees", autoAimCorrectionRotations / Constants.motorRotationsPerDegree);
 
         actualPivotPosition = pivotMotor.getSensorPosition();
-        actualPivotDegrees = (pivotCancoder.getPosition().getValueAsDouble() / Constants.cancoderRotationsPerDegree);
+//        actualPivotDegrees = (pivotCancoder.getPosition().getValueAsDouble() / Constants.cancoderRotationsPerDegree);
 
         actualRollerVelocity = rollerMotor.getSensorVelocity();
         actualFeederVelocity = feederMotor.getSensorVelocity();
@@ -258,7 +258,7 @@ public class Shooter extends Subsystem {
                 robotState.readyToShoot = false;
             }
             if (RobotBase.isReal()) {
-                correctingAutoAim = pivotMotor.get_ClosedLoopOutput() <= 0.02 + robotState.pivotLoopIncrement && !pivotCancoder.getFault_BadMagnet().getValue(); //Under 6%, TODO put into yaml later
+//                correctingAutoAim = pivotMotor.get_ClosedLoopOutput() <= 0.02 + robotState.pivotLoopIncrement && !pivotCancoder.getFault_BadMagnet().getValue(); //Under 6%, TODO put into yaml later
             }
         }
 
@@ -393,7 +393,7 @@ public class Shooter extends Subsystem {
     @Override
     public void zeroSensors() {
         pivotMotor.setSensorPosition(0, 50);
-        pivotCancoder.setPosition(0, 50);
+//        pivotCancoder.setPosition(0, 50);
     }
 
     public void setBraking(boolean braking) {
