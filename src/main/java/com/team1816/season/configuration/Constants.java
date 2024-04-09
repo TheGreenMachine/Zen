@@ -50,6 +50,17 @@ public class Constants {
     public static final int kLongCANTimeoutMs = 100; // utility: constructors
 
     /**
+     * Wait Action Text View Labels
+     *
+     * (Dynamic Autos)
+     */
+    public static final String kAutoWaitTimeBetweenFirstShotLabel = "Time To Wait Between First Shot";
+    public static final String kAutoWaitTimeBetweenSecondShotLabel = "Time To Wait Between Second Shot";
+    public static final String kAutoWaitTimeBetweenThirdShotLabel = "Time To Wait Between Third Shot";
+    public static final String kAutoWatTimeBeforeScramLabel = "Time To Wait Before Scramming";
+
+
+    /**
      * Field characterization
      */
     public static final Symmetry fieldSymmetry = Symmetry.AXIS;
