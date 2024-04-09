@@ -375,6 +375,10 @@ public class AutoModeManager {
         SCEA_SOURCETOAMP3,
 
 
+        //Weird Stuff
+        MID_FOUR_NOTE,
+
+
 
         BOTTOM_MIDDLE_EJECTS,
         TOP_MIDDLE_EJECTS,
@@ -473,6 +477,8 @@ public class AutoModeManager {
                 return new ScorchedEarthBotToTop2Mode();
             case SCEA_SOURCETOAMP3:
                 return new ScorchedEarthBotToTop3Mode();
+            case MID_FOUR_NOTE:
+                return new MidFourNoteTakeMode();
             case TEST:
                 if (!DriverStation.isFMSAttached()) return new TestMode();
             case SYSTEM_CHECK:

@@ -380,6 +380,9 @@ public class Shooter extends Subsystem {
                         correctingAutoAim = false;
                     }
                 }
+                case LASER -> {
+                    desiredPivotPosition = (50) * Constants.motorRotationsPerDegree - pivotNeutralPosition;
+                }
             }
             //System.out.println(desiredPivotPosition);
             pivotMotor.set(GreenControlMode.MOTION_MAGIC_EXPO, MathUtil.clamp(desiredPivotPosition, 1.5, 35));
@@ -492,5 +495,6 @@ public class Shooter extends Subsystem {
         SHOOT_AMP,
         SHOOT_DISTANCE,
         AUTO_AIM,
+        LASER
     }
 }
