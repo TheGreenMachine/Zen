@@ -44,8 +44,8 @@ public class TopThreeNoteTakeMode extends AutoMode {
     protected void routine() throws AutoModeEndedException {
         runAction(
                 new SeriesAction(
-                        new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT, Shooter.PIVOT_STATE.LASER),
-                        new WaitAction(.3),
+                        new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT, Shooter.PIVOT_STATE.STOW),
+                        new WaitAction(.5),
                         new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.TRANSFER, Shooter.PIVOT_STATE.STOW),
                         new ParallelAction(
                                 new CollectAction(Collector.COLLECTOR_STATE.INTAKE),
@@ -56,7 +56,7 @@ public class TopThreeNoteTakeMode extends AutoMode {
                                 trajectoryActions.get(1),
                                 new SeriesAction(
                                         new WaitAction(1.6),
-                                        new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT, Shooter.PIVOT_STATE.LASER),
+                                        new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT, Shooter.PIVOT_STATE.STOW),
                                         new WaitAction(.3),
                                         new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.TRANSFER, Shooter.PIVOT_STATE.STOW)
                                 )
@@ -65,13 +65,13 @@ public class TopThreeNoteTakeMode extends AutoMode {
                                 trajectoryActions.get(2),
                                 new SeriesAction(
                                         new WaitAction(1.4),
-                                        new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT, Shooter.PIVOT_STATE.LASER),
+                                        new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT, Shooter.PIVOT_STATE.STOW),
                                         new WaitAction(.3),
                                         new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.TRANSFER, Shooter.PIVOT_STATE.STOW)
                                 )
                         ),
                         trajectoryActions.get(3),
-                        new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT, Shooter.PIVOT_STATE.LASER)
+                        new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT, Shooter.PIVOT_STATE.STOW)
                 )
         );
     }
