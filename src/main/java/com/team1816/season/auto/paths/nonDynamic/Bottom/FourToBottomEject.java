@@ -16,7 +16,7 @@ public class FourToBottomEject extends AutoPath {
     protected List<Pose2d> getWaypoints() {
         return List.of(
             new Pose2d(8.10, 2.35, Rotation2d.fromDegrees(-150)),
-            new Pose2d(6.42, 1.47, Rotation2d.fromDegrees(-160)),
+            new Pose2d(6.42, 1.47, Rotation2d.fromDegrees(140)),
             new Pose2d(5.82, 1.49, Rotation2d.fromDegrees(140))
         );
     }
@@ -25,7 +25,7 @@ public class FourToBottomEject extends AutoPath {
     protected List<Rotation2d> getWaypointHeadings() {
         return List.of(
             Rotation2d.fromDegrees(30),
-            Rotation2d.fromDegrees(20),
+            Rotation2d.fromDegrees(-40),
             Rotation2d.fromDegrees(-40)
         );
     }
