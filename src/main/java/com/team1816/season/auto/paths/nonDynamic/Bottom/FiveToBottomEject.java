@@ -15,7 +15,7 @@ public class FiveToBottomEject extends AutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return List.of(
-            new Pose2d(7.77, 0.84, Rotation2d.fromDegrees(170)),
+            new Pose2d(8.10, 0.95, Rotation2d.fromDegrees(170)),
             new Pose2d(4.63, 1.57, Rotation2d.fromDegrees(140))
         );
     }
