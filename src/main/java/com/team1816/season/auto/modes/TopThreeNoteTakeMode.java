@@ -4,10 +4,14 @@ import com.team1816.lib.auto.AutoModeEndedException;
 import com.team1816.lib.auto.actions.ParallelAction;
 import com.team1816.lib.auto.actions.SeriesAction;
 import com.team1816.lib.auto.actions.TrajectoryAction;
+import com.team1816.lib.auto.actions.WaitAction;
 import com.team1816.lib.auto.modes.AutoMode;
 import com.team1816.season.auto.actions.CollectAction;
 import com.team1816.season.auto.actions.ShootAction;
+import com.team1816.season.auto.actions.ShootSpeakerAction;
 import com.team1816.season.auto.paths.TopThreeFromBottom.Note3ToNote4;
+import com.team1816.season.auto.paths.TopThreeFromBottom.Note4ToNote5;
+import com.team1816.season.auto.paths.TopThreeFromBottom.Note5Eject;
 import com.team1816.season.auto.paths.TopThreeFromBottom.SubwooferToNote3;
 import com.team1816.season.subsystems.Collector;
 import com.team1816.season.subsystems.Shooter;
@@ -25,6 +29,12 @@ public class TopThreeNoteTakeMode extends AutoMode {
                         ),
                         new TrajectoryAction(
                                 new Note3ToNote4()
+                        ),
+                        new TrajectoryAction(
+                                new Note4ToNote5()
+                        ),
+                        new TrajectoryAction(
+                                new Note5Eject()
                         )
                 )
         );
@@ -34,13 +44,34 @@ public class TopThreeNoteTakeMode extends AutoMode {
     protected void routine() throws AutoModeEndedException {
         runAction(
                 new SeriesAction(
-                        new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT, Shooter.PIVOT_STATE.STOW),
+                        new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT, Shooter.PIVOT_STATE.LASER),
+                        new WaitAction(.3),
+                        new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.TRANSFER, Shooter.PIVOT_STATE.STOW),
                         new ParallelAction(
                                 new CollectAction(Collector.COLLECTOR_STATE.INTAKE),
-                                trajectoryActions.get(0)
+                                trajectoryActions.get(0),
+                                new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.TRANSFER, Shooter.PIVOT_STATE.STOW)
                         ),
-                        trajectoryActions.get(1),
-                        new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT, Shooter.PIVOT_STATE.STOW)
+                        new ParallelAction(
+                                trajectoryActions.get(1),
+                                new SeriesAction(
+                                        new WaitAction(1.6),
+                                        new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT, Shooter.PIVOT_STATE.LASER),
+                                        new WaitAction(.3),
+                                        new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.TRANSFER, Shooter.PIVOT_STATE.STOW)
+                                )
+                        ),
+                        new ParallelAction(
+                                trajectoryActions.get(2),
+                                new SeriesAction(
+                                        new WaitAction(1.4),
+                                        new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT, Shooter.PIVOT_STATE.LASER),
+                                        new WaitAction(.3),
+                                        new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.TRANSFER, Shooter.PIVOT_STATE.STOW)
+                                )
+                        ),
+                        trajectoryActions.get(3),
+                        new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT, Shooter.PIVOT_STATE.LASER)
                 )
         );
     }

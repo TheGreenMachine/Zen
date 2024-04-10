@@ -6,23 +6,18 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 import java.util.List;
 
-public class Note3ToNote4 extends AutoPath {
-
+public class Note5Eject extends AutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return List.of(
-                new Pose2d(8.28, 4.12, Rotation2d.fromDegrees(140)),
-                new Pose2d(5.61, 6.33, Rotation2d.fromDegrees(180)),
-                new Pose2d(5.61, 6.34, Rotation2d.fromDegrees(0)),
-                new Pose2d(8.28, 5.81, Rotation2d.fromDegrees(0))
+                new Pose2d(8.26, 7.5, Rotation2d.fromDegrees(180)),
+                new Pose2d(5.82, 7.5, Rotation2d.fromDegrees(180))
         );
     }
 
     @Override
     protected List<Rotation2d> getWaypointHeadings() {
         return List.of(
-                Rotation2d.fromDegrees(0),
-                Rotation2d.fromDegrees(0),
                 Rotation2d.fromDegrees(0),
                 Rotation2d.fromDegrees(0)
         );
