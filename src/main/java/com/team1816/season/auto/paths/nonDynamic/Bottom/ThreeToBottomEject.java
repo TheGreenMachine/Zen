@@ -15,7 +15,7 @@ public class ThreeToBottomEject extends AutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return List.of(
-            new Pose2d(8.02, 3.76, Rotation2d.fromDegrees(-110)),
+            new Pose2d(8.10, 4, Rotation2d.fromDegrees(-110)),
             new Pose2d(7.55, 2.59, Rotation2d.fromDegrees(-115)),
             new Pose2d(6.9, 1.53, Rotation2d.fromDegrees(-140)),
             new Pose2d(5.81, 1.21, Rotation2d.fromDegrees(175)),
