@@ -12,6 +12,7 @@ import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.auto.modes.*;
 import com.team1816.season.auto.modes.distance.FourScoreFromDistanceMode;
+import com.team1816.season.auto.modes.eject.Bottom345Ejects;
 import com.team1816.season.auto.modes.eject.BottomMiddleEjects;
 import com.team1816.season.auto.modes.eject.TopMiddleEjects;
 import com.team1816.season.auto.paths.StartToAmpPath;
@@ -381,7 +382,7 @@ public class AutoModeManager {
         MID_FOUR_NOTE,
 
 
-
+        BOTTOM_345_EJECTS,
         BOTTOM_MIDDLE_EJECTS,
         TOP_MIDDLE_EJECTS,
         TEST
@@ -481,6 +482,8 @@ public class AutoModeManager {
                 return new ScorchedEarthBotToTop3Mode();
             case SCEA_SKIP_BOTTOM:
                 return new ScorchedEarthBottomSkipOne();
+            case BOTTOM_345_EJECTS:
+                return new Bottom345Ejects();
             case MID_FOUR_NOTE:
                 return new MidFourNoteTakeMode();
             case TEST:
