@@ -25,7 +25,6 @@ public class EjectMiddleThreeBottomMode extends AutoMode {
                 ),
                 new TrajectoryAction(
                     new EjectBottomMiddleThree_5()
-                    ''
                 )
             )
         );
