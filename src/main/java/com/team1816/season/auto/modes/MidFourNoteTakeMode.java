@@ -16,25 +16,7 @@ import java.util.List;
 
 public class MidFourNoteTakeMode extends AutoMode {
     public MidFourNoteTakeMode() {
-        super(
-                List.of(
-                        new TrajectoryAction(
-                                new MidFourNoteTakePath(robotState.allianceColor)
-                        ),
-                        new TrajectoryAction(
-                                new MidFourNoteTakePath1_0(robotState.allianceColor)
-                        ),
-                        new TrajectoryAction(
-                                new MidFourNoteTakePath2(robotState.allianceColor)
-                        ),
-                        new TrajectoryAction(
-                                new MidFourNoteTakePath3(robotState.allianceColor)
-                        ),
-                        new TrajectoryAction(
-                                new MidFourNoteTakePath3_0(robotState.allianceColor)
-                        )
-                )
-        );
+
     }
 
     @Override
