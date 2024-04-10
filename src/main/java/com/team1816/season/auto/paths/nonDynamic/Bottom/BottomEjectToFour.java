@@ -15,7 +15,7 @@ public class BottomEjectToFour extends AutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return List.of(
-            new Pose2d(4.63, 1.57, Rotation2d.fromDegrees(-40)),
+            new Pose2d(5.82, 1.49, Rotation2d.fromDegrees(-40)),
             new Pose2d(6.42, 1.47, Rotation2d.fromDegrees(30)),
             new Pose2d(8.10, 2.35, Rotation2d.fromDegrees(30))
         );

@@ -54,14 +54,14 @@ public class BottomMiddleEjects extends AutoMode {
                 new WaitAction(.3),
                 trajectoryActions.get(1),
                 new EjectAction(),
-                new WaitAction(.3),
+                new WaitAction(.1),
                 trajectoryActions.get(2),
-                new WaitAction(.3),
+                new WaitAction(.1),
                 trajectoryActions.get(3),
                 new EjectAction(),
-                new WaitAction(.3),
+                new WaitAction(.1),
                 trajectoryActions.get(4),
-                new WaitAction(.3),
+                new WaitAction(.1),
                 trajectoryActions.get(5),
                 new EjectAction()
             )
