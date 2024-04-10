@@ -1,6 +1,7 @@
 package com.team1816.lib.auto.actions;
 
 import com.team1816.lib.Injector;
+import com.team1816.lib.auto.Color;
 import com.team1816.lib.subsystems.drive.Drive;
 import com.team1816.lib.subsystems.drive.EnhancedSwerveDrive;
 import com.team1816.season.configuration.Constants;
@@ -9,6 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 
+import static com.team1816.lib.subsystems.Subsystem.robotState;
 import static com.team1816.lib.subsystems.drive.Drive.kRotationActionControllerConstraints;
 
 public class RotateSwerveAction implements AutoAction {
@@ -23,9 +25,13 @@ public class RotateSwerveAction implements AutoAction {
 
     private ProfiledPIDController thetaController;
 
-    public RotateSwerveAction(Rotation2d desiredHeading) {
+    public RotateSwerveAction(Rotation2d inputHeading) {
         drive = Injector.get(Drive.Factory.class).getInstance();
-        this.desiredHeading = desiredHeading;
+        if(robotState.allianceColor == Color.BLUE) {
+            desiredHeading = inputHeading;
+        } else {
+            desiredHeading = new Rotation2d(180 - inputHeading.getDegrees());
+        }
         this.kinematics = ((EnhancedSwerveDrive) drive).getKinematics();
 
         thetaController = new ProfiledPIDController(

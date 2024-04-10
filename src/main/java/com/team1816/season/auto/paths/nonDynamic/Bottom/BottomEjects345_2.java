@@ -8,8 +8,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import java.util.List;
 
 public class BottomEjects345_2 extends AutoPath {
-    public BottomEjects345_2(Color allianceColor) {
-        super(allianceColor);
+    public BottomEjects345_2(Color color) {
+        super(color);
     }
 
     @Override
