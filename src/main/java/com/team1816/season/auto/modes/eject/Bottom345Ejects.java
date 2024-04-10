@@ -21,13 +21,13 @@ public class Bottom345Ejects extends AutoMode {
         super(
             List.of(
                 new TrajectoryAction(
-                    new BottomEjects345_1()
+                    new BottomEjects345_1(robotState.allianceColor)
                 ),
                 new TrajectoryAction(
-                    new BottomEjects345_2()
+                    new BottomEjects345_2(robotState.allianceColor)
                 ),
                 new TrajectoryAction(
-                    new BottomEjects345_3()
+                    new BottomEjects345_3(robotState.allianceColor)
                 )
             )
 

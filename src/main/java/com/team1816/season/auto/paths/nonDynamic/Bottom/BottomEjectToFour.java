@@ -1,5 +1,6 @@
 package com.team1816.season.auto.paths.nonDynamic.Bottom;
 
+import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.paths.AutoPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -7,11 +8,15 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import java.util.List;
 
 public class BottomEjectToFour extends AutoPath {
+    public BottomEjectToFour(Color allianceColor) {
+        super(allianceColor);
+    }
+
     @Override
     protected List<Pose2d> getWaypoints() {
         return List.of(
-            new Pose2d(4.63, 1.57, Rotation2d.fromDegrees(-20)),
-            new Pose2d(6.42, 1.47, Rotation2d.fromDegrees(20)),
+            new Pose2d(4.63, 1.57, Rotation2d.fromDegrees(-40)),
+            new Pose2d(6.42, 1.47, Rotation2d.fromDegrees(30)),
             new Pose2d(7.85, 2.2, Rotation2d.fromDegrees(30))
         );
     }
@@ -19,8 +24,8 @@ public class BottomEjectToFour extends AutoPath {
     @Override
     protected List<Rotation2d> getWaypointHeadings() {
         return List.of(
-            Rotation2d.fromDegrees(-20),
-            Rotation2d.fromDegrees(20),
+            Rotation2d.fromDegrees(-40),
+            Rotation2d.fromDegrees(30),
             Rotation2d.fromDegrees(30)
         );
     }

@@ -20,22 +20,22 @@ public class BottomMiddleEjects extends AutoMode {
         super(
             List.of(
                 new TrajectoryAction(
-                    new BottomSpeakerToFive()
+                    new BottomSpeakerToFive(robotState.allianceColor)
                 ),
                 new TrajectoryAction(
-                    new FiveToBottomEject()
+                    new FiveToBottomEject(robotState.allianceColor)
                 ),
                 new TrajectoryAction(
-                    new BottomEjectToFour()
+                    new BottomEjectToFour(robotState.allianceColor)
                 ),
                 new TrajectoryAction(
-                    new FourToBottomEject()
+                    new FourToBottomEject(robotState.allianceColor)
                 ),
                 new TrajectoryAction(
-                    new BottomEjectToThree()
+                    new BottomEjectToThree(robotState.allianceColor)
                 ),
                 new TrajectoryAction(
-                    new ThreeToBottomEject()
+                    new ThreeToBottomEject(robotState.allianceColor)
                 )
             )
         );
