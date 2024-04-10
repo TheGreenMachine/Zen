@@ -17,7 +17,7 @@ public class FourToBottomEject extends AutoPath {
         return List.of(
             new Pose2d(7.85, 2.2, Rotation2d.fromDegrees(-150)),
             new Pose2d(6.42, 1.47, Rotation2d.fromDegrees(-160)),
-            new Pose2d(4.63, 1.57, Rotation2d.fromDegrees(160))
+            new Pose2d(4.63, 1.57, Rotation2d.fromDegrees(140))
         );
     }
 
@@ -26,7 +26,7 @@ public class FourToBottomEject extends AutoPath {
         return List.of(
             Rotation2d.fromDegrees(30),
             Rotation2d.fromDegrees(20),
-            Rotation2d.fromDegrees(-20)
+            Rotation2d.fromDegrees(-40)
         );
     }
 
