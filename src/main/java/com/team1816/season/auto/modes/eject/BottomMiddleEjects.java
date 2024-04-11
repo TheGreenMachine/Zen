@@ -52,15 +52,12 @@ public class BottomMiddleEjects extends AutoMode {
                     new CollectAction(Collector.COLLECTOR_STATE.INTAKE)
                 ),
                 trajectoryActions.get(1),
-                new WaitAction(.04),
                 new EjectAction(),
                 trajectoryActions.get(2),
                 trajectoryActions.get(3),
-                new WaitAction(.04),
                 new EjectAction(),
                 trajectoryActions.get(4),
                 trajectoryActions.get(5),
-                new WaitAction(.04),
                 new EjectAction()
             )
         );
