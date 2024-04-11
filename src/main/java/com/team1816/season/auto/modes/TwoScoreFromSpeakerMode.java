@@ -46,7 +46,7 @@ public class TwoScoreFromSpeakerMode extends AutoMode {
                 trajectoryActions.get(0),
                 trajectoryActions.get(1),
                 paths.get(1).isAmpPath() ? new ShootAmpAction() : new ShootSpeakerAction(),
-                new ShootAction(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW),
+                new ShootAction(Shooter.ROLLER_STATE.IDLE, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW),
                 scramAtEnd ? scramAction : new WaitAction(0.1)
             )
         );
