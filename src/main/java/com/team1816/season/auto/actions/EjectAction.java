@@ -11,7 +11,8 @@ public class EjectAction extends SeriesAction {
             new SeriesAction(
                 new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT, Shooter.PIVOT_STATE.STOW),
                 new WaitAction(0.1),
-                new ShootAction(Shooter.ROLLER_STATE.IDLE, Shooter.FEEDER_STATE.TRANSFER, Shooter.PIVOT_STATE.STOW)
+                new ShootAction(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.TRANSFER, Shooter.PIVOT_STATE.STOW)
+                    //TODO @Elena we had made it IDLE when we thought it was a problem with that, was the beambreak instead - if you find that this causes issues just go ahead and switch it back to IDLE
             )
         );
     }
