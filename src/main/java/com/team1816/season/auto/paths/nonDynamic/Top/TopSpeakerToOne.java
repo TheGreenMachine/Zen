@@ -10,7 +10,7 @@ public class TopSpeakerToOne extends AutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return List.of(
-            new Pose2d(0.73, 6.82, Rotation2d.fromDegrees(60)),
+            new Pose2d(0.742, 6.709, Rotation2d.fromDegrees(60)),
             new Pose2d(2.23, 7.68, Rotation2d.fromDegrees(5)),
             new Pose2d(3.85, 7.54, Rotation2d.fromDegrees(-5)),
             new Pose2d(7.85, 7.52, Rotation2d.fromDegrees(0))

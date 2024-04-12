@@ -138,7 +138,7 @@ subsystems:
         constants:
             useMultiTargetOdometry: 0
     collector:
-        implemented: false
+        implemented: true
         motors:
             intakeMotor:
                 motorType: TalonFX
@@ -155,7 +155,7 @@ subsystems:
             intakeSpeed: -0.75
             outtakeSpeed: 0.3
     shooter:
-        implemented: false
+        implemented: true
         motors:
             rollerMotor:
                 motorType: TalonFX
