@@ -314,7 +314,7 @@ public class Shooter extends Subsystem {
                 }
                 case SHOOT_SPEAKER -> {
                     // Ternary, is shuttling, need to get shuttle speed
-                    desiredRollerVelocity = SmartDashboard.getNumber("TestShuttleShot",rollerSpeakerShootSpeed);
+                    desiredRollerVelocity = rollerSpeakerShootSpeed;
                 }
                 case EJECT -> {
                     desiredRollerVelocity = rollerEjectShootSpeed;
@@ -345,7 +345,7 @@ public class Shooter extends Subsystem {
                 }
                 case TRANSFER -> {
                     if (!isBeamBreakTriggered()) {
-                        desiredFeederVelocity = SmartDashboard.getNumber("FeederShootSpeed",feederIntakeSpeed);
+                        desiredFeederVelocity = feederIntakeSpeed;
                     }
                 }
                 case MANUAL_TRANSFER -> {
