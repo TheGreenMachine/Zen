@@ -342,11 +342,12 @@ public class Robot extends TimedRobot {
                     "ampPivot",
                     ActionState.PRESSED,
                     () -> {
-                        if(shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.STOW) {
-                            shooter.setDesiredState(Shooter.ROLLER_STATE.SHOOT_AMP, Shooter.FEEDER_STATE.TRANSFER, Shooter.PIVOT_STATE.SHOOT_AMP);
+                        if (shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.STOW) {
+                            shooter.setDesiredRollerState(Shooter.ROLLER_STATE.SHOOT_AMP);
+                            shooter.setDesiredPivotState(Shooter.PIVOT_STATE.SHOOT_AMP);
                         }
                         else {
-                            shooter.setDesiredState(Shooter.ROLLER_STATE.IDLE, Shooter.FEEDER_STATE.TRANSFER, Shooter.PIVOT_STATE.STOW);
+                            shooter.setDesiredPivotState(Shooter.PIVOT_STATE.STOW);
                         }
 
                         GreenLogger.log("Changing pivot to: " + shooter.getDesiredPivotState());
