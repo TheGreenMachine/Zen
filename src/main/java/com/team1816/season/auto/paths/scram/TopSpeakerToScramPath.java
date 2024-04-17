@@ -19,18 +19,18 @@ public class TopSpeakerToScramPath extends DynamicAutoPath {
 
     @Override
     protected List<Pose2d> getWaypoints() {
-        return List.of(
+        return updateWaypoints(List.of(
                 new Pose2d(0.742, 6.709, Rotation2d.fromDegrees(0)),
                 new Pose2d(8.08, 7.45, Rotation2d.fromDegrees(0))
-        );
+        ));
     }
 
     @Override
     protected List<Rotation2d> getWaypointHeadings() {
-        return List.of(
+        return updateHeadings(List.of(
                 Rotation2d.fromDegrees(60),
                 Rotation2d.fromDegrees(-5)
-        );
+        ));
     }
 
     @Override

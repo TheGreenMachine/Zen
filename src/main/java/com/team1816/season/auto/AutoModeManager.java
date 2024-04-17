@@ -372,11 +372,11 @@ public class AutoModeManager {
         QUICK_EJECT,
 
         //Scorched Earth
-        SCEA_AMPTOSOURCE,
+//        SCEA_AMPTOSOURCE,
         SCEA_AMPTOSOURCE2,
         SCEA_SOURCETOAMP,
-        SCEA_SOURCETOAMP2,
-        SCEA_SOURCETOAMP3,
+//        SCEA_SOURCETOAMP2,
+//        SCEA_SOURCETOAMP3,
 
         SCEA_SKIP_BOTTOM,
 
@@ -461,30 +461,30 @@ public class AutoModeManager {
         switch (mode) {
             case DO_NOTHING:
                 return new DoNothingMode();
-            case TUNE_DRIVETRAIN: // commented for competition purposes
-                return new TuneDrivetrainMode();
+//            case TUNE_DRIVETRAIN: // commented for competition purposes
+//                return new TuneDrivetrainMode();
 //            case LIVING_ROOM:
 //                return (new LivingRoomMode(color));
             case DRIVE_STRAIGHT:
                 return new DriveStraightMode();
-            case BOTTOM_MIDDLE_EJECTS:
+            case BOTTOM_MIDDLE_EJECTS: // Can get the bottom two
                 return new BottomMiddleEjects();
-            case TOP_MIDDLE_EJECTS:
+            case TOP_MIDDLE_EJECTS: // Can get the top three
                 return new TopMiddleEjects();
             case SCORE_AND_SCRAM:
                 return new ScoreAndScramMode();
-            case QUICK_EJECT:
+            case QUICK_EJECT: // Gets first one and first middle shuttle - probably useless.
                 return new QuickEjectsMode();
-            case SCEA_AMPTOSOURCE:
-                return new ScorchedEarthTopToBotMode();
+//            case SCEA_AMPTOSOURCE:
+//                return new ScorchedEarthTopToBotMode();
             case SCEA_AMPTOSOURCE2:
                 return new ScorchedEarthTopToBot2Mode();
             case SCEA_SOURCETOAMP:
                 return new ScorchedEarthBotToTopMode();
-            case SCEA_SOURCETOAMP2:
-                return new ScorchedEarthBotToTop2Mode();
-            case SCEA_SOURCETOAMP3:
-                return new ScorchedEarthBotToTop3Mode();
+//            case SCEA_SOURCETOAMP2:
+//                return new ScorchedEarthBotToTop2Mode();
+//            case SCEA_SOURCETOAMP3:
+//                return new ScorchedEarthBotToTop3Mode();
             case SCEA_SKIP_BOTTOM:
                 return new ScorchedEarthBottomSkipOne();
             case BOTTOM_345_EJECTS:
