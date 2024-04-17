@@ -12,7 +12,7 @@ public class ShootAmpAction extends SeriesAction {
                         new WaitAction(0.5),
                         new ShootAction(Shooter.ROLLER_STATE.SHOOT_AMP, Shooter.FEEDER_STATE.SHOOT, Shooter.PIVOT_STATE.SHOOT_AMP),
                         new WaitAction(0.5),
-                        new ShootAction(Shooter.ROLLER_STATE.IDLE, Shooter.FEEDER_STATE.TRANSFER, Shooter.PIVOT_STATE.STOW)
+                        new ShootAction(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.TRANSFER, Shooter.PIVOT_STATE.STOW)
                 )
         );
     }

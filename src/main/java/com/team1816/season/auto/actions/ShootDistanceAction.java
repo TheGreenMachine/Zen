@@ -12,7 +12,7 @@ public class ShootDistanceAction extends SeriesAction {
                         new WaitAction(0.3),
                         new ShootAction(Shooter.ROLLER_STATE.SHOOT_DISTANCE, Shooter.FEEDER_STATE.SHOOT, Shooter.PIVOT_STATE.AUTO_AIM),
                         new WaitAction(0.3),
-                        new ShootAction(Shooter.ROLLER_STATE.IDLE, Shooter.FEEDER_STATE.TRANSFER, Shooter.PIVOT_STATE.STOW)
+                        new ShootAction(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.TRANSFER, Shooter.PIVOT_STATE.STOW)
                 )
         );
     }

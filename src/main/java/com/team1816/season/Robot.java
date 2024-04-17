@@ -328,7 +328,7 @@ public class Robot extends TimedRobot {
                             }
                         }
                         else {
-                            shooter.setDesiredState(Shooter.ROLLER_STATE.IDLE, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW);
+                            shooter.setDesiredState(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW);
                         }
                     }
             );
@@ -337,7 +337,6 @@ public class Robot extends TimedRobot {
                     ActionState.PRESSED,
                     () -> {
                         if (shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.STOW) {
-                            shooter.setDesiredRollerState(Shooter.ROLLER_STATE.SHOOT_AMP);
                             shooter.setDesiredPivotState(Shooter.PIVOT_STATE.SHOOT_AMP);
                         }
                         else {
@@ -435,7 +434,7 @@ public class Robot extends TimedRobot {
                     "SpeakerRev",
                     (pressed) -> {
                         if (!robotState.isShooting) {
-                           shooter.setDesiredRollerState(pressed ? Shooter.ROLLER_STATE.SHOOT_SPEAKER : Shooter.ROLLER_STATE.IDLE);
+                           shooter.setDesiredRollerState(pressed ? Shooter.ROLLER_STATE.SHOOT_SPEAKER : Shooter.ROLLER_STATE.STOP);
                         }
                     }
             );
@@ -445,7 +444,7 @@ public class Robot extends TimedRobot {
                     (pressed) -> {
                         if (!robotState.isShooting) {
                             //REPLACE WITH SHUTTLE TODO TODO TODO
-                            shooter.setDesiredRollerState(pressed ? Shooter.ROLLER_STATE.SHOOT_SPEAKER : Shooter.ROLLER_STATE.IDLE);
+                            shooter.setDesiredRollerState(pressed ? Shooter.ROLLER_STATE.SHOOT_SPEAKER : Shooter.ROLLER_STATE.STOP);
                         }
                     }
             );
@@ -501,7 +500,7 @@ public class Robot extends TimedRobot {
         drive.zeroSensors(autoModeManager.getSelectedAuto().getInitialPose());
 //        shooter.zeroMotor();
 
-        shooter.setDesiredState(Shooter.ROLLER_STATE.IDLE, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW);
+        shooter.setDesiredState(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW);
         collector.setDesiredState(Collector.COLLECTOR_STATE.STOP);
         climber.setDesiredState(Climber.CLIMBER_STATE.STOP);
 
