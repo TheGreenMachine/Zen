@@ -606,10 +606,6 @@ public class Robot extends TimedRobot {
             double activeRumble = robotState.readyToShoot ? 0.9 : 0.7;
             orchestrator.setControllerRumble(InputHandler.ControllerRole.DRIVER, InputHandler.RumbleDirection.UNIFORM,
                     robotState.isBeamBreakTriggered && !robotState.isBeamBreakOverridden ? activeRumble : 0);
-
-            if (DriverStation.isEnabled()) {
-                GreenLogger.updatePeriodicLogs();
-            }
         } catch (Throwable t) {
             faulted = true;
             GreenLogger.log(t.getMessage());
@@ -692,6 +688,11 @@ public class Robot extends TimedRobot {
         robotState.field
                 .getObject("Trajectory")
                 .setTrajectory(autoModeManager.getSelectedAuto().getCurrentTrajectory());
+
+        if(Constants.kLoggingRobot) {
+            GreenLogger.updatePeriodicLogs();
+        }
+
     }
 
     /**
@@ -706,6 +707,11 @@ public class Robot extends TimedRobot {
                     orchestrator.updatePoseWithVisionData();
                 }
             }
+
+            if(Constants.kLoggingRobot) {
+                GreenLogger.updatePeriodicLogs();
+            }
+
 
             manualControl();
         } catch (Throwable t) {
