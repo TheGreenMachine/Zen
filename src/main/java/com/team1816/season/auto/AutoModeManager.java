@@ -387,7 +387,7 @@ public class AutoModeManager {
         TOP_THREE_NOTE_SUBWOOFER,
 
 
-        BOTTOM_345_EJECTS,
+//        BOTTOM_345_EJECTS,
         BOTTOM_MIDDLE_EJECTS,
         TOP_MIDDLE_EJECTS,
         TEST
@@ -487,13 +487,13 @@ public class AutoModeManager {
 //                return new ScorchedEarthBotToTop3Mode();
             case SCEA_SKIP_BOTTOM:
                 return new ScorchedEarthBottomSkipOne();
-            case BOTTOM_345_EJECTS:
-                return new Bottom345Ejects();
-            case MID_FOUR_NOTE:
+//            case BOTTOM_345_EJECTS:
+//                return new Bottom345Ejects();
+            case MID_FOUR_NOTE: // Able to grab bottom two and the second from the top but not bring that one back - worth?
                 return new MidFourNoteTakeMode();
-            case MID_FOUR_NOTE_SUBWOOFER:
+            case MID_FOUR_NOTE_SUBWOOFER: //Shoots once, gets bottom two and stops before middle- likely not worth it
                 return new MidFourNoteTakeSubwooferMode();
-            case TOP_THREE_NOTE_SUBWOOFER:
+            case TOP_THREE_NOTE_SUBWOOFER: //Grabs all 3 but doesn't shuttle the last one
                 return new TopThreeNoteTakeMode();
             case TEST:
                 if (!DriverStation.isFMSAttached()) return new TestMode();
