@@ -211,7 +211,7 @@ subsystems:
             feederAmpShootSpeed: 11
             feederEjectShootSpeed: 28
             feederIntakeSpeed: 10.5
-            velocityErrorMargin: 0.05
+            velocityErrorMargin: 0.1
             velocityErrorMarginAutoAim: 0.003
             autoAimDegreeTolerance: .1
             pivotNeutralPosition: 1.5
