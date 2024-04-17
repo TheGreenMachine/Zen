@@ -88,6 +88,7 @@ public class Shooter extends Subsystem {
     private static final double velocityErrorMarginAutoAim = factory.getConstant(NAME, "velocityErrorMargin", 0.02);
     private static final double autoAimDegreeTolerance = factory.getConstant(NAME, "autoAimDegreeTolerance", 2);
     private static final double rollerSpeakerShootSpeed = factory.getConstant(NAME, "rollerSpeakerShootSpeed", 0.70);
+    private static final double rollerIdleSpeed = factory.getConstant(NAME, "rollerIdleSpeed", 5);
     private static final double rollerEjectShootSpeed = factory.getConstant(NAME, "rollerEjectShootSpeed", 0.3);
 
     private static final double rollerAmpShootSpeed = factory.getConstant(NAME, "rollerAmpShootSpeed", 0.40);
@@ -263,9 +264,10 @@ public class Shooter extends Subsystem {
         }
 
         if (robotState.actualRollerState != desiredRollerState) {
-            if (desiredRollerState != ROLLER_STATE.STOP && desiredRollerState.inDesiredSpeedRange(actualRollerVelocity)) {
+            //jank
+            if ((desiredRollerState != ROLLER_STATE.STOP && desiredRollerState != ROLLER_STATE.IDLE) && desiredRollerState.inDesiredSpeedRange(actualRollerVelocity)) {
                 robotState.actualRollerState = desiredRollerState;
-            } else if (desiredRollerState == ROLLER_STATE.STOP) {
+            } else if (desiredRollerState == ROLLER_STATE.STOP || desiredRollerState == ROLLER_STATE.IDLE) {
                 robotState.actualRollerState = desiredRollerState;
             }
         }
@@ -307,7 +309,11 @@ public class Shooter extends Subsystem {
                 case STOP -> {
                     desiredRollerVelocity = 0;
                 }
+                case IDLE -> {
+                    desiredRollerVelocity = rollerIdleSpeed;
+                }
                 case SHOOT_SPEAKER -> {
+                    // Ternary, is shuttling, need to get shuttle speed
                     desiredRollerVelocity = rollerSpeakerShootSpeed;
                 }
                 case EJECT -> {
@@ -379,6 +385,9 @@ public class Shooter extends Subsystem {
                         desiredPivotPosition = pivotNeutralPosition;
                         correctingAutoAim = false;
                     }
+                }
+                case LASER -> {
+                    desiredPivotPosition = (50) * Constants.motorRotationsPerDegree - pivotNeutralPosition;
                 }
             }
             //System.out.println(desiredPivotPosition);
@@ -453,6 +462,7 @@ public class Shooter extends Subsystem {
      */
     public enum ROLLER_STATE {
         STOP(0),
+        IDLE(rollerIdleSpeed),
         SHOOT_SPEAKER(rollerSpeakerShootSpeed),
 
         EJECT(rollerEjectShootSpeed),
@@ -492,5 +502,6 @@ public class Shooter extends Subsystem {
         SHOOT_AMP,
         SHOOT_DISTANCE,
         AUTO_AIM,
+        LASER
     }
 }

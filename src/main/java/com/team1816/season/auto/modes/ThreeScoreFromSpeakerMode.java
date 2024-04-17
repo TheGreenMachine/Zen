@@ -16,7 +16,6 @@ import com.team1816.season.configuration.Constants;
 import com.team1816.season.subsystems.Collector;
 import com.team1816.season.subsystems.Shooter;
 
-import java.lang.constant.Constable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +51,7 @@ public class ThreeScoreFromSpeakerMode extends AutoMode {
                         trajectoryActions.get(3),
                         paths.get(3).isAmpPath() ? new ShootAmpAction() : new ShootSpeakerAction(),
                         new WaitAction(Constants.kAutoTimeBetweenThirdShot),
-                        new ShootAction(Shooter.ROLLER_STATE.STOP, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW),
+                        new ShootAction(Shooter.ROLLER_STATE.IDLE, Shooter.FEEDER_STATE.STOP, Shooter.PIVOT_STATE.STOW),
                         new WaitAction(Constants.kAutoTimeBeforeScram),
                         scramAtEnd ? scramAction : new WaitAction(0.1)
                 ));

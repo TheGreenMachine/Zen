@@ -7,26 +7,24 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 import java.util.List;
 
-public class FourToBottomEject extends AutoPath {
-    public FourToBottomEject(Color allianceColor) {
-        super(allianceColor);
+public class BottomEjects345_3 extends AutoPath {
+    public BottomEjects345_3(Color color) {
+        super(color);
     }
 
     @Override
     protected List<Pose2d> getWaypoints() {
         return List.of(
-            new Pose2d(8.10, 2.35, Rotation2d.fromDegrees(-150)),
-            new Pose2d(6.42, 1.47, Rotation2d.fromDegrees(140)),
-            new Pose2d(5.82, 1.49, Rotation2d.fromDegrees(140))
+            new Pose2d(8.09, 2.00, Rotation2d.fromDegrees(85)),
+            new Pose2d(8.24, 3.66, Rotation2d.fromDegrees(85))
         );
     }
 
     @Override
     protected List<Rotation2d> getWaypointHeadings() {
         return List.of(
-            Rotation2d.fromDegrees(30),
-            Rotation2d.fromDegrees(-40),
-            Rotation2d.fromDegrees(-40)
+            Rotation2d.fromDegrees(85),
+            Rotation2d.fromDegrees(85)
         );
     }
 

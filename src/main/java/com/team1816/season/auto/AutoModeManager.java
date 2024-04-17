@@ -14,6 +14,7 @@ import com.team1816.lib.variableInputs.Numeric;
 import com.team1816.lib.variableInputs.VariableInput;
 import com.team1816.season.auto.modes.*;
 import com.team1816.season.auto.modes.distance.FourScoreFromDistanceMode;
+import com.team1816.season.auto.modes.eject.Bottom345Ejects;
 import com.team1816.season.auto.modes.eject.BottomMiddleEjects;
 import com.team1816.season.auto.modes.eject.TopMiddleEjects;
 import com.team1816.season.auto.paths.StartToAmpPath;
@@ -370,8 +371,23 @@ public class AutoModeManager {
 
         QUICK_EJECT,
 
+        //Scorched Earth
+        SCEA_AMPTOSOURCE,
+        SCEA_AMPTOSOURCE2,
+        SCEA_SOURCETOAMP,
+        SCEA_SOURCETOAMP2,
+        SCEA_SOURCETOAMP3,
+
+        SCEA_SKIP_BOTTOM,
 
 
+        //Weird Stuff
+        MID_FOUR_NOTE,
+        MID_FOUR_NOTE_SUBWOOFER,
+        TOP_THREE_NOTE_SUBWOOFER,
+
+
+        BOTTOM_345_EJECTS,
         BOTTOM_MIDDLE_EJECTS,
         TOP_MIDDLE_EJECTS,
         TEST
@@ -459,6 +475,26 @@ public class AutoModeManager {
                 return new ScoreAndScramMode();
             case QUICK_EJECT:
                 return new QuickEjectsMode();
+            case SCEA_AMPTOSOURCE:
+                return new ScorchedEarthTopToBotMode();
+            case SCEA_AMPTOSOURCE2:
+                return new ScorchedEarthTopToBot2Mode();
+            case SCEA_SOURCETOAMP:
+                return new ScorchedEarthBotToTopMode();
+            case SCEA_SOURCETOAMP2:
+                return new ScorchedEarthBotToTop2Mode();
+            case SCEA_SOURCETOAMP3:
+                return new ScorchedEarthBotToTop3Mode();
+            case SCEA_SKIP_BOTTOM:
+                return new ScorchedEarthBottomSkipOne();
+            case BOTTOM_345_EJECTS:
+                return new Bottom345Ejects();
+            case MID_FOUR_NOTE:
+                return new MidFourNoteTakeMode();
+            case MID_FOUR_NOTE_SUBWOOFER:
+                return new MidFourNoteTakeSubwooferMode();
+            case TOP_THREE_NOTE_SUBWOOFER:
+                return new TopThreeNoteTakeMode();
             case TEST:
                 if (!DriverStation.isFMSAttached()) return new TestMode();
             case SYSTEM_CHECK:

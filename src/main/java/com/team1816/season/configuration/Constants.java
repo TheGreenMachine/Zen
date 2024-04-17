@@ -170,7 +170,7 @@ public class Constants {
      * Autonomous
      */
     public static final double kPTranslational = 10;
-    public static final double kPRotational = 20;
+    public static final double kPRotational = 10;
 
     /**
      * Pathfinder characterization

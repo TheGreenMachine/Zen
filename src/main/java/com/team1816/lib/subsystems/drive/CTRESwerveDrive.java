@@ -338,10 +338,12 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
             chassisSpeed = swerveKinematics.toChassisSpeeds(train.getState().ModuleStates);
         }
 
-        for (int i = 0; i < 4; i++) {
-            motorTemperatures.get(i).refresh();
-            if (motorTemperatures.get(i).getValueAsDouble() > 55) { //TODO YAML
-                SmartDashboard.putBoolean(toModuleName(i), false);
+        if (Constants.kLoggingRobot) {
+            for (int i = 0; i < 4; i++) {
+                motorTemperatures.get(i).refresh();
+                if (motorTemperatures.get(i).getValueAsDouble() > 55) { //TODO YAML
+                    SmartDashboard.putBoolean(toModuleName(i), false);
+                }
             }
         }
 
@@ -418,12 +420,13 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
                 );
         robotState.deltaVehicle = cs;
 
-        robotState.drivetrainTemp = motorTemperatures.get(0).getValueAsDouble();
 
         robotState.vehicleToFloorProximityCentimeters = infrastructure.getMaximumProximity();
 
         if (Constants.kLoggingDrivetrain) {
             double[] desiredSpeeds = getDesiredSpeeds();
+
+            robotState.drivetrainTemp = motorTemperatures.get(0).getValueAsDouble();
 
             drivetrainPoseLogger.append(new double[]{robotState.fieldToVehicle.getX(), robotState.fieldToVehicle.getY(), robotState.fieldToVehicle.getRotation().getDegrees()});
             drivetrainChassisSpeedsLogger.append(new double[]{robotState.deltaVehicle.vxMetersPerSecond, robotState.deltaVehicle.vyMetersPerSecond, robotState.deltaVehicle.omegaRadiansPerSecond});

@@ -34,7 +34,7 @@ buttonboard:
     upLeft: climbSlow
     upRight: climbFast
     up: climbPosition
-    center: reSpool
+    center: ShuttleRev
     left: zeroClimber
     downLeft: toggleOverride
     down: manualFeedingTransfer
