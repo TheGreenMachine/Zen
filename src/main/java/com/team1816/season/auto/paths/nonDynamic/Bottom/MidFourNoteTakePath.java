@@ -15,7 +15,7 @@ public class MidFourNoteTakePath extends AutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return List.of(
-                new Pose2d(1.38, 1.61, Rotation2d.fromDegrees(-9)),
+                new Pose2d(0.48, 2.06, Rotation2d.fromDegrees(-9)),
                 new Pose2d(8.25, 0.71, Rotation2d.fromDegrees(-9))
 //                new Pose2d(5.2, 1.6, Rotation2d.fromDegrees(-12+180))
 //                new Pose2d(8.32, 2.48, Rotation2d.fromDegrees(14)),

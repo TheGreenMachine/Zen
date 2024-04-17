@@ -15,7 +15,7 @@ public class BottomSpeakerToFive extends AutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return List.of(
-            new Pose2d(0.75, 4.31, Rotation2d.fromDegrees(-60)),
+            new Pose2d(0.749, 4.391, Rotation2d.fromDegrees(-60)),
             new Pose2d(2.33, 2.56, Rotation2d.fromDegrees(-35)),
             new Pose2d(4.79, 1.47, Rotation2d.fromDegrees(-20)),
             new Pose2d(8.10, 0.95, Rotation2d.fromDegrees(-10))

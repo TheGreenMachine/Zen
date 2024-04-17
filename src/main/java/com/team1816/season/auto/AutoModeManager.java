@@ -255,7 +255,7 @@ public class AutoModeManager {
             }
 
             if (selectedAuto == DesiredAuto.TWO_SCORE
-                    || selectedAuto == DesiredAuto.RANGE_TWO_SCORE
+//                    || selectedAuto == DesiredAuto.RANGE_TWO_SCORE
                     || selectedAuto == DesiredAuto.THREE_SCORE
 //                    || selectedAuto == DesiredAuto.RANGE_FOUR_SCORE
             ) {
@@ -364,7 +364,7 @@ public class AutoModeManager {
         TWO_SCORE,
         THREE_SCORE,
 //        RANGE_FOUR_SCORE,
-        RANGE_TWO_SCORE,
+//        RANGE_TWO_SCORE,
         SCORE_AND_SCRAM,
         SCORE_AND_SIT,
 
