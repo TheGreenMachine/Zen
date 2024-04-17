@@ -104,7 +104,7 @@ public class AutoModeManager {
 
         SmartDashboard.putData("Auto mode", autoModeChooser); // appends chooser to shuffleboard
 
-        autoModeChooser.addOption("GETTYSBURG", DesiredAuto.RANGE_FOUR_SCORE);
+//        autoModeChooser.addOption("GETTYSBURG", DesiredAuto.RANGE_FOUR_SCORE);
         for (DesiredAuto desiredAuto : DesiredAuto.values()) {
             autoModeChooser.addOption(desiredAuto.name(), desiredAuto);
         }
@@ -257,7 +257,7 @@ public class AutoModeManager {
             if (selectedAuto == DesiredAuto.TWO_SCORE
                     || selectedAuto == DesiredAuto.RANGE_TWO_SCORE
                     || selectedAuto == DesiredAuto.THREE_SCORE
-                    || selectedAuto == DesiredAuto.RANGE_FOUR_SCORE
+//                    || selectedAuto == DesiredAuto.RANGE_FOUR_SCORE
             ) {
                 autoMode = generateDynamicAutoMode(selectedAuto, selectedColor,
                         List.of(selectedStartPos, selectedFirstShoot, selectedSecondShoot),
@@ -265,9 +265,8 @@ public class AutoModeManager {
                 );
             } else {
                 dynamicAutoChanged = false; //Stops unnecessary defaulting/zeroing
-                if (selectedAuto == DesiredAuto.SCORE_AND_SIT || selectedAuto == DesiredAuto.DO_NOTHING) {
-                    autoMode = selectedAuto == DesiredAuto.SCORE_AND_SIT ? new ScoreAndSitMode(selectedStartPos, selectedColor) :
-                            new DoNothingMode(selectedStartPos, selectedColor);
+                if (selectedAuto == DesiredAuto.SCORE_AND_SIT) {
+                    autoMode = new ScoreAndSitMode(selectedStartPos, selectedColor);
                 } else {
                     autoMode = generateAutoMode(selectedAuto, selectedColor);
                 }
@@ -353,8 +352,8 @@ public class AutoModeManager {
      */
     enum DesiredAuto {
         // Test : 2020 Legacy
-        DO_NOTHING,
-        TUNE_DRIVETRAIN,
+//        DO_NOTHING,
+//        TUNE_DRIVETRAIN,
         LIVING_ROOM,
         DRIVE_STRAIGHT,
 
@@ -364,7 +363,7 @@ public class AutoModeManager {
         // New Auto Modes : 2024
         TWO_SCORE,
         THREE_SCORE,
-        RANGE_FOUR_SCORE,
+//        RANGE_FOUR_SCORE,
         RANGE_TWO_SCORE,
         SCORE_AND_SCRAM,
         SCORE_AND_SIT,
@@ -459,8 +458,8 @@ public class AutoModeManager {
      */
     private AutoMode generateAutoMode(DesiredAuto mode, Color color) {
         switch (mode) {
-            case DO_NOTHING:
-                return new DoNothingMode();
+//            case DO_NOTHING:
+//                return new DoNothingMode();
 //            case TUNE_DRIVETRAIN: // commented for competition purposes
 //                return new TuneDrivetrainMode();
 //            case LIVING_ROOM:
@@ -508,12 +507,12 @@ public class AutoModeManager {
     private AutoMode generateDynamicAutoMode(DesiredAuto mode, Color color, List<ShootPos> shootPositions, List<DesiredCollect> collectPositions) {
         boolean isScramming = desiredScram == ScramChoice.SCRAM;
 
-        if (mode == DesiredAuto.RANGE_FOUR_SCORE) {
-            return new FourScoreFromDistanceMode(
-                    generateFourScorePaths(color, shootPositions.get(0), collectPositions.get(0) == DesiredCollect.TOP_NOTE),
-                    isScramming
-            );
-        }
+//        if (mode == DesiredAuto.RANGE_FOUR_SCORE) {
+//            return new FourScoreFromDistanceMode(
+//                    generateFourScorePaths(color, shootPositions.get(0), collectPositions.get(0) == DesiredCollect.TOP_NOTE),
+//                    isScramming
+//            );
+//        }
 
         List<DynamicAutoPath> dynamicPathList = generateDynamicPathList(color, shootPositions , collectPositions);
         if (mode == DesiredAuto.TWO_SCORE) {
