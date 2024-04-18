@@ -1,6 +1,7 @@
 package com.team1816.season.auto.modes;
 
 import com.team1816.lib.auto.AutoModeEndedException;
+import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.actions.ParallelAction;
 import com.team1816.lib.auto.actions.SeriesAction;
 import com.team1816.lib.auto.actions.TrajectoryAction;
@@ -21,20 +22,20 @@ import javax.naming.PartialResultException;
 import java.util.List;
 
 public class TopThreeNoteTakeMode extends AutoMode {
-    public TopThreeNoteTakeMode() {
+    public TopThreeNoteTakeMode(Color color) {
         super(
                 List.of(
                         new TrajectoryAction(
-                                new SubwooferToNote3(robotState.allianceColor)
+                                new SubwooferToNote3(color)
                         ),
                         new TrajectoryAction(
-                                new Note3ToNote4()
+                                new Note3ToNote4(color)
                         ),
                         new TrajectoryAction(
-                                new Note4ToNote5()
+                                new Note4ToNote5(color)
                         ),
                         new TrajectoryAction(
-                                new Note5Eject()
+                                new Note5Eject(color)
                         )
                 )
         );

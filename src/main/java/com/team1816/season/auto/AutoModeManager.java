@@ -467,33 +467,33 @@ public class AutoModeManager {
             case DRIVE_STRAIGHT:
                 return new DriveStraightMode();
             case BOTTOM_MIDDLE_EJECTS: // Can get the bottom two
-                return new BottomMiddleEjects();
+                return new BottomMiddleEjects(color);
             case TOP_MIDDLE_EJECTS: // Can get the top three
-                return new TopMiddleEjects();
+                return new TopMiddleEjects(color);
             case SCORE_AND_SCRAM:
-                return new ScoreAndScramMode();
+                return new ScoreAndScramMode(color);
             case QUICK_EJECT: // Gets first one and first middle shuttle - probably useless.
-                return new QuickEjectsMode();
+                return new QuickEjectsMode(color);
 //            case SCEA_AMPTOSOURCE:
 //                return new ScorchedEarthTopToBotMode();
             case SCEA_AMPTOSOURCE2:
-                return new ScorchedEarthTopToBot2Mode();
+                return new ScorchedEarthTopToBot2Mode(color);
             case SCEA_SOURCETOAMP:
-                return new ScorchedEarthBotToTopMode();
+                return new ScorchedEarthBotToTopMode(color);
 //            case SCEA_SOURCETOAMP2:
 //                return new ScorchedEarthBotToTop2Mode();
 //            case SCEA_SOURCETOAMP3:
 //                return new ScorchedEarthBotToTop3Mode();
             case SCEA_SKIP_BOTTOM:
-                return new ScorchedEarthBottomSkipOne();
+                return new ScorchedEarthBottomSkipOne(color);
 //            case BOTTOM_345_EJECTS:
 //                return new Bottom345Ejects();
             case MID_FOUR_NOTE: // Able to grab bottom two and the second from the top but not bring that one back - worth?
-                return new MidFourNoteTakeMode();
+                return new MidFourNoteTakeMode(color);
             case MID_FOUR_NOTE_SUBWOOFER: //Shoots once, gets bottom two and stops before middle- likely not worth it
-                return new MidFourNoteTakeSubwooferMode();
+                return new MidFourNoteTakeSubwooferMode(color);
             case TOP_THREE_NOTE_SUBWOOFER: //Grabs all 3 but doesn't shuttle the last one
-                return new TopThreeNoteTakeMode();
+                return new TopThreeNoteTakeMode(color);
             case TEST:
                 if (!DriverStation.isFMSAttached()) return new TestMode();
             case SYSTEM_CHECK:

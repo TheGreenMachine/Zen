@@ -1,6 +1,7 @@
 package com.team1816.season.auto.modes;
 
 import com.team1816.lib.auto.AutoModeEndedException;
+import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.actions.ParallelAction;
 import com.team1816.lib.auto.actions.SeriesAction;
 import com.team1816.lib.auto.actions.TrajectoryAction;
@@ -15,23 +16,23 @@ import com.team1816.season.subsystems.Shooter;
 import java.util.List;
 
 public class MidFourNoteTakeMode extends AutoMode {
-    public MidFourNoteTakeMode() {
+    public MidFourNoteTakeMode(Color color) {
         super(
                 List.of(
                         new TrajectoryAction(
-                                new MidFourNoteTakePath(robotState.allianceColor)
+                                new MidFourNoteTakePath(color)
                         ),
                         new TrajectoryAction(
-                                new MidFourNoteTakePath1_0(robotState.allianceColor)
+                                new MidFourNoteTakePath1_0(color)
                         ),
                         new TrajectoryAction(
-                                new MidFourNoteTakePath2(robotState.allianceColor)
+                                new MidFourNoteTakePath2(color)
                         ),
                         new TrajectoryAction(
-                                new MidFourNoteTakePath3(robotState.allianceColor)
+                                new MidFourNoteTakePath3(color)
                         ),
                         new TrajectoryAction(
-                                new MidFourNoteTakePath3_0(robotState.allianceColor)
+                                new MidFourNoteTakePath3_0(color)
                         )
                 )
         );

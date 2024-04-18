@@ -1,5 +1,6 @@
 package com.team1816.season.auto.paths.nonDynamic.Top;
 
+import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.paths.AutoPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -7,6 +8,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import java.util.List;
 
 public class TopEjectToThree extends AutoPath {
+    public TopEjectToThree(Color color) {
+        super(color);
+    }
     @Override
     protected List<Pose2d> getWaypoints() {
         return List.of(

@@ -31,21 +31,21 @@ import java.util.List;
 
 public class QuickEjectsMode extends AutoMode {
 
-    public QuickEjectsMode() {
+    public QuickEjectsMode(Color color) {
         super(
                 List.of(
 
                         new TrajectoryAction(
-                                new TopSpeakerToNoteOnePath(robotState.allianceColor)
+                                new TopSpeakerToNoteOnePath(color)
                         ),
                         new TrajectoryAction(
-                                new TopSpeakerToNoteOnePath(robotState.allianceColor).withInversedWaypoints()
+                                new TopSpeakerToNoteOnePath(color).withInversedWaypoints()
                         ),
                         new TrajectoryAction(
-                                new TopSpeakerToScramPath(robotState.allianceColor)
+                                new TopSpeakerToScramPath(color)
                         ),
                         new TrajectoryAction(
-                                new TopSpeakerToScramPath(robotState.allianceColor).withInversedWaypoints()
+                                new TopSpeakerToScramPath(color).withInversedWaypoints()
                         )
                 ));
     }

@@ -1,6 +1,7 @@
 package com.team1816.season.auto.modes.eject;
 
 import com.team1816.lib.auto.AutoModeEndedException;
+import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.actions.ParallelAction;
 import com.team1816.lib.auto.actions.SeriesAction;
 import com.team1816.lib.auto.actions.TrajectoryAction;
@@ -17,25 +18,25 @@ import java.util.List;
 
 public class TopMiddleEjects extends AutoMode {
 
-    public TopMiddleEjects() {
+    public TopMiddleEjects(Color color) {
         super(List.of(
             new TrajectoryAction(
-                new TopSpeakerToOne()
+                new TopSpeakerToOne(color)
             ),
             new TrajectoryAction(
-                new OneToTopEject()
+                new OneToTopEject(color)
             ),
             new TrajectoryAction(
-                new TopEjectToTwo()
+                new TopEjectToTwo(color)
             ),
             new TrajectoryAction(
-                new TwoToTopEject()
+                new TwoToTopEject(color)
             ),
             new TrajectoryAction(
-                new TopEjectToThree()
+                new TopEjectToThree(color)
             ),
             new TrajectoryAction(
-                new ThreeToTopEject()
+                new ThreeToTopEject(color)
             )
         ));
     }

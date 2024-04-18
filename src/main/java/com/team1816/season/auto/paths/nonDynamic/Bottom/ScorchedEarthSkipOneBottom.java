@@ -1,12 +1,19 @@
 package com.team1816.season.auto.paths.nonDynamic.Bottom;
 
+import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.paths.AutoPath;
+import com.team1816.season.auto.modes.ScorchedEarthBottomSkipOne;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 import java.util.List;
 
 public class ScorchedEarthSkipOneBottom extends AutoPath {
+
+    public ScorchedEarthSkipOneBottom(Color color) {
+        super(color);
+    }
+
     @Override
     protected List<Pose2d> getWaypoints() {
         return List.of(
