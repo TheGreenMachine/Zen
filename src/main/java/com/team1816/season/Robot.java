@@ -234,6 +234,7 @@ public class Robot extends TimedRobot {
             SmartDashboard.putNumber("FeederShootSpeed",10);
             SmartDashboard.putNumber("TestShuttleShot",71);
 
+            RobotController.setBrownoutVoltage(6);
 
             /** Register inputHandler */
             inputHandler = Injector.get(InputHandler.class);
