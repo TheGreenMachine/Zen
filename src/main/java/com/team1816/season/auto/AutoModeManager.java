@@ -408,7 +408,7 @@ public class AutoModeManager {
     public enum DesiredCollect {
         TOP_NOTE,
         MIDDLE_NOTE,
-        MIDDLE_NOTE_TOP,
+//        MIDDLE_NOTE_TOP,
         BOTTOM_NOTE
     }
 
@@ -443,7 +443,7 @@ public class AutoModeManager {
         return switch (shootPosition) {
             case TOP_NOTE -> Position.TOP_NOTE;
             case MIDDLE_NOTE -> Position.MIDDLE_NOTE;
-            case MIDDLE_NOTE_TOP -> Position.MIDDLE_NOTE_TOP;
+//            case MIDDLE_NOTE_TOP -> Position.MIDDLE_NOTE_TOP;
             case BOTTOM_NOTE -> Position.BOTTOM_NOTE;
         };
     }
