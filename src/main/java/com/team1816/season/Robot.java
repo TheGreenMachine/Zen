@@ -325,7 +325,7 @@ public class Robot extends TimedRobot {
                             } else if (shooter.getDesiredPivotState() == Shooter.PIVOT_STATE.AUTO_AIM) {
                                 shooter.setDesiredState(Shooter.ROLLER_STATE.SHOOT_DISTANCE, Shooter.FEEDER_STATE.SHOOT);
                             } else {
-                                shooter.setDesiredState(Shooter.ROLLER_STATE.SHOOT_SPEAKER, Shooter.FEEDER_STATE.SHOOT);
+                                shooter.setDesiredState(Shooter.ROLLER_STATE.SHOOT_AMP, Shooter.FEEDER_STATE.SHOOT); //TODO changed for demo
                             }
                         }
                         else {
