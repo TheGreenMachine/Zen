@@ -152,7 +152,7 @@ subsystems:
                 kD: 0.00001
                 kF: 0.0099
         constants:
-            intakeSpeed: -0.75
+            intakeSpeed: -0.4
             outtakeSpeed: 0.3
     shooter:
         implemented: true
@@ -209,7 +209,7 @@ subsystems:
             feederSpeakerShootSpeed: 30
             feederAmpShootSpeed: 11
             feederEjectShootSpeed: 28
-            feederIntakeSpeed: 10.5
+            feederIntakeSpeed: 5
             velocityErrorMargin: 0.05
             velocityErrorMarginAutoAim: 0.003
             autoAimDegreeTolerance: .1
