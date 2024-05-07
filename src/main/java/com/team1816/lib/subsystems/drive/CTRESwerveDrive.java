@@ -291,14 +291,18 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
 
     @Override
     public synchronized void setSlowMode(boolean slowMode) {
-        super.setSlowMode(slowMode);
-        updateSpeedMode(slowMode ? SPEED_MODE.SLOW : SPEED_MODE.NORMAL);
+        if (!isDemoMode()) {
+            super.setSlowMode(slowMode);
+            updateSpeedMode(slowMode ? SPEED_MODE.SLOW : SPEED_MODE.NORMAL);
+        }
     }
 
     @Override
     public synchronized void setTurboMode(boolean turboMode) {
-        super.setTurboMode(turboMode);
-        updateSpeedMode(turboMode ? SPEED_MODE.TURBO : SPEED_MODE.NORMAL);
+        if (!isDemoMode()) {
+            super.setTurboMode(turboMode);
+            updateSpeedMode(turboMode ? SPEED_MODE.TURBO : SPEED_MODE.NORMAL);
+        }
     }
 
     @Override
