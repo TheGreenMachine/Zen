@@ -10,10 +10,14 @@ import com.team1816.lib.input_handler.events.TriggerEvent;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.io.File;
 import java.util.EnumMap;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -62,8 +66,10 @@ public class InputHandler {
 
     private Controller[] controllers = new Controller[3];
 
-    private final boolean driverRumbleEnabled;
-    private final boolean operatorRumbleEnabled;
+    private boolean driverRumbleEnabled;
+    private boolean operatorRumbleEnabled;
+
+    private final InputHandlerBridge bridge;
 
     @Inject
     public InputHandler(InputHandlerBridge bridge) {
@@ -71,26 +77,7 @@ public class InputHandler {
         operator = new Controller();
         buttonBoard = new Controller();
 
-        controllers[0] = driver;
-        controllers[1] = operator;
-        controllers[2] = buttonBoard;
-
-        driver.binding = bridge.getDriverControllerBinding();
-        operator.binding = bridge.getOperatorControllerBinding();
-
-        // Permanent solution
-        buttonBoard.binding = new ButtonBoardControllerBinding();
-
-        driver.joystick = new Joystick(DRIVER_PORT);
-        operator.joystick = new Joystick(OPERATOR_PORT);
-        buttonBoard.joystick = new Joystick(BUTTON_BOARD_PORT);
-
-        driver.mappingInfo = bridge.getDriverControllerInfo();
-        operator.mappingInfo = bridge.getOperatorControllerInfo();
-        buttonBoard.mappingInfo = bridge.getButtonBoardControllerInfo();
-
-        driverRumbleEnabled = bridge.isDriverRumbleEnabled();
-        operatorRumbleEnabled = bridge.isOperatorRumbleEnabled();
+        this.bridge = bridge;
 
         init();
     }
@@ -397,6 +384,27 @@ public class InputHandler {
     }
 
     public void init() {
+        controllers[0] = driver;
+        controllers[1] = operator;
+        controllers[2] = buttonBoard;
+
+        driver.binding = bridge.getDriverControllerBinding();
+        operator.binding = bridge.getOperatorControllerBinding();
+
+        // Permanent solution
+        buttonBoard.binding = new ButtonBoardControllerBinding();
+
+        driver.joystick = new Joystick(DRIVER_PORT);
+        operator.joystick = new Joystick(OPERATOR_PORT);
+        buttonBoard.joystick = new Joystick(BUTTON_BOARD_PORT);
+
+        driver.mappingInfo = bridge.getDriverControllerInfo();
+        operator.mappingInfo = bridge.getOperatorControllerInfo();
+        buttonBoard.mappingInfo = bridge.getButtonBoardControllerInfo();
+
+        driverRumbleEnabled = bridge.isDriverRumbleEnabled();
+        operatorRumbleEnabled = bridge.isOperatorRumbleEnabled();
+
         for (Controller controller : controllers) {
             // Mapping a specific button to an event via an id from the binding.
             controller.binding.buttonMap.forEach((button, id) -> {
@@ -422,6 +430,13 @@ public class InputHandler {
             for (Dpad dpad : Dpad.values()) {
                 controller.dpadEventMapping.put(dpad, new DpadEvent());
             }
+        }
+    }
+
+    public void updateControllerLayout() {
+        if(!bridge.currentInputHandler.equals(bridge.controllerLayoutChooser.getSelected())){
+            bridge.update();
+            init();
         }
     }
 
@@ -452,5 +467,4 @@ public class InputHandler {
             });
         }
     }
-
 }

@@ -79,6 +79,7 @@
       "/LiveWindow/drivetrain": "Gyro",
       "/SmartDashboard/Alliance color": "String Chooser",
       "/SmartDashboard/Auto mode": "String Chooser",
+      "/SmartDashboard/Controller layout": "String Chooser",
       "/SmartDashboard/Demo Mode": "String Chooser",
       "/SmartDashboard/Dynamic Start": "String Chooser",
       "/SmartDashboard/Field": "Field2d",
@@ -101,6 +102,11 @@
     },
     "windows": {
       "/SmartDashboard/Auto mode": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Controller layout": {
         "window": {
           "visible": true
         }

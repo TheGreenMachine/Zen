@@ -278,7 +278,8 @@ public class Robot extends TimedRobot {
                     "slowMode",
                     drive::setSlowMode
             );
-
+    //balls
+            //balls
             inputHandler.listenActionPressAndRelease(
                     "snapToPickup",
                     (pressed) -> {
@@ -617,6 +618,8 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledPeriodic() {
+        inputHandler.updateControllerLayout();
+
         try {
             if (RobotController.getUserButton()) {
                 drive.zeroSensors(Constants.kDefaultZeroingPose);

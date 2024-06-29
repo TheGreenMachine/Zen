@@ -138,7 +138,7 @@ subsystems:
         constants:
             useMultiTargetOdometry: 0
     collector:
-        implemented: true
+        implemented: false
         motors:
             intakeMotor:
                 motorType: TalonFX
@@ -155,7 +155,7 @@ subsystems:
             intakeSpeed: -0.75
             outtakeSpeed: 0.3
     shooter:
-        implemented: true
+        implemented: false
         motors:
             rollerMotor:
                 motorType: TalonFX
@@ -249,7 +249,7 @@ infrastructure:
     ## Pigeon ##
     pigeonId: 32
     isPigeon2: true
-inputHandler: competition
+inputHandler: competition # the default input handler
 constants:
     zeroingButton: 9 # channel of DIO port
     enableMusic: 0
