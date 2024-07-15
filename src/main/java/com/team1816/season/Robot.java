@@ -671,6 +671,8 @@ public class Robot extends TimedRobot {
                 drive.update();
             }
 
+            drive.updateVelocityMultiplier();
+
             playlistManager.update();
             desireToPlaySong = SmartDashboard.getBoolean("PlaySong", false);
             orchestrator.playSong(desireToPlaySong);
