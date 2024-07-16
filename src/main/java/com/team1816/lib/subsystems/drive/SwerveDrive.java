@@ -432,9 +432,9 @@ public class SwerveDrive extends Drive implements EnhancedSwerveDrive, PidProvid
             signal = new SwerveDriveSignal(new double[]{0, 0, 0, 0}, azimuths, false);
         } else {
             signal = swerveDriveHelper.calculateDriveSignal(
-                (isDemoMode ? forward * demoModeMultiplier * velocityMultiplier : forward * velocityMultiplier),
-                (isDemoMode ? strafe * demoModeMultiplier * velocityMultiplier : strafe * velocityMultiplier),
-                (isDemoMode ? rotation * demoModeMultiplier * velocityMultiplier : rotation * velocityMultiplier),
+                (isDemoMode ? forward * demoModeMultiplier : forward),
+                (isDemoMode ? strafe * demoModeMultiplier : strafe),
+                (isDemoMode ? rotation * demoModeMultiplier : rotation),
                 isSlowMode,
                 true,
                 false

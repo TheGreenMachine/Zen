@@ -71,13 +71,6 @@ public abstract class Drive
         factory.getConstant(NAME, "isDemoMode", 0) > 0;
 
     /**
-     * Velocity Multiplier
-     */
-    protected double velocityMultiplier;
-    protected SendableChooser<VelocityMultiplier> velocityMultiplierChooser;
-    protected VelocityMultiplier desiredVelocityMultiplier;
-
-    /**
      * Components
      */
     protected static LedManager ledManager;
@@ -253,19 +246,6 @@ public abstract class Drive
             demoModeChooser.setDefaultOption(DemoMode.SLOW.name(), DemoMode.SLOW);
             demoModeMultiplier = 0.25;
         }
-
-        velocityMultiplierChooser = new SendableChooser<>();
-        SmartDashboard.putData("Velocity Multiplier", velocityMultiplierChooser);
-        // velocity multiplier functionality configuration
-
-        velocityMultiplierChooser = new SendableChooser<>();
-        SmartDashboard.putData("Velocity Multiplier", velocityMultiplierChooser);
-
-        for (VelocityMultiplier velocityMultiplier : VelocityMultiplier.values()) {
-            velocityMultiplierChooser.addOption(velocityMultiplier.name(), velocityMultiplier);
-        }
-        velocityMultiplierChooser.setDefaultOption(VelocityMultiplier.SLOW.name(), VelocityMultiplier.SLOW);
-        velocityMultiplier = 0.25;
 
         if (Constants.kLoggingDrivetrain) {
             drivetrainPoseLogger = new DoubleArrayLogEntry(DataLogManager.getLog(), "Drivetrain/Pose");
@@ -744,23 +724,6 @@ public abstract class Drive
     }
 
     /**
-     * Enum for VelocityMultiplier
-     */
-    private enum VelocityMultiplier {
-        SLOW("a"),
-        COMFORT("b"),
-        SPORT("c"),
-        PLAID("d");
-        private String name;
-        VelocityMultiplier(String name) {
-            this.name = name;
-        }
-        public String getName() {
-            return this.name;
-        }
-    }
-
-    /**
      * Updates the demoMode to the desiredMode
      *
      * @return true if demoMode updated
@@ -793,39 +756,5 @@ public abstract class Drive
         desiredMode = selectedMode;
 
         return modeChanged;
-    }
-
-    /**
-     * Updates the velocityMultiplier to the desiredVelocityMultiplier
-     *
-     * @return true if desiredVelocityMultiplier updated
-     */
-    public boolean updateVelocityMultiplier() {
-        VelocityMultiplier selectedVelocityMultiplier = velocityMultiplierChooser.getSelected();
-        boolean velocityMultiplierChanged = desiredVelocityMultiplier != selectedVelocityMultiplier;
-
-        if (velocityMultiplierChanged) {
-            GreenLogger.log(
-                    "Velocity multiplier changed from: " + desiredVelocityMultiplier + ", to: " + selectedVelocityMultiplier.name()
-            );
-
-            switch (selectedVelocityMultiplier) {
-                case SLOW:
-                    velocityMultiplier = 0.25;
-                    break;
-                case COMFORT:
-                    velocityMultiplier = 0.5;
-                    break;
-                case SPORT:
-                    velocityMultiplier = 0.75;
-                    break;
-                case PLAID:
-                    velocityMultiplier = 1;
-                    break;
-            }
-        }
-        desiredVelocityMultiplier = selectedVelocityMultiplier;
-
-        return velocityMultiplierChanged;
     }
 }
