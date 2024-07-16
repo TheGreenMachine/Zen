@@ -336,8 +336,8 @@ public class TankDrive extends Drive implements DifferentialDrivetrain {
     @Override
     public void setTeleopInputs(double forward, double strafe, double rotation) {
         DriveSignal driveSignal = driveHelper.cheesyDrive(
-            (isDemoMode ? forward * demoModeMultiplier * velocityMultiplier : forward * velocityMultiplier),
-            (isDemoMode ? rotation * demoModeMultiplier * velocityMultiplier : rotation * velocityMultiplier),
+            (isDemoMode ? forward * demoModeMultiplier : forward),
+            (isDemoMode ? rotation * demoModeMultiplier : rotation),
             false,
             false
         );
