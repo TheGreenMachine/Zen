@@ -130,8 +130,9 @@ public class Camera extends Subsystem{
         if (RobotBase.isSimulation()) {
             visionSim.update(robotState.fieldToVehicle);
         }
-        robotState.currentCamFind = updateEstimatedGlobalPose();
-
+        if(this.isImplemented()) {
+            robotState.currentCamFind = updateEstimatedGlobalPose();
+        }
 
         if (robotState.currentVisionEstimatedPose != null ) {
             FieldConfig.field.getObject("vision").setPose(robotState.currentVisionEstimatedPose.estimatedPose.toPose2d());
