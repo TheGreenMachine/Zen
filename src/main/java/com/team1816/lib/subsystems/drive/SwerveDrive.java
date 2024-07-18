@@ -29,7 +29,6 @@ import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 import java.util.List;
 import java.util.Objects;
@@ -111,13 +110,6 @@ public class SwerveDrive extends Drive implements EnhancedSwerveDrive, PidProvid
     /**
      * Logging
      */
-
-
-    /**
-     * Speed Control (ig)
-     */
-    public final SendableChooser<String> controllerLayoutChooser = new SendableChooser<>();
-
 
     /**
      * Instantiates a swerve drivetrain from base subsystem parameters

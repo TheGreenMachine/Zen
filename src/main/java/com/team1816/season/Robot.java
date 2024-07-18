@@ -5,7 +5,6 @@ import com.team1816.lib.Infrastructure;
 import com.team1816.lib.Injector;
 import com.team1816.lib.PlaylistManager;
 import com.team1816.lib.auto.Color;
-import com.team1816.lib.auto.paths.PathUtil;
 import com.team1816.lib.hardware.factory.RobotFactory;
 import com.team1816.lib.input_handler.*;
 import com.team1816.lib.input_handler.controlOptions.ActionState;
@@ -454,13 +453,10 @@ public class Robot extends TimedRobot {
 
             SmartDashboard.putString("Git Hash", Constants.kGitHash);
 
-            PathUtil.initSpeed();
-
         } catch (Throwable t) {
             faulted = true;
             throw t;
         }
-
     }
 
     /**
@@ -615,8 +611,6 @@ public class Robot extends TimedRobot {
             faulted = true;
             GreenLogger.log(t.getMessage());
         }
-
-        PathUtil.updateSpeed();
     }
 
     /**
@@ -687,7 +681,6 @@ public class Robot extends TimedRobot {
             faulted = true;
             throw t;
         }
-
     }
 
     /**
