@@ -15,14 +15,24 @@ import static com.team1816.lib.subsystems.Subsystem.factory;
 import static com.team1816.lib.subsystems.Subsystem.robotState;
 import static com.team1816.lib.subsystems.drive.Drive.kPathFollowingMaxAccelMeters;
 import static com.team1816.lib.subsystems.drive.Drive.kPathFollowingMaxVelMeters;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 public class PathUtil {
 
+    /**
+     * Sendable Chooser/Speed Control
+     */
+    public static final SendableChooser<String> speedModifier = new SendableChooser<>();
     /**
      * Constraints
      */
     private static final double kMaxVelocity = kPathFollowingMaxVelMeters;
     private static final double kMaxAccel = kPathFollowingMaxAccelMeters;
+
+    private static double tMaxVelocity = kMaxVelocity; //temp for speed modifier essentially
+    private static double tMaxAccel = kMaxAccel; //temp for speed modifier essentially
 
     /**
      * Generates a trajectory based on a list of waypoints based on WPIlib's TrajectoryGenerator
@@ -49,7 +59,7 @@ public class PathUtil {
             );
         }
         /* Configures trajectory constraints */
-        TrajectoryConfig config = new TrajectoryConfig(kMaxVelocity, kMaxAccel);
+        TrajectoryConfig config = new TrajectoryConfig(tMaxVelocity, tMaxAccel);
         var baseTrajectory = edu.wpi.first.math.trajectory.TrajectoryGenerator.generateTrajectory(
             waypointsMeters,
             config
@@ -84,7 +94,7 @@ public class PathUtil {
             );
         }
         /* Configures trajectory constraints */
-        TrajectoryConfig config = new TrajectoryConfig(kMaxVelocity, kMaxAccel);
+        TrajectoryConfig config = new TrajectoryConfig(tMaxVelocity, tMaxAccel);
         config.setStartVelocity(initial.vxMetersPerSecond);
         config.setEndVelocity(0);
         var baseTrajectory = edu.wpi.first.math.trajectory.TrajectoryGenerator.generateTrajectory(
@@ -185,6 +195,37 @@ public class PathUtil {
 
         return generatedHeadings;
     }
+
+    /**
+     *
+     */
+
+    public static void initSpeed(){
+        speedModifier.addOption("1", "1.0");
+        speedModifier.addOption("0.5", "0.5");
+        speedModifier.addOption("0.2", "0.2");
+        SmartDashboard.putData("Speed Modifier", speedModifier);
+        //add more options for dropdown
+    }
+    public static void updateSpeed(){
+        double temp;
+        if(speedModifier.getSelected()!=null){
+             temp = switch (speedModifier.getSelected()) {
+                case "1.0" ->
+                        1.0;
+                case "0.5" ->
+                        0.5;
+                case "0.2" ->
+                        0.2;
+                default -> -1;
+            };
+        }
+        else temp = 1;
+
+        tMaxAccel *= temp; //not a clean solution, apparently the speedModifier is preventing the robot for moving on my simulation
+        tMaxVelocity *= temp;
+    }
+
 
     /**
      * Generates headings that can be transposed onto a trajectory with time calibration via a differential model
