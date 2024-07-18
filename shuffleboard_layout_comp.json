@@ -22,7 +22,7 @@
               "_title": "SmartDashboard/Field",
               "_glyph": 148,
               "_showGlyph": false,
-              "Game/Game": "A2023_Charged_Up",
+              "Game/Game": "k2024Crescendo",
               "Visuals/Robot Icon Size": 50.0,
               "Visuals/Show Outside Circles": false,
               "Colors/Trajectory": "#FFFFFFFF"
@@ -41,7 +41,7 @@
               "_showGlyph": false
             }
           },
-          "8,1": {
+          "0,4": {
             "size": [
               2,
               1
@@ -183,45 +183,6 @@
               "_glyph": 148,
               "_showGlyph": false
             }
-          },
-          "3,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Mech2d/root/stand/pivot/angle",
-              "_title": "/SmartDashboard/Mech2d/root/stand/pivot/angle",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "6,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "ComboBox Chooser",
-              "_source0": "network_table:///SmartDashboard/Demo Mode",
-              "_title": "/SmartDashboard/Demo Mode",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "7,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "ComboBox Chooser",
-              "_source0": "network_table:///SmartDashboard/Velocity Multiplier",
-              "_title": "/SmartDashboard/Velocity Multiplier",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
           }
         }
       }
@@ -357,7 +318,7 @@
               "_title": "SmartDashboard/Field",
               "_glyph": 148,
               "_showGlyph": false,
-              "Game/Game": "A2023_Charged_Up",
+              "Game/Game": "k2024Crescendo",
               "Visuals/Robot Icon Size": 50.0,
               "Visuals/Show Outside Circles": false,
               "Colors/Trajectory": "#FFFFFFFF"
@@ -370,7 +331,7 @@
   "windowGeometry": {
     "x": -8.0,
     "y": -8.0,
-    "width": 1553.5999755859375,
-    "height": 977.5999755859375
+    "width": 1936.0,
+    "height": 1096.0
   }
 }
