@@ -105,6 +105,11 @@
           "visible": true
         }
       },
+      "/SmartDashboard/Demo Mode": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Dynamic Start": {
         "window": {
           "visible": true
