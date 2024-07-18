@@ -249,7 +249,7 @@ infrastructure:
     ## Pigeon ##
     pigeonId: 32
     isPigeon2: true
-inputHandler: competition
+inputHandler: drivercentric # the default input handler
 constants:
     zeroingButton: 9 # channel of DIO port
     enableMusic: 0
