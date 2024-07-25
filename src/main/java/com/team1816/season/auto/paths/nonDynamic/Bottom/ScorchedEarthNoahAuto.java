@@ -28,7 +28,7 @@ public class ScorchedEarthNoahAuto extends AutoPath {
     protected List<Rotation2d> getWaypointHeadings() {
         return List.of(
                 Rotation2d.fromDegrees(90),
-                Rotation2d.fromDegrees(35+90),
+                Rotation2d.fromDegrees(36+90),
                 Rotation2d.fromDegrees(35+90),
                 Rotation2d.fromDegrees(35+90),
                 Rotation2d.fromDegrees(35+90),
