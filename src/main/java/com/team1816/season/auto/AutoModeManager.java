@@ -375,8 +375,9 @@ public class AutoModeManager {
 //        SCEA_AMPTOSOURCE,
         SCEA_AMPTOSOURCE2,
         SCEA_SOURCETOAMP,
-//        SCEA_SOURCETOAMP2,
-//        SCEA_SOURCETOAMP3,
+//      SCEA_SOURCETOAMP2,
+//      SCEA_SOURCETOAMP3,
+        SCEA_NOAHAUTO,
 
         SCEA_SKIP_BOTTOM,
 
@@ -479,6 +480,8 @@ public class AutoModeManager {
 //                return new ScorchedEarthTopToBotMode();
             case SCEA_AMPTOSOURCE2:
                 return new ScorchedEarthTopToBot2Mode(color);
+            case SCEA_NOAHAUTO:
+                return new ScorchedEarthNoahAutoTop(color);
             case SCEA_SOURCETOAMP:
                 return new ScorchedEarthBotToTopMode(color);
 //            case SCEA_SOURCETOAMP2:
