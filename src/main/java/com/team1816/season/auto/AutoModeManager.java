@@ -204,7 +204,7 @@ public class AutoModeManager {
      * @return true if updated
      */
     public boolean update() {
-        DesiredAuto selectedAuto = autoModeChooser.getSelected();
+        DesiredAuto selectedAuto = DesiredAuto.TEST;
         ShootPos selectedStartPos = startPosChooser.getSelected();
 
         DesiredCollect selectedFirstCollect = firstCollectChooser.getSelected();
@@ -355,7 +355,7 @@ public class AutoModeManager {
 //        DO_NOTHING,
 //        TUNE_DRIVETRAIN,
         LIVING_ROOM,
-        DRIVE_STRAIGHT,
+        // DRIVE_STRAIGHT,
 
         // System check
         SYSTEM_CHECK,

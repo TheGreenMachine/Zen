@@ -68,7 +68,6 @@ public class Robot extends TimedRobot {
     private Collector collector;
     private LedManager ledManager;
     private Camera camera;
-    private Shooter shooter;
     private Climber climber;
 
     /**

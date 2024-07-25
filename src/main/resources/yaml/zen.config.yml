@@ -1,6 +1,6 @@
 subsystems:
     drivetrain:
-        implemented: true
+        implemented: false
         motors:
             FLDr:
                 motorType: TalonFX

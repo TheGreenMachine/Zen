@@ -355,7 +355,7 @@ public class Shooter extends Subsystem {
             pivotOutputsChanged = false;
             switch (desiredPivotState) {
                 case STOW -> {
-                    desiredPivotPosition = pivotNeutralPosition;
+                    desiredPivotPosition = "pivotNeutralPosition";
                 }
                 case SHOOT_AMP -> {
                     desiredPivotPosition = pivotAmpShootPosition;
