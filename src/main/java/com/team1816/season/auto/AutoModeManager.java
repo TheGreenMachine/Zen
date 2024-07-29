@@ -5,17 +5,10 @@ import com.google.inject.Singleton;
 import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.DynamicAutoUtil;
 import com.team1816.lib.auto.modes.AutoMode;
-import com.team1816.lib.auto.modes.DoNothingMode;
 import com.team1816.lib.auto.modes.DriveStraightMode;
-import com.team1816.lib.auto.modes.TuneDrivetrainMode;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
-import com.team1816.lib.hardware.factory.YamlConfig;
 import com.team1816.lib.util.logUtil.GreenLogger;
-import com.team1816.lib.variableInputs.Numeric;
-import com.team1816.lib.variableInputs.VariableInput;
 import com.team1816.season.auto.modes.*;
-import com.team1816.season.auto.modes.distance.FourScoreFromDistanceMode;
-import com.team1816.season.auto.modes.eject.Bottom345Ejects;
 import com.team1816.season.auto.modes.eject.BottomMiddleEjects;
 import com.team1816.season.auto.modes.eject.TopMiddleEjects;
 import com.team1816.season.auto.paths.StartToAmpPath;
@@ -32,7 +25,6 @@ import com.team1816.season.auto.paths.toNoteThree.BottomSpeakerToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteThree.MiddleSpeakerToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteThree.TopSpeakerToNoteThreePath;
 import com.team1816.season.auto.paths.toNoteTwo.*;
-import com.team1816.season.configuration.Constants;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -484,7 +476,7 @@ public class AutoModeManager {
             case SCEA_LEON:
                 return new ScorchedEarthLeonTopAuto(color);
             case SCEA_NOAHAUTO:
-                return new ScorchedEarthNoahAutoTop(color);
+                return new ScorchedEarthNoahTopAuto(color);
             case SCEA_SOURCETOAMP:
                 return new ScorchedEarthBotToTopMode(color);
 //            case SCEA_SOURCETOAMP2:
