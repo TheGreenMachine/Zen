@@ -8,21 +8,20 @@ import com.team1816.lib.auto.actions.WaitAction;
 import com.team1816.lib.auto.modes.AutoMode;
 import com.team1816.season.auto.actions.CollectAction;
 import com.team1816.season.auto.actions.ShootAction;
-import com.team1816.season.auto.paths.nonDynamic.Bottom.ScorchedEarthAmpToSource2Path;
 import com.team1816.season.auto.paths.nonDynamic.Bottom.ScorchedEarthEthanPath2;
 import com.team1816.season.auto.paths.nonDynamic.Bottom.ScorchedEarthEthanPath3;
-import com.team1816.season.auto.paths.nonDynamic.Bottom.ScorchedEarthLeonAuto;
+import com.team1816.season.auto.paths.nonDynamic.Bottom.ScorchedEarthLeonPath;
 import com.team1816.season.subsystems.Collector;
 import com.team1816.season.subsystems.Shooter;
 
 import java.util.List;
 
-public class ScorchedEarthLeonTopAuto extends AutoMode {
-    public ScorchedEarthLeonTopAuto(Color color) {
+public class ScorchedEarthLeonTopMode extends AutoMode {
+    public ScorchedEarthLeonTopMode(Color color) {
         super(
                 List.of(
                         new TrajectoryAction(
-                                new ScorchedEarthLeonAuto(color)
+                                new ScorchedEarthLeonPath(color)
                         ),
                         new TrajectoryAction(
                                 new ScorchedEarthEthanPath2(color)

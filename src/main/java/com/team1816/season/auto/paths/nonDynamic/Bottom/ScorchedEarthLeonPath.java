@@ -2,13 +2,12 @@ package com.team1816.season.auto.paths.nonDynamic.Bottom;
 
 import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.paths.AutoPath;
-import com.team1816.season.auto.modes.ScorchedEarthLeonTopAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 import java.util.List;
-public class ScorchedEarthLeonAuto extends AutoPath {
-    public ScorchedEarthLeonAuto(Color color){
+public class ScorchedEarthLeonPath extends AutoPath {
+    public ScorchedEarthLeonPath(Color color){
         super(color);
     }
 
