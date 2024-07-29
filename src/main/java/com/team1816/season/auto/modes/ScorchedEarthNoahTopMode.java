@@ -10,18 +10,18 @@ import com.team1816.season.auto.paths.nonDynamic.Bottom.*;
 
 import java.util.List;
 
-public class ScorchedEarthNoahTopAuto extends AutoMode{
-    public ScorchedEarthNoahTopAuto(Color color) {
+public class ScorchedEarthNoahTopMode extends AutoMode{
+    public ScorchedEarthNoahTopMode(Color color) {
         super(
                 List.of(
                         new TrajectoryAction(
-                                new ScorchedEarthNoahAuto(color)
+                                new ScorchedEarthNoahPath(color)
                         ),
                         new TrajectoryAction(
-                                new ScorchedEarthNoahAuto2(color)
+                                new ScorchedEarthNoahPath2(color)
                         ),
                         new TrajectoryAction(
-                                new ScorchedEarthNoahAuto3(color)
+                                new ScorchedEarthNoahPath3(color)
                         )
                 )
         );

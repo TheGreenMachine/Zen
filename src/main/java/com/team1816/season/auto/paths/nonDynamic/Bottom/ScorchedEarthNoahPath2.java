@@ -7,8 +7,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 import java.util.List;
 
-public class ScorchedEarthNoahAuto2 extends AutoPath {
-    public ScorchedEarthNoahAuto2(Color color) {
+public class ScorchedEarthNoahPath2 extends AutoPath {
+    public ScorchedEarthNoahPath2(Color color) {
         super(color);
     }
 

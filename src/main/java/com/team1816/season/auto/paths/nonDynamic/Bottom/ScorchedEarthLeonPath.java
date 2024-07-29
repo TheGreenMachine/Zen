@@ -1,26 +1,23 @@
 package com.team1816.season.auto.paths.nonDynamic.Bottom;
 
+import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.paths.AutoPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import com.team1816.lib.auto.Color;
 
 import java.util.List;
-
-public class ScorchedEarthNoahAuto extends AutoPath {
-    public ScorchedEarthNoahAuto(Color color) {
+public class ScorchedEarthLeonPath extends AutoPath {
+    public ScorchedEarthLeonPath(Color color){
         super(color);
     }
 
     @Override
     protected List<Pose2d> getWaypoints() {
         return List.of(
-                new Pose2d(0.58, 7.26, Rotation2d.fromDegrees(0)),
-                new Pose2d(6.83, 7.57, Rotation2d.fromDegrees(0)),
-                new Pose2d(8.47, 6.79, Rotation2d.fromDegrees(-87)),
-                new Pose2d(8.59, 0.98, Rotation2d.fromDegrees(-87)),
-                new Pose2d(7.35, 0.72, Rotation2d.fromDegrees(178)),
-                new Pose2d(4.7, 0.72, Rotation2d.fromDegrees(177))
+                new Pose2d(1.2, 7.14, Rotation2d.fromDegrees(0)),
+                new Pose2d(7, 7.14, Rotation2d.fromDegrees(0)),
+                new Pose2d(8.45, 5.74, Rotation2d.fromDegrees(-90)),
+                new Pose2d(8.35, 0.86, Rotation2d.fromDegrees(-90))
         );
     }
 
@@ -30,14 +27,12 @@ public class ScorchedEarthNoahAuto extends AutoPath {
                 Rotation2d.fromDegrees(90),
                 Rotation2d.fromDegrees(35+90),
                 Rotation2d.fromDegrees(35+90),
-                Rotation2d.fromDegrees(35+90),
-                Rotation2d.fromDegrees(35+90),
                 Rotation2d.fromDegrees(35+90)
         );
     }
 
     @Override
     protected boolean usingApp() {
-        return true;
+        return true; //WHY NOT
     }
 }

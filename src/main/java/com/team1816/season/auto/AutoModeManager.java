@@ -474,9 +474,9 @@ public class AutoModeManager {
             case SCEA_AMPTOSOURCE2:
                 return new ScorchedEarthTopToBot2Mode(color);
             case SCEA_LEON:
-                return new ScorchedEarthLeonTopAuto(color);
+                return new ScorchedEarthLeonTopMode(color);
             case SCEA_NOAHAUTO:
-                return new ScorchedEarthNoahTopAuto(color);
+                return new ScorchedEarthNoahTopMode(color);
             case SCEA_SOURCETOAMP:
                 return new ScorchedEarthBotToTopMode(color);
 //            case SCEA_SOURCETOAMP2:
