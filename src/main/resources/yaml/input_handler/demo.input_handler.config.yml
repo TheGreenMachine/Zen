@@ -1,58 +1,41 @@
 driver:
     controllerType: Xbox
-    rumble: false
+    rumble: true
     joysticks:
         left:
             horizontal: strafe
             vertical: throttle
         right:
             horizontal: rotation
+    buttonpad:
+        b: brakeMode
+        x: ampPivot
+        a: collectorOuttake
+        y: shootPivot
     axes:
-        leftTrigger: yeetShot
-        rightTrigger: slowMode
-    dpad:
-        left: turretJogLeft
-        right: turretJogRight
+        rightTrigger: turboMode
+        leftTrigger: slowMode
     buttons:
-        leftBumper: toggleCollector
-        rightBumper: toggleCollectorReverse
         start: zeroPose
+        back: hardZeroPose
+        leftBumper: shoot
+        rightBumper: rotateToPoint
+    dpad:
+        up: snapToPickup
+        down: snapToScore
+        left: snapToBottomSpeaker
+        right: snapToTopSpeaker
 operator:
     controllerType: Xbox
-    rumble: false
-    joysticks:
-        left:
-            horizontal: manualTurretXVal
-            vertical: manualTurretYVal
-        right:
-            vertical: manualClimberArm
-    dpad:
-        up: raiseBucket
-        down: lowerBucket
+    rumble: true
     buttonpad:
-        y: autoClimb
-    buttons:
-        leftBumper: autoAim
-        rightBumper: toggleHood
-        start: toggleTopClamp
-        back: toggleBottomClamp
-mrbuttons:
-    rumble: false
-    dpad:
-        up: up_function
-        down: down_function
-        left: left_function
-        right: right_function
-    buttonpad:
-        a: a_function
-        b: b_function
-        x: x_function
-        y: y_function
-    buttons:
-        leftBumper: leftBump_function
-        rightBumper: rightBump_function
-        start: start_function
-        back: back_function
-
-
-
+        y: stopShooter
+buttonboard:
+    upLeft: climbSlow
+    upRight: climbFast
+    up: climbPosition
+    center: ShuttleRev
+    left: zeroClimber
+    downLeft: toggleOverride
+    down: manualFeedingTransfer
+demoMode: false

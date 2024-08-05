@@ -243,8 +243,8 @@ public abstract class Drive
             for (DemoMode demoMode : DemoMode.values()) {
                 demoModeChooser.addOption(demoMode.name(), demoMode);
             }
-            demoModeChooser.setDefaultOption(DemoMode.SLOW.name(), DemoMode.SLOW);
-            demoModeMultiplier = 0.25;
+            demoModeChooser.setDefaultOption(DemoMode.EXTRA_SLOW.name(), DemoMode.EXTRA_SLOW);
+            demoModeMultiplier = 0.15;
         }
 
         if (Constants.kLoggingDrivetrain) {
@@ -717,6 +717,7 @@ public abstract class Drive
      * Enum for DemoModes
      */
     private enum DemoMode {
+        EXTRA_SLOW,
         SLOW,
         COMFORT,
         SPORT,
@@ -739,6 +740,9 @@ public abstract class Drive
             );
 
             switch (selectedMode) {
+                case EXTRA_SLOW:
+                    demoModeMultiplier = 0.15;
+                    break;
                 case SLOW:
                     demoModeMultiplier = 0.25;
                     break;

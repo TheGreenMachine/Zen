@@ -6,11 +6,13 @@ import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.subsystems.Subsystem;
+import com.team1816.lib.subsystems.drive.Drive;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.season.configuration.Constants;
 import com.team1816.season.states.RobotState;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 @Singleton
@@ -57,8 +59,8 @@ public class Collector extends Subsystem {
         super(NAME, inf, rs);
         intakeMotor = factory.getMotor(NAME, "intakeMotor");
 
-        intakeSpeed = factory.getConstant(NAME, "intakeSpeed", -0.5);
-        outtakeSpeed = factory.getConstant(NAME, "outtakeSpeed", 0.25);
+        intakeSpeed = factory.getConstant(NAME, "intakeSpeed", -0.5) * 0.2;
+        outtakeSpeed = factory.getConstant(NAME, "outtakeSpeed", 0.25) * 0.2;
 
         SmartDashboard.putBoolean("Collector", intakeMotor.getMotorTemperature() < 55);
 
