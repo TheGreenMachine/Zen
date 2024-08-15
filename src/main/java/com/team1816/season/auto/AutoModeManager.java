@@ -9,6 +9,7 @@ import com.team1816.lib.auto.modes.DoNothingMode;
 import com.team1816.lib.auto.modes.DriveStraightMode;
 import com.team1816.lib.auto.modes.TuneDrivetrainMode;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
+import com.team1816.lib.hardware.factory.YamlConfig;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.lib.variableInputs.Numeric;
 import com.team1816.lib.variableInputs.VariableInput;

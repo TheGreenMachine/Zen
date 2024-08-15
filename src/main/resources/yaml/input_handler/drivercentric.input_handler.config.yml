@@ -1,0 +1,41 @@
+driver:
+  controllerType: Xbox
+  rumble: true
+  joysticks:
+    left:
+      horizontal: strafe
+      vertical: throttle
+    right:
+      horizontal: rotation
+  buttonpad:
+    b: brakeMode
+    x: ampPivot
+    a: collectorOuttake
+    y: shootPivot
+  axes:
+    rightTrigger: turboMode
+    leftTrigger: slowMode
+  buttons:
+    start: zeroPose
+    back: hardZeroPose
+    leftBumper: shoot
+    rightBumper: rotateToPoint
+  dpad:
+    up: snapToPickup
+    down: snapToScore
+    left: snapToBottomSpeaker
+    right: snapToTopSpeaker
+operator:
+  controllerType: Xbox
+  rumble: true
+  buttonpad:
+    y: stopShooter
+buttonboard:
+  upLeft: climbSlow
+  upRight: climbFast
+  up: climbPosition
+  center: ShuttleRev
+  left: zeroClimber
+  downLeft: toggleOverride
+  down: manualFeedingTransfer
+demoMode: false

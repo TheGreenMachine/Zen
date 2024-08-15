@@ -3,6 +3,7 @@ package com.team1816.lib.input_handler;
 import com.google.inject.Inject;
 import com.team1816.lib.Injector;
 import com.team1816.lib.hardware.factory.RobotFactory;
+import com.team1816.lib.hardware.factory.YamlConfig;
 import com.team1816.lib.input_handler.bindings.ButtonBoardControllerBinding;
 import com.team1816.lib.input_handler.bindings.ControllerBinding;
 import com.team1816.lib.input_handler.bindings.WasdControllerBinding;
@@ -13,6 +14,14 @@ import com.team1816.lib.input_handler.controlOptions.Dpad;
 import com.team1816.lib.input_handler.controlOptions.Trigger;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 public class InputHandlerBridge {
     private InputHandlerConfig config;
@@ -55,6 +64,12 @@ public class InputHandlerBridge {
         return operatorRumble;
     }
 
+    public final SendableChooser<String> controllerLayoutChooser = new SendableChooser<>();
+
+    RobotFactory factory = Injector.get(RobotFactory.class);
+
+    public String currentInputHandler = factory.getInputHandlerName();
+
     private ControllerBinding stringToControllerBinding(String nameType) {
         switch (nameType) {
             case "Wasd": return new WasdControllerBinding();
@@ -67,9 +82,23 @@ public class InputHandlerBridge {
 
     @Inject
     public InputHandlerBridge() {
+        String[] inputHandlers = Objects.requireNonNull(new File("src/main/resources/yaml/input_handler").list());
+
+        for(int i = 0; i < inputHandlers.length; i++){
+            if(inputHandlers[i].endsWith(".input_handler.config.yml"))
+                controllerLayoutChooser.addOption(inputHandlers[i].substring(0, inputHandlers[i].length()-".input_handler.config.yml".length()), inputHandlers[i].substring(0, inputHandlers[i].length()-".input_handler.config.yml".length()));
+        }
+
+        controllerLayoutChooser.setDefaultOption(factory.getInputHandlerName(), factory.getInputHandlerName());
+
+        SmartDashboard.putData("Controller layout", controllerLayoutChooser);
+
+        update();
+    }
+
+    public void update() {
         try {
-            RobotFactory factory = Injector.get(RobotFactory.class);
-            String inputHandlerConfigFileName = factory.getInputHandlerName();
+            String inputHandlerConfigFileName = controllerLayoutChooser.getSelected();
 
             String location =
                     "yaml/input_handler/" +
@@ -82,6 +111,8 @@ public class InputHandlerBridge {
                             .getClassLoader()
                             .getResourceAsStream(location)
             );
+
+            currentInputHandler = controllerLayoutChooser.getSelected();
         } catch (Exception e) {
             GreenLogger.log(e);
             DriverStation.reportError(
