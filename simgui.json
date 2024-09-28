@@ -96,6 +96,7 @@
       "/SmartDashboard/Starting Position": "String Chooser",
       "/SmartDashboard/Third collected note": "String Chooser",
       "/SmartDashboard/Turret Sim": "Mechanism2d",
+      "/SmartDashboard/Velocity Multiplier": "String Chooser",
       "/SmartDashboard/VisionSystemSim-SimVision/Sim Field": "Field2d",
       "/SmartDashboard/VisionSystemSim-photonvision/Sim Field": "Field2d"
     },
