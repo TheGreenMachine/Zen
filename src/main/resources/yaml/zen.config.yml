@@ -134,7 +134,7 @@ subsystems:
             inputDeadband: 0.15 # Deadband of the normalized input
             snapDivisor: 30
     camera:
-        implemented: true
+        implemented: false
         constants:
             useMultiTargetOdometry: 0
     collector:
@@ -247,7 +247,7 @@ infrastructure:
     pcmIsRev: false
     pcmId: -1
     ## Pigeon ##
-    pigeonId: 32
+    pigeonId: 5
     isPigeon2: true
 inputHandler: competition
 constants:
@@ -263,7 +263,7 @@ constants:
     logDrivetrain: 1 # 0 or 1
     configStatusFrames: 0 # 0 or 1
     ## General ##
-    usingVision: 1
+    usingVision: 0
     teleopFieldCentric: 1 # 0 or 1
     kLooperDt: .025 # seconds
     isProLicensed: 0
