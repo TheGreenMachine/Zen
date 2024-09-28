@@ -13,6 +13,7 @@ import com.team1816.lib.input_handler.controlOptions.Button;
 import com.team1816.lib.input_handler.controlOptions.Dpad;
 import com.team1816.lib.input_handler.controlOptions.Trigger;
 import com.team1816.lib.util.logUtil.GreenLogger;
+import com.team1816.season.configuration.AddInputHandlersHere;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -82,12 +83,10 @@ public class InputHandlerBridge {
 
     @Inject
     public InputHandlerBridge() {
-        String[] inputHandlers = Objects.requireNonNull(new File("src/main/resources/yaml/input_handler").list());
+        List<String> inputHandlers = AddInputHandlersHere.inputHandlers;
 
-        for(int i = 0; i < inputHandlers.length; i++){
-            if(inputHandlers[i].endsWith(".input_handler.config.yml"))
-                controllerLayoutChooser.addOption(inputHandlers[i].substring(0, inputHandlers[i].length()-".input_handler.config.yml".length()), inputHandlers[i].substring(0, inputHandlers[i].length()-".input_handler.config.yml".length()));
-        }
+        for(String inputHandler : inputHandlers)
+            controllerLayoutChooser.addOption(inputHandler, inputHandler);
 
         controllerLayoutChooser.setDefaultOption(factory.getInputHandlerName(), factory.getInputHandlerName());
 
@@ -106,6 +105,7 @@ public class InputHandlerBridge {
                             ".input_handler.config.yml";
 
             GreenLogger.log("Attempting to load input handler yaml at: " + location);
+
             config = InputHandlerConfigYaml.loadFrom(
                     this.getClass()
                             .getClassLoader()
