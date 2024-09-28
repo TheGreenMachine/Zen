@@ -5,17 +5,13 @@ import com.google.inject.Singleton; // Switched from javax.inject.Singleton
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.components.ledManager.ILEDManager;
 import com.team1816.lib.util.logUtil.GreenLogger;
-import com.team1816.season.configuration.Constants;
-import com.team1816.season.states.RobotState;
+import com.team1816.core.states.RobotState;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.util.Color;
-
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * Subsystem container for an LEDManager

@@ -1,4 +1,4 @@
-package com.team1816.season.configuration;
+package com.team1816.core.configuration;
 
 import java.util.ArrayList;
 import java.util.List;

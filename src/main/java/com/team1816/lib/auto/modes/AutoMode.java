@@ -8,12 +8,11 @@ import com.team1816.lib.auto.actions.AutoAction;
 import com.team1816.lib.auto.actions.TrajectoryAction;
 import com.team1816.lib.subsystems.drive.EnhancedSwerveDrive;
 import com.team1816.lib.util.logUtil.GreenLogger;
-import com.team1816.season.auto.AutoModeManager;
-import com.team1816.season.configuration.Constants;
-import com.team1816.season.states.RobotState;
+import com.team1816.core.auto.AutoModeManager;
+import com.team1816.core.configuration.Constants;
+import com.team1816.core.states.RobotState;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 

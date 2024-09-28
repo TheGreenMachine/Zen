@@ -12,7 +12,7 @@ import com.team1816.lib.hardware.components.motor.configurations.*;
 import com.team1816.lib.util.ConfigurationTranslator;
 import com.team1816.lib.util.Util;
 import com.team1816.lib.util.logUtil.GreenLogger;
-import com.team1816.season.configuration.Constants;
+import com.team1816.core.configuration.Constants;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class LazyTalonFX extends TalonFX implements IGreenMotor {

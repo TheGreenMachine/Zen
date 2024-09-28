@@ -2,8 +2,7 @@ package com.team1816.season.auto.paths.toNoteTwo;
 
 import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
-import com.team1816.season.auto.AutoModeManager;
-import com.team1816.season.auto.paths.toNoteOne.TopSpeakerToNoteOnePath;
+import com.team1816.core.auto.AutoModeManager;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 

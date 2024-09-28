@@ -1,4 +1,4 @@
-package com.team1816.season.autoaim;
+package com.team1816.lib.autoaim;
 
 //Based on TransformedRobotRotationForShot
 //https://www.desmos.com/calculator/jerkgh3adb

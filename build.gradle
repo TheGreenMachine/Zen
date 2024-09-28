@@ -11,7 +11,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
-def ROBOT_MAIN_CLASS = "com.team1816.season.Main"
+def ROBOT_MAIN_CLASS = "com.team1816.core.Main"
 
 def getGitHash() {
     return ext.githash='git log --pretty=format:\" %cs, Hash: %h\" -1'.execute().text.trim()

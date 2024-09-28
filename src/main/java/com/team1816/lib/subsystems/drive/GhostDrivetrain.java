@@ -4,7 +4,7 @@ import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.PIDSlotConfiguration;
 import com.team1816.lib.subsystems.LedManager;
 import com.team1816.lib.util.team254.DriveSignal;
-import com.team1816.season.states.RobotState;
+import com.team1816.core.states.RobotState;
 import edu.wpi.first.math.geometry.Pose2d;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

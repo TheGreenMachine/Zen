@@ -1,13 +1,11 @@
 package com.team1816.lib.util;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.team1816.lib.Injector;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.hardware.factory.RobotFactory;
 import com.team1816.lib.subsystems.Subsystem;
 import com.team1816.lib.util.logUtil.GreenLogger;
-import com.team1816.season.Robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 

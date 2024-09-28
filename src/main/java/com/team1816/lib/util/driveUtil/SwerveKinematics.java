@@ -3,7 +3,7 @@ package com.team1816.lib.util.driveUtil;
 import com.team1816.lib.Injector;
 import com.team1816.lib.subsystems.drive.Drive;
 import com.team1816.lib.util.team254.SwerveDriveSignal;
-import com.team1816.season.configuration.Constants;
+import com.team1816.core.configuration.Constants;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;

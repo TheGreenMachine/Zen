@@ -1,8 +1,8 @@
-package com.team1816.season.autoaim;
+package com.team1816.lib.autoaim;
 
 import com.team1816.lib.Injector;
-import com.team1816.season.configuration.Constants;
-import com.team1816.season.states.RobotState;
+import com.team1816.core.configuration.Constants;
+import com.team1816.core.states.RobotState;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 
 import java.util.Optional;
@@ -144,10 +144,10 @@ public class ArmAngleFinder {
 
         if(heightOfTarget+1E-6 >=
                 0.5*(
-                    (gravityPerSecond
-                        /Math.pow(outputVelocityPerSecond,2)
+                        (gravityPerSecond
+                                /Math.pow(outputVelocityPerSecond,2)
                         )*Math.pow(xyPlaneEuclideanDistanceToTarget,2)
-                    -(Math.pow(outputVelocityPerSecond,2)/gravityPerSecond))
+                                -(Math.pow(outputVelocityPerSecond,2)/gravityPerSecond))
         ){
 //            System.out.println("Target out of range");
             return Optional.empty();
@@ -187,8 +187,8 @@ public class ArmAngleFinder {
         double placeholder = (xyPlaneEuclideanDistanceToTarget-lengthOfArm*Math.cos(armAngle))/(outputVelocityPerSecond*Math.cos(armAngle+angleBetweenArmAndShooterRadians));
         double returnable = lengthOfArm*Math.sin(armAngle)
                 +outputVelocityPerSecond
-                    *Math.sin(armAngle+angleBetweenArmAndShooterRadians)
-                    * placeholder
+                *Math.sin(armAngle+angleBetweenArmAndShooterRadians)
+                * placeholder
                 +(gravityPerSecond/2)*Math.pow(placeholder,2)
                 -heightOfTarget;
         return returnable;

@@ -1,6 +1,6 @@
 package com.team1816.lib.util.logUtil;
 
-import com.team1816.season.configuration.Constants;
+import com.team1816.core.configuration.Constants;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLogEntry;
 import edu.wpi.first.util.datalog.DoubleArrayLogEntry;

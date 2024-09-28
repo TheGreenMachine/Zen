@@ -4,12 +4,10 @@ import com.ctre.phoenix.motorcontrol.*;
 import com.team1816.lib.hardware.components.motor.configurations.*;
 import com.team1816.lib.util.driveUtil.DriveConversions;
 import com.team1816.lib.util.logUtil.GreenLogger;
-import com.team1816.season.Robot;
+import com.team1816.core.Robot;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
-
-import java.util.Arrays;
 
 import static java.lang.Double.NaN;
 

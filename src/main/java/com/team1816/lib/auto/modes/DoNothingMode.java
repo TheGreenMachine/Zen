@@ -3,8 +3,8 @@ package com.team1816.lib.auto.modes;
 import com.team1816.lib.auto.AutoModeEndedException;
 import com.team1816.lib.auto.Color;
 import com.team1816.lib.util.logUtil.GreenLogger;
-import com.team1816.season.auto.AutoModeManager;
-import com.team1816.season.configuration.Constants;
+import com.team1816.core.auto.AutoModeManager;
+import com.team1816.core.configuration.Constants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 

@@ -2,8 +2,7 @@ package com.team1816.season.auto.actions;
 
 import com.team1816.lib.Injector;
 import com.team1816.lib.auto.actions.AutoAction;
-import com.team1816.season.states.RobotState;
-import com.team1816.season.subsystems.Collector;
+import com.team1816.core.states.RobotState;
 import edu.wpi.first.wpilibj.RobotBase;
 
 public class WaitForCollectAction implements AutoAction {

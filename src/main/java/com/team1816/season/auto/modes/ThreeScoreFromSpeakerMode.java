@@ -2,7 +2,6 @@ package com.team1816.season.auto.modes;
 
 import com.team1816.lib.auto.AutoModeEndedException;
 import com.team1816.lib.auto.DynamicAutoUtil;
-import com.team1816.lib.auto.actions.ParallelAction;
 import com.team1816.lib.auto.actions.SeriesAction;
 import com.team1816.lib.auto.actions.TrajectoryAction;
 import com.team1816.lib.auto.actions.WaitAction;
@@ -12,7 +11,7 @@ import com.team1816.season.auto.actions.CollectAction;
 import com.team1816.season.auto.actions.ShootAction;
 import com.team1816.season.auto.actions.ShootAmpAction;
 import com.team1816.season.auto.actions.ShootSpeakerAction;
-import com.team1816.season.configuration.Constants;
+import com.team1816.core.configuration.Constants;
 import com.team1816.season.subsystems.Collector;
 import com.team1816.season.subsystems.Shooter;
 

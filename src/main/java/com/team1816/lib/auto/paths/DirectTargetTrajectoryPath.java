@@ -1,7 +1,7 @@
 package com.team1816.lib.auto.paths;
 
 import com.team1816.lib.Injector;
-import com.team1816.season.states.RobotState;
+import com.team1816.core.states.RobotState;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;

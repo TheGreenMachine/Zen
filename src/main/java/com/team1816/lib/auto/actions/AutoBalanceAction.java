@@ -2,13 +2,12 @@ package com.team1816.lib.auto.actions;
 
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.Injector;
-import com.team1816.lib.auto.actions.AutoAction;
 import com.team1816.lib.subsystems.LedManager;
 import com.team1816.lib.subsystems.drive.Drive;
 import com.team1816.lib.subsystems.drive.SwerveDrive;
 import com.team1816.lib.util.logUtil.GreenLogger;
-import com.team1816.season.Robot;
-import com.team1816.season.states.RobotState;
+import com.team1816.core.Robot;
+import com.team1816.core.states.RobotState;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;

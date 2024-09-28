@@ -1,18 +1,15 @@
 package com.team1816.season.auto.modes;
 
 import com.team1816.lib.auto.AutoModeEndedException;
-import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.DynamicAutoUtil;
 import com.team1816.lib.auto.actions.ParallelAction;
 import com.team1816.lib.auto.actions.RotateSwerveAction;
 import com.team1816.lib.auto.actions.SeriesAction;
 import com.team1816.lib.auto.modes.AutoMode;
 import com.team1816.lib.auto.paths.DynamicAutoPath;
-import com.team1816.season.auto.AutoModeManager;
 import com.team1816.season.auto.actions.*;
 import com.team1816.season.subsystems.Collector;
 import com.team1816.season.subsystems.Shooter;
-import edu.wpi.first.math.geometry.Rotation2d;
 
 import java.util.ArrayList;
 import java.util.List;

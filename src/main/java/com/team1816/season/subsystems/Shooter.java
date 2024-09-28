@@ -1,10 +1,6 @@
 package com.team1816.season.subsystems;
 
-import com.ctre.phoenix.Util;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.hardware.components.motor.GhostMotor;
 import com.team1816.lib.hardware.components.motor.IGreenMotor;
@@ -12,10 +8,8 @@ import com.team1816.lib.hardware.components.motor.LazyTalonFX;
 import com.team1816.lib.hardware.components.motor.configurations.GreenControlMode;
 import com.team1816.lib.subsystems.Subsystem;
 import com.team1816.lib.util.logUtil.GreenLogger;
-import com.team1816.season.Robot;
-import com.team1816.season.autoaim.AutoAimUtil;
-import com.team1816.season.configuration.Constants;
-import com.team1816.season.states.RobotState;
+import com.team1816.core.configuration.Constants;
+import com.team1816.core.states.RobotState;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -362,25 +356,6 @@ public class Shooter extends Subsystem {
                 }
                 case SHOOT_DISTANCE -> {
                     desiredPivotPosition = pivotDistanceShootPosition; //Lil bit over because of possibility for overshoot
-                }
-                case AUTO_AIM -> {
-                    pivotOutputsChanged = true;
-                    Optional<Double> shooterAngle = AutoAimUtil.getShooterAngle(new Translation2d(robotState.allianceColor == com.team1816.lib.auto.Color.BLUE ? Constants.blueSpeakerX : Constants.redSpeakerX, Constants.speakerY).getDistance(robotState.fieldToVehicle.getTranslation()));
-                    if(shooterAngle.isPresent()){
-                        desiredPivotPosition =
-                                (Math.PI-shooterAngle.get())
-                                * Constants.motorRotationsPerRadians
-                                - pivotNeutralPosition;
-                        autoAimTargetDegrees = -(desiredPivotPosition / Constants.motorRotationsPerDegree);
-
-                        if (correctingAutoAim) {
-                            desiredPivotPosition += autoAimCorrectionRotations;
-                        }
-
-                    } else {
-                        desiredPivotPosition = pivotNeutralPosition;
-                        correctingAutoAim = false;
-                    }
                 }
                 case LASER -> {
                     desiredPivotPosition = (50) * Constants.motorRotationsPerDegree - pivotNeutralPosition;

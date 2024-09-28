@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix6.configs.AudioConfigs;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -14,9 +13,8 @@ import com.team1816.lib.hardware.PIDSlotConfiguration;
 import com.team1816.lib.hardware.SubsystemConfig;
 import com.team1816.lib.hardware.components.motor.*;
 import com.team1816.lib.hardware.components.motor.configurations.FeedbackDeviceType;
-import com.team1816.lib.subsystems.drive.Drive;
 import com.team1816.lib.util.logUtil.GreenLogger;
-import com.team1816.season.configuration.Constants;
+import com.team1816.core.configuration.Constants;
 import edu.wpi.first.wpilibj.RobotBase;
 
 import java.util.Map;

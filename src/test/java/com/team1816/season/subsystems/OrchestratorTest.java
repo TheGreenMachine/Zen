@@ -2,8 +2,8 @@ package com.team1816.season.subsystems;
 
 import com.team1816.TestUtil;
 import com.team1816.lib.Injector;
-import com.team1816.season.states.Orchestrator;
-import com.team1816.season.states.RobotState;
+import com.team1816.core.states.Orchestrator;
+import com.team1816.core.states.RobotState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,6 @@
-package com.team1816.season.autoaim;
+package com.team1816.lib.autoaim;
 
-import com.team1816.season.configuration.Constants;
+import com.team1816.core.configuration.Constants;
 import edu.wpi.first.math.geometry.Translation2d;
 
 import java.util.Optional;

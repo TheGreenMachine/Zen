@@ -2,10 +2,8 @@ package com.team1816.season.auto.actions;
 
 import com.team1816.lib.auto.actions.RotateSwerveAction;
 import com.team1816.lib.auto.actions.SeriesAction;
-import com.team1816.lib.auto.actions.WaitAction;
 import com.team1816.lib.auto.modes.AutoMode;
-import com.team1816.season.auto.AutoModeManager;
-import com.team1816.season.subsystems.Shooter;
+import com.team1816.core.auto.AutoModeManager;
 
 public class ShootAndRotateDistanceAction extends SeriesAction {
     public ShootAndRotateDistanceAction(AutoModeManager.Position position) {

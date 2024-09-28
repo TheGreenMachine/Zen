@@ -8,7 +8,6 @@ import com.team1816.season.auto.paths.scram.AmpToScramPath;
 import com.team1816.season.auto.paths.scram.BottomSpeakerToScramPath;
 import com.team1816.season.auto.paths.scram.MiddleSpeakerToScramPath;
 import com.team1816.season.auto.paths.scram.TopSpeakerToScramPath;
-import com.team1816.season.auto.paths.toNoteTwo.MiddleSpeakerToNoteTwoPath;
 import org.apache.commons.math3.util.Pair;
 
 import javax.annotation.Nonnull;
@@ -18,8 +17,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
-import static com.team1816.season.auto.AutoModeManager.Position;
-import static com.team1816.season.auto.AutoModeManager.robotState;
+import static com.team1816.core.auto.AutoModeManager.Position;
+import static com.team1816.core.auto.AutoModeManager.robotState;
 
 /**
  * Holder class for the dynamic auto lookup table and utility for accessing it

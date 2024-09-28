@@ -1,9 +1,9 @@
-package com.team1816.season.subsystems;
+package com.team1816.core.subsystems;
 
 import com.google.inject.Inject;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.subsystems.Subsystem;
-import com.team1816.season.states.RobotState;
+import com.team1816.core.states.RobotState;
 
 public class BasicSubsystem extends Subsystem {
     /**
