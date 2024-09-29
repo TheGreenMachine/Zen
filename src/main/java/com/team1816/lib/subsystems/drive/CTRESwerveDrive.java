@@ -242,15 +242,6 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
             deadbander = 0;
         }
 
-        if (robotState.snapDirection != RobotState.SnappingDirection.NO_SNAP) {
-            rotation =
-                    MathUtil.inputModulus(
-                            (robotState.snapDirection.getValue(robotState.allianceColor) - pigeon.getYawValue()),
-                            robotState.allianceColor == Color.BLUE ? -180 : 180,
-                            robotState.allianceColor == Color.BLUE ?  180 : -180
-                    ) / snapDivisor;
-        }
-
         if (isBraking) {
             request = brakeRequest;
         } else {
@@ -583,11 +574,22 @@ public class CTRESwerveDrive extends Drive implements EnhancedSwerveDrive {
         if (thetaController.atGoal()) {
             setRotatingClosedLoop(false);
         } else {
+            double inputNormed = new Translation2d(robotState.throttleInput, robotState.strafeInput).getNorm();
+            double deadbander = 1;
+            if (inputNormed < inputDeadband) {
+                deadbander = 0;
+            }
+
+            //Keep this line for reference
             Translation2d distanceToTarget = new Translation2d(robotState.allianceColor == com.team1816.lib.auto.Color.BLUE ? Constants.blueSpeakerX : Constants.redSpeakerX, Constants.speakerY).minus(robotState.fieldToVehicle.getTranslation());
 
-            double rotationalSpeed = thetaController.calculate(robotState.fieldToVehicle.getRotation().getRadians(), AutoAimUtil.getRobotRotation(distanceToTarget) + Math.PI);
+            double rotationalSpeed = thetaController.calculate(robotState.fieldToVehicle.getRotation().getRadians(), robotState.targetRotationRadians);
 
-            setModuleStates(swerveKinematics.toSwerveModuleStates(new ChassisSpeeds(0, 0, rotationalSpeed)));
+            setModuleStates(swerveKinematics.toSwerveModuleStates(new ChassisSpeeds(robotState.throttleInput  * maxVel12MPS * driveScalar * deadbander, robotState.strafeInput  * maxVel12MPS * driveScalar * deadbander, rotationalSpeed)));
+
+            if (Constants.kLoggingDrivetrain) {
+                inputLogger.append(new double[]{robotState.throttleInput, robotState.rotationInput, 0});
+            }
         }
     }
 

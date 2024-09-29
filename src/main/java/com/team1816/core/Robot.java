@@ -545,6 +545,10 @@ public class Robot extends TimedRobot {
     public void manualControl() {
         inputHandler.update();
 
+        robotState.throttleInput = -inputHandler.getActionAsDouble("throttle");
+        robotState.strafeInput = -inputHandler.getActionAsDouble("strafe");
+        robotState.rotationInput = -inputHandler.getActionAsDouble("rotation");
+
         if (robotState.rotatingClosedLoop) {
             drive.rotationPeriodic();
         } else {
@@ -554,8 +558,6 @@ public class Robot extends TimedRobot {
                     -inputHandler.getActionAsDouble("rotation")
             );
         }
-
-        orchestrator.autoSetCollectorState();
     }
 
     /**

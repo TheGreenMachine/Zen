@@ -59,10 +59,18 @@ public class RobotState {
             );
 
     /**
+     * Current Drive inputs
+     */
+    public double throttleInput = 0;
+    public double strafeInput = 0;
+    public double rotationInput = 0;
+
+    /**
      * Rotating closed loop
      */
 
     public boolean rotatingClosedLoop = false;
+    public double targetRotationRadians = 0;
 
     /**
      * Orchestrator states
@@ -153,6 +161,19 @@ public class RobotState {
      */
     public Rotation2d getLatestFieldToCamera() {
         return fieldToVehicle.getRotation().plus(Constants.kCameraMountingOffset.getRotation());
+    }
+
+    /**
+     * Locks robot rotation to a specific angle, then terminates rotation once angle is reached
+     *
+     * @param targetRotationRadians
+     * @return
+     */
+    public boolean setRobotRotatingClosedLoop(double targetRotationRadians){
+        this.targetRotationRadians = targetRotationRadians;
+        rotatingClosedLoop = true;
+
+        return fieldToVehicle.getRotation().getRadians() == targetRotationRadians;
     }
 
     /**
