@@ -13,8 +13,6 @@ import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.lib.util.visionUtil.VisionPoint;
 import com.team1816.core.configuration.Constants;
 import com.team1816.core.configuration.FieldConfig;
-import com.team1816.season.subsystems.Collector;
-import com.team1816.season.subsystems.Shooter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -39,8 +37,7 @@ public class Orchestrator {
     private static Drive drive;
     private static Camera camera;
     private static LedManager ledManager;
-    private static Collector collector;
-    private static Shooter shooter;
+    //TODO add new subsystems here
     private InputHandler inputHandler;
 
     /**
@@ -74,8 +71,7 @@ public class Orchestrator {
         drive = df.getInstance();
         camera = cam;
         ledManager = led;
-        collector = Injector.get(Collector.class);
-        shooter = Injector.get(Shooter.class);
+        //TODO init new subsystems here
         inputHandler = Injector.get(InputHandler.class);
     }
 
@@ -221,20 +217,6 @@ public class Orchestrator {
         }
     }
 
-    public void autoSetCollectorState(){
-        if (robotState.isBeamBreakOverridden) {
-            collector.setDesiredState(Collector.COLLECTOR_STATE.INTAKE);
-        } else if (!robotState.isShooting) {
-            if (!robotState.isBeamBreakTriggered && shooter.getActualPivotPosition() < 3) {
-                collector.setDesiredState(Collector.COLLECTOR_STATE.INTAKE);
-                shooter.setDesiredFeederState(Shooter.FEEDER_STATE.TRANSFER);
-            } else {
-                collector.setDesiredState(Collector.COLLECTOR_STATE.OUTTAKE);
-                shooter.setDesiredFeederState(Shooter.FEEDER_STATE.STOP);
-            }
-        }
-    }
-
     //Just a wrapper to keep paradigm
     public void setControllerRumble(InputHandler.ControllerRole controller, InputHandler.RumbleDirection rumbleDirection, double rumbleLevel) {
         rumbleStopped = rumbleLevel == 0;
@@ -245,10 +227,5 @@ public class Orchestrator {
         if (!rumbleStopped) {
             setControllerRumble(controller, InputHandler.RumbleDirection.UNIFORM, 0);
         }
-    }
-
-    public enum CONTROL_MODE {
-        ALEPH_0,
-        ALEPH_1
     }
 }

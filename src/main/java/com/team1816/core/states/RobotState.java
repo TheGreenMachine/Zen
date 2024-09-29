@@ -7,9 +7,6 @@ import com.team1816.lib.subsystems.drive.SwerveDrive;
 import com.team1816.lib.util.visionUtil.VisionPoint;
 import com.team1816.core.configuration.Constants;
 import com.team1816.core.configuration.FieldConfig;
-import com.team1816.season.subsystems.Climber;
-import com.team1816.season.subsystems.Shooter;
-import com.team1816.season.subsystems.Collector;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -42,8 +39,6 @@ public class RobotState {
     public Pose2d driverRelativeFieldToVehicle = Constants.EmptyPose2d;
     public Pose2d extrapolatedFieldToVehicle = Constants.EmptyPose2d;
     public Pose2d target = Constants.fieldCenterPose;
-    public Rotation2d vehicleToTurret = Constants.EmptyRotation2d;
-    public Pose2d fieldToTurret = Constants.EmptyPose2d;
     public ChassisSpeeds deltaVehicle = new ChassisSpeeds(); // velocities of vehicle
     public ChassisSpeeds calculatedVehicleAccel = new ChassisSpeeds(); // calculated acceleration of vehicle
     public Double[] triAxialAcceleration = new Double[]{0d, 0d, 0d};
@@ -64,34 +59,8 @@ public class RobotState {
             );
 
     /**
-     * Inertial characterization
+     * Rotating closed loop
      */
-    public Pose3d fieldToCG = Constants.EmptyPose3d;
-    public Rotation3d inertialOrientationState = Constants.EmptyRotation3d;
-    public Quaternion inertialReferenceOrientationState = Constants.EmptyQuaternion; // utilizes active multiplication
-
-    /**
-     * Snapping Mode
-     */
-    public enum SnappingDirection {
-        PICKUP(-57),
-        SCORE(0),
-        BOTTOM_SPEAKER(-30),
-        TOP_SPEAKER(30),
-        NO_SNAP(-360); // Some magic value.
-
-        public double value;
-
-        SnappingDirection(double value) {
-            this.value = value;
-        }
-
-        public double getValue(Color color) {
-            return color == Color.BLUE ? value : value * -1;
-        }
-    }
-
-    public SnappingDirection snapDirection = SnappingDirection.NO_SNAP;
 
     public boolean rotatingClosedLoop = false;
 
@@ -99,16 +68,7 @@ public class RobotState {
      * Orchestrator states
      */
 
-    public Collector.COLLECTOR_STATE actualCollectorState = Collector.COLLECTOR_STATE.STOP;
-
-    public Shooter.ROLLER_STATE actualRollerState = Shooter.ROLLER_STATE.STOP;
-    public Shooter.FEEDER_STATE actualFeederState = Shooter.FEEDER_STATE.STOP;
-    public Shooter.PIVOT_STATE actualPivotState = Shooter.PIVOT_STATE.STOW;
-    public boolean isShooting = false;
-    public boolean isBeamBreakTriggered = false;
-    public boolean isBeamBreakOverridden = false;
-
-    public Climber.CLIMBER_STATE actualClimberState = Climber.CLIMBER_STATE.STOP;
+    //TODO add new subystem states here
 
     public VisionPoint superlativeTarget = new VisionPoint();
     public List<VisionPoint> visibleTargets = new ArrayList<>();
@@ -151,30 +111,6 @@ public class RobotState {
     public boolean currentCamFind;
 
     /**
-     * Autoaim Stuff
-     */
-    public double speedAdjustment = 0;
-    public double angleAdjustment = 0;
-    public double speedAdjustmentPercent = 2;
-    public double pivotLoopIncrement = 0;
-
-    public boolean readyToShoot = false;
-
-    /**
-     * Resets drivetrain and turret position to a specified pose of drivetrain and rotation of turret
-     *
-     * @param initial_field_to_vehicle
-     * @param initial_vehicle_to_turret
-     */
-    public synchronized void resetPosition(
-        Pose2d initial_field_to_vehicle,
-        Rotation2d initial_vehicle_to_turret
-    ) {
-        resetPosition(initial_field_to_vehicle);
-        vehicleToTurret = initial_vehicle_to_turret;
-    }
-
-    /**
      * Resets drivetrain position to a specified pose of drivetrain
      *
      * @param initial_field_to_vehicle
@@ -200,29 +136,13 @@ public class RobotState {
         calculatedVehicleAccel = new ChassisSpeeds();
         triAxialAcceleration = new Double[]{0d, 0d, 0d};
 
-        // TODO: Insert any state set up here.
-        actualPivotState = Shooter.PIVOT_STATE.STOW;
-        actualCollectorState = Collector.COLLECTOR_STATE.STOP;
-        actualFeederState = Shooter.FEEDER_STATE.STOP;
-        actualRollerState = Shooter.ROLLER_STATE.STOP;
-        actualClimberState = Climber.CLIMBER_STATE.STOP;
-
-        snapDirection = SnappingDirection.NO_SNAP;
+        // TODO: Insert any subsystem state set up here.
 
         isPoseUpdated = true;
         superlativeTarget = new VisionPoint();
         visibleTargets = new ArrayList<>();
         drivetrainTemp = 0;
         vehicleToFloorProximityCentimeters = 0;
-    }
-
-    /**
-     * Returns rotation of the turret with respect to the field
-     *
-     * @return Rotation2d
-     */
-    public Rotation2d getLatestFieldToTurret() {
-        return fieldToTurret.getRotation();
     }
 
     /**
@@ -236,34 +156,6 @@ public class RobotState {
     }
 
     /**
-     * Returns pose of the turret with respect ot the field
-     *
-     * @return Pose2d
-     */
-    public synchronized Pose2d getFieldToTurretPos() {
-        return fieldToTurret;
-    }
-
-    /**
-     * Returns the estimated pose of the turret with respect to the field based on a look-ahead time
-     *
-     * @return Pose2d
-     */
-    public synchronized Pose2d getEstimatedFieldToTurretPos() {
-        return new Pose2d(
-            extrapolatedFieldToVehicle
-                .transformBy(
-                    new Transform2d(
-                        Constants.kTurretMountingOffset,
-                        Constants.EmptyRotation2d
-                    )
-                )
-                .getTranslation(),
-            getLatestFieldToTurret()
-        );
-    }
-
-    /**
      * Returns the estimated / calculated acceleration of the robot based on sensor readings
      *
      * @return ChassisSpeeds
@@ -273,25 +165,12 @@ public class RobotState {
     }
 
     /**
-     * Returns the distance from the goal based on the pose of the robot
-     *
-     * @return distance (meters)
-     */
-    public double getDistanceToGoal() {
-        double estimatedDistanceToGoalMeters = fieldToVehicle
-            .getTranslation()
-            .getDistance(Constants.targetPos.getTranslation());
-        return estimatedDistanceToGoalMeters;
-    }
-
-    /**
      * Outputs real-time telemetry data to Shuffleboard / SmartDashboard
      */
     public synchronized void outputToSmartDashboard() {
         field.setRobotPose(fieldToVehicle);
 
         SmartDashboard.putData("Mech2d", mechCanvas);
-        SmartDashboard.putBoolean("BeamBreak", isBeamBreakTriggered);
 
         if (RobotBase.isSimulation()) {
             // TODO: Display any stats here

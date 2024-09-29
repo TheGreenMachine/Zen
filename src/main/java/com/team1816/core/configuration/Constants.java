@@ -48,32 +48,17 @@ public class Constants {
     /**
      * CAN Timeouts
      */
-    public static final int kCANTimeoutMs = 10; // utility: on the fly updates
+    public static final int kCANTimeoutMs = 10; //FIXME // utility: on the fly updates
     public static final int kLongCANTimeoutMs = 100; // utility: constructors
-
-    /**
-     * Wait Action Numerics
-     *
-     * (Dynamic Autos)
-     */
-    public static final Numeric kAutoTimeBetweenFirstShot = VariableInput.number("Time To Wait Between First Shot", 0.0);
-    public static final Numeric kAutoTimeBetweenSecondShot = VariableInput.number("Time To Wait Between Second Shot", 0.0);
-    public static final Numeric kAutoTimeBetweenThirdShot = VariableInput.number("Time To Wait Between Third Shot", 0.0);
-    public static final Numeric kAutoTimeBeforeScram = VariableInput.number("Time To Wait Before Scramming", 0.0);
 
 
     /**
      * Field characterization
      */
     public static final Symmetry fieldSymmetry = Symmetry.AXIS;
-    public static final double fieldCenterY = 8.211 / 2.0;
-    public static final double fieldCenterX = 16.542 / 2.0;
+    public static final double fieldCenterY = 8.211 / 2.0; //FIXME
+    public static final double fieldCenterX = 16.542 / 2.0; //FIXME
     public static final Pose2d fieldCenterPose = new Pose2d(
-        fieldCenterX,
-        fieldCenterY,
-        EmptyRotation2d
-    );
-    public static final Pose2d targetPos = new Pose2d(
         fieldCenterX,
         fieldCenterY,
         EmptyRotation2d
@@ -91,42 +76,24 @@ public class Constants {
     );
 
 
-    public static final double kCameraHeightMeters = 0.601;
+    public static final double kCameraHeightMeters = 0.601; //FIXME
 
-    public static final Pose2d kCameraMountingOffset = new Pose2d(
+    public static final Pose2d kCameraMountingOffset = new Pose2d( //FIXME
             -0.369,
             0,
             Rotation2d.fromRadians(Math.PI)
     );
 
-    public static final Transform3d kCameraMountingOffset3D = new Transform3d(
+    public static final Transform3d kCameraMountingOffset3D = new Transform3d( //FIXME
             -0.369,
             0,
             Constants.kCameraHeightMeters,
             new Rotation3d(Math.PI,-0.44,Math.PI)
     );
 
-    public static final Translation2d kTurretMountingOffset = new Translation2d(
-        -0.12065,
-        0.13335
-    );
-    public static final double chargeStationThresholdXMinBlue = 2.4;
-    public static final double chargeStationThresholdXMaxBlue = 5.1;
-    public static final double chargeStationThresholdXMinRed = 11.4;
-    public static final double chargeStationThresholdXMaxRed = 14.1;
-    public static final double chargeStationThresholdYMin = 1.1;
-    public static final double chargeStationThresholdYMax = 4.6;
-
     /**
      * Drivetrain characterization
      */
-    public static final double gravitationalAccelerationConstant = 9.8d;
-    public static double kMaxAccelDiffThreshold = 2d; // m/s^2
-    public static double kMaxBalancingVelocity = 0.2; // m/s
-    public static double kMinTrajectoryDistance = 0.064; // m
-    public static double kMaxProximityThresholdCentimeters = 25; // cm
-    public static double preTargetDistance = 0.4; // m
-
     public static double kClosedLoopRotationTolerance = factory.getConstant("rotationToleranceClosedLoop", 1);
 
     public static final boolean kSoundOnConfig = factory.getConstant("soundOnConfig", 1) > 0;
@@ -137,57 +104,18 @@ public class Constants {
      * Camera characterization
      */
     public static final double kCameraMountingAngleY = 0; // degrees
-    public static final double kTurretZedRadius = Units.inchesToMeters(7); // meters
 
     public static final double kLoggingDiskPartitionRatio = 0.25; // percent of storage space allotted for logging
     public static final boolean kLoggingRobot = factory.getConstant("logRobot", 1) > 0;
     public static final boolean kLoggingDrivetrain = factory.getConstant("logDrivetrain", 1) > 0 && kLoggingRobot;
 
-    public static final double kBallEjectionDuration = factory.getConstant(
-        "shooter",
-        "ballEjectionDuration",
-        1d,
-            false
-    );
     public static final boolean kUseVision = factory.getConstant("usingVision", 0) > 0;
-
-    /**
-     * Balancing characterization
-     */
-    public static final double autoBalanceThresholdDegrees = factory.getConstant("drivetrain", "autoBalanceThreshold", 2, false);
-    public static final double autoBalanceDivider = factory.getConstant("drivetrain", "autoBalanceDivider", 30, false);
-
-    /**
-     * Pivot
-     */
-    public static final double motorRotationsPerDegree = 0.31843;
-    public static final double degreesPerMotorRotations = 3.140407;
-    public static final double motorRotationsPerRadians = 18.245;
-
-    public static final double cancoderRotationsPerDegree = 0.23 / 90;
 
     /**
      * Autonomous
      */
     public static final double kPTranslational = 10;
     public static final double kPRotational = 10;
-
-    /**
-     * Pathfinder characterization
-     */
-    // 2023 legacy, kept as example
-//    public static final Polygon blueChargeStation = new Polygon(
-//        new Translation2d(Constants.chargeStationThresholdXMaxBlue, Constants.chargeStationThresholdYMax),
-//        new Translation2d(Constants.chargeStationThresholdXMinBlue, Constants.chargeStationThresholdYMax),
-//        new Translation2d(Constants.chargeStationThresholdXMinBlue, Constants.chargeStationThresholdYMin),
-//        new Translation2d(Constants.chargeStationThresholdXMaxBlue, Constants.chargeStationThresholdYMin)
-//    );
-//    public static final Polygon redChargeStation = new Polygon(
-//        new Translation2d(Constants.chargeStationThresholdXMaxRed, Constants.chargeStationThresholdYMax),
-//        new Translation2d(Constants.chargeStationThresholdXMinRed, Constants.chargeStationThresholdYMax),
-//        new Translation2d(Constants.chargeStationThresholdXMinRed, Constants.chargeStationThresholdYMin),
-//        new Translation2d(Constants.chargeStationThresholdXMaxRed, Constants.chargeStationThresholdYMin)
-//    );
 
     /**
      * Simulation
