@@ -210,20 +210,8 @@ public class AutoModeManager {
      */
     private AutoMode generateAutoMode(DesiredAuto mode, Color color) {
         switch (mode) {
-//            case DO_NOTHING:
-//                return new DoNothingMode();
-//            case TUNE_DRIVETRAIN: // commented for competition purposes
-//                return new TuneDrivetrainMode();
-//            case LIVING_ROOM:
-//                return (new LivingRoomMode(color));
             case DRIVE_STRAIGHT:
                 return new DriveStraightMode();
-//            case SCEA_SOURCETOAMP2:
-//                return new ScorchedEarthBotToTop2Mode();
-//            case SCEA_SOURCETOAMP3:
-//                return new ScorchedEarthBotToTop3Mode();
-//            case BOTTOM_345_EJECTS:
-//                return new Bottom345Ejects();
             case AUTOPATH:
                 return new AutopathMode();
             default:
