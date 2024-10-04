@@ -309,15 +309,6 @@ public class SwerveDrive extends Drive implements EnhancedSwerveDrive, PidProvid
         double strafe = 0;
         var heading = Constants.EmptyRotation2d;
 
-        double threshold = Constants.autoBalanceThresholdDegrees;
-
-        double autoBalanceDivider = Constants.autoBalanceDivider;
-
-        if (Math.abs(pitch) > threshold || Math.abs(roll) > threshold) {
-            throttle = pitch / autoBalanceDivider;
-            strafe = roll / autoBalanceDivider;
-        }
-
         // if not braking and ((throttle || strafe != 0) or joystick strafe input != 0), auto-balance
         // Else, lock wheels to face left/right side of field
         if (isBraking || ((throttle == 0 && strafe == 0) && Objects.equals(fieldRelativeChassisSpeeds, new ChassisSpeeds()))) {

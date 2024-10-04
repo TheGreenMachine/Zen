@@ -188,16 +188,4 @@ public abstract class AutoMode {
         }
         return initialPose;
     }
-
-    public static Rotation2d getNeededRotation(AutoModeManager.Position position) {
-        return Rotation2d.fromDegrees(
-                switch(position) {
-                    case TOP_NOTE -> robotState.allianceColor == Color.BLUE ? 28.5 : 151.5;
-                    case BOTTOM_NOTE -> robotState.allianceColor == Color.BLUE ? -28.5 : -151.5;
-                    default -> robotState.allianceColor == Color.BLUE ? 0 : 180;
-                });
-        //return robotState.fieldToVehicle.getTranslation().minus(new Translation2d(robotState.allianceColor == Color.BLUE ? Constants.blueSpeakerX : Constants.redSpeakerX, Constants.speakerY)).getAngle();
-    }
-
-
 }

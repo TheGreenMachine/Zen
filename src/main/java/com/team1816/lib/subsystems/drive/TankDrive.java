@@ -379,20 +379,7 @@ public class TankDrive extends Drive implements DifferentialDrivetrain {
         double strafe = 0;
         var heading = Constants.EmptyRotation2d;
 
-        double maxFlatRange = Constants.autoBalanceThresholdDegrees;
         double correction = (getInitialYaw() - pigeon.getYawValue()) / 1440;
-
-        if (Math.abs(pitch) > maxFlatRange || Math.abs(roll) > maxFlatRange) {
-            throttle = pitch / 4;
-            strafe = roll / 4;
-
-            ChassisSpeeds chassisSpeeds = new ChassisSpeeds(throttle, strafe, correction);
-
-
-            DifferentialDriveWheelSpeeds wheelSpeeds = tankKinematics.toWheelSpeeds(chassisSpeeds);
-            DriveSignal driveSignal = new DriveSignal(wheelSpeeds.leftMetersPerSecond / TankDrive.kPathFollowingMaxVelMeters, wheelSpeeds.rightMetersPerSecond / TankDrive.kPathFollowingMaxVelMeters);
-            setVelocity(driveSignal);
-        }
     }
 
     /**

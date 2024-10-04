@@ -5,8 +5,6 @@ import com.team1816.lib.auto.actions.TrajectoryAction;
 import com.team1816.lib.auto.actions.WaitAction;
 import com.team1816.lib.auto.paths.DriveStraightPath;
 import com.team1816.lib.util.logUtil.GreenLogger;
-import com.team1816.season.auto.paths.toNoteOne.BottomSpeakerToNoteOnePath;
-import com.team1816.season.auto.paths.toNoteOne.TopSpeakerToNoteOnePath;
 import edu.wpi.first.math.trajectory.Trajectory;
 
 import java.util.List;

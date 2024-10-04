@@ -20,7 +20,6 @@ import com.team1816.lib.util.driveUtil.DriveConversions;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import com.team1816.lib.util.team254.DriveSignal;
 import com.team1816.core.Robot;
-import com.team1816.lib.autoaim.AutoAimUtil;
 import com.team1816.core.configuration.Constants;
 import com.team1816.core.states.RobotState;
 import edu.wpi.first.math.MathUtil;

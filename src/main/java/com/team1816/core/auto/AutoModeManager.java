@@ -4,18 +4,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.team1816.core.states.RobotState;
 import com.team1816.lib.auto.Color;
-import com.team1816.lib.auto.DynamicAutoUtil;
 import com.team1816.lib.auto.modes.AutoMode;
 import com.team1816.lib.auto.modes.DriveStraightMode;
-import com.team1816.lib.auto.paths.DynamicAutoPath;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.team1816.season.auto.modes.TestMode;
+import com.team1816.season.auto.modes.SystemCheckMode;
 
 /**
  * An integrated and optimized manager for autonomous mode selection and configuration
