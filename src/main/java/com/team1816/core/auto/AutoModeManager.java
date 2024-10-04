@@ -11,8 +11,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import com.team1816.season.auto.modes.TestMode;
-import com.team1816.season.auto.modes.SystemCheckMode;
 
 /**
  * An integrated and optimized manager for autonomous mode selection and configuration
@@ -223,10 +221,6 @@ public class AutoModeManager {
 //                return new ScorchedEarthBotToTop3Mode();
 //            case BOTTOM_345_EJECTS:
 //                return new Bottom345Ejects();
-            case TEST:
-                if (!DriverStation.isFMSAttached()) return new TestMode();
-            case SYSTEM_CHECK:
-                if (!DriverStation.isFMSAttached()) return new SystemCheckMode();
             default:
                 GreenLogger.log("Defaulting to drive straight mode");
                 return new DriveStraightMode();
