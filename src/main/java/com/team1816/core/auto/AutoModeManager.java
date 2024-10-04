@@ -190,11 +190,6 @@ public class AutoModeManager {
 //        TUNE_DRIVETRAIN,
         LIVING_ROOM,
         DRIVE_STRAIGHT,
-
-        // System check
-        SYSTEM_CHECK,
-
-        TEST
         }
 
 
