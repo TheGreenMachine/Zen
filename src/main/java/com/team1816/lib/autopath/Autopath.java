@@ -32,21 +32,19 @@ public class Autopath {
     private Pose2d autopathTargetPosition = new Pose2d(0,0,new Rotation2d(0));
 
     /**
-     * State: if mode needs to be stopped
+     * State: if path needs to be stopped
      */
     private boolean needsStop;
 
     /**
-     * Instantiates an AutoMode from a list of trajectory actions
-     *
-     * @see TrajectoryAction
+     * Initializes Autopath
      */
     protected Autopath() {
         robotState = Injector.get(RobotState.class);
     }
 
     /**
-     * Runs the autoMode routine actions
+     * Runs the Autopath routine actions
      *
      * @see #routine()
      */
@@ -65,7 +63,7 @@ public class Autopath {
     }
 
     /**
-     * Runs the autoMode routine actions
+     * Runs the Autopath routine actions
      *
      * @see #routine()
      */
@@ -74,7 +72,7 @@ public class Autopath {
     }
 
     /**
-     * Starts the AutoMode and relevant actions
+     * Starts the Autopath and relevant actions
      */
     private void start() {
         GreenLogger.log("Starting Autopath");
@@ -82,8 +80,7 @@ public class Autopath {
     }
 
     /**
-     * Routine register of actions that will be run in the mode
-     *
+     * Called every loop
      */
     protected void routine() throws AutoModeEndedException {
         GreenLogger.log("Autopathing Running");
@@ -113,7 +110,7 @@ public class Autopath {
     }
 
     /**
-     * Stops the auto mode
+     * Stops the auto path
      */
     public void stop() {
         needsStop = true;
