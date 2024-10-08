@@ -45,7 +45,6 @@ public abstract class AutoMode {
     /**
      * Empty constructor for driveStraight and doNothing modes which don't require trajectories
      *
-     * @see DoNothingMode
      * @see DriveStraightMode
      */
     protected AutoMode() {
