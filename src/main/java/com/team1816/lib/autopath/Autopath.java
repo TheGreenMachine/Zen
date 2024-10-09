@@ -18,11 +18,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
+import jakarta.inject.Singleton;
+import org.apache.commons.math3.Field;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Singleton
 public class Autopath {
 
     public static RobotState robotState;
@@ -30,6 +33,8 @@ public class Autopath {
     private final long looperDtInMS = (long) (Constants.kLooperDt * 1000);
 
     private Pose2d autopathTargetPosition = new Pose2d(0,0,new Rotation2d(0));
+
+    private static FieldMap fieldMap = new FieldMap(2605, 1293);
 
     /**
      * State: if path needs to be stopped
@@ -39,8 +44,22 @@ public class Autopath {
     /**
      * Initializes Autopath
      */
-    protected Autopath() {
+    public Autopath() {
         robotState = Injector.get(RobotState.class);
+    }
+
+    /**
+     * Tests a trajectory against the fieldMap to see whether a robot of (whatever) width can path successfully
+     *
+     * @param trajectory
+     * @return
+     */
+    public static boolean testTrajectory(Trajectory trajectory){
+        for(int t = 0; t*.1 < trajectory.getTotalTimeSeconds(); t++){
+            if(fieldMap.checkPixelHasObjectOrOffMap((int)trajectory.sample(t).poseMeters.getX(), (int)trajectory.sample(t).poseMeters.getY()))
+                return false;
+        }
+        return true;
     }
 
     /**
@@ -50,6 +69,8 @@ public class Autopath {
      */
     public void run(Pose2d autopathTargetPosition) {
         this.autopathTargetPosition = autopathTargetPosition;
+
+        System.out.println("You told me to do something!");
 
         start();
 
@@ -75,6 +96,8 @@ public class Autopath {
      * Starts the Autopath and relevant actions
      */
     private void start() {
+        robotState.autopathing = true;
+
         GreenLogger.log("Starting Autopath");
         needsStop = false;
     }
@@ -86,9 +109,16 @@ public class Autopath {
         GreenLogger.log("Autopathing Running");
 
         Trajectory autopathTrajectory = new Trajectory();
-        //TODO create your trajectory
+
+        autopathTrajectory = AutopathAlgorithm.calculateAutopath(autopathTargetPosition);
+
         List<Rotation2d> autopathHeadings = new ArrayList<>();
         //TODO create headings
+        // for now I'll make it use the current robot rotation
+        autopathHeadings.add(robotState.fieldToVehicle.getRotation());
+
+        //Here's where your trajectory gets checked against the field
+        System.out.println("And survey says: "+testTrajectory(autopathTrajectory));
 
         TrajectoryAction autopathTrajectoryAction = new TrajectoryAction(autopathTrajectory, autopathHeadings);
 
@@ -97,7 +127,6 @@ public class Autopath {
         runAction(
                 new SeriesAction(
                         autopathTrajectoryAction
-
                 )
         );
     }
@@ -106,6 +135,8 @@ public class Autopath {
      * Standard cleanup end-procedure
      */
     protected void done() {
+        robotState.autopathing = false;
+
         GreenLogger.log("Autopath Done");
     }
 

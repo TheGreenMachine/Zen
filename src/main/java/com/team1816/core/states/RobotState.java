@@ -94,6 +94,10 @@ public class RobotState {
      */
     public PathFinder pathFinder = new PathFinder();
 
+    /**
+     * Autopathing state
+     */
+    public boolean autopathing = false;
 
     /**
      * Pigeon state

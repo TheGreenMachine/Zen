@@ -5,6 +5,7 @@ import com.team1816.lib.Infrastructure;
 import com.team1816.lib.Injector;
 import com.team1816.lib.PlaylistManager;
 import com.team1816.lib.auto.Color;
+import com.team1816.lib.autopath.Autopath;
 import com.team1816.lib.hardware.factory.RobotFactory;
 import com.team1816.lib.input_handler.*;
 import com.team1816.lib.input_handler.controlOptions.ActionState;
@@ -19,7 +20,9 @@ import com.team1816.core.auto.AutoModeManager;
 import com.team1816.core.configuration.Constants;
 import com.team1816.core.states.Orchestrator;
 import com.team1816.core.states.RobotState;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -62,6 +65,7 @@ public class Robot extends TimedRobot {
     private Drive drive;
 
     //TODO add new subsystems here
+    private Autopath autopather;
 
     private LedManager ledManager;
     private Camera camera;
@@ -167,6 +171,7 @@ public class Robot extends TimedRobot {
             subsystemManager = Injector.get(SubsystemLooper.class);
             autoModeManager = Injector.get(AutoModeManager.class);
             playlistManager = Injector.get(PlaylistManager.class);
+            autopather = Injector.get(Autopath.class);
 
             /** Logging */
             if (Constants.kLoggingRobot) {
@@ -268,6 +273,13 @@ public class Robot extends TimedRobot {
             inputHandler.listenActionPressAndRelease(
                     "slowMode",
                     drive::setSlowMode
+            );
+
+            inputHandler.listenAction(
+                    "autopathing",
+                    ActionState.PRESSED,
+                    () ->
+                        autopather.run(new Pose2d(new Translation2d(2500, 645), new Rotation2d(0)))
             );
 
             /** Operator Commands */
@@ -531,8 +543,8 @@ public class Robot extends TimedRobot {
                 GreenLogger.updatePeriodicLogs();
             }
 
-
-            manualControl();
+            if(!robotState.autopathing)
+                manualControl();
         } catch (Throwable t) {
             faulted = true;
             throw t;
