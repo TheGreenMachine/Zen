@@ -15,11 +15,7 @@ public class AutopathAlgorithm {
         Trajectory bestGuessTrajectory = null;
         int loops = 0;
 
-        while(bestGuessTrajectory == null || !Autopath.testTrajectory(bestGuessTrajectory)){
-            System.out.println("Robot is at "+Autopath.robotState.fieldToVehicle);
-            System.out.println("Target is at "+autopathTargetPosition);
-
-
+        while(bestGuessTrajectory == null){
             TrajectoryConfig config = new TrajectoryConfig(Drive.kPathFollowingMaxVelMeters, Drive.kPathFollowingMaxAccelMeters);
 
             bestGuessTrajectory = TrajectoryGenerator.generateTrajectory(

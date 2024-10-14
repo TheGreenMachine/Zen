@@ -34,7 +34,7 @@ public class Autopath {
 
     private Pose2d autopathTargetPosition = new Pose2d(0,0,new Rotation2d(0));
 
-    private static FieldMap fieldMap = new FieldMap(2605, 1293);
+    private static FieldMap fieldMap = new FieldMap(1654, 821);
 
     /**
      * State: if path needs to be stopped
@@ -46,6 +46,7 @@ public class Autopath {
      */
     public Autopath() {
         robotState = Injector.get(RobotState.class);
+        fieldMap.drawPolygon(new double[]{1100, 1100, 900}, new double[]{210, 630, 420}, true);
     }
 
     /**
@@ -56,7 +57,7 @@ public class Autopath {
      */
     public static boolean testTrajectory(Trajectory trajectory){
         for(int t = 0; t*.1 < trajectory.getTotalTimeSeconds(); t++){
-            if(fieldMap.checkPixelHasObjectOrOffMap((int)trajectory.sample(t).poseMeters.getX(), (int)trajectory.sample(t).poseMeters.getY()))
+            if(fieldMap.checkPixelHasObjectOrOffMap((int)(trajectory.sample(t).poseMeters.getX()*100), (int)(trajectory.sample(t).poseMeters.getY()*100)))
                 return false;
         }
         return true;
@@ -115,8 +116,7 @@ public class Autopath {
         List<Rotation2d> autopathHeadings = new ArrayList<>();
         //TODO create headings
         // for now I'll make it use the current robot rotation
-        for(int i = 0; i < autopathTrajectory.getStates().size(); i++)
-            autopathHeadings.add(robotState.fieldToVehicle.getRotation());
+        autopathHeadings.add(robotState.fieldToVehicle.getRotation());
 
         //Here's where your trajectory gets checked against the field
         System.out.println("And survey says: "+testTrajectory(autopathTrajectory));
