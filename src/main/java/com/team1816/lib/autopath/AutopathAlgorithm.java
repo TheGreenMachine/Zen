@@ -16,10 +16,13 @@ public class AutopathAlgorithm {
         int loops = 0;
 
         while(bestGuessTrajectory == null || !Autopath.testTrajectory(bestGuessTrajectory)){
+            System.out.println("Robot is at "+Autopath.robotState.fieldToVehicle);
+            System.out.println("Target is at "+autopathTargetPosition);
+
 
             TrajectoryConfig config = new TrajectoryConfig(Drive.kPathFollowingMaxVelMeters, Drive.kPathFollowingMaxAccelMeters);
 
-            TrajectoryGenerator.generateTrajectory(
+            bestGuessTrajectory = TrajectoryGenerator.generateTrajectory(
                     Autopath.robotState.fieldToVehicle,
                     new ArrayList<>(),
                     autopathTargetPosition,

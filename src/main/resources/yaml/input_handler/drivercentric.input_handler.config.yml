@@ -3,15 +3,15 @@ driver:
   rumble: true
   joysticks:
     left:
-      horizontal: autopathing #strafe
+      horizontal: strafe
       vertical: throttle
     right:
       horizontal: rotation
   buttonpad:
     b: brakeMode
-    x: ampPivot
+    x: autopathing #ampPivot
     a: collectorOuttake
-    y: shootPivot #autopathing #shootPivot
+    y: shootPivot
   axes:
     rightTrigger: turboMode
     leftTrigger: slowMode

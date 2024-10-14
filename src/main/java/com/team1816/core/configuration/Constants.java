@@ -31,7 +31,7 @@ public class Constants {
     public static final Transform3d EmptyTransform3d = new Transform3d();
     public static final Quaternion EmptyQuaternion = new Quaternion();
 
-    public static final double kLooperDt = 100;  //factory.getConstant("kLooperDt", .020);
+    public static final double kLooperDt = factory.getConstant("kLooperDt", .020);
 
     /**
      * Git Hash

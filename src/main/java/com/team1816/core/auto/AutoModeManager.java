@@ -5,6 +5,7 @@ import com.google.inject.Singleton;
 import com.team1816.core.states.RobotState;
 import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.modes.AutoMode;
+import com.team1816.lib.auto.modes.AutopathMode;
 import com.team1816.lib.auto.modes.DriveStraightMode;
 import com.team1816.lib.util.logUtil.GreenLogger;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -194,7 +195,9 @@ public class AutoModeManager {
         // System check
         SYSTEM_CHECK,
 
-        TEST
+        TEST,
+
+        AUTOPATH
         }
 
 
@@ -221,6 +224,8 @@ public class AutoModeManager {
 //                return new ScorchedEarthBotToTop3Mode();
 //            case BOTTOM_345_EJECTS:
 //                return new Bottom345Ejects();
+            case AUTOPATH:
+                return new AutopathMode();
             default:
                 GreenLogger.log("Defaulting to drive straight mode");
                 return new DriveStraightMode();
