@@ -36,6 +36,8 @@ public class Autopath {
 
     private static FieldMap fieldMap = new FieldMap(1654, 821);
 
+    private Pose2d autopathStartPosition = null;
+
     /**
      * State: if path needs to be stopped
      */
@@ -99,6 +101,8 @@ public class Autopath {
     private void start() {
         robotState.autopathing = true;
 
+        autopathStartPosition = robotState.fieldToVehicle;
+
         GreenLogger.log("Starting Autopath");
         needsStop = false;
     }
@@ -116,7 +120,8 @@ public class Autopath {
         List<Rotation2d> autopathHeadings = new ArrayList<>();
         //TODO create headings
         // for now I'll make it use the current robot rotation
-        autopathHeadings.add(robotState.fieldToVehicle.getRotation());
+        for(int i = 0; i < autopathTrajectory.getStates().size(); i++)
+            autopathHeadings.add(robotState.fieldToVehicle.getRotation());
 
         //Here's where your trajectory gets checked against the field
         System.out.println("And survey says: "+testTrajectory(autopathTrajectory));
@@ -126,9 +131,7 @@ public class Autopath {
         // Run actions here:
         // e.g. runAction(new SeriesAction(new WaitAction(0.5), ...))
         runAction(
-                new SeriesAction(
-                        autopathTrajectoryAction
-                )
+                autopathTrajectoryAction
         );
     }
 
@@ -137,6 +140,10 @@ public class Autopath {
      */
     protected void done() {
         robotState.autopathing = false;
+
+        System.out.println("Started at "+autopathStartPosition);
+        System.out.println("Hopefully ended at "+autopathTargetPosition);
+        System.out.println("And it thinks it's at "+robotState.fieldToVehicle);
 
         GreenLogger.log("Autopath Done");
     }
