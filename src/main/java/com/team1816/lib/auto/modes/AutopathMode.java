@@ -17,7 +17,7 @@ public class AutopathMode extends AutoMode{
     protected void routine() throws AutoModeEndedException {
         Trajectory autopathTrajectory = new Trajectory();
 
-        autopathTrajectory = AutopathAlgorithm.calculateAutopath(new Pose2d(new Translation2d(robotState.fieldToVehicle.getX()+10, robotState.fieldToVehicle.getY()+5), new Rotation2d(0)));
+        autopathTrajectory = AutopathAlgorithm.calculateAutopath(new Pose2d(new Translation2d(14, 4), new Rotation2d(0)));
 
         List<Rotation2d> autopathHeadings = new ArrayList<>();
         //TODO create headings
