@@ -48,7 +48,9 @@ public class Autopath {
      */
     public Autopath() {
         robotState = Injector.get(RobotState.class);
-        fieldMap.drawPolygon(new double[]{1200, 1200, 800}, new double[]{110, 730, 420}, true);
+        fieldMap.drawPolygon(new double[]{1624, 1624, 0, 0}, new double[]{821, 620, 821, 620}, true);
+        fieldMap.drawCircle(360, 0, 200, true);
+        fieldMap.drawCircle(700, 420, 200, true);
     }
 
     /**
