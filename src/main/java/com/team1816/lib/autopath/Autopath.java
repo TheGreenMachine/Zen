@@ -22,6 +22,7 @@ import jakarta.inject.Singleton;
 import org.apache.commons.math3.Field;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,9 @@ public class Autopath {
 
     private Pose2d autopathTargetPosition = new Pose2d(0,0,new Rotation2d(0));
 
-    private static FieldMap fieldMap = new FieldMap(1654, 821);
+    private static FieldMap stableFieldMap = new FieldMap(1651, 821);
+
+    private static UpdatableAndExpandableFieldMap fieldMap;
 
     private Pose2d autopathStartPosition = null;
 
@@ -48,7 +51,10 @@ public class Autopath {
      */
     public Autopath() {
         robotState = Injector.get(RobotState.class);
-        fieldMap.drawPolygon(new double[]{1200, 1200, 800}, new double[]{110, 730, 420}, true);
+
+        stableFieldMap.drawCircle(1000, 225, 40, true);
+
+        fieldMap = new UpdatableAndExpandableFieldMap(stableFieldMap.getMapX(), stableFieldMap.getMapY(), stableFieldMap, new FieldMap(stableFieldMap.getMapX(), stableFieldMap.getMapY()), 15);
     }
 
     /**
@@ -58,11 +64,49 @@ public class Autopath {
      * @return
      */
     public static boolean testTrajectory(Trajectory trajectory){
-        for(int t = 0; t*.1 < trajectory.getTotalTimeSeconds(); t++){
-            if(fieldMap.checkPixelHasObjectOrOffMap((int)(trajectory.sample(t).poseMeters.getX()*100), (int)(trajectory.sample(t).poseMeters.getY()*100)))
+        Pose2d prevState = trajectory.sample(0).poseMeters;
+
+        for(int t = 1; t*.1 < trajectory.getTotalTimeSeconds() + .1; t++){
+            Pose2d currentState = trajectory.sample(t*.1).poseMeters;
+            if(Bresenham.drawLine(fieldMap.getCurrentMap(), (int)(prevState.getX()*100), (int)(prevState.getY()*100), (int)(currentState.getX()*100), (int)(currentState.getY()*100), false))
                 return false;
         }
+
         return true;
+    }
+
+    public static TimestampTranslation2d returnCollisionStart(Trajectory trajectory){
+        Pose2d prevState = trajectory.sample(0).poseMeters;
+
+        for(int t = 1; t*.1 < trajectory.getTotalTimeSeconds() + .1; t++){
+            Pose2d currentState = trajectory.sample(t*.1).poseMeters;
+            Translation2d result = Bresenham.lineReturnCollision(fieldMap.getCurrentMap(), (int)(prevState.getX()*100), (int)(prevState.getY()*100), (int)(currentState.getX()*100), (int)(currentState.getY()*100));
+
+            if(result != null)
+                return new TimestampTranslation2d(t*.1, result);
+        }
+        return null;
+    }
+
+    public static TimestampTranslation2d returnCollisionEnd(Trajectory trajectory, TimestampTranslation2d timestampTranslation2d){
+//        System.out.println("Testing position: "+timestampTranslation2d.getTranslation2d()+" at time: "+timestampTranslation2d.getTimestamp());
+
+        Pose2d prevState = trajectory.sample(timestampTranslation2d.getTimestamp()).poseMeters;
+
+        for(int t = (int)(timestampTranslation2d.getTimestamp()*20) + 1; t*.05 < trajectory.getTotalTimeSeconds() + .05; t++){
+            Pose2d currentState = trajectory.sample(t*.05).poseMeters;
+
+//            System.out.println("Testing line: "+prevState+" to: "+currentState);
+
+            Translation2d result = Bresenham.lineReturnCollisionInverted(fieldMap.getCurrentMap(), (int)(prevState.getX()*100), (int)(prevState.getY()*100), (int)(currentState.getX()*100), (int)(currentState.getY()*100));
+
+//            System.out.println(result);
+
+            if(result != null)
+                return new TimestampTranslation2d(t*.05, result);
+        }
+
+        return timestampTranslation2d;
     }
 
     /**
@@ -115,7 +159,11 @@ public class Autopath {
 
         Trajectory autopathTrajectory = new Trajectory();
 
+        double beforeTime = System.nanoTime();
+
         autopathTrajectory = AutopathAlgorithm.calculateAutopath(autopathTargetPosition);
+
+        System.out.println("Time taken "+(System.nanoTime()-beforeTime)/1000000000);
 
         List<Rotation2d> autopathHeadings = new ArrayList<>();
         //TODO create headings
@@ -181,5 +229,32 @@ public class Autopath {
         }
 
         action.done();
+    }
+
+
+    public static class TimestampTranslation2d{
+        private double timestamp;
+        private Translation2d translation2d;
+
+        public TimestampTranslation2d(double timestamp, Translation2d translation2d){
+            this.timestamp = timestamp;
+            this.translation2d = translation2d;
+        }
+
+        public double getTimestamp() {
+            return timestamp;
+        }
+
+        public void setTimestamp(double timestamp) {
+            this.timestamp = timestamp;
+        }
+
+        public Translation2d getTranslation2d() {
+            return translation2d;
+        }
+
+        public void setTranslation2d(Translation2d translation2d) {
+            this.translation2d = translation2d;
+        }
     }
 }

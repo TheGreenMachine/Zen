@@ -17,7 +17,11 @@ public class AutopathMode extends AutoMode{
     protected void routine() throws AutoModeEndedException {
         Trajectory autopathTrajectory = new Trajectory();
 
+        double beforeTime = System.nanoTime();
+
         autopathTrajectory = AutopathAlgorithm.calculateAutopath(new Pose2d(new Translation2d(14, 4), new Rotation2d(0)));
+
+        System.out.println("Time taken "+(System.nanoTime()-beforeTime)/1000000000);
 
         List<Rotation2d> autopathHeadings = new ArrayList<>();
         //TODO create headings

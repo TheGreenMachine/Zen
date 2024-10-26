@@ -63,7 +63,7 @@ public class FieldMap {
         return drawLine((int)x1, (int)y1, (int)x2, (int)y2);
     }
     public boolean drawLine(int x1, int y1, int x2, int y2){
-        return Bresenham.drawLine(this, x1, y1, x2, y2);
+        return Bresenham.drawLine(this, x1, y1, x2, y2, true);
     }
 
     public void drawCircle(double centerX, double centerY, double radius, boolean fillCircle){

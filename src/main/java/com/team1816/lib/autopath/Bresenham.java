@@ -1,9 +1,11 @@
 package com.team1816.lib.autopath;
+import edu.wpi.first.math.geometry.Translation2d;
+
 import java.util.ArrayList;
 
 public class Bresenham {
     // function for line generation using Bresenham's line drawing algorithm
-    public static boolean drawLine(FieldMap map, int x1, int y1, int x2, int y2) {
+    public static boolean drawLine(FieldMap map, int x1, int y1, int x2, int y2, boolean applyToMap) {
         boolean collided = false;
         int dx, dy, i, e;
         int incx, incy, inc1, inc2;
@@ -18,7 +20,10 @@ public class Bresenham {
         if (y2 < y1) incy = -1;
         x = x1; y = y1;
         if (dx > dy) {
-            collided = !map.drawPixel(x, y) || collided;
+            if(applyToMap)
+                collided = !map.drawPixel(x, y) || collided;
+            else
+                collided = map.checkPixelHasObjectOrOffMap(x, y) || collided;
             e = 2 * dy - dx;
             inc1 = 2 * (dy - dx);
             inc2 = 2 * dy;
@@ -32,12 +37,18 @@ public class Bresenham {
                 else
                     e += inc2;
                 x += incx;
-                collided = !map.drawPixel(x, y) || collided;
+                if(applyToMap)
+                    collided = !map.drawPixel(x, y) || collided;
+                else
+                    collided = map.checkPixelHasObjectOrOffMap(x, y) || collided;
             }
         }
         else
         {
-            collided = !map.drawPixel(x, y) || collided;
+            if(applyToMap)
+                collided = !map.drawPixel(x, y) || collided;
+            else
+                collided = map.checkPixelHasObjectOrOffMap(x, y) || collided;
             e = 2 * dx - dy;
             inc1 = 2 * (dx - dy);
             inc2 = 2 * dx;
@@ -51,10 +62,128 @@ public class Bresenham {
                 else
                     e += inc2;
                 y += incy;
-                collided = !map.drawPixel(x, y) || collided;
+                if(applyToMap)
+                    collided = !map.drawPixel(x, y) || collided;
+                else
+                    collided = map.checkPixelHasObjectOrOffMap(x, y) || collided;
             }
         }
         return collided;
+    }
+
+    public static Translation2d lineReturnCollision(FieldMap map, int x1, int y1, int x2, int y2) {
+        int dx, dy, i, e;
+        int incx, incy, inc1, inc2;
+        int x, y;
+        dx = x2 - x1;
+        dy = y2 - y1;
+        if (dx < 0) dx = -dx;
+        if (dy < 0) dy = -dy;
+        incx = 1;
+        if (x2 < x1) incx = -1;
+        incy = 1;
+        if (y2 < y1) incy = -1;
+        x = x1; y = y1;
+        if (dx > dy) {
+            if(map.checkPixelHasObjectOrOffMap(x, y))
+                return new Translation2d(x, y);
+            e = 2 * dy - dx;
+            inc1 = 2 * (dy - dx);
+            inc2 = 2 * dy;
+            for (i = 0; i < dx; i++)
+            {
+                if (e >= 0)
+                {
+                    y += incy;
+                    e += inc1;
+                }
+                else
+                    e += inc2;
+                x += incx;
+                if(map.checkPixelHasObjectOrOffMap(x, y))
+                    return new Translation2d(x, y);
+            }
+        }
+        else
+        {
+            if(map.checkPixelHasObjectOrOffMap(x, y))
+                return new Translation2d(x, y);
+            e = 2 * dx - dy;
+            inc1 = 2 * (dx - dy);
+            inc2 = 2 * dx;
+            for (i = 0; i < dy; i++)
+            {
+                if (e >= 0)
+                {
+                    x += incx;
+                    e += inc1;
+                }
+                else
+                    e += inc2;
+                y += incy;
+                if(map.checkPixelHasObjectOrOffMap(x, y))
+                    return new Translation2d(x, y);
+            }
+        }
+        return null;
+    }
+
+    public static Translation2d lineReturnCollisionInverted(FieldMap map, int x1, int y1, int x2, int y2) {
+        boolean collisionStartFound = false;
+        int dx, dy, i, e;
+        int incx, incy, inc1, inc2;
+        int x, y;
+        dx = x2 - x1;
+        dy = y2 - y1;
+        if (dx < 0) dx = -dx;
+        if (dy < 0) dy = -dy;
+        incx = 1;
+        if (x2 < x1) incx = -1;
+        incy = 1;
+        if (y2 < y1) incy = -1;
+        x = x1; y = y1;
+        if (dx > dy) {
+            if(map.checkPixelHasObjectOrOffMap(x, y))
+                collisionStartFound = true;
+            e = 2 * dy - dx;
+            inc1 = 2 * (dy - dx);
+            inc2 = 2 * dy;
+            for (i = 0; i < dx; i++)
+            {
+                if (e >= 0)
+                {
+                    y += incy;
+                    e += inc1;
+                }
+                else
+                    e += inc2;
+                x += incx;
+                if(collisionStartFound && !map.checkPixelHasObjectOrOffMap(x, y))
+                    return new Translation2d(x-1, y);
+            }
+        }
+        else
+        {
+            if(map.checkPixelHasObjectOrOffMap(x, y))
+                collisionStartFound = true;
+            e = 2 * dx - dy;
+            inc1 = 2 * (dx - dy);
+            inc2 = 2 * dx;
+            for (i = 0; i < dy; i++)
+            {
+                if (e >= 0)
+                {
+                    x += incx;
+                    e += inc1;
+                }
+                else
+                    e += inc2;
+                y += incy;
+                if(collisionStartFound && !map.checkPixelHasObjectOrOffMap(x, y))
+                    return new Translation2d(x, y-1);
+            }
+        }
+        return null;
     }
 
     public static int[] drawPerpLine(FieldMap map, double startMinRadius, int x1, int y1, int x2, int y2) {
