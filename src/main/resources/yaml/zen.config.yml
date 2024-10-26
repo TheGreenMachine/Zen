@@ -213,7 +213,7 @@ subsystems:
             velocityErrorMargin: 0.05
             velocityErrorMarginAutoAim: 0.003
             autoAimDegreeTolerance: .1
-            pivotNeutralPosition: 1.5
+            pivotNeutralPosition: 0.1
             pivotAmpShootPosition: 33
             pivotDistanceShootPosition: 8.675
             invertFollowerMotor: 1
