@@ -54,8 +54,9 @@ public class Autopath {
 
         stableFieldMap.drawCircle(1000, 225, 40, true);
         stableFieldMap.drawCircle(800, 225, 40, true);
+        stableFieldMap.drawPolygon(new int[]{500, 800, 700}, new int[]{200,300,400}, true);
 
-        fieldMap = new UpdatableAndExpandableFieldMap(stableFieldMap.getMapX(), stableFieldMap.getMapY(), stableFieldMap, new FieldMap(stableFieldMap.getMapX(), stableFieldMap.getMapY()), 15);
+        fieldMap = new UpdatableAndExpandableFieldMap(stableFieldMap.getMapX(), stableFieldMap.getMapY(), stableFieldMap, new FieldMap(stableFieldMap.getMapX(), stableFieldMap.getMapY()), 40);
     }
 
     /**
