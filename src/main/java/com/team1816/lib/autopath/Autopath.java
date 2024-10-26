@@ -37,7 +37,7 @@ public class Autopath {
 
     private static FieldMap stableFieldMap = new FieldMap(1651, 821);
 
-    private static UpdatableAndExpandableFieldMap fieldMap;
+    public static UpdatableAndExpandableFieldMap fieldMap;
 
     private Pose2d autopathStartPosition = null;
 
@@ -53,6 +53,7 @@ public class Autopath {
         robotState = Injector.get(RobotState.class);
 
         stableFieldMap.drawCircle(1000, 225, 40, true);
+        stableFieldMap.drawCircle(800, 225, 40, true);
 
         fieldMap = new UpdatableAndExpandableFieldMap(stableFieldMap.getMapX(), stableFieldMap.getMapY(), stableFieldMap, new FieldMap(stableFieldMap.getMapX(), stableFieldMap.getMapY()), 15);
     }

@@ -193,6 +193,10 @@ public class UpdatableAndExpandableFieldMap {
         return currentMap;
     }
 
+    public boolean getStableMapCheckPixelHasObjectOrOffMap(int x, int y){
+        return stableMap.checkPixelHasObjectOrOffMap(x, y);
+    }
+
     public FieldMap getUpdatableMap(){
         updatableMapChanged = true;
 

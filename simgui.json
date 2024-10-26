@@ -177,6 +177,10 @@
         "left": 150,
         "right": 2961,
         "top": 79,
+        "trajectory": {
+          "arrows": false,
+          "style": "Line"
+        },
         "turret": {
           "arrowWeight": 3.0,
           "style": "Line"
