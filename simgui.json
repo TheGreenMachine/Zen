@@ -131,6 +131,19 @@
           "weight": 2.5,
           "width": 0.3499999940395355
         },
+        "AutopathTrajectory": {
+          "arrows": false,
+          "color": [
+            0.0,
+            256.0,
+            0.0,
+            256.0
+          ],
+          "length": 0.009999999776482582,
+          "style": "Line",
+          "weight": 0.0,
+          "width": 0.009999999776482582
+        },
         "EstimatedRobot": {
           "arrowColor": [
             0.5980392098426819,

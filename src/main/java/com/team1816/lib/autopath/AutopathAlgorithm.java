@@ -36,6 +36,7 @@ public class AutopathAlgorithm {
 
             if (Autopath.testTrajectory(bestGuessTrajectory)) {
                 System.out.println("found with waypoints: " + waypoints);
+                Autopath.robotState.autopathTrajectory = bestGuessTrajectory;
                 return bestGuessTrajectory;
 
             } else {

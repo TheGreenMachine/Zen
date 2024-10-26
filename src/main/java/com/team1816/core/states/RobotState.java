@@ -16,6 +16,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import org.photonvision.EstimatedRobotPose;
@@ -99,6 +100,7 @@ public class RobotState {
      * Autopathing state
      */
     public boolean autopathing = false;
+    public Trajectory autopathTrajectory = null;
 
     /**
      * Pigeon state
@@ -223,6 +225,9 @@ public class RobotState {
         }
 
         field.getObject("Obstacles").setPoses(obstacles);
+
+
+        field.getObject("AutopathTrajectory").setTrajectory(autopathTrajectory);
 
         SmartDashboard.putData("Mech2d", mechCanvas);
 
