@@ -10,7 +10,8 @@ public class UpdatableAndExpandableFieldMap {
     private final FieldMap updatableMap;
     private FieldMap currentMap;
 
-    private boolean updatableMapChanged;
+    private boolean updatableMapChanged = false;
+    public boolean outputToSmartDashboardChanged = true;
 
     private int mapX;
     private int mapY;
@@ -34,8 +35,6 @@ public class UpdatableAndExpandableFieldMap {
         currentMap = new FieldMap(mapX, mapY);
         currentMap.addOtherMap(stableMap);
         currentMap.addOtherMap(getExpandedMap(updatableMap, expansionWidth));
-
-        updatableMapChanged = false;
 
         this.mapX = mapX;
         this.mapY = mapY;
@@ -197,8 +196,13 @@ public class UpdatableAndExpandableFieldMap {
         return stableMap.checkPixelHasObjectOrOffMap(x, y);
     }
 
+    public FieldMap getUndeditableUpadatableMap(){
+        return updatableMap.getCopy();
+    }
+
     public FieldMap getUpdatableMap(){
         updatableMapChanged = true;
+        outputToSmartDashboardChanged = true;
 
         return updatableMap;
     }

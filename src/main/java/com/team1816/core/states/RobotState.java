@@ -198,33 +198,31 @@ public class RobotState {
     public synchronized void outputToSmartDashboard() {
         field.setRobotPose(fieldToVehicle);
 
-        ArrayList<Pose2d> obstaclesExpanded = new ArrayList<>();
+        if(Autopath.fieldMap != null && Autopath.fieldMap.outputToSmartDashboardChanged) {
+            ArrayList<Pose2d> obstaclesExpanded = new ArrayList<>();
 
-        if(Autopath.fieldMap != null){
-            for(int i = 0; i < Autopath.fieldMap.getCurrentMap().getMapX(); i++) {
+            for (int i = 0; i < Autopath.fieldMap.getCurrentMap().getMapX(); i++) {
                 for (int i2 = 0; i2 < Autopath.fieldMap.getCurrentMap().getMapY(); i2++) {
                     if (Autopath.fieldMap.getCurrentMap().checkPixelHasObjectOrOffMap(i, i2)) {
-                        obstaclesExpanded.add(new Pose2d(new Translation2d(i*.01, i2*.01), new Rotation2d()));
+                        obstaclesExpanded.add(new Pose2d(new Translation2d(i * .01, i2 * .01), new Rotation2d()));
                     }
                 }
             }
-        }
 
-        field.getObject("ExpandedObstacles").setPoses(obstaclesExpanded);
+            field.getObject("ExpandedObstacles").setPoses(obstaclesExpanded);
 
-        ArrayList<Pose2d> obstacles = new ArrayList<>();
+            ArrayList<Pose2d> obstacles = new ArrayList<>();
 
-        if(Autopath.fieldMap != null){
-            for(int i = 0; i < Autopath.fieldMap.getCurrentMap().getMapX(); i++) {
+            for (int i = 0; i < Autopath.fieldMap.getCurrentMap().getMapX(); i++) {
                 for (int i2 = 0; i2 < Autopath.fieldMap.getCurrentMap().getMapY(); i2++) {
                     if (Autopath.fieldMap.getStableMapCheckPixelHasObjectOrOffMap(i, i2)) {
-                        obstacles.add(new Pose2d(new Translation2d(i*.01, i2*.01), new Rotation2d()));
+                        obstacles.add(new Pose2d(new Translation2d(i * .01, i2 * .01), new Rotation2d()));
                     }
                 }
             }
-        }
 
-        field.getObject("Obstacles").setPoses(obstacles);
+            field.getObject("Obstacles").setPoses(obstacles);
+        }
 
 
         field.getObject("AutopathTrajectory").setTrajectory(autopathTrajectory);
