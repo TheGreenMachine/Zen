@@ -52,7 +52,23 @@ public class Autopath {
     public Autopath() {
         robotState = Injector.get(RobotState.class);
 
-        stableFieldMap.drawPolygon(new int[]{500, 800, 700}, new int[]{300,400,500}, true);
+//        Ethan's Code
+        stableFieldMap.drawPolygon(new int[]{0, 0, 175}, new int[]{0, 125, 0}, true);
+        stableFieldMap.drawPolygon(new int[]{1651, 1651, 1476}, new int[]{0, 125, 0}, true);
+
+//        Nora's Code
+        stableFieldMap.drawPolygon(new int[]{0, 0, 100, 100}, new int[]{450, 650, 600, 500}, true);
+        stableFieldMap.drawPolygon(new int[]{1651, 1651, 1551, 1551}, new int[]{450, 650, 600, 500}, true);
+
+//        Noah's Code
+        stableFieldMap.drawPolygon(new int[]{310, 310, 370, 370}, new int[]{380, 440, 440, 380}, true);
+        stableFieldMap.drawPolygon(new int[]{520, 550, 600, 570}, new int[]{290, 240, 270, 320}, true);
+        stableFieldMap.drawPolygon(new int[]{520, 550, 600, 570}, new int[]{531, 581, 551, 501}, true);
+
+//        John Jerney's Code
+        stableFieldMap.drawPolygon(new int[]{1651-310, 1651-310, 1651-370, 1651-370}, new int[]{380, 440, 440, 380}, true);
+        stableFieldMap.drawPolygon(new int[]{1651-520, 1651-550, 1651-600, 1651-570}, new int[]{290, 240, 270, 320}, true);
+        stableFieldMap.drawPolygon(new int[]{1651-520, 1651-550, 1651-600, 1651-570}, new int[]{531, 581, 551, 501}, true);
 
         fieldMap = new UpdatableAndExpandableFieldMap(stableFieldMap.getMapX(), stableFieldMap.getMapY(), stableFieldMap, new FieldMap(stableFieldMap.getMapX(), stableFieldMap.getMapY()), 40);
     }
