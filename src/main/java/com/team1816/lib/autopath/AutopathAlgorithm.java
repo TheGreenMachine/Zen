@@ -13,9 +13,13 @@ import java.util.List;
 
 public class AutopathAlgorithm {
     public static Trajectory calculateAutopath(Pose2d autopathTargetPosition){
+        return calculateAutopath(Autopath.robotState.fieldToVehicle, autopathTargetPosition);
+    }
+
+    public static Trajectory calculateAutopath(Pose2d autopathStartPosition, Pose2d autopathTargetPosition){
         Trajectory bestGuessTrajectory = null;
 
-        Pose2d startPos = Autopath.robotState.fieldToVehicle;
+        Pose2d startPos = autopathStartPosition;
 
         TrajectoryConfig config = new TrajectoryConfig(Drive.kPathFollowingMaxVelMeters, Drive.kPathFollowingMaxAccelMeters);
 
@@ -46,7 +50,7 @@ public class AutopathAlgorithm {
 
 
 
-                System.out.println("Colliding at " + startCollision.getTranslation2d() + " to " + endCollision.getTranslation2d());
+//                System.out.println("Colliding at " + startCollision.getTranslation2d() + " to " + endCollision.getTranslation2d());
             }
         }
 

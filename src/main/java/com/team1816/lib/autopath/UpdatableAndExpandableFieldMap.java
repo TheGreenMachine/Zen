@@ -1,10 +1,5 @@
 package com.team1816.lib.autopath;
 
-import com.team1816.lib.autopath.FieldMap;
-
-import java.lang.reflect.Field;
-import java.util.Arrays;
-
 public class UpdatableAndExpandableFieldMap {
     private final FieldMap stableMap;
     private final FieldMap updatableMap;
@@ -28,20 +23,20 @@ public class UpdatableAndExpandableFieldMap {
         assert(stableMap.getMapX() == mapX && stableMap.getMapY() == mapY);
 
         this.stableMap = stableMap.getCopy();
-        stableMap = getExpandedMap(stableMap, expansionWidth);
+        stableMap = getExpandedObstaclesAndEdgesMap(stableMap, expansionWidth);
 
         this.updatableMap = updatableMap.getCopy();
 
         currentMap = new FieldMap(mapX, mapY);
         currentMap.addOtherMap(stableMap);
-        currentMap.addOtherMap(getExpandedMap(updatableMap, expansionWidth));
+        currentMap.addOtherMap(getExpandedObstaclesMap(updatableMap, expansionWidth));
 
         this.mapX = mapX;
         this.mapY = mapY;
         this.expansionWidth = expansionWidth;
     }
 
-    private FieldMap getExpandedMap(FieldMap map, double expansionWidth){
+    private FieldMap getExpandedObstaclesMap(FieldMap map, double expansionWidth){
         FieldMap expandedMap = map.getCopy();
 
         if(expansionWidth <= 0)
@@ -123,6 +118,14 @@ public class UpdatableAndExpandableFieldMap {
         return expandedMap;
     }
 
+    private FieldMap getExpandedObstaclesAndEdgesMap(FieldMap map, double expansionWidth){
+        FieldMap expandedMap = new FieldMap(map.getMapX(), map.getMapY());
+
+        expandedMap.addOtherMap(getExpandedObstaclesMap(map, expansionWidth));
+
+        return expandedMap;
+    }
+
     public boolean isPerfectOverlay(){
         OverlayedFieldMap overlayedMaps = new OverlayedFieldMap(mapX, mapY);
 
@@ -135,7 +138,7 @@ public class UpdatableAndExpandableFieldMap {
     public void updateCurrentMap(){
         if(updatableMapChanged) {
             currentMap = stableMap.getCopy();
-            currentMap.addOtherMap(getExpandedMap(updatableMap, expansionWidth));
+            currentMap.addOtherMap(getExpandedObstaclesMap(updatableMap, expansionWidth));
         }
     }
 
