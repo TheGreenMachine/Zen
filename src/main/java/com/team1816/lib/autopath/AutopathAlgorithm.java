@@ -23,20 +23,36 @@ public class AutopathAlgorithm {
 
         TrajectoryConfig config = new TrajectoryConfig(Drive.kPathFollowingMaxVelMeters, Drive.kPathFollowingMaxAccelMeters);
 
-        List<Translation2d> waypoints = List.of();
+        List<Translation2d> waypoints = new ArrayList<>();
 
         double beforeTime = System.nanoTime();
 
-        while((System.nanoTime()-beforeTime)/1000000000 < 10) {
-            Translation2d firstWaypoint = waypoints.size() > 0 ? waypoints.get(0) : autopathTargetPosition.getTranslation();
-            Translation2d lastWaypoint = waypoints.size() > 0 ? waypoints.get(waypoints.size()-1) : startPos.getTranslation();
+        while(!Autopath.testTrajectory(bestGuessTrajectory)) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            Translation2d firstWaypoint = waypoints.size() > 0 ? waypoints.get(1) : autopathTargetPosition.getTranslation();
+            Translation2d lastWaypoint = waypoints.size() > 0 ? waypoints.get(waypoints.size()-2) : startPos.getTranslation();
 
             bestGuessTrajectory = TrajectoryGenerator.generateTrajectory(
-                    new Pose2d(startPos.getTranslation(), Rotation2d.fromRadians(Math.atan2(firstWaypoint.getY()-startPos.getY(), firstWaypoint.getX())-startPos.getX())),
+                    new Pose2d(startPos.getTranslation(), Rotation2d.fromRadians(Math.atan2(firstWaypoint.getY()-startPos.getY(), firstWaypoint.getX()-startPos.getX()))),
+//                    new Pose2d(startPos.getTranslation(), new Rotation2d()),
+
                     waypoints,
-                    new Pose2d(autopathTargetPosition.getTranslation(), Rotation2d.fromRadians(Math.atan2(autopathTargetPosition.getY()-lastWaypoint.getY(), autopathTargetPosition.getX())-lastWaypoint.getX())),
+                    new Pose2d(autopathTargetPosition.getTranslation(), Rotation2d.fromRadians(Math.atan2(autopathTargetPosition.getY()-lastWaypoint.getY(), autopathTargetPosition.getX()-lastWaypoint.getX()))),
+//                    new Pose2d(autopathTargetPosition.getTranslation(), new Rotation2d()),
+
                     config
             );
+
+            if(Autopath.robotState.autopathTrajectory != bestGuessTrajectory) {
+                Autopath.robotState.autopathTrajectoryChanged = true;
+                Autopath.robotState.autopathTrajectory = bestGuessTrajectory;
+            } else{
+                System.out.println("Path is not right and looping");
+            }
 
             if (Autopath.testTrajectory(bestGuessTrajectory)) {
                 System.out.println("found with waypoints: " + waypoints);
@@ -50,7 +66,7 @@ public class AutopathAlgorithm {
 
 
 
-//                System.out.println("Colliding at " + startCollision.getTranslation2d() + " to " + endCollision.getTranslation2d());
+                System.out.println("Colliding at " + startCollision.getTranslation2d() + " to " + endCollision.getTranslation2d());
             }
         }
 

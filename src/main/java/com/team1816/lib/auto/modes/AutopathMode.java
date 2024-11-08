@@ -27,8 +27,7 @@ public class AutopathMode extends AutoMode{
         List<Rotation2d> autopathHeadings = new ArrayList<>();
         //TODO create headings
         // for now I'll make it use the current robot rotation
-        for(int i = 0; i < autopathTrajectory.getStates().size(); i++)
-            autopathHeadings.add(robotState.fieldToVehicle.getRotation());
+        autopathHeadings.add(robotState.fieldToVehicle.getRotation());
 
         //Here's where your trajectory gets checked against the field
         System.out.println("And survey says: "+Autopath.testTrajectory(autopathTrajectory));

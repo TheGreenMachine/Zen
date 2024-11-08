@@ -101,6 +101,7 @@ public class RobotState {
      */
     public boolean autopathing = false;
     public Trajectory autopathTrajectory = null;
+    public boolean autopathTrajectoryChanged = false;
 
     /**
      * Pigeon state
@@ -224,10 +225,16 @@ public class RobotState {
             field.getObject("Obstacles").setPoses(obstacles);
 
             Autopath.fieldMap.outputToSmartDashboardChanged = false;
+
+            System.out.println(">>>>>>>>>>reprinted obstacles");
         }
 
+        if(autopathTrajectoryChanged && autopathTrajectory != null) {
+            field.getObject("AutopathTrajectory").setTrajectory(autopathTrajectory);
+            autopathTrajectoryChanged = false;
 
-        field.getObject("AutopathTrajectory").setTrajectory(autopathTrajectory);
+            System.out.println(">>>>>>>>>>reprinted trajectory");
+        }
 
         SmartDashboard.putData("Mech2d", mechCanvas);
 
