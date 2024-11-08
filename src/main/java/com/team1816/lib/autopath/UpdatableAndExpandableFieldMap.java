@@ -123,6 +123,30 @@ public class UpdatableAndExpandableFieldMap {
 
         expandedMap.addOtherMap(getExpandedObstaclesMap(map, expansionWidth));
 
+        for(int i = 0; i < expansionWidth; i++){
+            for(int i2 = 0; i2 < map.getMapY(); i2++){
+                expandedMap.drawPixel(i, i2);
+            }
+        }
+
+        for(int i = map.getMapX()-(int)expansionWidth; i < map.getMapX(); i++){
+            for(int i2 = 0; i2 < map.getMapY(); i2++){
+                expandedMap.drawPixel(i, i2);
+            }
+        }
+
+        for(int i = 0; i < expansionWidth; i++){
+            for(int i2 = (int)expansionWidth; i2 < map.getMapX()-(int)expansionWidth; i2++){
+                expandedMap.drawPixel(i2, i);
+            }
+        }
+
+        for(int i = map.getMapY()-(int)expansionWidth; i < map.getMapY(); i++){
+            for(int i2 = (int)expansionWidth; i2 < map.getMapX()-(int)expansionWidth; i2++){
+                expandedMap.drawPixel(i2, i);
+            }
+        }
+
         return expandedMap;
     }
 

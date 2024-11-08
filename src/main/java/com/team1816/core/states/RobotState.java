@@ -222,6 +222,8 @@ public class RobotState {
             }
 
             field.getObject("Obstacles").setPoses(obstacles);
+
+            Autopath.fieldMap.outputToSmartDashboardChanged = false;
         }
 
 
