@@ -102,6 +102,9 @@ public class RobotState {
     public boolean autopathing = false;
     public Trajectory autopathTrajectory = null;
     public boolean autopathTrajectoryChanged = false;
+    public ArrayList<Pose2d> autopathCollisionStarts = new ArrayList<>();
+    public ArrayList<Pose2d> autopathCollisionEnds = new ArrayList<>();
+    public ArrayList<Pose2d> autopathWaypoints = new ArrayList<>();
 
     /**
      * Pigeon state
@@ -226,15 +229,19 @@ public class RobotState {
 
             Autopath.fieldMap.outputToSmartDashboardChanged = false;
 
-            System.out.println(">>>>>>>>>>reprinted obstacles");
+//            System.out.println(">>>>>>>>>>reprinted obstacles");
         }
 
         if(autopathTrajectoryChanged && autopathTrajectory != null) {
             field.getObject("AutopathTrajectory").setTrajectory(autopathTrajectory);
             autopathTrajectoryChanged = false;
 
-            System.out.println(">>>>>>>>>>reprinted trajectory");
+//            System.out.println(">>>>>>>>>>reprinted trajectory");
         }
+
+        field.getObject("StartCollisionPoints").setPoses(autopathCollisionStarts);
+        field.getObject("EndCollisionPoints").setPoses(autopathCollisionEnds);
+        field.getObject("AutopathWaypoints").setPoses(autopathWaypoints);
 
         SmartDashboard.putData("Mech2d", mechCanvas);
 

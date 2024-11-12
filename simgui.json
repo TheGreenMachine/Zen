@@ -144,6 +144,33 @@
           "weight": 0.0,
           "width": 0.009999999776482582
         },
+        "AutopathWayoints": {
+          "width": 0.10000000149011612
+        },
+        "AutopathWaypoints": {
+          "arrows": false,
+          "color": [
+            0.0,
+            256.0,
+            0.0,
+            256.0
+          ],
+          "length": 0.10000000149011612,
+          "weight": 5.0,
+          "width": 0.10000000149011612
+        },
+        "EndCollisionPoints": {
+          "arrows": false,
+          "color": [
+            0.5661484599113464,
+            0.0,
+            0.894514799118042,
+            255.0
+          ],
+          "length": 0.10000000149011612,
+          "weight": 5.0,
+          "width": 0.10000000149011612
+        },
         "EstimatedRobot": {
           "arrowColor": [
             0.5980392098426819,
@@ -189,6 +216,19 @@
           "length": 0.8889999985694885,
           "weight": 2.0,
           "width": 0.8889999985694885
+        },
+        "StartCollisionPoints": {
+          "arrows": false,
+          "color": [
+            0.0,
+            0.07050158083438873,
+            0.9282700419425964,
+            255.0
+          ],
+          "length": 0.10000000149011612,
+          "style": "Box/Image",
+          "weight": 6.0,
+          "width": 0.10000000149011612
         },
         "Trajectory": {
           "arrows": false,

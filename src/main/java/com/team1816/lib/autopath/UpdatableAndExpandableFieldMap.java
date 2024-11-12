@@ -223,7 +223,7 @@ public class UpdatableAndExpandableFieldMap {
         return stableMap.checkPixelHasObjectOrOffMap(x, y);
     }
 
-    public FieldMap getUndeditableUpadatableMap(){
+    public FieldMap getUneditableUpdatableMap(){
         return updatableMap.getCopy();
     }
 
