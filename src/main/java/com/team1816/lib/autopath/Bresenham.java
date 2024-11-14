@@ -292,7 +292,7 @@ public class Bresenham {
         return null;
     }
 
-    public static int[] drawPerpLineMinusOnePixelPositive(FieldMap map, double startMinRadius, int x1, int y1, int x2, int y2) {
+    public static int[] drawPerpLineMinusOnePixelPositive(FieldMap map, int x1, int y1, int x2, int y2) {
         int midPixelX = (x2-x1)/2+x1;
         int midPixelY = (y2-y1)/2+y1;
 
@@ -307,8 +307,8 @@ public class Bresenham {
         int incx, incy, inc1, inc2;
         int posX, posY;
 
-        boolean changedX = false;
-        boolean changedY = false;
+        int lastX = x1;
+        int lastY = y1;
 
         dx = x2 - x1;
         dy = y2 - y1;
@@ -329,17 +329,16 @@ public class Bresenham {
                 {
                     posY += incy;
                     e += inc1;
-                    changedY = true;
                 }
                 else
                     e += inc2;
                 posX += incx;
-                if(dist(posX, posY, midPixelX, midPixelY) > startMinRadius){
-                    if (!map.checkPixelHasObjectOrOffMap(posX, posY)) {
-                        return new int[]{posX-incx, changedY ? posY-incy : posY};
-                    }
+                if (!map.checkPixelHasObjectOrOffMap(posX, posY)) {
+                    return new int[]{lastX, lastY};
+                } else{
+                    lastX = posX;
+                    lastY = posY;
                 }
-                changedY = false;
             }
         }
         else
@@ -353,17 +352,16 @@ public class Bresenham {
                 {
                     posX += incx;
                     e += inc1;
-                    changedX = true;
                 }
                 else
                     e += inc2;
                 posY += incy;
-                if(dist(posX, posY, midPixelX, midPixelY) > startMinRadius) {
-                    if (!map.checkPixelHasObjectOrOffMap(posX, posY)) {
-                        return new int[]{changedX ? posX-incx : posX, posY-incy};
-                    }
+                if (!map.checkPixelHasObjectOrOffMap(posX, posY)) {
+                    return new int[]{lastX, lastY};
+                } else{
+                    lastX = posX;
+                    lastY = posY;
                 }
-                changedX = false;
             }
         }
         System.out.println("Error in perping");

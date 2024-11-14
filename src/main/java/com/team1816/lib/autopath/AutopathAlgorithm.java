@@ -89,7 +89,16 @@ public class AutopathAlgorithm {
                         throw new RuntimeException(e);
                     }
 
-                    int[] collisionPoint =
+                    int[] collisionPointPositive =
+                            Bresenham.drawPerpLineMinusOnePixelPositive(
+                                    Autopath.fieldMap.getCurrentMap(),
+                                    startNewCollision[0],
+                                    startNewCollision[1],
+                                    endNewCollision[0],
+                                    endNewCollision[1]
+                            );
+
+                    int[] collisionPointNegative =
                             Bresenham.drawPerpLineMinusOnePixelNegative(
                                     Autopath.fieldMap.getCurrentMap(),
                                     startNewCollision[0],
@@ -98,36 +107,37 @@ public class AutopathAlgorithm {
                                     endNewCollision[1]
                             ); //TODO fix the fact that im only perping "negatively"
 
-                    Autopath.robotState.autopathWaypoints.add(new Pose2d(new Translation2d(collisionPoint[0]/100., collisionPoint[1]/100.), new Rotation2d()));
+                    Autopath.robotState.autopathWaypointsPos.add(new Pose2d(new Translation2d(collisionPointPositive[0]/100., collisionPointPositive[1]/100.), new Rotation2d()));
+                    Autopath.robotState.autopathWaypointsNeg.add(new Pose2d(new Translation2d(collisionPointNegative[0]/100., collisionPointNegative[1]/100.), new Rotation2d()));
 
-                    boolean isCollisionPointOnMap = Autopath.fieldMap.getCurrentMap().checkPixelHasObjectOrOffMap(collisionPoint[0], collisionPoint[1]);
+                    boolean isCollisionPointOnMap = Autopath.fieldMap.getCurrentMap().checkPixelHasObjectOrOffMap(collisionPointNegative[0], collisionPointNegative[1]);
                     boolean isStartPointOnMap = Autopath.fieldMap.getCurrentMap().checkPixelOnMap(autopathStartPosition.getX(), autopathStartPosition.getY());
 
                     int[] possibleStartNewCollision =
                             Bresenham.lineReturnCollisionInverted(
                                     Autopath.fieldMap.getCurrentMap(),
-                                    collisionPoint[0],
-                                    collisionPoint[1],
-                                    collisionPoint[0]-(int)(startToEndTranspose.getX()),
-                                    collisionPoint[1]-(int)(startToEndTranspose.getY()),
+                                    collisionPointNegative[0],
+                                    collisionPointNegative[1],
+                                    collisionPointNegative[0]-(int)(startToEndTranspose.getX()),
+                                    collisionPointNegative[1]-(int)(startToEndTranspose.getY()),
                                     true
                             );
                     int[] possibleEndNewCollision =
                             Bresenham.lineReturnCollisionInverted(
                                     Autopath.fieldMap.getCurrentMap(),
-                                    collisionPoint[0],
-                                    collisionPoint[1],
-                                    collisionPoint[0]+(int)(100*startToEndTranspose.getX()),
-                                    collisionPoint[1]+(int)(100*startToEndTranspose.getY()),
+                                    collisionPointNegative[0],
+                                    collisionPointNegative[1],
+                                    collisionPointNegative[0]+(int)(100*startToEndTranspose.getX()),
+                                    collisionPointNegative[1]+(int)(100*startToEndTranspose.getY()),
                                     true
                             );
 
-                    System.out.println("Original Start: "+startCollision.getTranslation2d().getX()+", "+startCollision.getTranslation2d().getY());
-                    System.out.println("Original End: "+endCollision.getTranslation2d().getX()+", "+endCollision.getTranslation2d().getY());
-                    System.out.println(Autopath.fieldMap.getCurrentMap().checkPixelHasObject(collisionPoint[0], collisionPoint[1]));
-                    System.out.println("Colliding: "+collisionPoint[0]+", "+collisionPoint[1]);
-                    System.out.println("Start: "+possibleStartNewCollision[0]+", "+possibleStartNewCollision[1]);
-                    System.out.println("End: "+possibleEndNewCollision[0]+", "+possibleEndNewCollision[1]);
+//                    System.out.println("Original Start: "+startCollision.getTranslation2d().getX()+", "+startCollision.getTranslation2d().getY());
+//                    System.out.println("Original End: "+endCollision.getTranslation2d().getX()+", "+endCollision.getTranslation2d().getY());
+//                    System.out.println(Autopath.fieldMap.getCurrentMap().checkPixelHasObject(collisionPointNegative[0], collisionPointNegative[1]));
+//                    System.out.println("Colliding: "+collisionPointNegative[0]+", "+collisionPointNegative[1]);
+//                    System.out.println("Start: "+possibleStartNewCollision[0]+", "+possibleStartNewCollision[1]);
+//                    System.out.println("End: "+possibleEndNewCollision[0]+", "+possibleEndNewCollision[1]);
 
                     if(Arrays.equals(startNewCollision, endNewCollision)) {
                         newWaypoint = startNewCollision;
@@ -137,7 +147,7 @@ public class AutopathAlgorithm {
                         newWaypoint = startNewCollision;
                         break;
                     }
-                    else if(lastCollisionPoint != null && (collisionPoint[0] < lastCollisionPoint[0] || collisionPoint[1] > lastCollisionPoint[1])){
+                    else if(lastCollisionPoint != null && (collisionPointNegative[0] < lastCollisionPoint[0] || collisionPointNegative[1] > lastCollisionPoint[1])){
                         newWaypoint = startNewCollision;
                         System.out.println("AAAAHHHHHHH AutopathAlgorithm NOT DOING GOOD");
                         break;
@@ -147,7 +157,7 @@ public class AutopathAlgorithm {
                         endNewCollision = possibleEndNewCollision;
                     }
 
-                    lastCollisionPoint = collisionPoint;
+                    lastCollisionPoint = collisionPointNegative;
 
                     iterationNum++;
                 }

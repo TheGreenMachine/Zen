@@ -5,6 +5,7 @@ import com.team1816.lib.auto.Color;
 import com.team1816.lib.auto.actions.TrajectoryAction;
 import com.team1816.lib.autopath.Autopath;
 import com.team1816.lib.autopath.AutopathAlgorithm;
+import com.team1816.lib.autopath.AutopathAlgorithmNodeTree;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -20,7 +21,9 @@ public class AutopathMode extends AutoMode{
 
         double beforeTime = System.nanoTime();
 
-        autopathTrajectory = AutopathAlgorithm.calculateAutopath(new Pose2d(new Translation2d(4, 7), new Rotation2d(0)));
+//        autopathTrajectory = AutopathAlgorithm.calculateAutopath(new Pose2d(new Translation2d(14, 3), new Rotation2d(0)));
+        autopathTrajectory = AutopathAlgorithmNodeTree.calculateAutopath(new Pose2d(new Translation2d(14, 4), new Rotation2d(0)));
+
 
         System.out.println("Time taken "+(System.nanoTime()-beforeTime)/1000000000);
 
