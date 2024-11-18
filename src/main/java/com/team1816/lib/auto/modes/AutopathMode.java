@@ -20,7 +20,7 @@ public class AutopathMode extends AutoMode{
 
         double beforeTime = System.nanoTime();
 
-        autopathTrajectory = AutopathAlgorithm.calculateAutopath(new Pose2d(new Translation2d(4, 7), new Rotation2d(0)));
+        autopathTrajectory = AutopathAlgorithm.calculateAutopath(new Pose2d(new Translation2d(14, 4), new Rotation2d(0)));
 
         System.out.println("Time taken "+(System.nanoTime()-beforeTime)/1000000000);
 

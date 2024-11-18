@@ -65,123 +65,14 @@ public class AutopathAlgorithm {
                 return bestGuessTrajectory;
 
             } else {
-                Autopath.TimestampTranslation2d startCollision = Autopath.returnCollisionStart(bestGuessTrajectory);
-                Autopath.TimestampTranslation2d endCollision = Autopath.returnCollisionEnd(bestGuessTrajectory, startCollision);
+                int[] tempNewWaypoint = getWaypoint(bestGuessTrajectory, true);
+                double[] newWaypoint = new double[]{tempNewWaypoint[0]/100., tempNewWaypoint[1]/100.};
 
-                Autopath.robotState.autopathCollisionStarts.add(new Pose2d(startCollision.getTranslation2d().times(.01), new Rotation2d()));
-                Autopath.robotState.autopathCollisionEnds.add(new Pose2d(endCollision.getTranslation2d().times(.01), new Rotation2d()));
+                addNewWaypoint(newWaypoint, waypoints, startPos, autopathTargetPosition, config);
 
-                Translation2d startToEndTranspose = endCollision.getTranslation2d().minus(startCollision.getTranslation2d());
+                Autopath.robotState.autopathWaypoints.add(new Pose2d(new Translation2d(newWaypoint[0], newWaypoint[1]), new Rotation2d()));
 
-                int[] newWaypoint = new int[]{(int)startCollision.getTranslation2d().getX(), (int)startCollision.getTranslation2d().getY()};
-
-                int[] startNewCollision = new int[]{(int)startCollision.getTranslation2d().getX(), (int)startCollision.getTranslation2d().getY()};
-                int[] endNewCollision = new int[]{(int)endCollision.getTranslation2d().getX(), (int)endCollision.getTranslation2d().getY()};
-
-                int[] lastCollisionPoint = null;
-
-                int iterationNum = 0;
-
-                while (true){
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    int[] collisionPoint =
-                            Bresenham.drawPerpLineMinusOnePixelNegative(
-                                    Autopath.fieldMap.getCurrentMap(),
-                                    startNewCollision[0],
-                                    startNewCollision[1],
-                                    endNewCollision[0],
-                                    endNewCollision[1]
-                            ); //TODO fix the fact that im only perping "negatively"
-
-                    Autopath.robotState.autopathWaypoints.add(new Pose2d(new Translation2d(collisionPoint[0]/100., collisionPoint[1]/100.), new Rotation2d()));
-
-                    boolean isCollisionPointOnMap = Autopath.fieldMap.getCurrentMap().checkPixelHasObjectOrOffMap(collisionPoint[0], collisionPoint[1]);
-                    boolean isStartPointOnMap = Autopath.fieldMap.getCurrentMap().checkPixelOnMap(autopathStartPosition.getX(), autopathStartPosition.getY());
-
-                    int[] possibleStartNewCollision =
-                            Bresenham.lineReturnCollisionInverted(
-                                    Autopath.fieldMap.getCurrentMap(),
-                                    collisionPoint[0],
-                                    collisionPoint[1],
-                                    collisionPoint[0]-(int)(startToEndTranspose.getX()),
-                                    collisionPoint[1]-(int)(startToEndTranspose.getY()),
-                                    true
-                            );
-                    int[] possibleEndNewCollision =
-                            Bresenham.lineReturnCollisionInverted(
-                                    Autopath.fieldMap.getCurrentMap(),
-                                    collisionPoint[0],
-                                    collisionPoint[1],
-                                    collisionPoint[0]+(int)(100*startToEndTranspose.getX()),
-                                    collisionPoint[1]+(int)(100*startToEndTranspose.getY()),
-                                    true
-                            );
-
-                    System.out.println("Original Start: "+startCollision.getTranslation2d().getX()+", "+startCollision.getTranslation2d().getY());
-                    System.out.println("Original End: "+endCollision.getTranslation2d().getX()+", "+endCollision.getTranslation2d().getY());
-                    System.out.println(Autopath.fieldMap.getCurrentMap().checkPixelHasObject(collisionPoint[0], collisionPoint[1]));
-                    System.out.println("Colliding: "+collisionPoint[0]+", "+collisionPoint[1]);
-                    System.out.println("Start: "+possibleStartNewCollision[0]+", "+possibleStartNewCollision[1]);
-                    System.out.println("End: "+possibleEndNewCollision[0]+", "+possibleEndNewCollision[1]);
-
-                    if(Arrays.equals(startNewCollision, endNewCollision)) {
-                        newWaypoint = startNewCollision;
-                        break;
-                    }
-                    else if(Arrays.equals(startNewCollision, possibleStartNewCollision) && Arrays.equals(endNewCollision, possibleEndNewCollision)) {
-                        newWaypoint = startNewCollision;
-                        break;
-                    }
-                    else if(lastCollisionPoint != null && (collisionPoint[0] < lastCollisionPoint[0] || collisionPoint[1] > lastCollisionPoint[1])){
-                        newWaypoint = startNewCollision;
-                        System.out.println("AAAAHHHHHHH AutopathAlgorithm NOT DOING GOOD");
-                        break;
-                    } //TODO if this ever actually triggers we need to revamp the system so that it...doesn't, this is basically just a botch solution to a really bad problem we may or may not have
-                    else{
-                        startNewCollision = possibleStartNewCollision;
-                        endNewCollision = possibleEndNewCollision;
-                    }
-
-                    lastCollisionPoint = collisionPoint;
-
-                    iterationNum++;
-                }
-
-                if(Math.atan2(startToEndTranspose.getY(), startToEndTranspose.getX()) < Math.PI/2 || Math.atan2(startToEndTranspose.getY(), startToEndTranspose.getX()) > 3*Math.PI/2){
-                    newWaypoint[0] += 5;
-                } else{
-                    newWaypoint[0] -= 5;
-                }
-
-                if(Math.atan2(startToEndTranspose.getY(), startToEndTranspose.getX()) < Math.PI){
-                    newWaypoint[1] -= 5;
-                } else {
-                    newWaypoint[1] += 5;
-                }
-
-                double dist = Bresenham.dist(newWaypoint[0], newWaypoint[1], startPos.getX()*100, startPos.getY()*100);
-                int waypointsBeforeSize = waypoints.size();
-                //TODO might have to make this a binary rather than just iterative insertion sort
-                for(int i = 0; i < waypoints.size(); i++){
-                    if(dist == waypoints.get(i).getDistance(startPos.getTranslation())*100){
-                        System.out.println("algorithm's being bad");
-                    }
-                    else if(dist < waypoints.get(i).getDistance(startPos.getTranslation())*100){
-                        waypoints.add(i, new Translation2d(newWaypoint[0]/100., newWaypoint[1]/100.));
-                        break;
-                    }
-                }
-                if(waypoints.size() == waypointsBeforeSize)
-                    waypoints.add(new Translation2d(newWaypoint[0]/100., newWaypoint[1]/100.));
-
-                Autopath.robotState.autopathWaypoints.add(new Pose2d(new Translation2d(newWaypoint[0]/100., newWaypoint[1]/100.), new Rotation2d()));
-
-                System.out.println("Colliding at " + startCollision.getTranslation2d() + " to " + endCollision.getTranslation2d());
+//                System.out.println("Colliding at " + startCollision.getTranslation2d() + " to " + endCollision.getTranslation2d());
                 System.out.println("Solved with waypoint: " + newWaypoint[0] + ", " + newWaypoint[1]);
             }
         }
@@ -190,5 +81,167 @@ public class AutopathAlgorithm {
         System.out.println("tried with waypoints " + waypoints);
 
         return null;
+    }
+
+    private static void addNewWaypoint(double[] newWaypoint, List<Translation2d> waypoints, Pose2d startPos, Pose2d endPos, TrajectoryConfig config){
+        int waypointsBeforeSize = waypoints.size();
+        Translation2d newFirstWaypoint = new Translation2d(newWaypoint[0], newWaypoint[1]);
+        Translation2d newLastWaypoint = waypoints.size() > 0 ? waypoints.get(waypoints.size()-1) : new Translation2d(newWaypoint[0], newWaypoint[1]);
+        waypoints.add(0, new Translation2d(newWaypoint[0], newWaypoint[1]));
+        double bestTime = TrajectoryGenerator.generateTrajectory(
+                new Pose2d(startPos.getTranslation(), Rotation2d.fromRadians(Math.atan2(newFirstWaypoint.getY()-startPos.getY(), newFirstWaypoint.getX()-startPos.getX()))),
+                waypoints,
+                new Pose2d(endPos.getTranslation(), Rotation2d.fromRadians(Math.atan2(endPos.getY()-newLastWaypoint.getY(), endPos.getX()-newLastWaypoint.getX()))),
+                config
+        ).getTotalTimeSeconds();
+        waypoints.remove(0);
+        int bestIndex = 0;
+
+        for(int i = 0; i < waypoints.size(); i++){
+            newFirstWaypoint = waypoints.get(0);
+            newLastWaypoint = waypoints.get(waypoints.size()-1);
+
+            double newTime;
+
+            if(i == waypoints.size()-1) {
+                newLastWaypoint = new Translation2d(newWaypoint[0], newWaypoint[1]);
+                waypoints.add(new Translation2d(newWaypoint[0], newWaypoint[1]));
+                newTime = TrajectoryGenerator.generateTrajectory(
+                        new Pose2d(startPos.getTranslation(), Rotation2d.fromRadians(Math.atan2(newFirstWaypoint.getY() - startPos.getY(), newFirstWaypoint.getX() - startPos.getX()))),
+                        waypoints,
+                        new Pose2d(endPos.getTranslation(), Rotation2d.fromRadians(Math.atan2(endPos.getY() - newLastWaypoint.getY(), endPos.getX() - newLastWaypoint.getX()))),
+                        config
+                ).getTotalTimeSeconds();
+                waypoints.remove(waypoints.size() - 1);
+            }
+            else {
+                waypoints.add(i+1, new Translation2d(newWaypoint[0], newWaypoint[1]));
+                newTime = TrajectoryGenerator.generateTrajectory(
+                        new Pose2d(startPos.getTranslation(), Rotation2d.fromRadians(Math.atan2(newFirstWaypoint.getY() - startPos.getY(), newFirstWaypoint.getX() - startPos.getX()))),
+                        waypoints,
+                        new Pose2d(endPos.getTranslation(), Rotation2d.fromRadians(Math.atan2(endPos.getY() - newLastWaypoint.getY(), endPos.getX() - newLastWaypoint.getX()))),
+                        config
+                ).getTotalTimeSeconds();
+                waypoints.remove(i+1);
+            }
+
+            if(bestTime > newTime){
+                bestIndex = i+1;
+                bestTime = newTime;
+            }
+        }
+
+        waypoints.add(bestIndex, new Translation2d(newWaypoint[0], newWaypoint[1]));
+    }
+
+    private static int[] getWaypoint(Trajectory bestGuessTrajectory, boolean makeNegative) {
+        Autopath.TimestampTranslation2d startCollision = Autopath.returnCollisionStart(bestGuessTrajectory);
+        Autopath.TimestampTranslation2d endCollision = Autopath.returnCollisionEnd(bestGuessTrajectory, startCollision);
+
+        Autopath.robotState.autopathCollisionStarts.add(new Pose2d(startCollision.getTranslation2d().times(.01), new Rotation2d()));
+        Autopath.robotState.autopathCollisionEnds.add(new Pose2d(endCollision.getTranslation2d().times(.01), new Rotation2d()));
+
+        Translation2d startToEndTranspose = endCollision.getTranslation2d().minus(startCollision.getTranslation2d());
+
+        int[] newWaypoint;
+
+        int[] startNewCollision = new int[]{(int) startCollision.getTranslation2d().getX(), (int) startCollision.getTranslation2d().getY()};
+        int[] endNewCollision = new int[]{(int) endCollision.getTranslation2d().getX(), (int) endCollision.getTranslation2d().getY()};
+
+        int[] lastCollisionPoint = null;
+
+        int buffer = makeNegative ? -5 : 5;
+
+        int iterationNum = 0;
+
+        while (true) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            int[] collisionPoint;
+
+            if (makeNegative)
+                collisionPoint =
+                        Bresenham.drawPerpLineMinusOnePixelNegative(
+                                Autopath.fieldMap.getCurrentMap(),
+                                startNewCollision[0],
+                                startNewCollision[1],
+                                endNewCollision[0],
+                                endNewCollision[1]
+                        ); //TODO fix the fact that im only perping "negatively"
+            else
+                collisionPoint =
+                    Bresenham.drawPerpLineMinusOnePixelPositive(
+                            Autopath.fieldMap.getCurrentMap(),
+                            startNewCollision[0],
+                            startNewCollision[1],
+                            endNewCollision[0],
+                            endNewCollision[1]
+                    ); //TODO fix the fact that im only perping "negatively"
+
+            Autopath.robotState.autopathWaypoints.add(new Pose2d(new Translation2d(collisionPoint[0] / 100., collisionPoint[1] / 100.), new Rotation2d()));
+
+            int[] possibleStartNewCollision =
+                    Bresenham.lineReturnCollisionInverted(
+                            Autopath.fieldMap.getCurrentMap(),
+                            collisionPoint[0],
+                            collisionPoint[1],
+                            collisionPoint[0] - (int) (startToEndTranspose.getX()),
+                            collisionPoint[1] - (int) (startToEndTranspose.getY()),
+                            true
+                    );
+            int[] possibleEndNewCollision =
+                    Bresenham.lineReturnCollisionInverted(
+                            Autopath.fieldMap.getCurrentMap(),
+                            collisionPoint[0],
+                            collisionPoint[1],
+                            collisionPoint[0] + (int) (100 * startToEndTranspose.getX()),
+                            collisionPoint[1] + (int) (100 * startToEndTranspose.getY()),
+                            true
+                    );
+
+            System.out.println("Original Start: " + startCollision.getTranslation2d().getX() + ", " + startCollision.getTranslation2d().getY());
+            System.out.println("Original End: " + endCollision.getTranslation2d().getX() + ", " + endCollision.getTranslation2d().getY());
+            System.out.println(Autopath.fieldMap.getCurrentMap().checkPixelHasObject(collisionPoint[0], collisionPoint[1]));
+            System.out.println("Colliding: " + collisionPoint[0] + ", " + collisionPoint[1]);
+            System.out.println("Start: " + possibleStartNewCollision[0] + ", " + possibleStartNewCollision[1]);
+            System.out.println("End: " + possibleEndNewCollision[0] + ", " + possibleEndNewCollision[1]);
+
+            if (Arrays.equals(startNewCollision, endNewCollision)) {
+                newWaypoint = startNewCollision;
+                break;
+            } else if (Arrays.equals(startNewCollision, possibleStartNewCollision) && Arrays.equals(endNewCollision, possibleEndNewCollision)) {
+                newWaypoint = startNewCollision;
+                break;
+            } else if (lastCollisionPoint != null && (collisionPoint[0] < lastCollisionPoint[0] || (makeNegative ? collisionPoint[1] > lastCollisionPoint[1] : collisionPoint[1] < lastCollisionPoint[1]))) {
+                newWaypoint = startNewCollision;
+                System.out.println("AAAAHHHHHHH AutopathAlgorithm NOT DOING GOOD");
+                break;
+            } //TODO if this ever actually triggers we need to revamp the system so that it...doesn't, this is basically just a botch solution to a really bad problem we may or may not have
+            else {
+                startNewCollision = possibleStartNewCollision;
+                endNewCollision = possibleEndNewCollision;
+            }
+
+            lastCollisionPoint = collisionPoint;
+
+            iterationNum++;
+        }
+
+        if (Math.atan2(startToEndTranspose.getY(), startToEndTranspose.getX()) < Math.PI / 2 || Math.atan2(startToEndTranspose.getY(), startToEndTranspose.getX()) > 3 * Math.PI / 2) {
+            newWaypoint[0] -= buffer;
+        } else {
+            newWaypoint[0] += buffer;
+        }
+
+        if (Math.atan2(startToEndTranspose.getY(), startToEndTranspose.getX()) < Math.PI) {
+            newWaypoint[1] += buffer;
+        } else {
+            newWaypoint[1] -= buffer;
+        }
+        return newWaypoint;
     }
 }
