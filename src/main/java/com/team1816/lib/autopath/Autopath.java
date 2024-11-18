@@ -195,7 +195,9 @@ public class Autopath {
 
         double beforeTime = System.nanoTime();
 
-        autopathTrajectory = AutopathAlgorithm.calculateAutopath(autopathTargetPosition);
+//        autopathTrajectory = AutopathAlgorithm.calculateAutopath(autopathTargetPosition);
+        autopathTrajectory = AutopathAlgorithmNodeTree.calculateAutopath(autopathTargetPosition);
+
 
         System.out.println("Time taken "+(System.nanoTime()-beforeTime)/1000000000);
 

@@ -101,10 +101,14 @@ public class RobotState {
      */
     public boolean autopathing = false;
     public Trajectory autopathTrajectory = null;
+    public ArrayList<Trajectory> autopathTrajectoryPossibilities = new ArrayList<>();
     public boolean autopathTrajectoryChanged = false;
+    public boolean autopathTrajectoryPossibilitiesChanged = false;
     public ArrayList<Pose2d> autopathCollisionStarts = new ArrayList<>();
     public ArrayList<Pose2d> autopathCollisionEnds = new ArrayList<>();
     public ArrayList<Pose2d> autopathWaypoints = new ArrayList<>();
+    public ArrayList<Pose2d> autopathWaypointsPos = new ArrayList<>();
+    public ArrayList<Pose2d> autopathWaypointsNeg = new ArrayList<>();
 
     /**
      * Pigeon state
@@ -228,16 +232,19 @@ public class RobotState {
             field.getObject("Obstacles").setPoses(obstacles);
 
             Autopath.fieldMap.outputToSmartDashboardChanged = false;
-
-//            System.out.println(">>>>>>>>>>reprinted obstacles");
         }
 
         if(autopathTrajectoryChanged && autopathTrajectory != null) {
             field.getObject("AutopathTrajectory").setTrajectory(autopathTrajectory);
             autopathTrajectoryChanged = false;
-
-//            System.out.println(">>>>>>>>>>reprinted trajectory");
         }
+
+//        for(Trajectory trajectory : autopathTrajectoryPossibilities){
+//            if(autopathTrajectoryPossibilitiesChanged && trajectory != null) {
+//                field.getObject("AutopathTrajectory: "+trajectory.hashCode()).setTrajectory(trajectory);
+//                autopathTrajectoryPossibilitiesChanged = false;
+//            }
+//        }
 
         field.getObject("StartCollisionPoints").setPoses(autopathCollisionStarts);
         field.getObject("EndCollisionPoints").setPoses(autopathCollisionEnds);
