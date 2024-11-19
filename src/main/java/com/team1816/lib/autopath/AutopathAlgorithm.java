@@ -25,62 +25,110 @@ public class AutopathAlgorithm {
         Autopath.robotState.autopathCollisionStarts.clear();
         Autopath.robotState.autopathCollisionEnds.clear();
 
-        Trajectory bestGuessTrajectory = null;
-
-        Pose2d startPos = autopathStartPosition;
-
         TrajectoryConfig config = new TrajectoryConfig(Drive.kPathFollowingMaxVelMeters, Drive.kPathFollowingMaxAccelMeters);
 
-        List<Translation2d> waypoints = new ArrayList<>();
+        ArrayList<WaypointTreeNode> branches = new ArrayList<>();
+        branches.add(
+                new WaypointTreeNode(
+                        new Pose2d(autopathStartPosition.getTranslation(), Rotation2d.fromRadians(Math.atan2(autopathTargetPosition.getY() - autopathStartPosition.getY(), autopathTargetPosition.getX() - autopathStartPosition.getX()))),
+                        new ArrayList<>(),
+                        new Pose2d(autopathTargetPosition.getTranslation(), Rotation2d.fromRadians(Math.atan2(autopathTargetPosition.getY() - autopathStartPosition.getY(), autopathTargetPosition.getX() - autopathStartPosition.getX()))),
+                        config
+                )
+        );
 
-        double beforeTime = System.nanoTime();
+        while(!branches.get(0).trajectoryCheck){
+            for(int i = 1; i < branches.size(); i++)
+                if(branches.get(i-1).trajectoryCheck) {
+                    branches.remove(i);
+                    i--;
+                }
 
-        while(!Autopath.testTrajectory(bestGuessTrajectory)) {
-            try {
-                Thread.sleep(2500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            Autopath.robotState.autopathTrajectoryPossibilities.clear();
 
-            Translation2d firstWaypoint = waypoints.size() > 0 ? waypoints.get(0) : autopathTargetPosition.getTranslation();
-            Translation2d lastWaypoint = waypoints.size() > 0 ? waypoints.get(waypoints.size()-1) : startPos.getTranslation();
+            for(WaypointTreeNode node : branches)
+                Autopath.robotState.autopathTrajectoryPossibilities.add(node.getTrajectory());
+            Autopath.robotState.autopathTrajectoryPossibilitiesChanged = true;
 
-            bestGuessTrajectory = TrajectoryGenerator.generateTrajectory(
-                    new Pose2d(startPos.getTranslation(), Rotation2d.fromRadians(Math.atan2(firstWaypoint.getY()-startPos.getY(), firstWaypoint.getX()-startPos.getX()))),
-                    waypoints,
-                    new Pose2d(autopathTargetPosition.getTranslation(), Rotation2d.fromRadians(Math.atan2(autopathTargetPosition.getY()-lastWaypoint.getY(), autopathTargetPosition.getX()-lastWaypoint.getX()))),
-                    config
-            );
+            for(int currentBranchIndex = 0; currentBranchIndex < branches.size(); currentBranchIndex++) {
+                ArrayList<Translation2d> waypoints = branches.get(currentBranchIndex).getWaypoints();
+                Trajectory bestGuessTrajectory = branches.get(currentBranchIndex).getTrajectory();
 
-            if(Autopath.robotState.autopathTrajectory != bestGuessTrajectory) {
-                Autopath.robotState.autopathTrajectoryChanged = true;
-                Autopath.robotState.autopathTrajectory = bestGuessTrajectory;
-            } else{
-                System.out.println("Path is not right and looping");
-            }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
 
-            if (Autopath.testTrajectory(bestGuessTrajectory)) {
-                System.out.println("found with waypoints: " + waypoints);
-                Autopath.robotState.autopathTrajectory = bestGuessTrajectory;
-                return bestGuessTrajectory;
+                if (branches.get(currentBranchIndex).trajectoryCheck) {
+                    Autopath.robotState.autopathTrajectory = bestGuessTrajectory;
 
-            } else {
-                int[] tempNewWaypoint = getWaypoint(bestGuessTrajectory, true);
-                double[] newWaypoint = new double[]{tempNewWaypoint[0]/100., tempNewWaypoint[1]/100.};
+                    for(int i = currentBranchIndex+1; i < branches.size(); i+=0)
+                        branches.remove(i);
 
-                addNewWaypoint(newWaypoint, waypoints, startPos, autopathTargetPosition, config);
+                    Autopath.robotState.autopathTrajectoryChanged = true;
+                } else {
+                    branches.remove(currentBranchIndex);
+                    currentBranchIndex--;
 
-                Autopath.robotState.autopathWaypoints.add(new Pose2d(new Translation2d(newWaypoint[0], newWaypoint[1]), new Rotation2d()));
+                    int[] tempNewWaypointNegative = getWaypoint(bestGuessTrajectory, true);
+                    double[] newWaypointNegative = new double[]{tempNewWaypointNegative[0] / 100., tempNewWaypointNegative[1] / 100.};
+                    ArrayList<Translation2d> newWaypointsNegative = (ArrayList<Translation2d>) waypoints.clone();
+                    addNewWaypoint(newWaypointNegative, newWaypointsNegative, autopathStartPosition, autopathTargetPosition, config);
 
-//                System.out.println("Colliding at " + startCollision.getTranslation2d() + " to " + endCollision.getTranslation2d());
-                System.out.println("Solved with waypoint: " + newWaypoint[0] + ", " + newWaypoint[1]);
+                    int[] tempNewWaypointPositive = getWaypoint(bestGuessTrajectory, false);
+                    double[] newWaypointPositive = new double[]{tempNewWaypointPositive[0] / 100., tempNewWaypointPositive[1] / 100.};
+                    ArrayList<Translation2d> newWaypointsPositive = (ArrayList<Translation2d>) waypoints.clone();
+                    addNewWaypoint(newWaypointPositive, newWaypointsPositive, autopathStartPosition, autopathTargetPosition, config);
+
+                    WaypointTreeNode newNodeNeg =
+                            new WaypointTreeNode(
+                                    new Pose2d(autopathStartPosition.getTranslation(), Rotation2d.fromRadians(Math.atan2(newWaypointsNegative.get(0).getY() - autopathStartPosition.getY(), newWaypointsNegative.get(0).getX() - autopathStartPosition.getX()))),
+                                    newWaypointsNegative,
+                                    new Pose2d(autopathTargetPosition.getTranslation(), Rotation2d.fromRadians(Math.atan2(autopathTargetPosition.getY() - newWaypointsNegative.get(newWaypointsNegative.size()-1).getY(), autopathTargetPosition.getX() - newWaypointsNegative.get(newWaypointsNegative.size()-1).getX()))),
+                                    config
+                            );
+                    WaypointTreeNode newNodePos =
+                            new WaypointTreeNode(
+                                    new Pose2d(autopathStartPosition.getTranslation(), Rotation2d.fromRadians(Math.atan2(newWaypointsPositive.get(0).getY() - autopathStartPosition.getY(), newWaypointsPositive.get(0).getX() - autopathStartPosition.getX()))),
+                                    newWaypointsPositive,
+                                    new Pose2d(autopathTargetPosition.getTranslation(), Rotation2d.fromRadians(Math.atan2(autopathTargetPosition.getY() - newWaypointsPositive.get(newWaypointsPositive.size()-1).getY(), autopathTargetPosition.getX() - newWaypointsPositive.get(newWaypointsPositive.size()-1).getX()))),
+                                    config
+                            );
+
+                    for(int i = 0; i <= branches.size(); i++)
+                        if(i == branches.size()){
+                            branches.add(newNodeNeg);
+                            break;
+                        }
+                        else if(newNodeNeg.getTrajectoryTime() < branches.get(i).getTrajectoryTime()) {
+                            branches.add(i, newNodeNeg);
+                            break;
+                        }
+
+                    for(int i = 0; i <= branches.size(); i++)
+                        if(i == branches.size()){
+                            branches.add(newNodePos);
+                            break;
+                        }
+                        else if(newNodePos.getTrajectoryTime() < branches.get(i).getTrajectoryTime()) {
+                            branches.add(i, newNodePos);
+                            break;
+                        }
+
+                    Autopath.robotState.autopathWaypoints.add(new Pose2d(new Translation2d(newWaypointNegative[0], newWaypointNegative[1]), new Rotation2d()));
+                    Autopath.robotState.autopathWaypoints.add(new Pose2d(new Translation2d(newWaypointPositive[0], newWaypointPositive[1]), new Rotation2d()));
+//
+////                System.out.println("Colliding at " + startCollision.getTranslation2d() + " to " + endCollision.getTranslation2d());
+//                System.out.println("Solved with waypoint: " + newWaypoint[0] + ", " + newWaypoint[1]);
+                }
             }
         }
 
-        System.out.println("Autopath Idek");
-        System.out.println("tried with waypoints " + waypoints);
-
-        return null;
+        return branches.get(0).getTrajectory();
+//
+//        System.out.println("Autopath Idek");
+//        System.out.println("tried with waypoints " + waypoints);
     }
 
     private static void addNewWaypoint(double[] newWaypoint, List<Translation2d> waypoints, Pose2d startPos, Pose2d endPos, TrajectoryConfig config){
@@ -156,7 +204,7 @@ public class AutopathAlgorithm {
 
         while (true) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -242,6 +290,45 @@ public class AutopathAlgorithm {
         } else {
             newWaypoint[1] -= buffer;
         }
+
         return newWaypoint;
+    }
+
+    static class WaypointTreeNode {
+        private final ArrayList<Translation2d> waypoints;
+        private final Trajectory trajectory;
+        private final double trajectoryTime;
+        private final boolean trajectoryCheck;
+
+        WaypointTreeNode(Pose2d startPos, ArrayList<Translation2d> waypoints, Pose2d endPos, TrajectoryConfig config) {
+            this.waypoints = waypoints;
+            trajectory = TrajectoryGenerator.generateTrajectory(
+                    startPos,
+                    waypoints,
+                    endPos,
+                    config
+            );
+            trajectoryTime = trajectory.getTotalTimeSeconds();
+            trajectoryCheck = Autopath.testTrajectory(trajectory);
+        }
+
+        public boolean equals(WaypointTreeNode otherNode) {
+            if (waypoints.equals(otherNode.getWaypoints())) {
+                return true;
+            }
+            return false;
+        }
+
+        public ArrayList<Translation2d> getWaypoints() {
+            return waypoints;
+        }
+
+        public Trajectory getTrajectory() {
+            return trajectory;
+        }
+
+        public double getTrajectoryTime() {
+            return trajectoryTime;
+        }
     }
 }

@@ -239,12 +239,12 @@ public class RobotState {
             autopathTrajectoryChanged = false;
         }
 
-//        for(Trajectory trajectory : autopathTrajectoryPossibilities){
-//            if(autopathTrajectoryPossibilitiesChanged && trajectory != null) {
-//                field.getObject("AutopathTrajectory: "+trajectory.hashCode()).setTrajectory(trajectory);
-//                autopathTrajectoryPossibilitiesChanged = false;
-//            }
-//        }
+        for(Trajectory trajectory : autopathTrajectoryPossibilities){
+            if(autopathTrajectoryPossibilitiesChanged && trajectory != null) {
+                field.getObject("AutopathTrajectory: "+trajectory.hashCode()).setTrajectory(trajectory);
+                autopathTrajectoryPossibilitiesChanged = false;
+            }
+        }
 
         field.getObject("StartCollisionPoints").setPoses(autopathCollisionStarts);
         field.getObject("EndCollisionPoints").setPoses(autopathCollisionEnds);
