@@ -258,6 +258,9 @@ public class AutopathAlgorithm {
                                 endNewCollision[1]
                         ); //TODO fix the fact that im only perping "negatively"
 
+            if(collisionPoint == null)
+                return null;
+
             Autopath.robotState.autopathWaypoints.add(new Pose2d(new Translation2d(collisionPoint[0] / 100., collisionPoint[1] / 100.), new Rotation2d()));
 
             int[] possibleStartNewCollision =

@@ -411,6 +411,8 @@ public class Bresenham {
                 negX -= incx;
                 if (!map.checkPixelHasObjectOrOffMap(negX, negY)) {
                     return new int[]{lastX, lastY};
+                } else if (!map.checkPixelOnMap(negX, negY)){
+                    return null;
                 } else{
                     lastX = negX;
                     lastY = negY;
@@ -434,6 +436,8 @@ public class Bresenham {
                 negY -= incy;
                 if (!map.checkPixelHasObjectOrOffMap(negX, negY)) {
                     return new int[]{lastX, lastY};
+                } else if (!map.checkPixelOnMap(negX, negY)){
+                    return null;
                 } else{
                     lastX = negX;
                     lastY = negY;
@@ -487,6 +491,8 @@ public class Bresenham {
                 negX -= incx;
                 if (!map.checkPixelHasObjectOrOffMap(negX, negY)) {
                     return new int[]{lastX, lastY};
+                } else if (!map.checkPixelOnMap(negX, negY)){
+                    return null;
                 } else{
                     lastX = negX;
                     lastY = negY;
@@ -510,6 +516,8 @@ public class Bresenham {
                 negY -= incy;
                 if (!map.checkPixelHasObjectOrOffMap(negX, negY)) {
                     return new int[]{lastX, lastY};
+                } else if (!map.checkPixelOnMap(negX, negY)){
+                    return null;
                 } else{
                     lastX = negX;
                     lastY = negY;

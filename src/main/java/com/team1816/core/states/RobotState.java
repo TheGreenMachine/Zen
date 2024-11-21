@@ -100,6 +100,7 @@ public class RobotState {
      * Autopathing state
      */
     public boolean printAutopathing = false;
+    public boolean printAutopathFieldTest = false;
     public boolean autopathing = false;
     public Trajectory autopathTrajectory = null;
     public ArrayList<Trajectory> autopathTrajectoryPossibilities = new ArrayList<>();
@@ -241,22 +242,26 @@ public class RobotState {
                 autopathTrajectoryChanged = false;
             }
 
-            int i = 0;
-            for (Trajectory trajectory : autopathTrajectoryPossibilities) {
-                if (autopathTrajectoryPossibilitiesChanged && trajectory != null) {
-                    field.getObject("AutopathTrajectory: " + i).setTrajectory(trajectory);
+            if(autopathTrajectoryPossibilitiesChanged) {
+                int i = 0;
+                for (Trajectory trajectory : autopathTrajectoryPossibilities) {
+                    if (trajectory != null) {
+                        field.getObject("AutopathTrajectory: " + i).setTrajectory(trajectory);
+                    }
+                    i++;
                 }
-                i++;
+                autopathTrajectoryPossibilitiesChanged = false;
             }
-            autopathTrajectoryPossibilitiesChanged = false;
 
             field.getObject("StartCollisionPoints").setPoses(autopathCollisionStarts);
             field.getObject("EndCollisionPoints").setPoses(autopathCollisionEnds);
             field.getObject("AutopathWaypoints").setPoses(autopathWaypoints);
         }
 
-        field.getObject("AutopathSuccessfulPoints").setPoses(autopathWaypointsSuccess);
-        field.getObject("AutopathFailPoints").setPoses(autopathWaypointsFail);
+        if(printAutopathFieldTest) {
+            field.getObject("AutopathSuccessfulPoints").setPoses(autopathWaypointsSuccess);
+            field.getObject("AutopathFailPoints").setPoses(autopathWaypointsFail);
+        }
 
         SmartDashboard.putData("Mech2d", mechCanvas);
 
