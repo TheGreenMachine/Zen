@@ -131,6 +131,24 @@
           "weight": 2.5,
           "width": 0.3499999940395355
         },
+        "AutopathFailPoints": {
+          "arrows": false,
+          "length": 0.05000000074505806,
+          "weight": 0.0,
+          "width": 0.05000000074505806
+        },
+        "AutopathSuccessfulPoints": {
+          "arrows": false,
+          "color": [
+            0.0,
+            0.0,
+            256.0,
+            256.0
+          ],
+          "length": 0.05000000074505806,
+          "weight": 0.0,
+          "width": 0.05000000074505806
+        },
         "AutopathTrajectory": {
           "arrows": false,
           "color": [

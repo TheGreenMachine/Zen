@@ -14,13 +14,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AutopathMode extends AutoMode{
+     Translation2d startTranslation = new Translation2d(8.25, 4.10);
+
     @Override
     protected void routine() throws AutoModeEndedException {
-        Trajectory autopathTrajectory = new Trajectory();
+        Trajectory autopathTrajectory;
 
         double beforeTime = System.nanoTime();
 
-        autopathTrajectory = AutopathAlgorithm.calculateAutopath(new Pose2d(new Translation2d(12, 6), new Rotation2d(0)));
+        Autopath.robotState.autopathWaypointsSuccess.clear();
+        Autopath.robotState.autopathWaypointsFail.clear();
+
+        int i3 = 0;
+        long totalTime = 0;
+        long highestTime = -1;
+//        for(double i = 16.51; i >= 0; i-=16.51/200.){
+//            for(double i2 = 0; i2 <= 8.21; i2+=8.21/100.){
+//                long holdStartTime = System.nanoTime()/1000000;
+//                try{
+//                    i3++;
+//                    Trajectory test = AutopathAlgorithm.calculateAutopath(new Pose2d(startTranslation, new Rotation2d()), new Pose2d(new Translation2d(i, i2), new Rotation2d(0)));
+//                    if(test != null && test.getStates().size() > 1)
+//                        Autopath.robotState.autopathWaypointsSuccess.add(new Pose2d(new Translation2d(i, i2), new Rotation2d()));
+//                    else
+//                        Autopath.robotState.autopathWaypointsFail.add(new Pose2d(new Translation2d(i, i2), new Rotation2d()));
+//                } catch (Exception e){
+//                    Autopath.robotState.autopathWaypointsFail.add(new Pose2d(new Translation2d(i, i2), new Rotation2d()));
+//                }
+//                long holdEndTime = System.nanoTime()/1000000;
+//                totalTime += holdEndTime-holdStartTime;
+//                if(holdEndTime-holdStartTime > highestTime)
+//                    highestTime = holdEndTime-holdStartTime;
+//                System.out.println(highestTime + ", " + totalTime/i3);
+//            }
+//        }
+
+        autopathTrajectory = AutopathAlgorithm.calculateAutopath(new Pose2d(new Translation2d(14, 4), new Rotation2d(0)));
+
 
         System.out.println("Time taken "+(System.nanoTime()-beforeTime)/1000000000);
 
@@ -38,6 +68,6 @@ public class AutopathMode extends AutoMode{
     }
 
     public Pose2d getInitialPose() {
-        return new Pose2d(3,1, robotState.allianceColor == Color.BLUE ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180));
+        return new Pose2d(startTranslation, robotState.allianceColor == Color.BLUE ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180));
     }
 }

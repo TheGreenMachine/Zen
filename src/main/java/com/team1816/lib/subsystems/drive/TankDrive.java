@@ -182,7 +182,7 @@ public class TankDrive extends Drive implements DifferentialDrivetrain {
 
         // update actual heading from gyro (pigeon)
         if (RobotBase.isSimulation()) {
-            simulateGyroOffset();
+//            simulateGyroOffset();
         }
         actualHeading = Rotation2d.fromDegrees(pigeon.getYawValue());
 

@@ -99,6 +99,7 @@ public class RobotState {
     /**
      * Autopathing state
      */
+    public boolean printAutopathing = false;
     public boolean autopathing = false;
     public Trajectory autopathTrajectory = null;
     public ArrayList<Trajectory> autopathTrajectoryPossibilities = new ArrayList<>();
@@ -107,8 +108,8 @@ public class RobotState {
     public ArrayList<Pose2d> autopathCollisionStarts = new ArrayList<>();
     public ArrayList<Pose2d> autopathCollisionEnds = new ArrayList<>();
     public ArrayList<Pose2d> autopathWaypoints = new ArrayList<>();
-    public ArrayList<Pose2d> autopathWaypointsPos = new ArrayList<>();
-    public ArrayList<Pose2d> autopathWaypointsNeg = new ArrayList<>();
+    public ArrayList<Pose2d> autopathWaypointsSuccess = new ArrayList<>();
+    public ArrayList<Pose2d> autopathWaypointsFail = new ArrayList<>();
 
     /**
      * Pigeon state
@@ -206,49 +207,56 @@ public class RobotState {
     public synchronized void outputToSmartDashboard() {
         field.setRobotPose(fieldToVehicle);
 
-        if(Autopath.fieldMap != null && Autopath.fieldMap.outputToSmartDashboardChanged) {
-            ArrayList<Pose2d> obstaclesExpanded = new ArrayList<>();
+        if (printAutopathing) {
+            if (Autopath.fieldMap != null && Autopath.fieldMap.outputToSmartDashboardChanged) {
+                ArrayList<Pose2d> obstaclesExpanded = new ArrayList<>();
 
-            for (int i = 0; i < Autopath.fieldMap.getCurrentMap().getMapX(); i++) {
-                for (int i2 = 0; i2 < Autopath.fieldMap.getCurrentMap().getMapY(); i2++) {
-                    if (Autopath.fieldMap.getCurrentMap().checkPixelHasObjectOrOffMap(i, i2)) {
-                        obstaclesExpanded.add(new Pose2d(new Translation2d(i * .01, i2 * .01), new Rotation2d()));
+                for (int i = 0; i < Autopath.fieldMap.getCurrentMap().getMapX(); i++) {
+                    for (int i2 = 0; i2 < Autopath.fieldMap.getCurrentMap().getMapY(); i2++) {
+                        if (Autopath.fieldMap.getCurrentMap().checkPixelHasObjectOrOffMap(i, i2)) {
+                            obstaclesExpanded.add(new Pose2d(new Translation2d(i * .01, i2 * .01), new Rotation2d()));
+                        }
                     }
                 }
-            }
 
-            field.getObject("ExpandedObstacles").setPoses(obstaclesExpanded);
+                field.getObject("ExpandedObstacles").setPoses(obstaclesExpanded);
 
-            ArrayList<Pose2d> obstacles = new ArrayList<>();
+                ArrayList<Pose2d> obstacles = new ArrayList<>();
 
-            for (int i = 0; i < Autopath.fieldMap.getCurrentMap().getMapX(); i++) {
-                for (int i2 = 0; i2 < Autopath.fieldMap.getCurrentMap().getMapY(); i2++) {
-                    if (Autopath.fieldMap.getStableMapCheckPixelHasObjectOrOffMap(i, i2)) {
-                        obstacles.add(new Pose2d(new Translation2d(i * .01, i2 * .01), new Rotation2d()));
+                for (int i = 0; i < Autopath.fieldMap.getCurrentMap().getMapX(); i++) {
+                    for (int i2 = 0; i2 < Autopath.fieldMap.getCurrentMap().getMapY(); i2++) {
+                        if (Autopath.fieldMap.getStableMapCheckPixelHasObjectOrOffMap(i, i2)) {
+                            obstacles.add(new Pose2d(new Translation2d(i * .01, i2 * .01), new Rotation2d()));
+                        }
                     }
                 }
+
+                field.getObject("Obstacles").setPoses(obstacles);
+
+                Autopath.fieldMap.outputToSmartDashboardChanged = false;
             }
 
-            field.getObject("Obstacles").setPoses(obstacles);
-
-            Autopath.fieldMap.outputToSmartDashboardChanged = false;
-        }
-
-        if(autopathTrajectoryChanged && autopathTrajectory != null) {
-            field.getObject("AutopathTrajectory").setTrajectory(autopathTrajectory);
-            autopathTrajectoryChanged = false;
-        }
-
-        for(Trajectory trajectory : autopathTrajectoryPossibilities){
-            if(autopathTrajectoryPossibilitiesChanged && trajectory != null) {
-                field.getObject("AutopathTrajectory: "+trajectory.hashCode()).setTrajectory(trajectory);
-                autopathTrajectoryPossibilitiesChanged = false;
+            if (autopathTrajectoryChanged && autopathTrajectory != null) {
+                field.getObject("AutopathTrajectory").setTrajectory(autopathTrajectory);
+                autopathTrajectoryChanged = false;
             }
+
+            int i = 0;
+            for (Trajectory trajectory : autopathTrajectoryPossibilities) {
+                if (autopathTrajectoryPossibilitiesChanged && trajectory != null) {
+                    field.getObject("AutopathTrajectory: " + i).setTrajectory(trajectory);
+                }
+                i++;
+            }
+            autopathTrajectoryPossibilitiesChanged = false;
+
+            field.getObject("StartCollisionPoints").setPoses(autopathCollisionStarts);
+            field.getObject("EndCollisionPoints").setPoses(autopathCollisionEnds);
+            field.getObject("AutopathWaypoints").setPoses(autopathWaypoints);
         }
 
-        field.getObject("StartCollisionPoints").setPoses(autopathCollisionStarts);
-        field.getObject("EndCollisionPoints").setPoses(autopathCollisionEnds);
-        field.getObject("AutopathWaypoints").setPoses(autopathWaypoints);
+        field.getObject("AutopathSuccessfulPoints").setPoses(autopathWaypointsSuccess);
+        field.getObject("AutopathFailPoints").setPoses(autopathWaypointsFail);
 
         SmartDashboard.putData("Mech2d", mechCanvas);
 

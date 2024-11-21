@@ -292,12 +292,88 @@ public class Bresenham {
         return null;
     }
 
+//    public static int[] drawPerpLineMinusOnePixelPositive(FieldMap map, int x1, int y1, int x2, int y2) {
+//        int midPixelX = (x2-x1)/2+x1;
+//        int midPixelY = (y2-y1)/2+y1;
+//
+//        int hold = midPixelX-(y2-y1);
+//        y2 = midPixelY+(x2-x1);
+//        x2 = hold;
+//
+//        x1 = midPixelX;
+//        y1 = midPixelY;
+//
+//        int dx, dy, e;
+//        int incx, incy, inc1, inc2;
+//        int posX, posY;
+//
+//        int lastX = x1;
+//        int lastY = y1;
+//
+//        dx = x2 - x1;
+//        dy = y2 - y1;
+//        if (dx < 0) dx = -dx;
+//        if (dy < 0) dy = -dy;
+//        incx = 1;
+//        if (x2 < x1) incx = -1;
+//        incy = 1;
+//        if (y2 < y1) incy = -1;
+//        posX = x1; posY = y1;
+//        if (dx > dy) {
+//            e = 2 * dy - dx;
+//            inc1 = 2 * (dy - dx);
+//            inc2 = 2 * dy;
+//            while (map.checkPixelOnMap(posX, posY))
+//            {
+//                if (e >= 0)
+//                {
+//                    posY += incy;
+//                    e += inc1;
+//                }
+//                else
+//                    e += inc2;
+//                posX += incx;
+//                if (!map.checkPixelHasObjectOrOffMap(posX, posY)) {
+//                    return new int[]{lastX, lastY};
+//                } else{
+//                    lastX = posX;
+//                    lastY = posY;
+//                }
+//            }
+//        }
+//        else
+//        {
+//            e = 2 * dx - dy;
+//            inc1 = 2 * (dx - dy);
+//            inc2 = 2 * dx;
+//            while (map.checkPixelOnMap(posX, posY))
+//            {
+//                if (e >= 0)
+//                {
+//                    posX += incx;
+//                    e += inc1;
+//                }
+//                else
+//                    e += inc2;
+//                posY += incy;
+//                if (!map.checkPixelHasObjectOrOffMap(posX, posY)) {
+//                    return new int[]{lastX, lastY};
+//                } else{
+//                    lastX = posX;
+//                    lastY = posY;
+//                }
+//            }
+//        }
+//        System.out.println("Error in perping");
+//        return null;
+//    }
+
     public static int[] drawPerpLineMinusOnePixelPositive(FieldMap map, int x1, int y1, int x2, int y2) {
         int midPixelX = (x2-x1)/2+x1;
         int midPixelY = (y2-y1)/2+y1;
 
-        int hold = midPixelX-(y2-y1);
-        y2 = midPixelY+(x2-x1);
+        int hold = midPixelX+(y2-y1);
+        y2 = midPixelY-(x2-x1);
         x2 = hold;
 
         x1 = midPixelX;
@@ -305,7 +381,7 @@ public class Bresenham {
 
         int dx, dy, e;
         int incx, incy, inc1, inc2;
-        int posX, posY;
+        int negX, negY;
 
         int lastX = x1;
         int lastY = y1;
@@ -318,26 +394,26 @@ public class Bresenham {
         if (x2 < x1) incx = -1;
         incy = 1;
         if (y2 < y1) incy = -1;
-        posX = x1; posY = y1;
+        negX = x1; negY = y1;
         if (dx > dy) {
             e = 2 * dy - dx;
             inc1 = 2 * (dy - dx);
             inc2 = 2 * dy;
-            while (map.checkPixelOnMap(posX, posY))
+            while (map.checkPixelOnMap(negX, negY))
             {
                 if (e >= 0)
                 {
-                    posY += incy;
+                    negY -= incy;
                     e += inc1;
                 }
                 else
                     e += inc2;
-                posX += incx;
-                if (!map.checkPixelHasObjectOrOffMap(posX, posY)) {
+                negX -= incx;
+                if (!map.checkPixelHasObjectOrOffMap(negX, negY)) {
                     return new int[]{lastX, lastY};
                 } else{
-                    lastX = posX;
-                    lastY = posY;
+                    lastX = negX;
+                    lastY = negY;
                 }
             }
         }
@@ -346,21 +422,21 @@ public class Bresenham {
             e = 2 * dx - dy;
             inc1 = 2 * (dx - dy);
             inc2 = 2 * dx;
-            while (map.checkPixelOnMap(posX, posY))
+            while (map.checkPixelOnMap(negX, negY))
             {
                 if (e >= 0)
                 {
-                    posX += incx;
+                    negX -= incx;
                     e += inc1;
                 }
                 else
                     e += inc2;
-                posY += incy;
-                if (!map.checkPixelHasObjectOrOffMap(posX, posY)) {
+                negY -= incy;
+                if (!map.checkPixelHasObjectOrOffMap(negX, negY)) {
                     return new int[]{lastX, lastY};
                 } else{
-                    lastX = posX;
-                    lastY = posY;
+                    lastX = negX;
+                    lastY = negY;
                 }
             }
         }

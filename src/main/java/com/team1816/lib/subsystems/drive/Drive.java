@@ -236,9 +236,9 @@ public abstract class Drive
             // demo mode functionality configuration
 
             GreenLogger.log("    Using Demo Control Board");
-
-            demoModeChooser = new SendableChooser<>();
-            SmartDashboard.putData("Demo Mode", demoModeChooser);
+//
+//            demoModeChooser = new SendableChooser<>();
+//            SmartDashboard.putData("Demo Mode", demoModeChooser);
 
             for (DemoMode demoMode : DemoMode.values()) {
                 demoModeChooser.addOption(demoMode.name(), demoMode);
