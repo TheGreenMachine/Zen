@@ -28,8 +28,15 @@ public class AutopathMode extends AutoMode{
         int i3 = 0;
         long totalTime = 0;
         long highestTime = -1;
+        Autopath.robotState.printAutopathFieldTest = true;
         for(double i = 16.51; i >= 0; i-=16.51/200.){
             for(double i2 = 0; i2 <= 8.21; i2+=8.21/100.){
+//                try {
+//                    Thread.sleep(15);
+//                } catch (InterruptedException e) {
+//                    throw new RuntimeException(e);
+//                }
+
                 long holdStartTime = System.nanoTime()/1000000;
                 try{
                     i3++;

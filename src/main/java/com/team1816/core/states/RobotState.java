@@ -100,8 +100,8 @@ public class RobotState {
      * Autopathing state
      */
     public boolean autopathing = false;
-    public boolean printAutopathing = true;
-    public boolean printAutopathFieldTest = true;
+    public boolean printAutopathing = false;
+    public boolean printAutopathFieldTest = false;
     public Trajectory autopathTrajectory = null;
     public ArrayList<Trajectory> autopathTrajectoryPossibilities = new ArrayList<>();
     public boolean autopathTrajectoryChanged = false;
@@ -238,11 +238,14 @@ public class RobotState {
                 Autopath.fieldMap.outputToSmartDashboardChanged = false;
             }
 
-            if (autopathTrajectoryChanged && autopathTrajectory != null) {
-                for (int i = 0; i < autopathMaxBranches; i++) {
-                    field.getObject("AutopathTrajectory: " + i).close();
-                }
-                field.getObject("AutopathTrajectory").setTrajectory(autopathTrajectory);
+            if (autopathTrajectoryChanged) {
+                if(autopathTrajectory != null){
+                    for (int i = 0; i < autopathMaxBranches; i++) {
+                        field.getObject("AutopathTrajectory: " + i).close();
+                    }
+                    field.getObject("AutopathTrajectory").setTrajectory(autopathTrajectory);
+                } else
+                    field.getObject("AutopathTrajectory").setPoses(List.of(new Pose2d(new Translation2d(-1, -1), new Rotation2d())));
                 autopathTrajectoryChanged = false;
             }
 

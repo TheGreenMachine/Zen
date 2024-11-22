@@ -26,8 +26,11 @@ public class AutopathAlgorithm {
         Autopath.robotState.autopathCollisionStarts.clear();
         Autopath.robotState.autopathCollisionEnds.clear();
 
-        if(Autopath.fieldMap.getCurrentMap().checkPixelHasObjectOrOffMap((int)(autopathTargetPosition.getX()*100), (int)(autopathTargetPosition.getY()*100)))
+        if(Autopath.fieldMap.getCurrentMap().checkPixelHasObjectOrOffMap((int)(autopathTargetPosition.getX()*100), (int)(autopathTargetPosition.getY()*100))) {
+            if(Autopath.robotState.autopathTrajectory != null)
+                Autopath.robotState.autopathTrajectoryChanged = true;
             return null;
+        }
 
         TrajectoryConfig config = new TrajectoryConfig(Drive.kPathFollowingMaxVelMeters, Drive.kPathFollowingMaxAccelMeters);
 
@@ -231,7 +234,7 @@ public class AutopathAlgorithm {
 
         ArrayList<Integer> pastCollisionPointHashes = new ArrayList<>();
 
-        int buffer = 5;
+        double buffer = 7.5;
 
         while (true) {
 //            try {
