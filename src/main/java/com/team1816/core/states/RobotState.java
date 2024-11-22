@@ -99,9 +99,9 @@ public class RobotState {
     /**
      * Autopathing state
      */
-    public boolean printAutopathing = false;
-    public boolean printAutopathFieldTest = false;
     public boolean autopathing = false;
+    public boolean printAutopathing = true;
+    public boolean printAutopathFieldTest = true;
     public Trajectory autopathTrajectory = null;
     public ArrayList<Trajectory> autopathTrajectoryPossibilities = new ArrayList<>();
     public boolean autopathTrajectoryChanged = false;
@@ -111,6 +111,7 @@ public class RobotState {
     public ArrayList<Pose2d> autopathWaypoints = new ArrayList<>();
     public ArrayList<Pose2d> autopathWaypointsSuccess = new ArrayList<>();
     public ArrayList<Pose2d> autopathWaypointsFail = new ArrayList<>();
+    public int autopathMaxBranches = 0;
 
     /**
      * Pigeon state
@@ -238,18 +239,20 @@ public class RobotState {
             }
 
             if (autopathTrajectoryChanged && autopathTrajectory != null) {
+                for (int i = 0; i < autopathMaxBranches; i++) {
+                    field.getObject("AutopathTrajectory: " + i).close();
+                }
                 field.getObject("AutopathTrajectory").setTrajectory(autopathTrajectory);
                 autopathTrajectoryChanged = false;
             }
 
             if(autopathTrajectoryPossibilitiesChanged) {
-                int i = 0;
-                for (Trajectory trajectory : autopathTrajectoryPossibilities) {
-                    if (trajectory != null) {
-                        field.getObject("AutopathTrajectory: " + i).setTrajectory(trajectory);
+                for (int i = 0; i < autopathTrajectoryPossibilities.size(); i++) {
+                    if (autopathTrajectoryPossibilities.get(i) != null) {
+                        field.getObject("AutopathTrajectory: " + i).setTrajectory(autopathTrajectoryPossibilities.get(i));
                     }
-                    i++;
                 }
+                autopathMaxBranches = Math.max(autopathTrajectoryPossibilities.size(), autopathMaxBranches);
                 autopathTrajectoryPossibilitiesChanged = false;
             }
 

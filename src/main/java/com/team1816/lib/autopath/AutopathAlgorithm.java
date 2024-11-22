@@ -159,6 +159,9 @@ public class AutopathAlgorithm {
             }
         }
 
+        Autopath.robotState.autopathTrajectory = branches.get(0).getTrajectory();
+        Autopath.robotState.autopathTrajectoryChanged = true;
+
         return branches.get(0).getTrajectory();
     }
 
