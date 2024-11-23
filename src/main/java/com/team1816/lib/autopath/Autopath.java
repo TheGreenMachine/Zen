@@ -129,7 +129,7 @@ public class Autopath {
                             (int)(prevState.getY()*100),
                             (int)(currentState.getX()*100),
                             (int)(currentState.getY()*100),
-                            false
+                            true
                     );
 
 //            System.out.println(result);
@@ -264,7 +264,6 @@ public class Autopath {
 
         action.done();
     }
-
 
     public static class TimestampTranslation2d{
         private double timestamp;

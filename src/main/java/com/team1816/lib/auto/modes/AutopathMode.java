@@ -14,7 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AutopathMode extends AutoMode{
-     Translation2d startTranslation = new Translation2d(1.45, 5.5);
+//     Translation2d startTranslation = new Translation2d(1.45, 5.5);
+    Translation2d startTranslation = new Translation2d(14, 4);
+    //total avg: -0.15704970708570218 pos avg: 0.18805418060928844 ratio: 6.142624593037816
+
 
     @Override
     protected void routine() throws AutoModeEndedException {
@@ -52,11 +55,12 @@ public class AutopathMode extends AutoMode{
                 totalTime += holdEndTime-holdStartTime;
                 if(holdEndTime-holdStartTime > highestTime)
                     highestTime = holdEndTime-holdStartTime;
-                System.out.println(highestTime + ", " + totalTime/i3);
+//                System.out.println(highestTime + ", " + totalTime/i3);
             }
         }
 
-        autopathTrajectory = AutopathAlgorithm.calculateAutopath(new Pose2d(new Translation2d(15.25, 1.15), new Rotation2d(0)));
+//        autopathTrajectory = AutopathAlgorithm.calculateAutopath(new Pose2d(new Translation2d(15.25, 1.15), new Rotation2d(0)));
+        autopathTrajectory = AutopathAlgorithm.calculateAutopath(new Pose2d(new Translation2d(1.3, 1.25), new Rotation2d(0)));
 
 
         System.out.println("Time taken "+(System.nanoTime()-beforeTime)/1000000000);

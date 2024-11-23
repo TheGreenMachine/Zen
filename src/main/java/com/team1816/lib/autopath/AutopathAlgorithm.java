@@ -16,11 +16,17 @@ import java.util.Arrays;
 import java.util.List;
 
 public class AutopathAlgorithm {
+    static double totalTimeEdited = 0;
+    static int totalTimeEditedAmount = 0;
+    static double positiveTimeEdited = 0;
+    static int positiveTimeEditedAmount = 0;
+
     public static Trajectory calculateAutopath(Pose2d autopathTargetPosition){
         return calculateAutopath(Autopath.robotState.fieldToVehicle, autopathTargetPosition);
     }
 
     public static Trajectory calculateAutopath(Pose2d autopathStartPosition, Pose2d autopathTargetPosition){
+
         Autopath.robotState.autopathWaypoints.clear();
         Autopath.robotState.autopathTrajectory = null;
         Autopath.robotState.autopathCollisionStarts.clear();
@@ -40,11 +46,14 @@ public class AutopathAlgorithm {
                         new Pose2d(autopathStartPosition.getTranslation(), Rotation2d.fromRadians(Math.atan2(autopathTargetPosition.getY() - autopathStartPosition.getY(), autopathTargetPosition.getX() - autopathStartPosition.getX()))),
                         new ArrayList<>(),
                         new Pose2d(autopathTargetPosition.getTranslation(), Rotation2d.fromRadians(Math.atan2(autopathTargetPosition.getY() - autopathStartPosition.getY(), autopathTargetPosition.getX() - autopathStartPosition.getX()))),
-                        config
+                        config,
+                        new ArrayList<>(),
+                        false
                 )
         );
 
         while(!branches.get(0).trajectoryCheck){
+            boolean foundWorkingPath;
             for(int i = 1; i < branches.size(); i++)
                 if(branches.get(i-1).trajectoryCheck) {
                     branches.remove(i);
@@ -55,7 +64,11 @@ public class AutopathAlgorithm {
 
             Autopath.robotState.autopathTrajectoryPossibilities.clear();
             if(!branches.get(currentBranchIndex).trajectoryCheck) {
-                Autopath.robotState.autopathTrajectoryPossibilities.add(branches.get(currentBranchIndex).getTrajectory());
+//                Autopath.robotState.autopathTrajectoryPossibilities.add(branches.get(currentBranchIndex).getTrajectory());
+                for(WaypointTreeNode node : branches){
+                    Autopath.robotState.autopathTrajectoryPossibilities.add(node.getTrajectory());
+
+                }
             }
             Autopath.robotState.autopathTrajectoryPossibilitiesChanged = true;
 
@@ -68,13 +81,15 @@ public class AutopathAlgorithm {
 //                throw new RuntimeException(e);
 //            }
 
-            branches.remove(currentBranchIndex);
+            WaypointTreeNode baseBranch = branches.remove(currentBranchIndex);
 
             int[] tempNewWaypointNegative = getWaypoint(bestGuessTrajectory, true);
             if(tempNewWaypointNegative != null) {
                 double[] newWaypointNegative = new double[]{tempNewWaypointNegative[0] / 100., tempNewWaypointNegative[1] / 100.};
                 ArrayList<Translation2d> newWaypointsNegative = (ArrayList<Translation2d>) waypoints.clone();
                 addNewWaypoint(newWaypointNegative, newWaypointsNegative, autopathStartPosition, autopathTargetPosition, config);
+                ArrayList<Boolean> newPathTraceNegative = (ArrayList<Boolean>) baseBranch.getPathTrace().clone();
+                newPathTraceNegative.add(false);
 
                 WaypointTreeNode newNodeNeg =
                         new WaypointTreeNode(
@@ -101,17 +116,54 @@ public class AutopathAlgorithm {
                                                 )
                                         )
                                 ),
-                                config
+                                config,
+                                newPathTraceNegative,
+                                baseBranch.isBoundaryPathBranch()
                         );
 
-                for (int i = 0; i <= branches.size(); i++)
-                    if (i == branches.size()) {
-                        branches.add(newNodeNeg);
-                        break;
-                    } else if (newNodeNeg.getTrajectoryTime() < branches.get(i).getTrajectoryTime()) {
-                        branches.add(i, newNodeNeg);
-                        break;
-                    }
+                if(baseBranch.getPathTrace().size() > 1 && baseBranch.isBoundaryPath() && !baseBranch.isBoundaryPathBranch() && !baseBranch.getPathTrace().get(0)){
+                    WaypointTreeNode newNodeNegBoundaryBranch =
+                            new WaypointTreeNode(
+                                    new Pose2d(
+                                            autopathStartPosition.getTranslation(),
+                                            Rotation2d.fromRadians(
+                                                    Math.atan2(
+                                                            newWaypointsNegative.get(0).getY()
+                                                                    - autopathStartPosition.getY(),
+                                                            newWaypointsNegative.get(0).getX()
+                                                                    - autopathStartPosition.getX()
+                                                    )
+                                            )
+                                    ),
+                                    new ArrayList<>(List.of(new Translation2d(newWaypointNegative[0], newWaypointNegative[1]))),
+                                    new Pose2d(
+                                            autopathTargetPosition.getTranslation(),
+                                            Rotation2d.fromRadians(
+                                                    Math.atan2(
+                                                            autopathTargetPosition.getY()
+                                                                    - newWaypointsNegative.get(newWaypointsNegative.size() - 1).getY(),
+                                                            autopathTargetPosition.getX()
+                                                                    - newWaypointsNegative.get(newWaypointsNegative.size() - 1).getX()
+                                                    )
+                                            )
+                                    ),
+                                    config,
+                                    newPathTraceNegative,
+                                    true
+                            );
+                    addBranch(branches, newNodeNegBoundaryBranch);
+                }
+
+                addBranch(branches, newNodeNeg);
+
+                if(baseBranch.getTrajectoryTime() > newNodeNeg.getTrajectoryTime()){
+                    positiveTimeEdited += baseBranch.getTrajectoryTime() - newNodeNeg.getTrajectoryTime();
+                    positiveTimeEditedAmount += 1;
+                }
+                totalTimeEdited += baseBranch.getTrajectoryTime() - newNodeNeg.getTrajectoryTime();
+                totalTimeEditedAmount += 1;
+
+                System.out.println("total avg: "+(totalTimeEdited/totalTimeEditedAmount)+" pos avg: "+(positiveTimeEdited/positiveTimeEditedAmount)+" ratio: "+(totalTimeEditedAmount/(double)positiveTimeEditedAmount));
 
                 Autopath.robotState.autopathWaypoints.add(new Pose2d(new Translation2d(newWaypointNegative[0], newWaypointNegative[1]), new Rotation2d()));
             }
@@ -121,7 +173,8 @@ public class AutopathAlgorithm {
                 double[] newWaypointPositive = new double[]{tempNewWaypointPositive[0] / 100., tempNewWaypointPositive[1] / 100.};
                 ArrayList<Translation2d> newWaypointsPositive = (ArrayList<Translation2d>) waypoints.clone();
                 addNewWaypoint(newWaypointPositive, newWaypointsPositive, autopathStartPosition, autopathTargetPosition, config);
-
+                ArrayList<Boolean> newPathTracePositive = (ArrayList<Boolean>) baseBranch.getPathTrace().clone();
+                newPathTracePositive.add(true);
                 WaypointTreeNode newNodePos =
                         new WaypointTreeNode(
                                 new Pose2d(
@@ -147,17 +200,47 @@ public class AutopathAlgorithm {
                                                 )
                                         )
                                 ),
-                                config
+                                config,
+                                newPathTracePositive,
+                                baseBranch.isBoundaryPathBranch()
                         );
 
-                for (int i = 0; i <= branches.size(); i++)
-                    if (i == branches.size()) {
-                        branches.add(newNodePos);
-                        break;
-                    } else if (newNodePos.getTrajectoryTime() < branches.get(i).getTrajectoryTime()) {
-                        branches.add(i, newNodePos);
-                        break;
-                    }
+                if(baseBranch.getPathTrace().size() > 1 && baseBranch.isBoundaryPath() && !baseBranch.isBoundaryPathBranch() && baseBranch.getPathTrace().get(0)){
+                    WaypointTreeNode newNodePosBoundaryBranch =
+                            new WaypointTreeNode(
+                                    new Pose2d(
+                                            autopathStartPosition.getTranslation(),
+                                            Rotation2d.fromRadians(
+                                                    Math.atan2(
+                                                            newWaypointsPositive.get(0).getY()
+                                                                    - autopathStartPosition.getY(),
+                                                            newWaypointsPositive.get(0).getX()
+                                                                    - autopathStartPosition.getX()
+                                                    )
+                                            )
+                                    ),
+                                    new ArrayList<>(List.of(new Translation2d(newWaypointPositive[0], newWaypointPositive[1]))),
+                                    new Pose2d(
+                                            autopathTargetPosition.getTranslation(),
+                                            Rotation2d.fromRadians(
+                                                    Math.atan2(
+                                                            autopathTargetPosition.getY()
+                                                                    - newWaypointsPositive.get(newWaypointsPositive.size() - 1).getY(),
+                                                            autopathTargetPosition.getX()
+                                                                    - newWaypointsPositive.get(newWaypointsPositive.size() - 1).getX()
+                                                    )
+                                            )
+                                    ),
+                                    config,
+                                    newPathTracePositive,
+                                    true
+                            );
+
+                    addBranch(branches, newNodePosBoundaryBranch);
+                }
+
+                addBranch(branches, newNodePos);
+
                 Autopath.robotState.autopathWaypoints.add(new Pose2d(new Translation2d(newWaypointPositive[0], newWaypointPositive[1]), new Rotation2d()));
             }
         }
@@ -327,14 +410,29 @@ public class AutopathAlgorithm {
         return false;
     }
 
+    private static void addBranch(List<WaypointTreeNode> branches, WaypointTreeNode branch){
+        for (int i = 0; i <= branches.size(); i++)
+            if (i == branches.size()) {
+                branches.add(branch);
+                break;
+            } else if (branch.getTrajectoryTime() < branches.get(i).getTrajectoryTime()) {
+                branches.add(i, branch);
+                break;
+            }
+    }
+
     static class WaypointTreeNode {
         private final ArrayList<Translation2d> waypoints;
+        private final ArrayList<Boolean> pathTrace;
         private final Trajectory trajectory;
         private final double trajectoryTime;
         private final boolean trajectoryCheck;
+        private boolean boundaryPath = false;
+        private final boolean boundaryPathBranch;
 
-        WaypointTreeNode(Pose2d startPos, ArrayList<Translation2d> waypoints, Pose2d endPos, TrajectoryConfig config) {
-            this.waypoints = waypoints;
+        WaypointTreeNode(Pose2d startPos, ArrayList<Translation2d> waypoints, Pose2d endPos, TrajectoryConfig config, ArrayList<Boolean> pathTrace, boolean boundaryPathBranch) {
+            this.waypoints = (ArrayList<Translation2d>) waypoints.clone();
+            this.pathTrace = (ArrayList<Boolean>) pathTrace.clone();
             trajectory = TrajectoryGenerator.generateTrajectory(
                     startPos,
                     waypoints,
@@ -343,6 +441,18 @@ public class AutopathAlgorithm {
             );
             trajectoryTime = trajectory.getTotalTimeSeconds();
             trajectoryCheck = Autopath.testTrajectory(trajectory);
+            this.boundaryPathBranch = boundaryPathBranch;
+
+            if(!pathTrace.isEmpty())
+                a:{
+                    boolean b = pathTrace.get(0);
+                    for (boolean b2 : pathTrace){
+                        if(b != b2){
+                            break a;
+                        }
+                    }
+                    boundaryPath = true;
+                }
         }
 
         public boolean equals(WaypointTreeNode otherNode) {
@@ -362,6 +472,18 @@ public class AutopathAlgorithm {
 
         public double getTrajectoryTime() {
             return trajectoryTime;
+        }
+
+        public ArrayList<Boolean> getPathTrace() {
+            return pathTrace;
+        }
+
+        public boolean isBoundaryPath() {
+            return boundaryPath;
+        }
+
+        public boolean isBoundaryPathBranch() {
+            return boundaryPathBranch;
         }
     }
 }
