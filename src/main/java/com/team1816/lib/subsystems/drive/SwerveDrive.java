@@ -208,6 +208,8 @@ public class SwerveDrive extends Drive implements EnhancedSwerveDrive, PidProvid
         }
         chassisSpeed = swerveKinematics.toChassisSpeeds(actualModuleStates);
 
+        robotState.robotVelocity = Math.hypot(chassisSpeed.vxMetersPerSecond, chassisSpeed.vyMetersPerSecond);
+
         if (RobotBase.isSimulation()) {
 //            simulateGyroOffset();
         }

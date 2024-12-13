@@ -285,7 +285,7 @@ public class Robot extends TimedRobot {
                     "autopathing",
                     ActionState.PRESSED,
                     () ->
-                        autopather.start(new Pose2d(new Translation2d(1.6, 5.5), robotState.fieldToVehicle.getRotation()))
+                        autopather.start(new Pose2d(new Translation2d(1.6, 5.5), Rotation2d.fromDegrees(robotState.fieldToVehicle.getRotation().getDegrees()+90)))
             );
 
             /** Operator Commands */

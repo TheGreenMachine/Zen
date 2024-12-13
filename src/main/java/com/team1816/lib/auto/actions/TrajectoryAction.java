@@ -98,14 +98,16 @@ public class TrajectoryAction implements AutoAction {
         } else if (drive instanceof EnhancedSwerveDrive) {
             var thetaController = new ProfiledPIDController(
                     Constants.kPRotational,
-                0,
-                0,
+                0.1,
+                0.1,
                 kThetaControllerConstraints
             );
-            thetaController.enableContinuousInput(-Math.PI, Math.PI);
+//            thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-            PIDController xController = new PIDController(Constants.kPTranslational, 0, 0);
-            PIDController yController = new PIDController(Constants.kPTranslational, 0, 0);
+            PIDController xController = new PIDController(Constants.kPTranslational, 0.1, 0.1);
+            PIDController yController = new PIDController(Constants.kPTranslational, 0.1, 0.1);
+
+            drive.startTrajectory(trajectory, headings);
 
             command =
                 new SwerveControllerCommand(
@@ -159,7 +161,6 @@ public class TrajectoryAction implements AutoAction {
         GreenLogger.log(
             "Starting trajectory! (Seconds = " + trajectory.getTotalTimeSeconds() + ")"
         );
-        drive.startTrajectory(trajectory, headings);
         command.initialize();
     }
 

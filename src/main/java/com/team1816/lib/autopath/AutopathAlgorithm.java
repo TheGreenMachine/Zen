@@ -41,6 +41,8 @@ public class AutopathAlgorithm {
         }
 
         TrajectoryConfig config = new TrajectoryConfig(Drive.kPathFollowingMaxVelMeters, Drive.kPathFollowingMaxAccelMeters);
+        config.setStartVelocity(Autopath.robotState.robotVelocity);
+        config.setEndVelocity(Drive.kPathFollowingMaxVelMeters/2);
 
         ArrayList<WaypointTreeNode> branches = new ArrayList<>();
         branches.add(
@@ -256,6 +258,11 @@ public class AutopathAlgorithm {
 
         Autopath.robotState.autopathTrajectory = branches.isEmpty() ? null : branches.get(0).getTrajectory();
         Autopath.robotState.autopathTrajectoryChanged = true;
+
+        if(!branches.isEmpty())
+            Autopath.robotState.autopathInputWaypoints = new ArrayList<>(branches.get(0).waypoints.stream()
+                .map(b -> new Pose2d(b, new Rotation2d()))
+                .toList());
 
         return branches.isEmpty() ? null : branches.get(0).getTrajectory();
     }

@@ -15,7 +15,7 @@ import edu.wpi.first.math.trajectory.TrajectoryParameterizer;
 import java.util.*;
 
 public class AutopathMode extends AutoMode{
-     Translation2d startTranslation = new Translation2d(1.6, 5.5);
+     Translation2d startTranslation = new Translation2d(2.6, 5.5);
 //    Translation2d startTranslation = new Translation2d(14, 4);
     //total avg: -0.15704970708570218 pos avg: 0.18805418060928844 ratio: 6.142624593037816
 
@@ -68,16 +68,29 @@ public class AutopathMode extends AutoMode{
 //            }
 //        }
 
-        autopathTrajectory = AutopathAlgorithm.calculateAutopath(new Pose2d(new Translation2d(15.25, 4), new Rotation2d(0)));
+        autopathTrajectory = AutopathAlgorithm.calculateAutopath(new Pose2d(new Translation2d(1.6, 5.5), Rotation2d.fromDegrees(90)));
 //        autopathTrajectory = AutopathAlgorithm.calculateAutopath(new Pose2d(new Translation2d(1.3, 1.25), new Rotation2d(0)));
 
 
         System.out.println("Time taken "+(System.nanoTime()-beforeTime)/1000000000);
 
-        List<Rotation2d> autopathHeadings = new ArrayList<>();
-        //TODO create headings
-        // for now I'll make it use the current robot rotation
-        autopathHeadings.add(robotState.fieldToVehicle.getRotation());
+        List<Rotation2d> autopathHeadings = List.of(
+                Rotation2d.fromRadians(0),
+                Rotation2d.fromRadians(0.3),
+                Rotation2d.fromRadians(0.43),
+                Rotation2d.fromRadians(0.52),
+                Rotation2d.fromRadians(0.59),
+                Rotation2d.fromRadians(0.70),
+                Rotation2d.fromRadians(0.79),
+                Rotation2d.fromRadians(0.87),
+                Rotation2d.fromRadians(0.98),
+                Rotation2d.fromRadians(1.06),
+                Rotation2d.fromRadians(1.15),
+                Rotation2d.fromRadians(1.27),
+                Rotation2d.fromRadians(1.57)
+        );
+
+        System.out.println(autopathHeadings);
 
         //Here's where your trajectory gets checked against the field
         System.out.println("And survey says: "+Autopath.testTrajectory(autopathTrajectory));
@@ -88,6 +101,6 @@ public class AutopathMode extends AutoMode{
     }
 
     public Pose2d getInitialPose() {
-        return new Pose2d(startTranslation, robotState.allianceColor == Color.BLUE ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180));
+        return new Pose2d(startTranslation, robotState.allianceColor == Color.BLUE ? Rotation2d.fromDegrees(-90) : Rotation2d.fromDegrees(180));
     }
 }
