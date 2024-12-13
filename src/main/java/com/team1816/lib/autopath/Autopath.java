@@ -41,6 +41,8 @@ public class Autopath {
 
     private Pose2d autopathStartPosition = null;
 
+    private TrajectoryAction autopathTrajectoryAction;
+
     /**
      * State: if path needs to be stopped
      */
@@ -199,7 +201,7 @@ public class Autopath {
 
         System.out.println("You told me to do something!");
 
-        start();
+//        start();
 
         try {
             routine();
@@ -222,20 +224,15 @@ public class Autopath {
     /**
      * Starts the Autopath and relevant actions
      */
-    private void start() {
+    public void start(Pose2d action) {
+        this.autopathTargetPosition = action;
+
         robotState.autopathing = true;
 
         autopathStartPosition = robotState.fieldToVehicle;
 
         GreenLogger.log("Starting Autopath");
         needsStop = false;
-    }
-
-    /**
-     * Called every loop
-     */
-    protected void routine() throws AutoModeEndedException {
-        GreenLogger.log("Autopathing Running");
 
         Trajectory autopathTrajectory = new Trajectory();
 
@@ -254,13 +251,38 @@ public class Autopath {
         //Here's where your trajectory gets checked against the field
         System.out.println("And survey says: "+testTrajectory(autopathTrajectory));
 
-        TrajectoryAction autopathTrajectoryAction = new TrajectoryAction(autopathTrajectory, autopathHeadings);
+        autopathTrajectoryAction = new TrajectoryAction(autopathTrajectory, autopathHeadings);
+
+        autopathTrajectoryAction.start();
+    }
+
+    /**
+     * Called every loop
+     */
+    public void routine() throws AutoModeEndedException {
+//        GreenLogger.log("Autopathing Running");
 
         // Run actions here:
         // e.g. runAction(new SeriesAction(new WaitAction(0.5), ...))
-        runAction(
-                autopathTrajectoryAction
-        );
+
+        // Run action, stop action on interrupt or done
+        if (!autopathTrajectoryAction.isFinished()) {
+            if (needsStop) {
+                throw new AutoModeEndedException();
+            }
+
+            autopathTrajectoryAction.update();
+
+            try {
+                Thread.sleep(looperDtInMS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            autopathTrajectoryAction.done();
+            done();
+        }
     }
 
     /**
@@ -301,11 +323,11 @@ public class Autopath {
 
             action.update();
 
-            try {
-                Thread.sleep(looperDtInMS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Thread.sleep(looperDtInMS);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
         }
 
         action.done();

@@ -4,6 +4,7 @@ import com.ctre.phoenix6.CANBus;
 import com.team1816.lib.Infrastructure;
 import com.team1816.lib.Injector;
 import com.team1816.lib.PlaylistManager;
+import com.team1816.lib.auto.AutoModeEndedException;
 import com.team1816.lib.auto.Color;
 import com.team1816.lib.autopath.Autopath;
 import com.team1816.lib.hardware.factory.RobotFactory;
@@ -284,7 +285,7 @@ public class Robot extends TimedRobot {
                     "autopathing",
                     ActionState.PRESSED,
                     () ->
-                        autopather.run(new Pose2d(robotState.fieldToVehicle.getTranslation().plus(new Translation2d(5, 2)), robotState.fieldToVehicle.getRotation()))
+                        autopather.start(new Pose2d(new Translation2d(1.6, 5.5), robotState.fieldToVehicle.getRotation()))
             );
 
             /** Operator Commands */
@@ -548,11 +549,16 @@ public class Robot extends TimedRobot {
                 GreenLogger.updatePeriodicLogs();
             }
 
-            if(!robotState.autopathing)
-                manualControl();
+            manualControl();
+            if(robotState.autopathing)
+                autopather.routine();
         } catch (Throwable t) {
             faulted = true;
-            throw t;
+            try {
+                throw t;
+            } catch (AutoModeEndedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -566,15 +572,16 @@ public class Robot extends TimedRobot {
         robotState.strafeInput = -inputHandler.getActionAsDouble("strafe");
         robotState.rotationInput = -inputHandler.getActionAsDouble("rotation");
 
-        if (robotState.rotatingClosedLoop) {
-            drive.rotationPeriodic();
-        } else {
-            drive.setTeleopInputs(
-                    -inputHandler.getActionAsDouble("throttle"),
-                    -inputHandler.getActionAsDouble("strafe"),
-                    -inputHandler.getActionAsDouble("rotation")
-            );
-        }
+        if(!robotState.autopathing)
+            if (robotState.rotatingClosedLoop) {
+                drive.rotationPeriodic();
+            } else {
+                drive.setTeleopInputs(
+                        -inputHandler.getActionAsDouble("throttle"),
+                        -inputHandler.getActionAsDouble("strafe"),
+                        -inputHandler.getActionAsDouble("rotation")
+                );
+            }
     }
 
     /**

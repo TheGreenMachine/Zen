@@ -100,7 +100,7 @@ public class RobotState {
      * Autopathing state
      */
     public boolean autopathing = false;
-    public boolean printAutopathing = true;
+    public boolean printAutopathing = false;
     public boolean printAutopathFieldTest = false;
     public Trajectory autopathTrajectory = null;
     public ArrayList<Trajectory> autopathTrajectoryPossibilities = new ArrayList<>();
@@ -238,17 +238,6 @@ public class RobotState {
                 Autopath.fieldMap.outputToSmartDashboardChanged = false;
             }
 
-            if (autopathTrajectoryChanged) {
-                if(autopathTrajectory != null){
-                    for (int i = 0; i < autopathMaxBranches; i++) {
-                        field.getObject("AutopathTrajectory: " + i).close();
-                    }
-                    field.getObject("AutopathTrajectory").setTrajectory(autopathTrajectory);
-                } else
-                    field.getObject("AutopathTrajectory").setPoses(List.of(new Pose2d(new Translation2d(-1, -1), new Rotation2d())));
-                autopathTrajectoryChanged = false;
-            }
-
             if(autopathTrajectoryPossibilitiesChanged) {
                 for (int i = 0; i < autopathTrajectoryPossibilities.size(); i++) {
                     if (autopathTrajectoryPossibilities.get(i) != null) {
@@ -262,6 +251,17 @@ public class RobotState {
             field.getObject("StartCollisionPoints").setPoses(autopathCollisionStarts);
             field.getObject("EndCollisionPoints").setPoses(autopathCollisionEnds);
             field.getObject("AutopathWaypoints").setPoses(autopathWaypoints);
+        }
+
+        if (autopathTrajectoryChanged) {
+            if(autopathTrajectory != null){
+                for (int i = 0; i < autopathMaxBranches; i++) {
+                    field.getObject("AutopathTrajectory: " + i).close();
+                }
+                field.getObject("AutopathTrajectory").setTrajectory(autopathTrajectory);
+            } else
+                field.getObject("AutopathTrajectory").setPoses(List.of(new Pose2d(new Translation2d(-1, -1), new Rotation2d())));
+            autopathTrajectoryChanged = false;
         }
 
         if(printAutopathFieldTest) {

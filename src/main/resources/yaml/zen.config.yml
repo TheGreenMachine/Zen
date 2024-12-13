@@ -110,7 +110,7 @@ subsystems:
             ## Positional Configurations ##
             openLoopRampRate: 0.1
             isSwerve: 1
-            isCTRSwerve: 1 #TODO IF ALL ELSE FAILS
+            isCTRSwerve: 0 #TODO IF ALL ELSE FAILS
             wheelDiameter: 3.81 #inches
             kTrackScrubFactor: 1.0
             ## Velocity Constraints ##
@@ -120,7 +120,7 @@ subsystems:
             wheelbaseLength: 22.75 # inches
             maxVelOpenLoop: 3 # meters/s
             maxVel12VMPS: 5.2
-            maxVelPathFollowing: 5 # meters/s
+            maxVelPathFollowing: 10 # meters/s
             maxAccel: 2 # meters/s^2
             isDemoMode: 0
             ## Swerve Characterization ##
