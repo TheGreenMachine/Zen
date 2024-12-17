@@ -241,7 +241,8 @@ public class Autopath {
 
         Trajectory autopathTrajectory;
 
-        double beforeTime = System.nanoTime();
+        robotState.autopathBeforeTime = (double) System.nanoTime() /1000000;
+        double beforeTime = robotState.autopathBeforeTime;
 
         autopathTrajectory = AutopathAlgorithm.calculateAutopath(autopathTargetPosition);
 
@@ -320,7 +321,8 @@ public class Autopath {
      * Stops the auto path
      */
     public void stop() {
-        needsStop = true;
+        autopathTrajectoryAction.done();
+        robotState.autopathing = false;
     }
 
     /**

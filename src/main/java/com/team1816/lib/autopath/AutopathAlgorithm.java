@@ -59,14 +59,14 @@ public class AutopathAlgorithm {
         );
 
         while(!branches.isEmpty() && !branches.get(0).trajectoryCheck){
-            if(System.nanoTime()/1000000-startTime > 100)
+            if(System.nanoTime()/1000000-startTime > 200)
                 return null;
             boolean foundWorkingPath;
             for(int i = 1; i < branches.size(); i++)
-                if(branches.get(i-1).trajectoryCheck) {
+                if(branches.get(i) == null) {
                     branches.remove(i);
                     i--;
-                } else if(branches.get(i) == null) {
+                }else if(branches.get(i-1).trajectoryCheck) {
                     branches.remove(i);
                     i--;
                 }

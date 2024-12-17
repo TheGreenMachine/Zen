@@ -114,6 +114,7 @@ public class RobotState {
     public int autopathMaxBranches = 0;
     public ArrayList<Pose2d> autopathInputWaypoints = new ArrayList<>();
     public double robotVelocity = 0;
+    public double autopathBeforeTime = 0;
 
     /**
      * Pigeon state

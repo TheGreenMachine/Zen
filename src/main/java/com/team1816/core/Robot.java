@@ -285,14 +285,14 @@ public class Robot extends TimedRobot {
                     "autopathingSpeaker",
                     ActionState.PRESSED,
                     () ->
-                        autopather.start(new Pose2d(new Translation2d(1.6, 5.5), Rotation2d.fromDegrees(robotState.fieldToVehicle.getRotation().getDegrees()+90)))
+                        autopather.start(new Pose2d(new Translation2d(1.6, 5.5), Rotation2d.fromDegrees(0)))
             );
 
             inputHandler.listenAction(
                     "autopathingAmp",
                     ActionState.PRESSED,
                     () ->
-                        autopather.start(new Pose2d(new Translation2d(15.2, 1.1), Rotation2d.fromDegrees(robotState.fieldToVehicle.getRotation().getDegrees()+90)))
+                        autopather.start(new Pose2d(new Translation2d(15.2, 1.1), Rotation2d.fromDegrees(135)))
             );
 
             inputHandler.listenAction(
@@ -580,22 +580,26 @@ public class Robot extends TimedRobot {
      * Sets manual inputs for subsystems like the drivetrain when criteria met
      */
     public void manualControl() {
+
         inputHandler.update();
 
         robotState.throttleInput = -inputHandler.getActionAsDouble("throttle");
         robotState.strafeInput = -inputHandler.getActionAsDouble("strafe");
         robotState.rotationInput = -inputHandler.getActionAsDouble("rotation");
 
-//        if(!robotState.autopathing)
-            if (robotState.rotatingClosedLoop) {
-                drive.rotationPeriodic();
-            } else {
-                drive.setTeleopInputs(
-                        -inputHandler.getActionAsDouble("throttle"),
-                        -inputHandler.getActionAsDouble("strafe"),
-                        -inputHandler.getActionAsDouble("rotation")
-                );
-            }
+        if(robotState.autopathing && (robotState.throttleInput != 0 || robotState.strafeInput != 0) && (double) System.nanoTime() /1000000 - robotState.autopathBeforeTime > 500){
+            autopather.stop();
+        }
+
+        if (robotState.rotatingClosedLoop) {
+            drive.rotationPeriodic();
+        } else {
+            drive.setTeleopInputs(
+                    -inputHandler.getActionAsDouble("throttle"),
+                    -inputHandler.getActionAsDouble("strafe"),
+                    -inputHandler.getActionAsDouble("rotation")
+            );
+        }
     }
 
     /**
