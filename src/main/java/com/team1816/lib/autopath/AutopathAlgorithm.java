@@ -29,6 +29,8 @@ public class AutopathAlgorithm {
         Autopath.robotState.autopathCollisionStarts.clear();
         Autopath.robotState.autopathCollisionEnds.clear();
 
+        long startTime = System.nanoTime()/1000000;
+
         if(Autopath.fieldMap.getCurrentMap().checkPixelHasObjectOrOffMap((int)(autopathTargetPosition.getX()*100), (int)(autopathTargetPosition.getY()*100))) {
             if(Autopath.robotState.autopathTrajectory != null)
                 Autopath.robotState.autopathTrajectoryChanged = true;
@@ -42,7 +44,7 @@ public class AutopathAlgorithm {
 
         TrajectoryConfig config = new TrajectoryConfig(Drive.kPathFollowingMaxVelMeters, Drive.kPathFollowingMaxAccelMeters);
         config.setStartVelocity(Autopath.robotState.robotVelocity);
-        config.setEndVelocity(Drive.kPathFollowingMaxVelMeters/2);
+//        config.setEndVelocity(Math.min(Drive.kPathFollowingMaxVelMeters/2, 3));
 
         ArrayList<WaypointTreeNode> branches = new ArrayList<>();
         branches.add(
@@ -57,9 +59,14 @@ public class AutopathAlgorithm {
         );
 
         while(!branches.isEmpty() && !branches.get(0).trajectoryCheck){
+            if(System.nanoTime()/1000000-startTime > 100)
+                return null;
             boolean foundWorkingPath;
             for(int i = 1; i < branches.size(); i++)
                 if(branches.get(i-1).trajectoryCheck) {
+                    branches.remove(i);
+                    i--;
+                } else if(branches.get(i) == null) {
                     branches.remove(i);
                     i--;
                 }

@@ -282,10 +282,24 @@ public class Robot extends TimedRobot {
             );
 
             inputHandler.listenAction(
-                    "autopathing",
+                    "autopathingSpeaker",
                     ActionState.PRESSED,
                     () ->
                         autopather.start(new Pose2d(new Translation2d(1.6, 5.5), Rotation2d.fromDegrees(robotState.fieldToVehicle.getRotation().getDegrees()+90)))
+            );
+
+            inputHandler.listenAction(
+                    "autopathingAmp",
+                    ActionState.PRESSED,
+                    () ->
+                        autopather.start(new Pose2d(new Translation2d(15.2, 1.1), Rotation2d.fromDegrees(robotState.fieldToVehicle.getRotation().getDegrees()+90)))
+            );
+
+            inputHandler.listenAction(
+                    "teleport",
+                    ActionState.PRESSED,
+                    () ->
+                            robotState.fieldToVehicle = new Pose2d(new Translation2d(16.51, 8.21), new Rotation2d())
             );
 
             /** Operator Commands */
@@ -572,7 +586,7 @@ public class Robot extends TimedRobot {
         robotState.strafeInput = -inputHandler.getActionAsDouble("strafe");
         robotState.rotationInput = -inputHandler.getActionAsDouble("rotation");
 
-        if(!robotState.autopathing)
+//        if(!robotState.autopathing)
             if (robotState.rotatingClosedLoop) {
                 drive.rotationPeriodic();
             } else {

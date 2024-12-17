@@ -227,6 +227,9 @@ public class Autopath {
      * Starts the Autopath and relevant actions
      */
     public void start(Pose2d autopathTargetPosition) {
+        if(robotState.autopathing)
+            return;
+
         this.autopathTargetPosition = autopathTargetPosition;
 
         robotState.autopathing = true;
@@ -250,16 +253,18 @@ public class Autopath {
         System.out.println("Time taken "+(System.nanoTime()-beforeTime)/1000000000);
 
         ArrayList<Rotation2d> autopathHeadings = new ArrayList<>();
-        autopathHeadings.add(robotState.fieldToVehicle.getRotation());
+        autopathHeadings.add(autopathTargetPosition.getRotation());
+//        double autopathTrajectoryTime = autopathTrajectory.getTotalTimeSeconds();
 //        for(int i = 0; i < autopathTrajectory.getStates().size(); i++){
 //            autopathHeadings.add(Rotation2d.fromDegrees(
-//                    robotState.fieldToVehicle.getRotation().getDegrees() * ((double) (autopathTrajectory.getStates().size() - 1 - i) / (autopathTrajectory.getStates().size()-1)) +
-//                            autopathTargetPosition.getRotation().getDegrees() * ((double) i / (autopathTrajectory.getStates().size()-1))
+//                    autopathStartPosition.getRotation().getDegrees() * (autopathTrajectoryTime - autopathTrajectory.getStates().get(i).timeSeconds) / autopathTrajectoryTime +
+//                            autopathTargetPosition.getRotation().getDegrees() * autopathTrajectory.getStates().get(i).timeSeconds / autopathTrajectoryTime
 //            ));
 //        }
-//
-//        System.out.println(autopathHeadings.get(0));
-//        System.out.println(autopathHeadings.get(autopathHeadings.size()-1));
+
+        System.out.println(autopathHeadings.get(0));
+        System.out.println(autopathHeadings.get(autopathHeadings.size()-1));
+        System.out.println(autopathHeadings);
 
         //Here's where your trajectory gets checked against the field
         System.out.println("And survey says: "+testTrajectory(autopathTrajectory));

@@ -9,9 +9,9 @@ driver:
       horizontal: rotation
   buttonpad:
     b: brakeMode
-    x: autopathing #ampPivot
-    a: collectorOuttake
-    y: shootPivot
+    x: autopathingSpeaker #ampPivot
+    a: autopathingAmp
+    y: teleport
   axes:
     rightTrigger: turboMode
     leftTrigger: slowMode

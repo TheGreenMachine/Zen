@@ -211,7 +211,7 @@ public class SwerveDrive extends Drive implements EnhancedSwerveDrive, PidProvid
         robotState.robotVelocity = Math.hypot(chassisSpeed.vxMetersPerSecond, chassisSpeed.vyMetersPerSecond);
 
         if (RobotBase.isSimulation()) {
-//            simulateGyroOffset();
+            simulateGyroOffset();
         }
         actualHeading = Rotation2d.fromDegrees(pigeon.getYawValue());
 

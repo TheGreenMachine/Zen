@@ -120,7 +120,7 @@ subsystems:
             wheelbaseLength: 22.75 # inches
             maxVelOpenLoop: 3 # meters/s
             maxVel12VMPS: 5.2
-            maxVelPathFollowing: 5 # meters/s
+            maxVelPathFollowing: 4 # meters/s
             maxAccel: 3 # meters/s^2
             isDemoMode: 0
             ## Swerve Characterization ##
@@ -263,7 +263,7 @@ constants:
     logDrivetrain: 1 # 0 or 1
     configStatusFrames: 0 # 0 or 1
     ## General ##
-    usingVision: 1
+    usingVision: 0
     teleopFieldCentric: 1 # 0 or 1
     kLooperDt: .025 # seconds
     isProLicensed: 0

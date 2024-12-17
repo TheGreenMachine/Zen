@@ -74,21 +74,29 @@ public class AutopathMode extends AutoMode{
 
         System.out.println("Time taken "+(System.nanoTime()-beforeTime)/1000000000);
 
-        List<Rotation2d> autopathHeadings = List.of(
-                Rotation2d.fromRadians(0),
-                Rotation2d.fromRadians(0.3),
-                Rotation2d.fromRadians(0.43),
-                Rotation2d.fromRadians(0.52),
-                Rotation2d.fromRadians(0.59),
-                Rotation2d.fromRadians(0.70),
-                Rotation2d.fromRadians(0.79),
-                Rotation2d.fromRadians(0.87),
-                Rotation2d.fromRadians(0.98),
-                Rotation2d.fromRadians(1.06),
-                Rotation2d.fromRadians(1.15),
-                Rotation2d.fromRadians(1.27),
-                Rotation2d.fromRadians(1.57)
-        );
+        List<Rotation2d> autopathHeadings = new ArrayList<>();
+        double autopathTrajectoryTime = autopathTrajectory.getTotalTimeSeconds();
+        for(int i = 0; i < autopathTrajectory.getStates().size(); i++){
+            autopathHeadings.add(Rotation2d.fromDegrees(
+                    robotState.fieldToVehicle.getRotation().getDegrees() * ((autopathTrajectoryTime - autopathTrajectory.getStates().get(i).timeSeconds) / autopathTrajectoryTime) +
+                            90 * (autopathTrajectory.getStates().get(i).timeSeconds / autopathTrajectoryTime)
+            ));
+        }
+//        List<Rotation2d> autopathHeadings = List.of(
+//                Rotation2d.fromRadians(0),
+//                Rotation2d.fromRadians(0.3),
+//                Rotation2d.fromRadians(0.43),
+//                Rotation2d.fromRadians(0.52),
+//                Rotation2d.fromRadians(0.59),
+//                Rotation2d.fromRadians(0.70),
+//                Rotation2d.fromRadians(0.79),
+//                Rotation2d.fromRadians(0.87),
+//                Rotation2d.fromRadians(0.98),
+//                Rotation2d.fromRadians(1.06),
+//                Rotation2d.fromRadians(1.15),
+//                Rotation2d.fromRadians(1.27),
+//                Rotation2d.fromRadians(1.57)
+//        );
 
         System.out.println(autopathHeadings);
 
@@ -101,6 +109,6 @@ public class AutopathMode extends AutoMode{
     }
 
     public Pose2d getInitialPose() {
-        return new Pose2d(startTranslation, robotState.allianceColor == Color.BLUE ? Rotation2d.fromDegrees(-90) : Rotation2d.fromDegrees(180));
+        return new Pose2d(startTranslation, robotState.allianceColor == Color.BLUE ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180));
     }
 }
