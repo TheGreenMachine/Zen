@@ -45,6 +45,8 @@ public class Autopath {
 
     private TrajectoryAction autopathTrajectoryAction;
 
+    static int autopathTrajectoryPathCheckPrecisionInTimesPerSecond = 50;
+
     /**
      * State: if path needs to be stopped
      */
@@ -89,8 +91,8 @@ public class Autopath {
 
         Pose2d prevState = trajectory.sample(0).poseMeters;
 
-        for(int t = 1; t*.02 < trajectory.getTotalTimeSeconds() + .02; t++){
-            Pose2d currentState = trajectory.sample(t*.02).poseMeters;
+        for(int t = 1; t*.02 < trajectory.getTotalTimeSeconds() + 1./autopathTrajectoryPathCheckPrecisionInTimesPerSecond; t++){
+            Pose2d currentState = trajectory.sample(t*1./autopathTrajectoryPathCheckPrecisionInTimesPerSecond).poseMeters;
 //            if(Bresenham.drawLine(fieldMap.getCurrentMap(), (int)(prevState.getX()*100), (int)(prevState.getY()*100), (int)(currentState.getX()*100), (int)(currentState.getY()*100), false))
             if(fieldMap.getCurrentMap().checkPixelHasObjectOrOffMap((int)(currentState.getX()*100), (int)(currentState.getY()*100)))
                 return false;
@@ -104,12 +106,12 @@ public class Autopath {
     public static TimestampTranslation2d returnCollisionStart(Trajectory trajectory){
         Pose2d prevState = trajectory.sample(0).poseMeters;
 
-        for(int t = 1; t*.02 < trajectory.getTotalTimeSeconds() + .02; t++){
-            Pose2d currentState = trajectory.sample(t*.02).poseMeters;
+        for(int t = 1; t*1./autopathTrajectoryPathCheckPrecisionInTimesPerSecond < trajectory.getTotalTimeSeconds() + 1./autopathTrajectoryPathCheckPrecisionInTimesPerSecond; t++){
+            Pose2d currentState = trajectory.sample(t*1./autopathTrajectoryPathCheckPrecisionInTimesPerSecond).poseMeters;
             Translation2d result = Bresenham.lineReturnCollision(fieldMap.getCurrentMap(), (int)(prevState.getX()*100), (int)(prevState.getY()*100), (int)(currentState.getX()*100), (int)(currentState.getY()*100));
 
             if(result != null)
-                return new TimestampTranslation2d(t*.02, result);
+                return new TimestampTranslation2d(t*1./autopathTrajectoryPathCheckPrecisionInTimesPerSecond, result);
 
             prevState = currentState;
         }
@@ -121,8 +123,8 @@ public class Autopath {
 
         Pose2d prevState = trajectory.sample(timestampTranslation2d.getTimestamp()).poseMeters;
 
-        for(int t = (int)(timestampTranslation2d.getTimestamp()*50) + 1; t*.02 < trajectory.getTotalTimeSeconds() + .02; t++){
-            Pose2d currentState = trajectory.sample(t*.02).poseMeters;
+        for(int t = (int)(timestampTranslation2d.getTimestamp()*autopathTrajectoryPathCheckPrecisionInTimesPerSecond) + 1; t*1./autopathTrajectoryPathCheckPrecisionInTimesPerSecond < trajectory.getTotalTimeSeconds() + 1./autopathTrajectoryPathCheckPrecisionInTimesPerSecond; t++){
+            Pose2d currentState = trajectory.sample(t*1./autopathTrajectoryPathCheckPrecisionInTimesPerSecond).poseMeters;
 
 //            System.out.println("Testing line: "+prevState+" to: "+currentState);
 
@@ -139,7 +141,7 @@ public class Autopath {
 //            System.out.println(result);
 
             if(result != null)
-                return new TimestampTranslation2d(t*.02, new Translation2d(result[0], result[1]));
+                return new TimestampTranslation2d(t*1./autopathTrajectoryPathCheckPrecisionInTimesPerSecond, new Translation2d(result[0], result[1]));
 
             prevState = currentState;
         }
@@ -150,12 +152,12 @@ public class Autopath {
     public static TimestampTranslation2d returnCollisionStartLast(Trajectory trajectory){
         Pose2d prevState = trajectory.sample(trajectory.getTotalTimeSeconds()).poseMeters;
 
-        for(int t = (int)(trajectory.getTotalTimeSeconds()*50) - 1; t*.02 > 0; t--){
-            Pose2d currentState = trajectory.sample(t*.02).poseMeters;
+        for(int t = (int)(trajectory.getTotalTimeSeconds()*autopathTrajectoryPathCheckPrecisionInTimesPerSecond) - 1; t*1./autopathTrajectoryPathCheckPrecisionInTimesPerSecond > 0; t--){
+            Pose2d currentState = trajectory.sample(t*1./autopathTrajectoryPathCheckPrecisionInTimesPerSecond).poseMeters;
             Translation2d result = Bresenham.lineReturnCollision(fieldMap.getCurrentMap(), (int)(prevState.getX()*100), (int)(prevState.getY()*100), (int)(currentState.getX()*100), (int)(currentState.getY()*100));
 
             if(result != null)
-                return new TimestampTranslation2d(t*.02, result);
+                return new TimestampTranslation2d(t*1./autopathTrajectoryPathCheckPrecisionInTimesPerSecond, result);
 
             prevState = currentState;
         }
@@ -167,8 +169,8 @@ public class Autopath {
 
         Pose2d prevState = trajectory.sample(timestampTranslation2d.getTimestamp()).poseMeters;
 
-        for(int t = (int)(timestampTranslation2d.getTimestamp()*50) - 1; t*.02 > 0; t--){
-            Pose2d currentState = trajectory.sample(t*.02).poseMeters;
+        for(int t = (int)(timestampTranslation2d.getTimestamp()*autopathTrajectoryPathCheckPrecisionInTimesPerSecond) - 1; t*1./autopathTrajectoryPathCheckPrecisionInTimesPerSecond > 0; t--){
+            Pose2d currentState = trajectory.sample(t*1./autopathTrajectoryPathCheckPrecisionInTimesPerSecond).poseMeters;
 
 //            System.out.println("Testing line: "+prevState+" to: "+currentState);
 
@@ -185,7 +187,7 @@ public class Autopath {
 //            System.out.println(result);
 
             if(result != null)
-                return new TimestampTranslation2d(t*.02, new Translation2d(result[0], result[1]));
+                return new TimestampTranslation2d(t*1./autopathTrajectoryPathCheckPrecisionInTimesPerSecond, new Translation2d(result[0], result[1]));
 
             prevState = currentState;
         }
@@ -227,7 +229,7 @@ public class Autopath {
      * Starts the Autopath and relevant actions
      */
     public void start(Pose2d autopathTargetPosition) {
-        if(robotState.autopathing)
+        if(robotState.autopathing && System.nanoTime()/1000000 - robotState.autopathBeforeTime < robotState.autopathPathCancelBufferMilli)
             return;
 
         this.autopathTargetPosition = autopathTargetPosition;

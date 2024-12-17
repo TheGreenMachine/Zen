@@ -4,7 +4,6 @@ import com.team1816.lib.subsystems.drive.Drive;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.spline.SplineParameterizer;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
@@ -14,10 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class AutopathAlgorithm {
-    static double totalTimeEdited = 0;
-    static int totalTimeEditedAmount = 0;
-    static double positiveTimeEdited = 0;
-    static int positiveTimeEditedAmount = 0;
+    static double autopathMaxCalcMilli = 200;
+    static double autopathBuffer = 7.5;
 
     public static Trajectory calculateAutopath(Pose2d autopathTargetPosition){
         return calculateAutopath(Autopath.robotState.fieldToVehicle, autopathTargetPosition);
@@ -59,7 +56,7 @@ public class AutopathAlgorithm {
         );
 
         while(!branches.isEmpty() && !branches.get(0).trajectoryCheck){
-            if(System.nanoTime()/1000000-startTime > 200)
+            if(System.nanoTime()/1000000-startTime > autopathMaxCalcMilli)
                 return null;
             boolean foundWorkingPath;
             for(int i = 1; i < branches.size(); i++)
@@ -340,8 +337,6 @@ public class AutopathAlgorithm {
 
         ArrayList<Integer> pastCollisionPointHashes = new ArrayList<>();
 
-        double buffer = 7.5;
-
         try {
             while (true) {
 //            try {
@@ -419,11 +414,11 @@ public class AutopathAlgorithm {
         }
 
         if(makeNegative){
-            newWaypoint[0] -= (int)(buffer*Math.cos(startToEndTranspose.getAngle().getRadians()+(Math.PI/2)));
-            newWaypoint[1] -= (int)(buffer*Math.sin(startToEndTranspose.getAngle().getRadians()+(Math.PI/2)));
+            newWaypoint[0] -= (int)(autopathBuffer *Math.cos(startToEndTranspose.getAngle().getRadians()+(Math.PI/2)));
+            newWaypoint[1] -= (int)(autopathBuffer *Math.sin(startToEndTranspose.getAngle().getRadians()+(Math.PI/2)));
         } else{
-            newWaypoint[0] -= (int)(buffer*Math.cos(startToEndTranspose.getAngle().getRadians()-(Math.PI/2)));
-            newWaypoint[1] -= (int)(buffer*Math.sin(startToEndTranspose.getAngle().getRadians()-(Math.PI/2)));
+            newWaypoint[0] -= (int)(autopathBuffer *Math.cos(startToEndTranspose.getAngle().getRadians()-(Math.PI/2)));
+            newWaypoint[1] -= (int)(autopathBuffer *Math.sin(startToEndTranspose.getAngle().getRadians()-(Math.PI/2)));
         }
 
         return newWaypoint;
