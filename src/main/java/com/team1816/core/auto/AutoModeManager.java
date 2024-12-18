@@ -186,16 +186,7 @@ public class AutoModeManager {
      * Enum for AutoModes
      */
     enum DesiredAuto {
-        // Test : 2020 Legacy
-//        DO_NOTHING,
-//        TUNE_DRIVETRAIN,
-        LIVING_ROOM,
         DRIVE_STRAIGHT,
-
-        // System check
-        SYSTEM_CHECK,
-
-        TEST,
 
         AUTOPATH
         }

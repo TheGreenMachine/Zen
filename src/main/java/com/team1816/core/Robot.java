@@ -233,8 +233,6 @@ public class Robot extends TimedRobot {
             faulted = true;
 
             SmartDashboard.putBoolean("PlaySong", false);
-            SmartDashboard.putNumber("FeederShootSpeed",10);
-            SmartDashboard.putNumber("TestShuttleShot",71);
 
             RobotController.setBrownoutVoltage(6);
 
@@ -293,13 +291,6 @@ public class Robot extends TimedRobot {
                     ActionState.PRESSED,
                     () ->
                         autopather.start(new Pose2d(new Translation2d(15.2, 1.1), Rotation2d.fromDegrees(135)))
-            );
-
-            inputHandler.listenAction(
-                    "teleport",
-                    ActionState.PRESSED,
-                    () ->
-                            robotState.fieldToVehicle = new Pose2d(new Translation2d(16.51, 8.21), new Rotation2d())
             );
 
             /** Operator Commands */
