@@ -234,7 +234,7 @@ public class Robot extends TimedRobot {
 
             SmartDashboard.putBoolean("PlaySong", false);
 
-            RobotController.setBrownoutVoltage(6);
+            RobotController.setBrownoutVoltage(5.5);
 
             /** Register inputHandler */
             inputHandler = Injector.get(InputHandler.class);
