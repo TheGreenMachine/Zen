@@ -56,7 +56,7 @@ subsystems:
                     xCoord: 7.125
                     yCoord: 11.375
                     constants:
-                        encoderOffset: -0.34228515625
+                        encoderOffset: 0.231201171875
                         couplingRatio: 3.576
                         freeSpin12VRPS: 101
                         invertSensorPhase: 1
@@ -67,7 +67,7 @@ subsystems:
                     xCoord: 7.125
                     yCoord: -11.375
                     constants:
-                        encoderOffset: -0.014404296875
+                        encoderOffset: -0.4794921875
                         couplingRatio: 3.579
                         freeSpin12VRPS: 101
                         invertSensorPhase: 1
@@ -78,7 +78,7 @@ subsystems:
                     xCoord: -11.375
                     yCoord: 11.375
                     constants:
-                        encoderOffset: 0.23779296875
+                        encoderOffset: -0.344482421875
                         couplingRatio: 3.572
                         freeSpin12VRPS: 101
                         invertSensorPhase: 1
@@ -89,7 +89,7 @@ subsystems:
                     xCoord: -11.375
                     yCoord: -11.375
                     constants:
-                        encoderOffset: 0.3076171875
+                        encoderOffset: -0.012451171875
                         couplingRatio: 3.589
                         freeSpin12VRPS: 104
                         invertSensorPhase: 1
