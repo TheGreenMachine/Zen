@@ -43,10 +43,10 @@ subsystems:
                 id: 0
                 invertMotor: false
         canCoders:
-            FLEnc: 16
-            FREnc: 15
-            RLEnc: 17
-            RREnc: 14
+            FLEnc: 15
+            FREnc: 14
+            RLEnc: 16
+            RREnc: 17
         swerveModules:
             modules:
                 frontLeft:
@@ -101,7 +101,7 @@ subsystems:
                     kF: 0.00925
             azimuthPID:
                 slot0:
-                    kP: 75
+                    kP: 7
                     kI: 0
                     kD: 0
                     kF: 0

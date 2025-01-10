@@ -223,6 +223,7 @@ public abstract class AutoPath {
                     );
             }
         }
+        System.out.println(headings);
         return headings;
     }
 }

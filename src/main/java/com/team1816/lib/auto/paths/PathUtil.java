@@ -183,6 +183,8 @@ public class PathUtil {
         /* Adds final heading to be the same as the previous so the path is aligned with the heading */
         generatedHeadings.add(swerveHeadings.get(swerveHeadings.size() - 1));
 
+        System.out.println(generatedHeadings);
+
         return generatedHeadings;
     }
 
@@ -232,7 +234,7 @@ public class PathUtil {
         int iWaypointCheckpoint = 0;
         for (Pose2d waypointPose2d : waypointsMeters) {
             for (int i = iWaypointCheckpoint; i < trajectory.getStates().size(); i++) {
-                var trajectoryPose2d = trajectory.getStates().get(i).poseMeters;
+                Pose2d trajectoryPose2d = trajectory.getStates().get(i).poseMeters;
                 if (trajectoryPose2d.equals(waypointPose2d)) {
                     waypointTimes.add(trajectory.getStates().get(i).timeSeconds);
                     waypointIndexes.add(i);
