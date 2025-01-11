@@ -3,8 +3,8 @@ driver:
   rumble: true
   joysticks:
     left:
-      horizontal: throttle
-      vertical: strafe
+      horizontal: strafe
+      vertical: throttle
     right:
       horizontal: rotation
   buttonpad:
