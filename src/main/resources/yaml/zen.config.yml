@@ -11,7 +11,7 @@ subsystems:
                 motorType: TalonFX
                 motorName: FRDr
                 id: 2
-                invertMotor: true
+                invertMotor: false
             RLDr:
                 motorType: TalonFX
                 motorName: BLDr
@@ -67,7 +67,7 @@ subsystems:
                     xCoord: 7.125
                     yCoord: -11.375
                     constants:
-                        encoderOffset: 0.02685546875
+                        encoderOffset: 0.52685546875
                         couplingRatio: 3.579
                         freeSpin12VRPS: 101
                         invertSensorPhase: 1
@@ -78,7 +78,7 @@ subsystems:
                     xCoord: -11.375
                     yCoord: 11.375
                     constants:
-                        encoderOffset: -0.357177734375
+                        encoderOffset: 0.64282226562
                         couplingRatio: 3.572
                         freeSpin12VRPS: 101
                         invertSensorPhase: 1
@@ -89,7 +89,7 @@ subsystems:
                     xCoord: -11.375
                     yCoord: -11.375
                     constants:
-                        encoderOffset: -0.01025390625
+                        encoderOffset: 0.98974609375
                         couplingRatio: 3.589
                         freeSpin12VRPS: 104
                         invertSensorPhase: 1
@@ -101,7 +101,7 @@ subsystems:
                     kF: 0.00925
             azimuthPID:
                 slot0:
-                    kP: 7
+                    kP: 5
                     kI: 0
                     kD: 0
                     kF: 0
