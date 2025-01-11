@@ -39,6 +39,7 @@ public class RobotState {
     public final Field2d field = new Field2d();
     public Color allianceColor = Color.BLUE;
     public Pose2d fieldToVehicle = Constants.EmptyPose2d;
+    public Pose2d fieldToVehicleVision = Constants.EmptyPose2d;
     public Pose2d driverRelativeFieldToVehicle = Constants.EmptyPose2d;
     public Pose2d extrapolatedFieldToVehicle = Constants.EmptyPose2d;
     public Pose2d target = Constants.fieldCenterPose;
@@ -289,6 +290,7 @@ public class RobotState {
      */
     public synchronized void outputToSmartDashboard() {
         field.setRobotPose(fieldToVehicle);
+//        field.getObject("VisionRobot").setPose(fieldToVehicleVision);
 
         SmartDashboard.putData("Mech2d", mechCanvas);
         SmartDashboard.putBoolean("BeamBreak", isBeamBreakTriggered);

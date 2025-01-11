@@ -16,12 +16,12 @@ subsystems:
                 motorType: TalonFX
                 motorName: BLDr
                 id: 8
-                invertMotor: true
+                invertMotor: false
             RRDr:
                 motorType: TalonFX
                 motorName: BRDr
                 id: 1
-                invertMotor: true
+                invertMotor: false
             FLAz:
                 motorType: TalonFX
                 motorName: FLAz
