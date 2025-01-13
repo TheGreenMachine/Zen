@@ -309,13 +309,13 @@ public class Robot extends TimedRobot {
             );
 
             /** Operator Commands */
-            inputHandler.listenAction(
-                    "revSpeaker",
-                    ActionState.PRESSED,
-                    () -> {
-                        shooter.setDesiredRollerState(Shooter.ROLLER_STATE.SHOOT_SPEAKER);
-                    }
-            );
+//            inputHandler.listenAction(
+//                    "revSpeaker",
+//                    ActionState.PRESSED,
+//                    () -> {
+//                        shooter.setDesiredRollerState(Shooter.ROLLER_STATE.SHOOT_SPEAKER);
+//                    }
+//            );
             inputHandler.listenActionPressAndRelease(
                     "shoot",
                     (pressed) -> {
@@ -436,7 +436,7 @@ public class Robot extends TimedRobot {
                     "SpeakerRev",
                     (pressed) -> {
                         if (!robotState.isShooting) {
-                           shooter.setDesiredRollerState(pressed ? Shooter.ROLLER_STATE.SHOOT_SPEAKER : Shooter.ROLLER_STATE.STOP);
+//                           shooter.setDesiredRollerState(pressed ? Shooter.ROLLER_STATE.SHOOT_SPEAKER : Shooter.ROLLER_STATE.STOP);
                         }
                     }
             );
@@ -446,7 +446,7 @@ public class Robot extends TimedRobot {
                     (pressed) -> {
                         if (!robotState.isShooting) {
                             //REPLACE WITH SHUTTLE TODO TODO TODO
-                            shooter.setDesiredRollerState(pressed ? Shooter.ROLLER_STATE.SHOOT_SPEAKER : Shooter.ROLLER_STATE.STOP);
+//                            shooter.setDesiredRollerState(pressed ? Shooter.ROLLER_STATE.SHOOT_SPEAKER : Shooter.ROLLER_STATE.STOP);
                         }
                     }
             );
