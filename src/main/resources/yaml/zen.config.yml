@@ -57,7 +57,7 @@ subsystems:
                     yCoord: 11.375
                     constants:
                         encoderOffset: 0.23486328125
-                        couplingRatio: 12.7943415186
+                        couplingRatio: 3.576
                         freeSpin12VRPS: 101
                         invertSensorPhase: 1
                 frontRight:
@@ -68,7 +68,7 @@ subsystems:
                     yCoord: -11.375
                     constants:
                         encoderOffset: 0.52685546875
-                        couplingRatio: 12.7774994438
+                        couplingRatio: 3.579
                         freeSpin12VRPS: 101
                         invertSensorPhase: 1
                 backLeft:
@@ -79,7 +79,7 @@ subsystems:
                     yCoord: 11.375
                     constants:
                         encoderOffset: 0.64282226562
-                        couplingRatio: 12.7842200305
+                        couplingRatio: 3.572
                         freeSpin12VRPS: 101
                         invertSensorPhase: 1
                 backRight:
@@ -90,7 +90,7 @@ subsystems:
                     yCoord: -11.375
                     constants:
                         encoderOffset: 0.98974609375
-                        couplingRatio: 12.8027514119
+                        couplingRatio: 3.589
                         freeSpin12VRPS: 104
                         invertSensorPhase: 1
             drivePID:
@@ -101,7 +101,7 @@ subsystems:
                     kF: 0.00925
             azimuthPID:
                 slot0:
-                    kP: 11
+                    kP: 5
                     kI: 0
                     kD: 0
                     kF: 0
@@ -155,7 +155,7 @@ subsystems:
             intakeSpeed: -0.75
             outtakeSpeed: 0.3
     shooter:
-        implemented: false
+        implemented: true
         motors:
             rollerMotor:
                 motorType: TalonFX
@@ -213,7 +213,7 @@ subsystems:
             velocityErrorMargin: 0.05
             velocityErrorMarginAutoAim: 0.003
             autoAimDegreeTolerance: .1
-            pivotNeutralPosition: 2
+            pivotNeutralPosition: 1.5
             pivotAmpShootPosition: 33
             pivotDistanceShootPosition: 8.675
             invertFollowerMotor: 1

@@ -11,8 +11,8 @@ public class WhateverTest extends AutoPath {
     @Override
     protected List<Pose2d> getWaypoints() {
         return List.of(
-                new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(0)),
-                new Pose2d(new Translation2d(5, 0), Rotation2d.fromDegrees(0))
+                new Pose2d(new Translation2d(2.6, 5.5), Rotation2d.fromDegrees(180)),
+                new Pose2d(new Translation2d(1.6, 5.5), Rotation2d.fromDegrees(180))
         );
     }
 
@@ -20,7 +20,7 @@ public class WhateverTest extends AutoPath {
     protected List<Rotation2d> getWaypointHeadings() {
         return List.of(
                 new Rotation2d(0),
-                Rotation2d.fromDegrees(0)
+                Rotation2d.fromDegrees(90)
         );
     }
 
